@@ -1,0 +1,384 @@
+/* Estilos base para todas las pantallas */
+:root {
+    --padding-container: 100px 0;
+    --color-title: #001A49;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+}
+/* Estilo para el encabezado */
+
+.hero {
+    width: 100%;
+    height: 100vh;
+    min-height: 300px;
+    max-height: 600px;
+    position: relative;
+    grid-template-rows: 100px 1fr;
+    margin-top: 0;
+}
+.user-controls {
+    display: flex;
+    justify-content: flex-end; /* Alinea a la derecha */
+    align-items: center;
+}
+.user-info {
+    margin-right: 20px;
+    margin-top: 20px;
+    /* Agrega espacio entre el nombre de usuario y el icono */
+}
+#user-button {
+    font-size: 16px; /* Tamaño del texto */
+    padding: 10px 20px; /* Relleno (ajusta según sea necesario) */
+    position: relative; /* Añadir posición relativa para permitir la posición absoluta del menú */
+    z-index: 1; /* Asegura que el botón esté por encima de otros elementos */
+    background: transparent;
+    color: #0c0c0c;
+    cursor: pointer;
+    border-radius: 40px;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif, sans-serif;
+
+}
+
+.user-menu {
+    display: none;
+    right: 0;
+    top: 100%;
+    z-index: 2;
+    font-size: 16px;
+    position: absolute;
+    margin-top: -540px;
+    margin-right: 150px;
+    padding: auto;
+}
+
+.user-menu ul{
+    list-style-type: none;
+}
+.user-menu li {
+    margin: 0;
+    padding: 0;
+    margin-bottom: 5px;
+}
+.user-menu a {
+    text-decoration: none;
+    color: #ffffff;
+    border-radius: 34px;
+    z-index: 1;
+    background-size: cover;
+    display: block;
+    padding: 10px 20px; /* Ajusta el relleno según sea necesario */
+    border: 1px solid #ffffff; /* Agrega un borde blanco alrededor de cada opción */
+    background-color: #535455;
+    padding: 10px;
+
+}
+
+.user-menu.show {
+    display: block;
+    list-style-type: none; /* Elimina los puntos de las opciones del menú */
+}
+.logout-icon img {
+    width: 40px; /* Ajusta el tamaño del icono de cerrar sesión */
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+
+.hero::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    z-index: -1;
+}
+
+
+.logo {
+    position: absolute;
+    height: 170px;
+    width: 170px;
+    left: 40px;
+    z-index: 1;
+    background-size: cover;
+    margin-top: 40px;
+}
+
+.nav {
+    height: 5px; /* Cambia la altura a "auto" para que se ajuste automáticamente al contenido */
+    display: flex;
+    align-items: center;
+}
+
+.nav__title {
+    font-weight: 100;
+
+}
+/* Estilos para el contenedor de la barra de navegación */
+/* Estilos para el contenedor de la barra de navegación */
+.nav.container {
+    display: flex;
+    justify-content: center; /* Centra los botones horizontalmente */
+    align-items: center; /* Centra los botones verticalmente */
+    padding: 10px 0;
+    margin-left: 100px;
+}
+
+/* Estilos para los botones */
+/* Estilos para los botones */
+.nav__button {
+    background-color: #2433bd;
+    color: #fff;
+    text-decoration: none;
+    padding: 12px 30px; /* Aumenta el relleno horizontal para hacer los botones más grandes */
+    border-radius: 34px;
+    z-index: 1;
+    background-size: cover;
+    min-width: auto; /* Puedes ajustar este valor según sea necesario para hacer los botones más anchos */
+    transition: background-color 0.3s;
+    margin: 0 10px 0 15px; /* Añade un espacio horizontal a la derecha para separar los botones */
+}
+
+
+/* Cambio de color cuando se pasa el mouse sobre los botones */
+.nav__button:hover {
+    background-color: #E42E24;
+    color: #fff;
+}
+
+/* Estilos para los elementos de la barra de navegación */
+.nav__link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 140px; /* Aumenta el margen superior para mover los botones más abajo */
+}
+
+/* Estilos generales para los elementos .nav__items */
+.nav__items {
+    display: flex;
+    align-items: center;
+}
+
+/* Estilos para los enlaces de la barra de navegación */
+.nav__links {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    margin-left: 10px; /* Añade un espacio horizontal entre los enlaces */
+}
+
+/* Estilos para el título */
+.nav__title {
+    font-weight: 100;
+}
+
+/* Estilos para el botón de cierre */
+.nav__close {
+    display: var(--show, none);
+}
+
+
+/* CSS para la barra de búsqueda y el icono de carrito */
+.cart {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-top: 100px;
+}
+
+.search {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-top: 130px;
+    width: 350px;
+    margin-right: -60px;
+    padding: 10px;
+}
+
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Centra horizontalmente los elementos */
+    position: relative;
+    background-repeat: no-repeat;
+    background-size: 30px 30px;
+    background-position: right 10px center;
+    padding-right: 400px; /* Aumenta el padding-right para dar espacio al carrito */
+    border-radius: 30px;
+    padding: 10px; /* Agrega padding para dar margen interno al cuadro de búsqueda */
+    flex: 1; /* Hace que el cuadro de búsqueda ocupe todo el espacio disponible */
+    font-size: 16px; /* Ajusta el tamaño de la fuente según tus necesidades */
+    max-width: 400px; /* Establece un ancho máximo para el cuadro de búsqueda */
+}
+
+.search-bar input[type="text"] {
+    border: none;
+    border-bottom: 1px solid #000;
+    border-radius: 30px;
+    flex: 1;
+    font-size: 16px;
+    background: url('../images/bx-search-alt-2.svg') no-repeat right 10px center;
+    background-size: 20px 20px;
+    padding: 10px; /* Aumenta el padding para dar margen interno al campo de búsqueda */
+    width: 100%; /* Hace que el campo de búsqueda ocupe todo el ancho disponible */
+}
+
+/* Estilos para la franja degradada con alternancia de colores en diagonal */
+.gradient-stripe {
+    background: linear-gradient(
+        45deg, /* Ángulo de 45 grados para el degradado diagonal */
+        #E42E24 0%,
+        #E42E24 25%,
+        #2433bd 25%,
+        #2433bd 75%,
+        #E42E24 75%,
+        #E42E24 100%
+    ); /* Alternancia de colores en diagonal */
+    height: 15px; /* Altura de la franja */
+    width: 100%; /* Ancho del 100% para que cubra todo el ancho del contenedor */
+    margin-top: 150px; /* Espacio superior para separar la franja del contenido superior */
+    margin-bottom: 10px; /* Espacio inferior para separar la franja del contenido inferior */
+}
+
+/* Estilos para el elemento h2 */
+h4 {
+    font-size: 40px;
+    margin-left: 50px;
+    margin-top: -280px;
+}
+.product-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Centra los productos horizontalmente */
+    gap: 20px;
+    text-align: center;
+}
+
+.product {
+    padding: 10px;
+    width: 23%;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+    text-align: center;
+    background-color: #d6e9ec;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+/* Añade margen izquierdo y derecho iguales para centrar los productos */
+.product:first-child {
+    margin-left: 0;
+}
+
+.product img {
+    max-width: 12ch;
+    display: block;
+    margin: 0 auto;
+    background-color: transparent;
+    padding: 10px;
+}
+
+
+
+.footer {
+    background-color: #1D293F;
+    width: 100%;
+    padding: 20px;
+}
+
+.footer__title, .footer__newsletter {
+    color: #fff;
+}
+
+.footer__container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid #fff;
+    padding: 10px 0;
+    margin: 0 auto;
+    max-width: auto;
+}
+
+.contactactanos {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    font-size: 15px;
+    color: #f3eded;
+    max-width: 100%;
+    flex-direction: row;
+    margin-top: 10px;
+}
+
+.contactactanos img {
+    margin-left: 10px;
+    filter: invert(100%);
+}
+
+.nav--footer {
+    padding-bottom: 0.2px;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    speak-as: 10px;
+}
+
+.footer__container {
+    position: relative;
+}
+
+.contac-us {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    text-align: center;
+    color: rgb(245, 242, 242);
+    margin-top: 20px;
+}
+
+.footer__copy {
+    --padding-container: 30px 0;
+    text-align: center;
+    color: #fff;
+    margin-top: 1px;
+}
+
+.footer__copyright {
+    font-weight: 300;
+}
+
+.footer__icons {
+    margin-bottom: 10px;
+}
+
+.footer__img {
+    width: 30px;
+    margin: 0 10px;
+}
+
+/* Media queries para pantallas más pequeñas */
+@media screen and (max-width: 768px) {
+    .encabezado {
+        margin-top: 20px; /* Ajusta el margen en pantallas más pequeñas */
+    }
+
+    header {
+        margin-bottom: -200px; /* Ajusta el margen en pantallas más pequeñas */
+    }
+
+    /* Otros ajustes para pantallas más pequeñas */
+}

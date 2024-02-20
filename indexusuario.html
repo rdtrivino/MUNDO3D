@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MUNDO 3D </title>
+    <link rel="shortcut icon" href="./images/Logo Mundo 3d.png" type="image/x-icon">
+    <link rel="stylesheet" href="./css/normalize.css">
+    <link rel="stylesheet" href="./css/indexregistradoadmin.css">
+    <script src="../MUNDO 3D/js/usuario.js"></script>
+
+<body>
+    <header class="hero">
+        <div class="nav__logo">
+            <img src="images/Logo Mundo 3d.png" alt="Logo de la empresa" class="logo">
+        </div>
+        <div class="user-controls">
+            <div class="user-info">
+                <button id="user-button">Bienvenido: <span id="user-name">Usuario</span></button>
+                <div class="user-menu" id="user-menu">
+                    <ul>
+                        <li><a href="">Mis pedidos</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="logout-icon">
+                <img src="../MUNDO 3D/images/bx-exit.svg" alt="Cerrar Sesión" id="logout-button">
+            </div>
+        </div>
+        <script>
+            var userButton = document.getElementById("user-button");
+            var userMenu = document.getElementById("user-menu");
+            var logoutButton = document.getElementById("logout-button");
+        
+            userButton.addEventListener("click", function (e) {
+                e.stopPropagation();
+                userMenu.classList.toggle("show");
+            });
+        
+            logoutButton.addEventListener("click", function () {
+                var confirmLogout = confirm("¿Estás seguro de que deseas cerrar sesión?");
+                if (confirmLogout) {
+                    window.location.href = "index.html";
+                }
+            });
+            window.addEventListener("click", function () {
+                if (userMenu.classList.contains("show")) {
+                    userMenu.classList.remove("show");
+                }
+            });
+        </script>        
+        <nav class="nav container">
+            <ul class="nav__link nav__link--menu">
+                <li class="nav__items">
+                    <a href="Administrador.html" class="nav__links nav__button">Catalogo</a>
+                </li>
+                <li class="nav__items">
+                    <a href="repuestosvisitante.html" class="nav__links nav__button">Repuestos</a>
+                </li>
+                <li class="nav__items">
+                    <a href="#" class="nav__links nav__button" id="archivos-3d-link">Archivos 3D</a>
+                </li>
+                <li class="nav__items">
+                    <a href="#" class="nav__links nav__button" id="Servicio-de-impresión-link">Servicio de impresión</a>
+                </li> 
+        </nav>
+            <h1 class="hero__title">Transformando ideas en realidad tridimensional</h1>
+            <p class="hero__paragraph">¡Adéntrate en un mundo tridimensional como nunca antes! ¡Bienvenid@ nuestra página 3D, donde tus sueños cobran vida!</p><br><br><br><br>
+        </section>
+    </header>
+
+    <main>
+        <section class="knowledge">
+            <div class="knowledge__container container">
+                <div class="knowledege__texts">
+                    <h2 class="subtitle">¿QUIENES SOMOS?</h2>
+                    <p class="knowledge__paragraph">Empresa en Colombiana que importa y comercializa profesionalmente tecnología 3D en todo el territorio nacional. Buscamos facilitar a los entusiastas de la impresión 3D el acceso a esta tecnología revolucionaria.
+                        Acompañamos a personas, empresas e instituciones innovadoras a materializar sus proyectos mediante tecnología especializada en prototipado 3D, con un servicio post-venta de alta calidad.
+                        Mundo 3D está enfocado en la venta exclusiva de tecnología 3D, proveemos un servicio post-venta eficaz y rápido. Cuenta con un departamento de soporte técnico que tiene como fin proporcionar asistencia a nuestros clientes resolviendo determinados problemas que se presentan.</p>
+                </div>
+
+                <figure class="knowledge__picture">
+                    <img src="./images/vivir-de-la-impresion-3D-2-300x198.png" class="knowledge__img">
+                </figure>
+            </div>
+        </section>
+
+        <section class="testimony">
+            <div class="testimony__container container">
+                <img src="./images/leftarrow.svg" class="testimony__arrow" id="before">
+
+                <section class="testimony__body testimony__body--show" data-id="1">
+                    <div class="testimony__texts">
+                        <h2 class="subtitle">IMPRESORAS 3D. <span class="testimony__course">Impresoras 3D de Recina-Filamento.</span></h2>
+                        <p class="testimony__review">Contamos con un amplio catalogo de impresoras 3D industruales y de escritorio.</p>
+                    </div>
+
+                    <figure class="testimony__picture">
+                        <img src="./images/impresora-3c-portada-m.jpg.webp" class="testimony__img">
+                    </figure>
+                </section>
+
+                <section class="testimony__body" data-id="2">
+                    <div class="testimony__texts">
+                        <h2 class="subtitle">SERVICIO DE IMPRESION 3D. <br><span class="testimony__course">Impresion 3D.</span></h2>
+                        <p class="testimony__review">Brindamos servicio de impresion de alta resolucion e impresión 3D a los mejores precios asequibles.
+                            <p><span></span></p><br>
+                            <p><span></span></p><br>
+                            <span class="testimony__review">"TU TE LO IMAGINAS, NOSOTROS LO CREAMOS"  </span>
+                            
+                        </p>
+                    </div>
+
+                    <figure class="testimony__picture">
+                        <img src="./images/1.jpg" class="testimony__img">
+                    </figure>
+                </section>
+
+                <section class="testimony__body" data-id="3">
+                    <div class="testimony__texts">
+                        <h2 class="subtitle">ARCHIVOS 3D <br><span class="testimony__course">imagenes 3D</span></h2>
+                        <p class="testimony__review">Explora una variedad de archivos 3D e imágenes tridimensionales para dar vida a tus proyectos. ¡El único límite es tu imaginación!</p>
+                    </div>
+
+                    <figure class="testimony__picture">
+                        <img src="./images/mariia-shalabaieva-HBkpnDVc_Ic-unsplash.jpg" class="testimony__img">
+                    </figure>
+                </section>
+
+                <section class="testimony__body" data-id="4">
+                    <div class="testimony__texts">
+                        <h2 class="subtitle">REPUESTOS <br><span class="testimony__course">Repuestos para maquinaria  3D</span></h2>
+                        <p class="testimony__review">Encuentra los repuestos esenciales para tu maquinaria 3D y mantén tu impresora funcionando al máximo rendimiento.</p>
+                    </div>
+
+                    <figure class="testimony__picture">
+                        <img src="./images/images.jpg" class="testimony__img">
+                    </figure>
+                </section>
+                
+
+
+                <img src="./images/rightarrow.svg" class="testimony__arrow" id="next">
+            </div>
+        </section>
+        <section class="questions container">
+
+            <section class="questions__container">
+                <article class="questions__padding">
+                    <div class="questions__answer">
+                        <h3 class="questions__title">VISIÓN
+                            <span class="questions__arrow">
+                                <img src="./images/arrow.svg" class="questions__img">
+                            </span>
+                        </h3>
+
+                        <p class="questions__show">Brindamos el asesoramiento y las técnicas adecuadas para 
+                            satisfacer las necesidades de nuestros clientes en todos los 
+                            aspectos de reproducción de productos y diseño gráfco. 
+                            Construimos relaciones de largo plazo basadas en la confanza 
+                            mutua y la calidad del servicio. En MUNDO 3D queremos seguir 
+                            siendo líderes en el desarrollo e implementación técnica de 
+                            procesos de impresión, para que nuestros clientes encuentren 
+                            junto a nosotros la solución adecuada para optimizar el 
+                            procesamiento de documentos.
+                            </p>
+                    </div>
+                </article>
+
+                <article class="questions__padding">
+                    <div class="questions__answer">
+                        <h3 class="questions__title">MISIÓN
+                            <span class="questions__arrow">
+                                <img src="./images/arrow.svg" class="questions__img">
+                            </span>
+                        </h3>
+
+                        <p class="questions__show">Le ofrecemos asesoría y tecnología adecuadas para solucionar 
+                            las necesidades de nuestros clientes en todo lo relacionado 
+                            con la duplicación y la creación gráfica de sus productos. 
+                            Construimos relaciones a largo plazo basadas en la confanza 
+                            mutua y en la calidad que nuestro servicio.
+                            Nuestro mayor valor está representado en nuestra gente que 
+                            son la base de nuestro éxito. En MUNDO 3D valoramos la 
+                            productividad, la lealtad y creemos en el trabajo en equipo.
+                            Contamos con la experiencia que nos ha hecho pioneros y 
+                            líderes en los servicios que prestamos. Confamos en nuestro 
+                            futuro y nos sentimos orgullosos de nuestra organización.
+                            </p>
+                    </div>
+                </article>
+        </section>
+        </section>
+
+      
+    </main>
+
+    <footer class="footer">
+        <section class="footer__container container">
+            <nav class="nav nav--footer">
+                <div class="contac-us">
+                    <h2 class="contac-us">CONTACTENOS:</h2>
+                    <div class="contactactanos">
+                        <img src="images/bxl-whatsapp.svg" alt="">
+                        <p>3124672836</p>
+                    </div>
+                    <div class="contactactanos">
+                        <img src="images/bx email.svg" alt="">
+                        <p>rdtrivino6@misena.edu.co</p>
+                    </div>
+                    <div class="contactactanos">
+                        <img src="images/bx-location-plus.svg" alt="">
+                        <p>Email: Calle 15 #31-42 Bogotá, Colombia</p>
+                </div>
+            </nav>
+        </section>        
+        <section class="footer__copy container">
+            <div class="footer__social">
+                <a href="#" class="footer__icons"><img src="./images/facebook.svg" class="footer__img"></a>
+                <a href="#" class="footer__icons"><img src="./images/twitter.svg" class="footer__img"></a>
+                <a href="#" class="footer__icons"><img src="./images/youtube.svg" class="footer__img"></a>
+            </div>
+
+            <h3 class="footer__copyright">Derechos reservados 2023 &copy; MUNDO 3D</h3>
+        </section>
+    </footer>
+
+    <script src="./js/slider.js"></script>
+    <script src="./js/questions.js"></script>
+    <script src="./js/menu.js"></script>
+</body>
+
+</html>
