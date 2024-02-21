@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="./images/Logo Mundo 3d.png" type="image/x-icon">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="./css/estilosregistro.css">
+    <title>Página de registro</title>
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+            text-align: center;
+            border-radius: 30PX;
+        }
+
+        #modalMessage {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        #closeModal {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 18px;
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 20px;
+            margin-top: 30px;
+        }
+
+        #closeModal:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-form">
+        <div class="information">
+            <img src="images/Logo Mundo 3d.png" alt="Bienvenido">
+            <div class="info-childs">
+                <h2>BIENVENIDO</h2>
+                <h1>Regístrate para que puedas disfrutar de nuestras opciones como:</h1>
+                <ul>
+                    <li>Descargar archivos 3D y realizar tus propias impresiones.</li>
+                    <li>Mantenimientos a tus impresoras.</li>
+                    <li>Imprimir la pieza o figuras que quieras.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="form-information">
+            <div class="form-information-childs">
+                <h2>CREAR UNA CUENTA</h2>
+                <div class="icons">
+                    <img src="images/bxl-gmail.svg" alt="">
+                    <img src="images/bxl-facebook-circle.svg" alt="">
+                    <img src="images/bxl-twitter.svg" alt="">
+                    <img src="images/bxl-instagram.svg" alt="">
+                </div>
+                <p>o usa una cuenta para registrarte.</p>
+                <form class="form" id="registroForm" action="Programas/registro.php" method="POST">
+                    <label>
+                        <img src="images/bx-id-card.svg" alt="">
+                        <input type="text" name="Usu_Identificacion" placeholder="Documento de identidad" required>
+                    </label>
+                    <label>
+                        <img src="images/bx-user.svg" alt="">
+                        <input type="text" name="Usu_Nombre_completo" placeholder="Nombres y apellidos" required>
+                    </label>
+                    <label>
+                        <img src="images/bx-phone.svg" alt="">
+                        <input type="tel" name="Usu_Telefono" placeholder="Número de teléfono">
+                    </label>
+                    <label>
+                        <img src="images/bx-envelope.svg" alt="">
+                        <input type="email" name="Usu_Email" placeholder="Correo electrónico" required>
+                    </label>
+                    <label>
+                        <img src="images/bx-buildings.svg" alt="">
+                        <select name="Usu_Ciudad">
+                            <option value="Bogota D.C.">Bogota D.C.</option>
+                            <option value="Medellin">Medellin</option>
+                            <option value="Cali">Cali</option>
+                            <!-- Agrega más opciones de ciudad según sea necesario -->
+                        </select>
+                    </label>
+                    <label>
+                        <img src="images/bx-current-location.svg" alt="">
+                        <input type="text" name="Usu_Direccion" placeholder="Dirección de residencia" required>
+                    </label>
+                    <label>
+                        <img src="images/bx-lock-alt.svg" alt="">
+                        <input type="password" name="Usu_Contraseña" placeholder="Contraseña" required>
+                    </label>
+                    <label>
+                        <img src="images/bx-lock-open-alt.svg" alt="">
+                        <input type="password" name="Confirma_Contraseña" placeholder="Confirma contraseña" required>
+                    </label>
+                    <input type="submit" value="Regístrate">
+                </form>                
+            </div>
+        </div>
+    </div>
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <p id="modalMessage">¡Registro exitoso!</p>
+            <button id="closeModal">Aceptar</button>
+        </div>
+    </div>
+    <script>
+document.addEventListener('DOMContentLoaded', function () {
+    const formulario = document.querySelector('#registroForm');
+    const modal = document.getElementById('myModal');
+    const closeModalBtn = document.getElementById('closeModal');
+    const modalMessage = document.getElementById('modalMessage');
+
+    formulario.addEventListener('submit', function (e) {
+        e.preventDefault(); // Evita que la página se recargue
+
+        // Enviar el formulario usando AJAX
+        const formData = new FormData(formulario);
+
+        fetch('Programas/registro.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Registro exitoso, mostrar el modal y redirigir después de 3 segundos
+                modalMessage.textContent = '¡Registro exitoso!';
+                modalMessage.style.color = 'green';
+                modal.style.display = 'block';
+                closeModalBtn.style.backgroundColor = '#4CAF50'; // Cambia el color a verde
+
+                // Redirigir después de 3 segundos
+                setTimeout(function () {
+                    window.location.href = 'index.html'; // Cambia 'inicio.html' por la URL de tu página de inicio
+                }, 3000); // 3000 milisegundos (3 segundos)
+            } else {
+                // Mostrar un mensaje de error y cambiar el color del botón a rojo
+                modalMessage.textContent = data.message;
+                modalMessage.style.color = 'red';
+                modal.style.display = 'block';
+                closeModalBtn.style.backgroundColor = 'red'; // Cambia el color a rojo
+            }
+        })
+        .catch(error => {
+            // Mostrar un mensaje de error en caso de error de red y cambiar el color del botón a rojo
+            console.error(error);
+            modalMessage.textContent = 'Ocurrió un error al procesar el registro.';
+            modalMessage.style.color = 'red';
+            modal.style.display = 'block';
+            closeModalBtn.style.backgroundColor = 'red'; // Cambia el color a rojo
+        });
+    });
+
+    // Cerrar el modal sin redirección
+    closeModalBtn.addEventListener('click', function () {
+        modal.style.display = 'none';
+    });
+});
+
+    </script>
+</body>
+</html>

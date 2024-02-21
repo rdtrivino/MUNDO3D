@@ -20,7 +20,7 @@
     <style>
         /* Estilos personalizados */
         .cajitas {
-            background-image: url('../images/bx-package.svg'); /* Ruta de la imagen */
+            background-image: url('../images/bxs-wrench.svg'); /* Ruta de la imagen */
             background-repeat: repeat-x; /* Repetir la imagen horizontalmente */
             height: 30px; /* Altura de las cajitas */
         }
