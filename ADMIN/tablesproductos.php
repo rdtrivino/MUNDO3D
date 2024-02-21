@@ -15,6 +15,21 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Estilos personalizados */
+        .cajitas {
+            background-image: url('../images/bx-package.svg'); /* Ruta de la imagen */
+            background-repeat: repeat-x; /* Repetir la imagen horizontalmente */
+            height: 30px; /* Altura de las cajitas */
+        }
+    </style>
+    <style>
+    body {
+        background-color: #add8e6; /* Azul claro */
+    }
+    </style>
 
     
 </head>
@@ -83,11 +98,21 @@
         </div>
         <div id="layoutSidenav_content">
             <main>
-                <div class="container-fluid px-4">
-                    <h1 class="mt-4">Tabla de Productos</h1>
+            <div class="container-fluid px-4">
+                    <div class="row align-items-center justify-content-between mb-4">
+                        <div class="col">
+                            <h1 class="mt-4">Tabla de Productos</h1>
+                        </div>
+                    </div>
+                    <div class="row align-items-start justify-content-end mb-4">
+                        <div class="col-auto">
+                            <img src="../images/Logo Mundo 3d.png" alt="Logo de la empresa" style="height: 100px; margin-top: -80px; margin-right: 20px;"> <!-- Ajustamos el margen superior -->
+                        </div>
+                    </div>
                     <ol class="breadcrumb mb-4">
                         <li class="breadcrumb-item"><a href="index.php">Inicio</a></li>
                         <li class="breadcrumb-item active">Tablas</li>
+                    </ol>
                     </ol>
                     <div class="card mb-4">
                         <div class="card-body">
@@ -98,6 +123,10 @@
                         <div class="card-header">
                             <i class="fas fa-table me-1"></i>
                             PRODUCTOS
+                        </div>
+                                                            <!-- Inserta las imágenes de las cajitas de pedidos aquí -->
+                        <div class="col">
+                            <div class="cajitas"></div>
                         </div>
                         <div class="card-body">
                                                     <!-- Modal de Agregar Nuevo Producto -->
