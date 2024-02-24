@@ -1,11 +1,10 @@
 <?php
 session_start();
-require '../conexion.php';
-
-if (!isset($_SESSION['username'])) {
-    header("location: index.php");
-    exit(); 
-}
+include __DIR__ . '/../conexion.php';
+    //Confirmacion de que el usuario ha realizado el proceso de autenticación
+    if(!isset($_SESSION['confirmado']) || $_SESSION['confirmado'] == false){
+        die("No ha iniciado sesión !!!");
+    }
 
 $nombreCompleto = $_SESSION['username'];
 $usuario_id = $_SESSION['user_id'];
@@ -16,10 +15,10 @@ if (!$resultado) {
     die("Error en la consulta: " . mysqli_error($link));
 }
 
-
 function obtenerNombreProducto($codigoProducto, $tu_conexion) {
     // Realiza una consulta SQL para obtener el nombre del producto a partir del código
-    $sql = "SELECT pro_nombre FROM producto WHERE pro_codigo = " . $codigoProducto;
+    $sql = "SELECT pro_nombre FROM producto
+     WHERE pro_codigo = " . $codigoProducto;
 
     // Ejecuta la consulta
     $resultado = mysqli_query($tu_conexion, $sql);
