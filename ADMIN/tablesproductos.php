@@ -17,6 +17,16 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap CSS -->
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<!-- Bootstrap JS -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
     <style>
         /* Estilos personalizados */
         .cajitas {
@@ -124,7 +134,6 @@
                             <i class="fas fa-table me-1"></i>
                             PRODUCTOS
                         </div>
-                                                            <!-- Inserta las imágenes de las cajitas de pedidos aquí -->
                         <div class="col">
                             <div class="cajitas"></div>
                         </div>
@@ -206,7 +215,7 @@
                                     // Enviar los datos mediante AJAX
                                     $.ajax({
                                         type: 'POST',
-                                        url: 'tablesproductos.php',
+                                        url: 'funcionetabladeproductos.php',
                                         data: formData,
                                         cache: false,
                                         contentType: false,
@@ -271,14 +280,66 @@
                                             <!-- Botón de editar -->
                                             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editarModal<?php echo $row['Pro_Codigo']; ?>" data-toggle="tooltip" data-placement="top" title="Editar">
                                                 <i class="fas fa-edit"></i>
-                                            </button>
-                                                                                        
                                             <!-- Botón de eliminar -->
-                                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#eliminarModal<?php echo $row['Pro_Codigo']; ?>" data-toggle="tooltip" data-placement="top" title="Eliminar">
+                                            <button type="button" class="btn btn-danger" onclick="mostrarModalConfirmacion(<?php echo $row['Pro_Codigo']; ?>)" data-toggle="tooltip" data-placement="top" title="Eliminar">
                                                 <i class="fas fa-trash"></i>
                                             </button>
+
+                                            <!-- Modal de confirmación -->
+                                            <div class="modal fade" id="modalConfirmacion_<?php echo $row['Pro_Codigo']; ?>" tabindex="-1" aria-labelledby="modalConfirmacionLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="modalConfirmacionLabel">Confirmar acción</h5>
+                                                            <button type="button" class="btn-close" aria-label="Close" onclick="cerrarModalConfirmacion(<?php echo $row['Pro_Codigo']; ?>)"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            ¿Estás seguro de que deseas eliminar el producto?
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" onclick="cerrarModalConfirmacion(<?php echo $row['Pro_Codigo']; ?>)">Cancelar</button>
+                                                            <button type="button" class="btn btn-danger" onclick="confirmarCambioEstado(<?php echo $row['Pro_Codigo']; ?>)">Aceptar</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <script>
+                                                function mostrarModalConfirmacion(codigoProducto) {
+                                                    // Muestra el modal de confirmación correspondiente al producto
+                                                    $('#modalConfirmacion_' + codigoProducto).modal('show');
+                                                }
+
+                                                function cerrarModalConfirmacion(codigoProducto) {
+                                                    // Cierra el modal de confirmación correspondiente al producto
+                                                    $('#modalConfirmacion_' + codigoProducto).modal('hide');
+                                                }
+
+                                                function confirmarCambioEstado(codigoProducto) {
+                                                    // Realiza la solicitud AJAX para cambiar el estado del producto
+                                                    $.ajax({
+                                                        type: 'POST',
+                                                        url: 'funcionestabladeproductos.php', // Cambia la URL según la ubicación de tu archivo PHP
+                                                        data: { codigo: codigoProducto },
+                                                        success: function(response) {
+                                                            // Muestra el mensaje de éxito
+                                                            alert(response);
+                                                            // Cierra el modal de confirmación
+                                                            cerrarModalConfirmacion(codigoProducto);
+                                                            // Actualiza la tabla de productos
+                                                            location.reload();
+                                                        },
+                                                        error: function(xhr, status, error) {
+                                                            console.error('Error al cambiar el estado del producto:', error);
+                                                        }
+                                                    });
+                                                }
+                                            </script>
+
+
+
                                         </div>
-                                                                                <!-- Modal de Editar Producto -->
+                                                                        
                                         <div class="modal fade" id="editarModal<?php echo $row['Pro_Codigo']; ?>" tabindex="-1" aria-labelledby="editarModalLabel<?php echo $row['Pro_Codigo']; ?>" aria-hidden="true">
                                             <div class="modal-dialog modal-lg">
                                                 <div class="modal-content">
@@ -333,9 +394,6 @@
                                                             <!-- Input para seleccionar una nueva imagen -->
                                                             <input type="file" class="form-control" id="imagen" name="imagen" accept="image/*">
                                                         </div>
-
-
-                                                        <!-- Puedes agregar más campos según sea necesario -->
                                                     </form>
                                                 </div>
                                                 <div class="modal-footer">
@@ -357,7 +415,7 @@
 
                                             // Realizar la solicitud AJAX
                                             var xhr = new XMLHttpRequest();
-                                            xhr.open("POST", "tablesproductos.php", true);
+                                            xhr.open("POST", "funcionestabladeproductos.php", true);
                                             xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
                                             xhr.onreadystatechange = function () {
                                                 if (xhr.readyState === 4 && xhr.status === 200) {
@@ -366,7 +424,7 @@
                                                 }
                                             };
                                             // Enviar los datos del formulario al servidor
-                                            xhr.send("codigo=" + codigo + "&nombre=" + encodeURIComponent(nombre) + "&descripcion=" + encodeURIComponent(descripcion) + "&precio=" + precio + "&categoria=" + categoria + "&cantidad=" + cantidad + "&costo=" + costo);
+                                            xhr.send("codigo=" + codigo + "&nombre=" + encodeURIComponent(nombre) + "&descripcion=" + encodeURIComponent(descripcion) + "&precio=" + precio + "&categoria=" + categoria + "&cantidad=" + cantidad + "&costo=" + costo );
                                         }
                                     </script>
 
