@@ -1,4 +1,4 @@
-<?php
+ADMIN/funcionestabladeproductos.php<?php
 session_start();
 require '../conexion.php';
 
