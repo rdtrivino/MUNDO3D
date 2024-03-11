@@ -10,12 +10,13 @@
         $usuario_id = $_SESSION['user_id'];
 ?>
 <!DOCTYPE html>
+<!-- http://localhost/MUNDO 3D/COLABORADOR/index.php -->
 <html lang="es">
     <head>
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <title>MUNDO3D-ADMIN</title>
+        <title>MUNDO3D</title>
         <link rel="shortcut icon" href="../images/Logo Mundo 3d.png" type="image/x-icon">
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
         <link href="css/styles.css" rel="stylesheet" />
@@ -103,11 +104,11 @@
                     <div class="container-fluid px-4">
                         <h1 class="mt-4">MUNDO 3D</h1>
                         <div class="btn-group mr-2">
-                            <!--Si hay una tabla seleccionada montrar el boton adicionar-->  
+                            <!--Si hay una tabla seleccionada mostrar el boton adicionar-->  
                             <?php
                             if (isset($_GET['tabla'])) {
                                 echo '<a href="adicionar.php?tabla=' . $_GET['tabla'] . '" class="btn btn-sm btn-outline-secondary">Adicionar registro</a>';
-                                echo '<button type="button" class="btn btn-sm btn-outline-secondary">Exportar</button>';
+                                echo '<a href="crear_pdf.php" type="button" class="btn btn-sm btn-outline-secondary">Exportar PDF</a>';
                             }
                             ?>
                         </div>
