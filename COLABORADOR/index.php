@@ -108,7 +108,8 @@
                             <?php
                             if (isset($_GET['tabla'])) {
                                 echo '<a href="adicionar.php?tabla=' . $_GET['tabla'] . '" class="btn btn-sm btn-outline-secondary">Adicionar registro</a>';
-                                echo '<a href="crear_pdf.php" type="button" class="btn btn-sm btn-outline-secondary">Exportar PDF</a>';
+                                echo '<a href="crear_excel.php" type="button" class="btn btn-sm btn-outline-secondary">Exportar</a>';
+                                echo '<a href="crear_pdf.php" type="button" class="btn btn-sm btn-outline-secondary">Imprimir</a>';
                             }
                             ?>
                         </div>
