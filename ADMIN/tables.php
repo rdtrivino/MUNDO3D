@@ -102,7 +102,7 @@
                             </div>
                         <script>
                             function generarReportePDF() {
-                                window.open("generar_reporte.php", "_blank");
+                                window.open("generar_reporte_usuarios.php", "_blank");
                             }
                         </script>
                         </div>

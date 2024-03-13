@@ -8,7 +8,7 @@ include __DIR__ . '/../conexion.php';
 
 $nombreCompleto = $_SESSION['username'];
 $usuario_id = $_SESSION['user_id'];
-$sql = "SELECT Pe_Codigo, Pe_Estado, Pe_Producto, Pe_Cantidad, Pe_Precio, Pe_Fechaentrega, Pe_Fechapedido, Pe_Cliente, Pe_Observacion FROM pedido";
+$sql = "SELECT Identificador, Pe_Estado, Pe_Producto, Pe_Cantidad,  Pe_Fechaentrega, Pe_Fechapedido, Pe_Cliente, Pe_Observacion FROM pedidos";
 $resultado = mysqli_query($link, $sql);
 
 if (!$resultado) {
@@ -17,8 +17,8 @@ if (!$resultado) {
 
 function obtenerNombreProducto($codigoProducto, $tu_conexion) {
     // Realiza una consulta SQL para obtener el nombre del producto a partir del código
-    $sql = "SELECT pro_nombre FROM producto
-     WHERE pro_codigo = " . $codigoProducto;
+    $sql = "SELECT pro_nombre FROM productos
+     WHERE Identificador = " . $codigoProducto;
 
     // Ejecuta la consulta
     $resultado = mysqli_query($tu_conexion, $sql);
@@ -44,29 +44,27 @@ function obtenerNombreEstado($codigoEstado, $tu_conexion) {
 }
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guardar_cambios'])) {
     // Verifica que los campos estén definidos en el formulario
-    if (isset($_POST['Pe_Codigo'], $_POST['Pe_Estado'], $_POST['Pe_Producto'], $_POST['Pe_Cantidad'], $_POST['Pe_Precio'], $_POST['Pe_Observacion'], $_POST['Pe_Fechaentrega'], $_POST['cliente'])) {
-        $codigo = $_POST['Pe_Codigo'];
+    if (isset($_POST['Identificador'], $_POST['Pe_Estado'], $_POST['Pe_Producto'], $_POST['Pe_Cantidad'], $_POST['Pe_Observacion'], $_POST['Pe_Fechaentrega'], $_POST['cliente'])) {
+        $Identificador = $_POST['Identificador'];
         $estado = $_POST['Pe_Estado'];
         $producto = $_POST['Pe_Producto'];
         $cantidad = $_POST['Pe_Cantidad'];
-        $precio = $_POST['Pe_Precio'];
         $observacion = $_POST['Pe_Observacion'];
         $fecha_entrega = $_POST['Pe_Fechaentrega'];
         $cliente = $_POST['cliente'];
 
         // Validar y escapar los datos para evitar inyección SQL
-        $codigo = intval($codigo);
+        $identificador = intval($identificador);
         $estado = intval($estado);
         $cantidad = intval($cantidad);
         $precio = intval($precio);
         // Validar y escapar otros campos según el tipo de dato en la base de datos
 
         // Realiza una consulta SQL para actualizar los datos en la base de datos
-        $sql_actualizar = "UPDATE pedido 
-                          SET Pe_Estado = $estado, 
+        $sql_actualizar = "UPDATE pedidos
+                          SET Identificaror = $identificador, 
                               Pe_Producto = '$producto', 
                               Pe_Cantidad = $cantidad, 
-                              Pe_Precio = $precio, 
                               Pe_Observacion = '$observacion', 
                               Pe_Fechaentrega = '$fecha_entrega', 
                               Pe_Cliente = $cliente 
@@ -150,10 +148,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guardar_cambios'])) {
                                 </nav>
                             </div>
                             <div class="sb-sidenav-menu-heading">Administrar</div>
-                            <a class="nav-link" href="charts.php">
-                                <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                                Graficos
-                            </a>
+
                             <a class="nav-link" href="tables.php">
                                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                                 Tabla usuarios
@@ -181,43 +176,158 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guardar_cambios'])) {
                         <ol class="breadcrumb mb-4">
                             <li class="breadcrumb-item active">PANEL DE CONTROL </li>
                         </ol>
-                        <div class="row">
+                        <div class="row justify-content-around">
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card bg-success text-white mb-4">
+                                <div class="card-body">stock lleno</div>
+                                <div class="card-footer d-flex align-items-center justify-content-between">
+                                    <a id="verDetallesLink" class="small text-white stretched-link" href="#" onclick="cargarProductos()">Ver Detalles</a>
+                                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal fade" id="productosModal" tabindex="-1" aria-labelledby="productosModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: 90%; margin: 5% auto;">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <div class="d-flex align-items-center">
+                                            <img class="logo" src="../images/Logo Mundo 3d.png" alt="Logo de la empresa" style="max-width: 100px;"><br/>
+                                            <h5 class="modal-title" id="stockMedioModalLabel">Productos con stock lleno</h5>
+                                        </div>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <table class="table" id="productosTable">
+                                            <!-- Aquí se mostrarán los detalles de los productos -->
+                                        </table>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                    </div>
+                                        <script>
+                                            function cargarProductos() {
+                                                $.ajax({
+                                                    url: 'stocklleno.php',  
+                                                    type: 'GET',
+                                                    success: function(data) {
+                                                        $('#productosTable').html(data);  
+                                                        $('#productosModal').modal('show'); 
+                                                    },
+                                                    error: function(xhr, status, error) {
+                                                        console.error(xhr.responseText); 
+                                                    }
+                                                });
+                                            }
+                                        </script>
+                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="col-xl-3 col-md-6">
                                 <div class="card bg-primary text-white mb-4">
                                     <div class="card-body">stock medio</div>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="#">Ver Detalles </a>
+                                        <a class="small text-white stretched-link" href="#" data-bs-toggle="modal" data-bs-target="#stockMedioModal" onclick="cargarProductosStockMedio()">Ver Detalles</a>
                                         <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xl-3 col-md-6">
-                                <div class="card bg-warning text-white mb-4">
-                                    <div class="card-body">stock revisar</div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="#">Ver Detalles</a>
-                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+
+                            <!-- Modal para mostrar los productos con stock medio -->
+                            <div class="modal fade" id="stockMedioModal" tabindex="-1" aria-labelledby="stockMedioModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: 90%; margin: 5% auto;">
+                                    <div class="modal-content">
+                                        <!-- Encabezado del modal con el logo y el texto "Stock medio" -->
+                                        <div class="modal-header">
+                                            <div class="d-flex align-items-center">
+                                                <img class="logo" src="../images/Logo Mundo 3d.png" alt="Logo de la empresa" style="max-width: 100px;"><br/>
+                                                <h5 class="modal-title" id="stockMedioModalLabel">Productos con stock medio</h5>
+                                            </div>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> <!-- Agregamos el botón de cierre -->
+                                        </div>
+                                        <div class="modal-body">
+                                            <!-- Aquí se mostrará la tabla de productos -->
+                                            <table class="table" id="stockMedioTable">
+                                                <!-- La tabla de productos se insertará aquí dinámicamente -->
+                                            </table>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xl-3 col-md-6">
-                                <div class="card bg-success text-white mb-4">
-                                    <div class="card-body">stock lleno</div>
-                                    <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="#">Ver Detalles</a>
-                                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                                    </div>
-                                </div>
-                            </div>
+
+                            <!-- Script para cargar los productos con stock medio -->
+                            <script>
+                                function cargarProductosStockMedio() {
+                                    var xhr = new XMLHttpRequest();
+                                    xhr.onreadystatechange = function() {
+                                        if (xhr.readyState == 4 && xhr.status == 200) {
+                                            document.getElementById("stockMedioTable").innerHTML = xhr.responseText;
+                                        }
+                                    };
+                                    xhr.open("GET", "stockmedio.php", true);
+                                    xhr.send();
+                                }
+                            </script>
+
+                            <!-- Coloca este código donde quieras que aparezca el botón de "Ver Detalles" -->
                             <div class="col-xl-3 col-md-6">
                                 <div class="card bg-danger text-white mb-4">
                                     <div class="card-body">stock vacio</div>
                                     <div class="card-footer d-flex align-items-center justify-content-between">
-                                        <a class="small text-white stretched-link" href="#">Ver Detalles</a>
+                                        <a class="small text-white stretched-link" href="#" data-bs-toggle="modal" data-bs-target="#stockVacioModal">Ver Detalles</a>
                                         <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- Modal para mostrar los productos con stock vacío -->
+                            <div class="modal fade" id="stockVacioModal" tabindex="-1" aria-labelledby="stockVacioModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: 90%; margin: 5% auto;">
+                                    <div class="modal-content">
+                                        <!-- Encabezado del modal con el logo y el texto "Stock vacío" -->
+                                        <div class="modal-header">
+                                            <div class="d-flex align-items-center">
+                                                <img class="logo" src="../images/Logo Mundo 3d.png" alt="Logo de la empresa" style="max-width: 100px;"><br/>
+                                                <h5 class="modal-title" id="stockVacioModalLabel">Productos con stock vacío</h5>
+                                            </div>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <!-- Aquí se mostrará la tabla de productos -->
+                                            <table class="table" id="stockVacioTable">
+                                                <!-- La tabla de productos se insertará aquí dinámicamente -->
+                                            </table>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Coloca este script en el lugar apropiado en tu página -->
+                            <script>
+                                // Llamar a la función para cargar los productos con stock vacío al cargar la página
+                                window.onload = function() {
+                                    cargarProductosStockVacio();
+                                };
+
+                                function cargarProductosStockVacio() {
+                                    var xhr = new XMLHttpRequest();
+                                    xhr.onreadystatechange = function() {
+                                        if (xhr.readyState == 4 && xhr.status == 200) {
+                                            document.getElementById("stockVacioTable").innerHTML = xhr.responseText;
+                                        }
+                                    };
+                                    xhr.open("GET", "stockvacio.php", true);
+                                    xhr.send();
+                                }
+                            </script>
+
+
                         </div>
                         <div class="row">
                             <div class="col-xl-6">
@@ -248,7 +358,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guardar_cambios'])) {
                                             <th>Estado</th>
                                             <th>Producto</th>
                                             <th>Cantidad</th>
-                                            <th>Precio</th>
                                             <th>Fecha de Entrega</th>
                                             <th>Fecha de Pedido</th>
                                             <th>Cliente</th>
@@ -260,11 +369,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guardar_cambios'])) {
                                         while ($row = mysqli_fetch_assoc($resultado)) {
                                         ?>
                                         <tr>
-                                            <td><?php echo $row['Pe_Codigo']; ?></td>
+                                            <td><?php echo $row['Identificador']; ?></td>
                                             <td><?php echo obtenerNombreEstado($row['Pe_Estado'], $link); ?></td>
                                             <td><?php echo obtenerNombreProducto($row['Pe_Producto'], $link); ?></td>
                                             <td><?php echo $row['Pe_Cantidad']; ?></td>
-                                            <td><?php echo $row['Pe_Precio']; ?></td>
                                             <td><?php echo $row['Pe_Fechaentrega']; ?></td>
                                             <td><?php echo $row['Pe_Fechapedido']; ?></td>
                                             <td><?php echo $row['Pe_Cliente']; ?></td>

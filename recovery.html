@@ -89,53 +89,58 @@
     </div>
     <script>
             document.addEventListener('DOMContentLoaded', function () {
-            const formulario = document.querySelector('#olvidoForm');
-            const modal = document.getElementById('myModal');
-            const closeModalBtn = document.getElementById('closeModal');
-            const modalMessage = document.getElementById('modalMessage');
+                const formulario = document.querySelector('#olvidoForm');
+                const modal = document.getElementById('myModal');
+                const closeModalBtn = document.getElementById('closeModal');
+                const modalMessage = document.getElementById('modalMessage');
 
-            formulario.addEventListener('submit', function (e) {
-                e.preventDefault();
+                formulario.addEventListener('submit', function (e) {
+                    e.preventDefault();
 
-                const formData = new FormData(formulario);
+                    const formData = new FormData(formulario);
 
-                fetch('../MUNDO 3D/Programas/recovery.php', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    modalMessage.textContent = data.message;
-                    modal.style.display = 'block';
+                    fetch('../MUNDO 3D/Programas/recovery.php', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        modalMessage.textContent = data.message;
+                        modal.style.display = 'block';
 
-                    if (data.success) {
-                        closeModalBtn.style.backgroundColor = 'green';
-                        setTimeout(function () {
-                            window.location.href = 'index.html';
-                        }, 5000);
-                    } else {
+                        if (data.success) {
+                            closeModalBtn.style.backgroundColor = 'green';
+                            setTimeout(function () {
+                                modal.style.display = 'none';
+                                closeModalBtn.style.backgroundColor = ''; // Restaura el color por defecto al cerrar el modal
+                                window.location.href = 'index.html';
+                            }, 5000);
+                        } else {
+                            closeModalBtn.style.backgroundColor = 'red';
+                            setTimeout(function () {
+                                modal.style.display = 'none';
+                                closeModalBtn.style.backgroundColor = ''; // Restaura el color por defecto al cerrar el modal
+                            }, 5000);
+                        }
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        modalMessage.textContent = 'Ocurrió un error al procesar la operación.';
+                        modal.style.display = 'block';
                         closeModalBtn.style.backgroundColor = 'red';
-                    }
+                        closeModalBtn.classList.add('error'); // Puedes usar esta clase para personalizar estilos específicos de error si es necesario
+                        setTimeout(function () {
+                            modal.style.display = 'none';
+                            closeModalBtn.style.backgroundColor = ''; // Restaura el color por defecto al cerrar el modal
+                        }, 5000);
+                    });
+                });
 
-                    setTimeout(function () {
-                        modal.style.display = 'none';
-                        closeModalBtn.style.backgroundColor = ''; // Restaura el color por defecto al cerrar el modal
-                    }, 5000);
-                })
-                .catch(error => {
-                    console.error(error);
-                    modalMessage.textContent = 'Ocurrió un error al procesar la operación.';
-                    modal.style.display = 'block';
-                    closeModalBtn.style.backgroundColor = 'red';
-                    closeModalBtn.classList.add('error'); // Puedes usar esta clase para personalizar estilos específicos de error si es necesario
+                closeModalBtn.addEventListener('click', function () {
+                    modal.style.display = 'none';
+                    closeModalBtn.style.backgroundColor = ''; // Restaura el color por defecto al cerrar el modal
                 });
             });
-
-            closeModalBtn.addEventListener('click', function () {
-                modal.style.display = 'none';
-                closeModalBtn.style.backgroundColor = ''; // Restaura el color por defecto al cerrar el modal
-            });
-        });
 
     </script>
 </body>

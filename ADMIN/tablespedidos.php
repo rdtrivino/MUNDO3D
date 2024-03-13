@@ -72,6 +72,7 @@
                                 <i class="fas fa-plus-circle me-1"></i> Agregar Nuevos pedidos
                             </button>
                         </div>
+
                             <div class="mb-3">
                                 <button type="button" class="btn btn-primary w-100" onclick="generarReportePDF()">
                                     <i class="fas fa-file-pdf me-1"></i> Generar Reporte PDF
@@ -80,7 +81,7 @@
                         <script>
                             function generarReportePDF() {
                                 // Redirige a la página que genera el reporte PDF
-                                window.open("generar_reporte.php", "_blank");
+                                window.open("generar_reporte_pedidos.php", "_blank");
                             }
                         </script>
                     </div>
@@ -92,6 +93,142 @@
             </div>
             <div id="layoutSidenav_content">
                 <main>
+                    <!-- Modal de agregar nuevo pedido -->
+                    <div class="modal fade" id="agregarModal" tabindex="-1" aria-labelledby="agregarModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="agregarModalLabel">Agregar Nuevo Pedido</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- Formulario para agregar nuevo pedido -->
+                                    <form id="formularioAgregarPedido">
+                                        <!-- Campo Pe_Codigo (oculto) -->
+                                        <input type="hidden" id="codigo" name="codigo">
+
+                                        <!-- Campo Pe_Estado (oculto) -->
+                                        <input type="hidden" id="estado" name="estado" value="1">
+
+                                        <!-- Campo Pe_Producto -->
+                                        <div class="mb-3">
+                                            <label for="producto" class="form-label">Producto</label>
+                                            <select class="form-select" id="producto" name="producto" required>
+                                                <?php
+                                                // Consulta SQL para obtener los productos que estén en modo activo
+                                                $sql_productos_activos = "SELECT * FROM productos WHERE Pro_Estado = 'Activo'";
+                                                $resultado_productos_activos = mysqli_query($link, $sql_productos_activos);
+
+                                                // Verificar si la consulta tuvo éxito
+                                                if ($resultado_productos_activos && mysqli_num_rows($resultado_productos_activos) > 0) {
+                                                    // Iterar sobre cada fila de resultado para obtener los productos activos
+                                                    while ($row_producto = mysqli_fetch_assoc($resultado_productos_activos)) {
+                                                        // Mostrar los productos activos en la lista desplegable
+                                                        echo "<option value=\"{$row_producto['Identificador']}\">{$row_producto['Pro_Nombre']}</option>";
+                                                    }
+                                                } else {
+                                                    // Si no hay productos activos, mostrar un mensaje
+                                                    echo "<option value=\"\">No hay productos activos disponibles</option>";
+                                                }
+                                                ?>
+                                            </select>
+                                        </div>
+
+                                        <!-- Campo Pe_Cantidad -->
+                                        <div class="mb-3">
+                                            <label for="cantidad" class="form-label">Cantidad</label>
+                                            <input type="number" class="form-control" id="cantidad" name="cantidad" required>
+                                        </div>
+
+                                        <!-- Campo Pe_Precio -->
+                                        <div class="mb-3">
+                                            <label for="precio" class="form-label">Precio</label>
+                                            <input type="number" class="form-control" id="precio" name="precio" required>
+                                        </div>
+
+                                        <!-- Campo Pe_Fechaentrega -->
+                                        <div class="mb-3">
+                                            <label for="fechaEntrega" class="form-label">Fecha de Entrega</label>
+                                            <input type="date" class="form-control" id="fechaEntrega" name="fechaEntrega" required>
+                                        </div>
+
+                                        <!-- Campo Pe_Fechapedido -->
+                                        <div class="mb-3">
+                                            <label for="fechaPedido" class="form-label">Fecha de Pedido</label>
+                                            <input type="date" class="form-control" id="fechaPedido" name="fechaPedido" required>
+                                        </div>
+
+                                        <!-- Campo Pe_Cliente -->
+                                        <div class="mb-3">
+                                            <label for="cliente" class="form-label">Cliente</label>
+                                            <select class="form-select" id="cliente" name="cliente" required>
+                                                <?php
+                                                // Consulta SQL para obtener los usuarios que estén en modo activo
+                                                $sql_usuarios_activos = "SELECT * FROM usuario WHERE Usu_Estado = 'Activo'";
+                                                $resultado_usuarios_activos = mysqli_query($link, $sql_usuarios_activos);
+
+                                                // Verificar si la consulta tuvo éxito
+                                                if ($resultado_usuarios_activos && mysqli_num_rows($resultado_usuarios_activos) > 0) {
+                                                    // Iterar sobre cada fila de resultado para obtener los usuarios activos
+                                                    while ($row_usuario = mysqli_fetch_assoc($resultado_usuarios_activos)) {
+                                                        // Mostrar los nombres de usuario activos en la lista desplegable
+                                                        echo "<option value=\"{$row_usuario['Usu_Identificacion']}\">{$row_usuario['Usu_Nombre_completo']}</option>";
+                                                    }
+                                                } else {
+                                                    // Si no hay usuarios activos, mostrar un mensaje
+                                                    echo "<option value=\"\">No hay usuarios activos disponibles</option>";
+                                                }
+                                                ?>
+                                            </select>
+                                        </div>
+
+                                        <!-- Campo Pe_Observacion -->
+                                        <div class="mb-3">
+                                            <label for="observacion" class="form-label">Observación</label>
+                                            <textarea class="form-control" id="observacion" name="observacion" rows="3" required></textarea>
+                                        </div>
+
+                                        <!-- Botones para enviar el formulario y cerrar el modal -->
+                                        <div class="d-grid gap-2 d-md-flex justify-content-md-between">
+                                            <button type="submit" class="btn btn-primary">Agregar Pedido</button>
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <script>
+    $(document).ready(function() {
+        $('#formularioAgregarPedido').submit(function(event) {
+            // Detener el envío del formulario por defecto
+            event.preventDefault();
+
+            // Obtener los datos del formulario
+            var formData = $(this).serialize();
+
+            // Enviar la solicitud AJAX
+            $.ajax({
+                type: 'POST',
+                url: 'funcionestabladepedidos.php', // Ruta al script PHP que procesará la solicitud
+                data: formData,
+                success: function(response) {
+                    // Manejar la respuesta del servidor
+                    alert(response); // Puedes mostrar un mensaje de éxito o hacer alguna otra acción
+                    $('#agregarModal').modal('hide'); // Cerrar el modal después de agregar el pedido
+                    location.reload(); // Recargar la página para actualizar la tabla de pedidos
+                },
+                error: function(xhr, status, error) {
+                    // Manejar los errores
+                    console.error('Error al agregar el pedido:', error);
+                    alert('Error al agregar el pedido. Por favor, inténtalo de nuevo.');
+                }
+            });
+        });
+    });
+</script>
+
+
                     <div class="container-fluid px-4">
                         <h1 class="mt-4">Tabla de pedidos</h1>
                         <ol class="breadcrumb mb-4">
@@ -181,11 +318,10 @@
                                 <table id="datatablesSimple" class="table">
                                     <thead>
                                         <tr>
-                                            <th>Código</th>
+                                            <th>Codigo</th>
                                             <th>Estado</th>
                                             <th>Producto</th>
                                             <th>Cantidad</th>
-                                            <th>Precio</th>
                                             <th>Fecha de Entrega</th>
                                             <th>Fecha de Pedido</th>
                                             <th>Cliente</th>
@@ -196,19 +332,17 @@
                                     <tbody>
                                         <?php
                                         // Realizar consulta SQL para obtener los pedidos
-                                        $sql_pedidos = "SELECT * FROM pedido";
-                                        $resultado_pedidos = mysqli_query($link, $sql_pedidos);
-
+                                        $sql_pedidos = "SELECT * FROM pedidos WHERE Pe_Estado <> 'inactivo'";
+                                        $resultado_pedidos = mysqli_query($link, $sql_pedidos);                                        
                                         // Verificar si la consulta tuvo éxito
                                         if ($resultado_pedidos) {
                                             // Iterar sobre cada fila de resultado
                                             while ($row = mysqli_fetch_assoc($resultado_pedidos)) {
                                                 // Asignar los valores a variables
-                                                $codigo = $row['Pe_Codigo'];
+                                                $identificador = $row['identificador'];
                                                 $estado = obtenerNombreEstado($row['Pe_Estado'], $link);
                                                 $producto = obtenerNombreProducto($row['Pe_Producto'], $link);
                                                 $cantidad = $row['Pe_Cantidad'];
-                                                $precio = $row['Pe_Precio'];
                                                 $fechaEntrega = $row['Pe_Fechaentrega'];
                                                 $fechaPedido = $row['Pe_Fechapedido'];
                                                 $cliente = $row['Pe_Cliente'];
@@ -216,15 +350,15 @@
                                         ?>
 
                                                 <tr>
-                                                    <td><?php echo $codigo; ?></td>
-                                                    <td><?php echo $estado; ?></td>
-                                                    <td><?php echo $producto; ?></td>
-                                                    <td><?php echo $cantidad; ?></td>
-                                                    <td><?php echo $precio; ?></td>
-                                                    <td><?php echo $fechaEntrega; ?></td>
-                                                    <td><?php echo $fechaPedido; ?></td>
+                                                    <td><?php echo $row['Identificador']; ?></td>
+                                                    <td><?php echo obtenerNombreEstado($row['Pe_Estado'], $link); ?></td>
+                                                    <td><?php echo obtenerNombreProducto($row['Pe_Producto'], $link); ?></td>
+                                                    <td><?php echo $row['Pe_Cantidad']; ?></td>
+                                                    <td><?php echo $row['Pe_Fechaentrega']; ?></td>
+                                                    <td><?php echo $row['Pe_Fechapedido']; ?></td>
+                                                    <td><?php echo $row['Pe_Cliente']; ?></td>
+                                                    <td><?php echo $row['Pe_Observacion']; ?></td>
                                                     <?php
-                                                    // Realizar consulta SQL para obtener el nombre del cliente
                                                     $documento_cliente = $row['Pe_Cliente'];
                                                     $sql_nombre_cliente = "SELECT Usu_Nombre_completo FROM usuario WHERE Usu_Identificacion = '$documento_cliente'";
                                                     $resultado_nombre_cliente = mysqli_query($link, $sql_nombre_cliente);
@@ -241,14 +375,11 @@
                                                     <td><?php echo $nombre_cliente; ?></td>
                                                     <td><?php echo $observacion; ?></td>
                                                     <td>
-                                                    <!-- Contenedor para los botones -->
                                                     <div class="btn-group" role="group" aria-label="Acciones">
-                                                        <!-- Botón de Editar -->
                                                         <button type='button' class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#editarModal<?php echo $codigo; ?>' data-toggle='tooltip' data-placement='top' title='Editar'>
                                                             <i class='fas fa-edit'></i>
                                                         </button>
-                                                            <!-- Modal de edición para pedidos -->
-                                                            <div class="modal fade" id="editarModal<?php echo $row['Pe_Codigo']; ?>" tabindex="-1" aria-labelledby="editarModalLabel<?php echo $row['Pe_Codigo']; ?>" aria-hidden="true">
+                                                            <div class="modal fade" id="editarModal<?php echo $row['Identificador']; ?>" tabindex="-1" aria-labelledby="editarModalLabel<?php echo $row['Pe_Codigo']; ?>" aria-hidden="true">
                                                                 <div class="modal-dialog modal-lg">
                                                                     <div class="modal-content">
                                                                         <div class="modal-header">
@@ -256,7 +387,6 @@
                                                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                                         </div>
                                                                         <div class="modal-body">
-                                                                            <!-- Formulario para editar el pedido -->
                                                                             <form id="formulario-edicion-<?php echo $row['Pe_Codigo']; ?>">
                                                                                 <div class="mb-3">
                                                                                     <label for="codigo" class="form-label">Código</label>
@@ -266,25 +396,32 @@
                                                                                     <label for="estado" class="form-label">Estado</label>
                                                                                     <select class="form-select" id="estado-<?php echo $row['Pe_Codigo']; ?>" name="estado" required>
                                                                                         <?php
-                                                                                        // Iterar sobre los estados posibles
-                                                                                        foreach ($estados_posibles as $estado_posible) {
-                                                                                            $selected = ($estado_posible['Es_Codigo'] == $row['Es_pedido']) ? 'selected' : '';
-                                                                                            echo "<option value=\"{$estado_posible['Es_Codigo']}\" $selected>{$estado_posible['Es_Nombre']}</option>";
+                                                                                        $sql_estados = "SELECT Es_Codigo, Es_Nombre FROM pedido_estado";
+                                                                                        $resultado_estados = mysqli_query($link, $sql_estados);
+
+                                                                                        if ($resultado_estados && mysqli_num_rows($resultado_estados) > 0) {
+                                                                                            while ($estado = mysqli_fetch_assoc($resultado_estados)) {
+                                                                                                $selected = ($estado['Es_Codigo'] == $row['Pe_Estado']) ? 'selected' : '';
+                                                                                                
+                                                                                                echo "<option value=\"{$estado['Es_Codigo']}\" $selected>{$estado['Es_Nombre']}</option>";
+                                                                                            }
+                                                                                        } else {
+                                                                                            echo "<option value=\"\">No hay estados disponibles</option>";
                                                                                         }
+                                                                                        
+                                                                                        mysqli_free_result($resultado_estados);
                                                                                         ?>
                                                                                     </select>
                                                                                 </div>
+
                                                                                 <div class="mb-3">
                                                                                     <label for="producto" class="form-label">Producto</label>
                                                                                     <select class="form-select" id="producto-<?php echo $row['Pe_Codigo']; ?>" name="producto" required>
                                                                                         <?php
-                                                                                        // Realizar consulta SQL para obtener los productos
                                                                                         $sql_productos = "SELECT * FROM producto";
                                                                                         $resultado_productos = mysqli_query($link, $sql_productos);
 
-                                                                                        // Verificar si la consulta tuvo éxito
                                                                                         if ($resultado_productos) {
-                                                                                            // Iterar sobre cada fila de resultado para obtener los productos
                                                                                             while ($row_producto = mysqli_fetch_assoc($resultado_productos)) {
                                                                                                 $selected = ($row_producto['Pro_Codigo'] == $row['Pe_Producto']) ? 'selected' : '';
                                                                                                 echo "<option value=\"{$row_producto['Pro_Codigo']}\" $selected>{$row_producto['Pro_Nombre']}</option>";
@@ -313,116 +450,138 @@
                                                                                 <div class="mb-3">
                                                                                     <label for="cliente" class="form-label">Cliente</label>
                                                                                     <?php
-                                                                                    // Realizar consulta SQL para obtener el nombre del cliente
                                                                                     $cedula_cliente = $row['Pe_Cliente'];
                                                                                     $sql_nombre_cliente = "SELECT Usu_Nombre_completo FROM usuario WHERE Usu_Identificacion = '$cedula_cliente'";
                                                                                     $resultado_nombre_cliente = mysqli_query($link, $sql_nombre_cliente);
 
-                                                                                    // Verificar si la consulta tuvo éxito
                                                                                     if ($resultado_nombre_cliente && mysqli_num_rows($resultado_nombre_cliente) > 0) {
-                                                                                        // Obtener el nombre del cliente
                                                                                         $nombre_cliente = mysqli_fetch_assoc($resultado_nombre_cliente)['Usu_Nombre_completo'];
                                                                                     } else {
-                                                                                        // Si no se encuentra el cliente, mostrar la cédula
                                                                                         $nombre_cliente = $cedula_cliente;
                                                                                     }
                                                                                     ?>
                                                                                     <input type="text" class="form-control form-control-dark" id="cliente-<?php echo $row['Pe_Codigo']; ?>" name="cliente" value="<?php echo $nombre_cliente; ?>" readonly style="background-color: #6c757d; color: #fff; cursor: not-allowed;">
                                                                                 </div>
-
-
                                                                                 <div class="mb-3">
                                                                                     <label for="observacion" class="form-label">Observación</label>
-                                                                                    <textarea class="form-control" id="observacion-<?php echo $row['Pe_Codigo']; ?>" name="observacion" rows="3"><?php echo $row['Pe_Observacion']; ?></textarea>
+                                                                                    <textarea class="form-control" id="observacion-<?php echo $row['Pe_Codigo']; ?>" name="observacion" rows="3"><?php echo htmlspecialchars($row['Pe_Observacion']); ?></textarea>
                                                                                 </div>
+
+
                                                                             </form>
                                                                         </div>
                                                                         <div class="modal-footer">
                                                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                                                            <button type="button" class="btn btn-primary" onclick="guardar_cambios(<?php echo $row['Pe_Codigo']; ?>)">Guardar Cambios</button>
+                                                                            <button type="button" class="btn btn-primary" onclick="guardarCambiosPedido(<?php echo $row['Pe_Codigo']; ?>)">Guardar Cambios</button>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
 
                                                             <script>
-                                                                function guardar_cambios(codigo) {
-                                                                    // Obtener los valores del formulario
-                                                                    var cantidad = document.getElementById('cantidad-' + codigo).value;
-                                                                    var precio = document.getElementById('precio-' + codigo).value;
-                                                                    var fechaEntrega = document.getElementById('fechaEntrega-' + codigo).value;
-                                                                    var fechaPedido = document.getElementById('fechaPedido-' + codigo).value;
-                                                                    var cliente = document.getElementById('cliente-' + codigo).value;
-                                                                    var observacion = document.getElementById('observacion-' + codigo).value;
+                                                                    function guardarCambiosPedido(codigo) {
+                                                                        var cantidad = document.getElementById('cantidad-' + codigo).value;
+                                                                        var precio = document.getElementById('precio-' + codigo).value;
+                                                                        var fechaEntrega = document.getElementById('fechaEntrega-' + codigo).value;
+                                                                        var fechaPedido = document.getElementById('fechaPedido-' + codigo).value;
+                                                                        var estado = document.getElementById('estado-' + codigo).value;
+                                                                        var observacion = document.getElementById('observacion-' + codigo).value;
 
-                                                                    // Realizar la solicitud AJAX o ejecutar el código para guardar los cambios en la base de datos
-                                                                    // Aquí debes colocar la lógica correspondiente
+                                                                        var datos = {
+                                                                            guardar_cambios_pedido: true, 
+                                                                            codigo: codigo,
+                                                                            cantidad: cantidad,
+                                                                            fechaEntrega: fechaEntrega,
+                                                                            fechaPedido: fechaPedido,
+                                                                            estado: estado,
+                                                                            observacion: observacion
+                                                                        };
 
-                                                                    // Ejemplo de alerta de éxito
-                                                                    alert("Los cambios se han realizado con éxito.");
+                                                                        $.ajax({
+                                                                            url: 'funcionestabladepedidos.php',
+                                                                            type: 'POST',
+                                                                            data: datos,
+                                                                            success: function(response) {
+                                                                                alert(response);
 
-                                                                    // Cerrar el modal después de realizar los cambios
-                                                                    $('#editarModal' + codigo).modal('hide');
+                                                                                $('#editarModal' + codigo).modal('hide');
 
-                                                                    // Recargar la página después de un cierto tiempo (opcional)
-                                                                    setTimeout(function() {
-                                                                        location.reload();
-                                                                    }, 1000);
-                                                                }
+                                                                                setTimeout(function() {
+                                                                                    location.reload();
+                                                                                }, 1000);
+                                                                            },
+                                                                            error: function(xhr, status, error) {
+                                                                                alert('Error al guardar los cambios: ' + error);
+                                                                            }
+                                                                        });
+                                                                    }
+
+
+
+
                                                             </script>
-                                                            <!-- Botón de Eliminar -->
-                                                            <button type="button" class="btn btn-danger" onclick="mostrarModalConfirmacion(<?php echo $codigo; ?>)" data-toggle="tooltip" data-placement="top" title="Eliminar">
-                                                                <i class="fas fa-trash"></i>
-                                                            </button>
+                                                                    <button type="button" class="btn btn-danger" onclick="eliminarPedido(<?php echo $row['Pe_Codigo']; ?>)" data-toggle="tooltip" data-placement="top" title="Eliminar">
+                                                                        <i class="fas fa-trash"></i>
+                                                                    </button>
 
-                                                            <!-- Modal de confirmación -->
-                                                            <div class="modal fade" id="eliminarModal<?php echo $codigo; ?>" tabindex="-1" aria-labelledby="eliminarModalLabel" aria-hidden="true">
-                                                                <div class="modal-dialog">
-                                                                    <div class="modal-content">
-                                                                        <div class="modal-header">
-                                                                            <h5 class="modal-title" id="eliminarModalLabel">Confirmación de eliminación</h5>
-                                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                                        </div>
-                                                                        <div class="modal-body">
-                                                                            ¿Seguro que quieres eliminar este pedido?
-                                                                        </div>
-                                                                        <div class="modal-footer">
-                                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                                                            <button type="button" class="btn btn-danger" onclick="eliminarPedido(<?php echo $codigo; ?>)">Eliminar</button>
+                                                                    <div class="modal fade" id="modalConfirmacion_<?php echo $row['Pe_Codigo']; ?>" tabindex="-1" aria-labelledby="modalConfirmacionLabel" aria-hidden="true">
+                                                                        <div class="modal-dialog">
+                                                                            <div class="modal-content">
+                                                                                <div class="modal-header">
+                                                                                    <h5 class="modal-title" id="modalConfirmacionLabel">Confirmar acción</h5>
+                                                                                    <button type="button" class="btn-close" aria-label="Close" onclick="cerrarModalConfirmacion(<?php echo $row['Pe_Codigo']; ?>)"></button>
+                                                                                </div>
+                                                                                <div class="modal-body">
+                                                                                    ¿Estás seguro de que deseas eliminar este pedido?
+                                                                                </div>
+                                                                                <div class="modal-footer">
+                                                                                <div class="modal-footer">
+                                                                                    <button type="button" class="btn btn-secondary" onclick="cerrarModalConfirmacion(<?php echo $row['Pe_Codigo']; ?>)">Cancelar</button>
+                                                                                    <button type="button" class="btn btn-danger" onclick="confirmarEliminacion(<?php echo $row['Pe_Codigo']; ?>)">Aceptar</button>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
 
-                                                            <script>
-                                                                function mostrarModalConfirmacion(codigo) {
-                                                                    $('#eliminarModal' + codigo).modal('show');
+                                                                    <script>
+                                                                        function eliminarPedido(codigoPedido) {
+                                                                            // Detener la propagación del evento de clic
+                                                                            event.stopPropagation();
+
+                                                                            // Mostrar el modal de confirmación
+                                                                            $('#modalConfirmacion_' + codigoPedido).modal('show');
+                                                                            
+                                                                            // También puedes incluir aquí la lógica para hacer la solicitud AJAX si el usuario confirma la eliminación
+                                                                        }
+
+                                                                        function confirmarEliminacion(codigoPedido) {
+                                                                            $.ajax({
+                                                                                type: 'POST',
+                                                                                url: 'funcionestabladepedidos.php',
+                                                                                data: { codigo: codigoPedido },
+                                                                                success: function(response) {
+                                                                                    alert(response);
+                                                                                    location.reload();
+                                                                                },
+                                                                                error: function(xhr, status, error) {
+                                                                                    console.error('Error al eliminar el pedido:', error);
+                                                                                }
+                                                                            });
+                                                                        }
+                                                                        </script>
+
+                                                                        </div>
+                                                                    </td>
+
+                                                            <?php
                                                                 }
-
-                                                                function eliminarPedido(codigo) {
-                                                                    // Aquí puedes realizar la solicitud AJAX para eliminar el pedido
-                                                                    // Reemplaza esta línea con tu lógica para eliminar el pedido
-                                                                    
-                                                                    // Después de eliminar el pedido, cierra el modal
-                                                                    $('#eliminarModal' + codigo).modal('hide');
-
-                                                                    // Puedes agregar aquí más acciones después de eliminar el pedido, como actualizar la tabla de pedidos
-                                                                }
-                                                            </script>
-
-                                                    </div>
-                                                </td>
-
-                                        <?php
-                                            }
-                                        } else {
-                                            // La consulta no tuvo éxito, mostrar un mensaje de error
-                                            echo "<tr><td colspan='10'>No se pudieron obtener los pedidos.</td></tr>";
-                                        }
-                                        ?>
-                                    </tbody>
-                                </table>
-                            </body>
+                                                            } else {
+                                                                echo "<tr><td colspan='10'>No se pudieron obtener los pedidos.</td></tr>";
+                                                            }
+                                                            ?>
+                                                        </tbody>
+                                                    </table>
+                                                </body>
                                         <?php
                                         
                                         ?>

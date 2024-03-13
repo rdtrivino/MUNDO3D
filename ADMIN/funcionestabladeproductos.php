@@ -10,8 +10,8 @@ if (!isset($_SESSION['username'])) {
 $nombreCompleto = $_SESSION['username'];
 $usuario_id = $_SESSION['user_id'];
 
-$sql = "SELECT p.Pro_Nombre, p.Pro_Codigo, p.Pro_Descripcion, p.Pro_PrecioVenta, c.Cgo_Nombre, p.Pro_Cantidad, p.Pro_Costo, p.imagen_principal
-        FROM producto p
+$sql = "SELECT p.Pro_Nombre, p.Identificador, p.Pro_Descripcion, p.Pro_PrecioVenta, c.Cgo_Nombre, p.Pro_Cantidad, p.Pro_Costo, p.imagen_principal
+        FROM productos p
         INNER JOIN categoria c ON p.Pro_Categoria = c.Cgo_Codigo
         WHERE p.Pro_Estado = 'activo'";
 
@@ -38,9 +38,9 @@ while ($row = mysqli_fetch_assoc($resultado_categorias)) {
 // Verificar si se recibió una solicitud para guardar cambios
 if (isset($_POST['guardar_cambios'])) {
     // Verificar si se ha recibido el código del producto
-    if (isset($_POST['codigo'])) {
+    if (isset($_POST['identificador'])) {
         // Obtener el código del producto a actualizar
-        $codigo = $_POST['codigo'];
+        $identificador = $_POST['identificador'];
 
         // Obtener los demás datos del formulario
         $nombre = $_POST['nombre'];
@@ -60,7 +60,7 @@ if (isset($_POST['guardar_cambios'])) {
         // Consulta para obtener los datos actuales del producto
         $consulta_actualizar = "SELECT Pro_Nombre, Pro_Descripcion, Pro_PrecioVenta, Pro_Categoria, Pro_Cantidad, Pro_Costo, imagen_principal FROM producto WHERE Pro_Codigo=?";
         $stmt_actualizar = mysqli_prepare($link, $consulta_actualizar);
-        mysqli_stmt_bind_param($stmt_actualizar, "i", $codigo);
+        mysqli_stmt_bind_param($stmt_actualizar, "i", $identificador);
         mysqli_stmt_execute($stmt_actualizar);
         mysqli_stmt_store_result($stmt_actualizar);
 
@@ -79,7 +79,7 @@ if (isset($_POST['guardar_cambios'])) {
             $imagen_contenido = empty($imagen_contenido) ? $imagen_actual : $imagen_contenido;
 
             // Actualizar los datos en la base de datos
-            $consulta = "UPDATE producto SET Pro_Nombre=?, Pro_Descripcion=?, Pro_PrecioVenta=?, Pro_Categoria=?, Pro_Cantidad=?, Pro_Costo=?, imagen_principal=? WHERE Pro_Codigo=?";
+            $consulta = "UPDATE productos SET Pro_Nombre=?, Pro_Descripcion=?, Pro_PrecioVenta=?, Pro_Categoria=?, Pro_Cantidad=?, Pro_Costo=?, imagen_principal=? WHERE Pro_Codigo=?";
             $stmt = mysqli_prepare($link, $consulta);
             if ($stmt) {
                 mysqli_stmt_bind_param($stmt, "ssdsddsi", $nombre, $descripcion, $precio, $categoria, $cantidad, $costo, $imagen_contenido, $codigo);
@@ -116,7 +116,7 @@ if (isset($_POST['codigo'])) {
     $codigoProducto = mysqli_real_escape_string($link, $_POST['codigo']);
 
     // Consulta para cambiar el estado del producto en la base de datos
-    $sql = "UPDATE producto SET Pro_Estado = IF(Pro_Estado = 'activo', 'inactivo', 'activo') WHERE Pro_Codigo = '$codigoProducto'";
+    $sql = "UPDATE productos SET Pro_Estado = IF(Pro_Estado = 'activo', 'inactivo', 'activo') WHERE Pro_Codigo = '$codigoProducto'";
 
     // Ejecuta la consulta
     if (mysqli_query($link, $sql)) {
@@ -152,13 +152,13 @@ if (isset($_POST['nombre']) && isset($_POST['descripcion']) && isset($_POST['pre
     }
 
     // Obtener el último código de producto
-    $ultimoCodigoConsulta = mysqli_query($link, "SELECT MAX(Pro_Codigo) AS ultimo_codigo FROM producto");
+    $ultimoCodigoConsulta = mysqli_query($link, "SELECT MAX(Identificador) AS ultimo_codigo FROM productos");
     $ultimoCodigoFila = mysqli_fetch_assoc($ultimoCodigoConsulta);
     $ultimoCodigo = $ultimoCodigoFila['ultimo_codigo'];
     $nuevoCodigo = $ultimoCodigo + 1;
 
     // Insertar los datos en la base de datos
-    $consulta = "INSERT INTO producto (Pro_Codigo, Pro_Nombre, Pro_Descripcion, Pro_PrecioVenta, Pro_Categoria, Pro_Cantidad, Pro_Costo, Pro_Estado, imagen_principal) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $consulta = "INSERT INTO productos (Identificador, Pro_Nombre, Pro_Descripcion, Pro_PrecioVenta, Pro_Categoria, Pro_Cantidad, Pro_Costo, Pro_Estado, imagen_principal) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = mysqli_prepare($link, $consulta);
     mysqli_stmt_bind_param($stmt, "dssdsdsss", $nuevoCodigo, $nombre, $descripcion, $precio, $categoria, $cantidad, $costo, $estado, $imagen_contenido);
 
