@@ -59,7 +59,6 @@ function generarReporteUsuarios($conexion) {
     $pdf->Cell(20, 10, 'Ciudad', 1, 0, 'C', true); // Encabezado de la columna 5 (Achicada)
     $pdf->Cell(40, 10, 'Direccion', 1, 0, 'C', true); // Encabezado de la columna 6 (Achicada)
     $pdf->Cell(20, 10, 'Rol', 1, 0, 'C', true); // Encabezado de la columna 7
-    $pdf->Cell(20, 10, 'Pedidos', 1, 0, 'C', true); // Encabezado de la columna 8
     $pdf->Cell(30, 10, 'Estado', 1, 1, 'C', true); // Encabezado de la columna 9 (Achicada)
     
     // Función para obtener la etiqueta de rol correspondiente
@@ -109,7 +108,6 @@ while ($row = mysqli_fetch_assoc($resultado)) {
     $pdf->Cell(20, 8, utf8_decode($row['Usu_Ciudad']), 1, 0, 'C', true); // Datos de la columna 5 (Achicada)
     $pdf->Cell(40, 8, utf8_decode($row['Usu_Direccion']), 1, 0, 'C', true); // Datos de la columna 6 (Achicada)
     $pdf->Cell(20, 8, obtenerEtiquetaRol($row['Usu_Rol']), 1, 0, 'C', true); // Datos de la columna 7
-    $pdf->Cell(20, 8, utf8_decode($row['Usu_Pedidos']), 1, 0, 'C', true); // Datos de la columna 8
     $pdf->Cell(30, 8, utf8_decode($row['Usu_Estado']), 1, 1, 'C', true); // Datos de la columna 9 (Achicada)
 }
     

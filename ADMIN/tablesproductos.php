@@ -25,24 +25,20 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 <!-- Bootstrap JS -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-    <style>
-        /* Estilos personalizados */
-        .cajitas {
-            background-image: url('../images/bxs-wrench.svg'); /* Ruta de la imagen */
-            background-repeat: repeat-x; /* Repetir la imagen horizontalmente */
-            height: 30px; /* Altura de las cajitas */
-        }
-    </style>
-    <style>
-    body {
-        background-color: #add8e6; /* Azul claro */
-    }
-    </style>
-
-    
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>   
 </head>
+<body style="background: linear-gradient(135deg, #2980b9, #2c3e50); color: white;">
+<style>
+    .modal-content {
+        background-color: rgba(255, 255, 255, 0.9) !important; /* Color de fondo */
+        color: #000 !important; /* Color del texto */
+    }
+
+    .modal-title {
+        color: #000 !important;
+    }
+</style>
+
 <body class="sb-nav-fixed">
 <?php include 'funcionestabladeproductos.php'; ?>
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
@@ -83,14 +79,15 @@
                             Tablas Pedidos
                         </a>
                     </div>
-                    <div class="mb-3">
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agregarModal">
-                                <i class="fas fa-plus-circle me-1"></i> Agregar Nuevo Producto
-                            </button>
-                        </div>
+
                             <div class="mb-3">
                                 <button type="button" class="btn btn-primary w-100" onclick="generarReportePDF()">
                                     <i class="fas fa-file-pdf me-1"></i> Generar Reporte PDF
+                                </button>
+                            </div>
+                            <div class="mb-3">
+                                <button type="button" class="btn btn-primary w-100" onclick="generarReporteExcel()">
+                                    <i class="fas fa-file-excel me-1"></i> Generar Reporte Excel
                                 </button>
                             </div>
                         <script>
@@ -99,7 +96,21 @@
                                 window.open("generar_reporte_productos.php", "_blank");
                             }
                         </script>
+                        <div class="mb-3 text-center" style="margin-top: 30px;"> 
+                            <h4>PRODUCTOS</h4>
+                            <div style="max-width: 80%; margin: 0 auto;"> 
+                                <div class="caja-giratoria" style="display: inline-block;">
+                                    <img src="..\images\productos.png" alt="Pedidos" class="img-fluid gira">
+                                </div>
+                            </div>
+                        </div>
                 </div>
+                <div class="mb-3">
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#agregarModal">
+                        <i class="fas fa-plus-circle me-1"></i> Agregar Nuevo Producto
+                    </button>
+                </div>
+
                 <div class="sb-sidenav-footer">
                     <div class="small"></div>
                     MUNDO 3D
@@ -108,35 +119,57 @@
         </div>
         <div id="layoutSidenav_content">
             <main>
-            <div class="container-fluid px-4">
-                    <div class="row align-items-center justify-content-between mb-4">
-                        <div class="col">
-                            <h1 class="mt-4">Tabla de Productos</h1>
+                <div class="container-fluid px-4" style="padding-top: 20px; padding-bottom: 20px;">
+                    <div class="row mt-4">
+                        <div class="col text-center">
+                            <h1 class="display-4 mb-2" style="font-family: 'Arial Black', sans-serif;">PRODUCTOS</h1>
+                            <!-- Cambiar tamaño del texto y fuente -->
                         </div>
                     </div>
-                    <div class="row align-items-start justify-content-end mb-4">
-                        <div class="col-auto">
-                            <img src="../images/Logo Mundo 3d.png" alt="Logo de la empresa" style="height: 100px; margin-top: -80px; margin-right: 20px;"> <!-- Ajustamos el margen superior -->
+                </div>
+                    <div class="row mt-4">
+                        <div class="col d-flex justify-content-end">
+                            <div class="col-auto">
+                                <div class="input-group input-group-sm rounded-pill">
+                                    <input type="text" class="form-control rounded-start" id="searchInput" placeholder="Buscar..." oninput="searchTable()">
+                                    <button class="btn btn-outline-light rounded-end" type="button">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <ol class="breadcrumb mb-4">
-                        <li class="breadcrumb-item"><a href="index.php">Inicio</a></li>
-                        <li class="breadcrumb-item active">Tablas</li>
-                    </ol>
-                    </ol>
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            Esta tabla almacena información todos los productos registrados en el sistema.
-                        </div>
-                    </div>
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <i class="fas fa-table me-1"></i>
-                            PRODUCTOS
-                        </div>
-                        <div class="col">
-                            <div class="cajitas"></div>
-                        </div>
+                        <script>
+                            function searchTable() {
+                                var input, filter, table, tr, td, i, txtValue;
+                                input = document.getElementById("searchInput");
+                                filter = input.value.toUpperCase();
+                                table = document.getElementById("datatable");
+                                tr = table.getElementsByTagName("tr");
+                                for (i = 0; i < tr.length; i++) {
+                                    // Verifica si es la fila del encabezado
+                                    if (tr[i].getElementsByTagName("th").length > 0) {
+                                        continue; // Si es el encabezado, pasa a la siguiente fila
+                                    }
+                                    td = tr[i].getElementsByTagName("td");
+                                    var found = false;
+                                    for (var j = 0; j < td.length; j++) {
+                                        if (td[j]) {
+                                            txtValue = td[j].textContent || td[j].innerText;
+                                            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                                                found = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    if (found) {
+                                        tr[i].style.display = "";
+                                    } else {
+                                        tr[i].style.display = "none";
+                                    }
+                                }
+                            }
+                            </script>
+
                         <div class="card-body">
                         <!-- Agrega un campo oculto para el estado con valor "activo" -->
                         <input type="hidden" id="estado" name="estado" value="activo">
@@ -250,38 +283,38 @@
 
                         </script>
 
-                        <table class="table table-bordered border-primary">
-                         <thead class="table-dark">
-                                    <tr>
-                                        <th>Nombre</th>
-                                        <th>Codigo</th>
-                                        <th>Descripción</th>
-                                        <th>Precio</th>
-                                        <th>Categoria</th>
-                                        <th>Cantidad</th>
-                                        <th>Costo</th>
-                                        <th>Imagenes</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                        while ($row = mysqli_fetch_assoc($resultado)) {
-                                    ?>
-                                    <tr>
-                                        <td><?php echo $row['Pro_Nombre']; ?></td>
-                                        <td><?php echo $row['Identificador']; ?></td>
-                                        <td><?php echo $row['Pro_Descripcion']; ?></td>
-                                        <td><?php echo $row['Pro_PrecioVenta']; ?></td>
-                                        <td><?php echo $row['Cgo_Nombre']; ?></td>
-                                        <td><?php echo $row['Pro_Cantidad']; ?></td>
-                                        <td><?php echo $row['Pro_Costo']; ?></td>
-                                        <td><img src="data:image/png;base64,<?php echo base64_encode($row['imagen_principal']); ?>" alt="Imagen del producto" style="width: 200px; height: 200px;"></td>
-                                        <td>
-                                        <div class="btn-group" role="group" aria-label="Acciones">
-                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editarModal<?php echo $row['Identificador']; ?>" data-toggle="tooltip" data-placement="top" title="Editar">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
+                            <div class="col">
+                                <div class="table-responsive" style="background-color: #f8f9fa; border-radius: 10px;">
+                                    <table id="datatable" class="table table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Nombre</th>
+                                                <th>Código</th>
+                                                <th>Descripción</th>
+                                                <th>Precio</th>
+                                                <th>Categoría</th>
+                                                <th>Cantidad</th>
+                                                <th>Costo</th>
+                                                <th>Imágenes</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php while ($row = mysqli_fetch_assoc($resultado)) { ?>
+                                                <tr>
+                                                    <td><?php echo $row['Pro_Nombre']; ?></td>
+                                                    <td><?php echo $row['Identificador']; ?></td>
+                                                    <td><?php echo $row['Pro_Descripcion']; ?></td>
+                                                    <td><?php echo $row['Pro_PrecioVenta']; ?></td>
+                                                    <td><?php echo $row['Cgo_Nombre']; ?></td>
+                                                    <td><?php echo $row['Pro_Cantidad']; ?></td>
+                                                    <td><?php echo $row['Pro_Costo']; ?></td>
+                                                    <td><img src="data:image/png;base64,<?php echo base64_encode($row['imagen_principal']); ?>" alt="Imagen del producto" style="width: 200px; height: 200px;"></td>
+                                                    <td>
+                                                    <div class="btn-group" role="group" aria-label="Acciones">
+                                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editarModal<?php echo $row['Identificador']; ?>" data-toggle="tooltip" data-placement="top" title="Editar">
+                                                            <i class="fas fa-edit"></i>
+                                                        </button>
                                             <!-- Modal de edición -->
                                             <div class="modal fade" id="editarModal<?php echo $row['Identificador']; ?>" tabindex="-1" aria-labelledby="editarModalLabel<?php echo $row['Identificador']; ?>" aria-hidden="true">
                                                 <div class="modal-dialog modal-lg">
@@ -464,7 +497,7 @@
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; Your Website 2023</div>
+                        <div class="text-muted">MUNDO 3D &copy; Your Website 2024</div>
                         <div>
                             <a href="#">Privacy Policy</a>
                             &middot;
