@@ -85,18 +85,14 @@
                                     <i class="fas fa-file-pdf me-1"></i> Generar Reporte PDF
                                 </button>
                             </div>
-                            <div class="mb-3">
-                                <button type="button" class="btn btn-primary w-100" onclick="generarReporteExcel()">
-                                    <i class="fas fa-file-excel me-1"></i> Generar Reporte Excel
-                                </button>
-                            </div>
+
                         <script>
                             function generarReportePDF() {
                                 // Redirige a la página que genera el reporte PDF
                                 window.open("generar_reporte_productos.php", "_blank");
                             }
                         </script>
-                        <div class="mb-3 text-center" style="margin-top: 30px;"> 
+                        <div class="mb-3 text-center" style="margin-top: 70px;"> 
                             <h4>PRODUCTOS</h4>
                             <div style="max-width: 80%; margin: 0 auto;"> 
                                 <div class="caja-giratoria" style="display: inline-block;">
@@ -127,17 +123,18 @@
                         </div>
                     </div>
                 </div>
-                    <div class="row mt-4">
-                        <div class="col d-flex justify-content-end">
-                            <div class="col-auto">
-                                <div class="input-group input-group-sm rounded-pill">
-                                    <input type="text" class="form-control rounded-start" id="searchInput" placeholder="Buscar..." oninput="searchTable()">
-                                    <button class="btn btn-outline-light rounded-end" type="button">
-                                        <i class="fas fa-search"></i>
-                                    </button>
+                <div class="row mt-4">
+                                <div class="col d-flex justify-content-end">
+                                    <div class="col-auto">
+                                        <div class="input-group input-group-sm rounded-pill" style="width: 300px;"> <!-- Ajusta el ancho total aquí -->
+                                            <span class="input-group-text" id="basic-addon1"> <!-- Espacio adicional para la izquierda -->
+                                                <i class="fas fa-search"></i>
+                                            </span>
+                                            <input type="text" class="form-control rounded-end" id="searchInput" placeholder="Buscar..." oninput="searchTable()" style="width: 250px;"> <!-- Ajusta el ancho del campo de entrada aquí -->
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
                         <script>
                             function searchTable() {
                                 var input, filter, table, tr, td, i, txtValue;
@@ -436,12 +433,12 @@
                                             </button>
 
                                             <!-- Modal de confirmación -->
-                                            <div class="modal fade" id="modalConfirmacion_<?php echo $row['Pro_Codigo']; ?>" tabindex="-1" aria-labelledby="modalConfirmacionLabel" aria-hidden="true">
+                                            <div class="modal fade" id="modalConfirmacion_<?php echo $row['Identificador']; ?>" tabindex="-1" aria-labelledby="modalConfirmacionLabel" aria-hidden="true">
                                                 <div class="modal-dialog">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <h5 class="modal-title" id="modalConfirmacionLabel">Confirmar acción</h5>
-                                                            <button type="button" class="btn-close" aria-label="Close" onclick="cerrarModalConfirmacion(<?php echo $row['Pro_Codigo']; ?>)"></button>
+                                                            <button type="button" class="btn-close" aria-label="Close" onclick="cerrarModalConfirmacion(<?php echo $row['Identificador']; ?>)"></button>
                                                         </div>
                                                         <div class="modal-body">
                                                             ¿Estás seguro de que deseas eliminar el producto?
