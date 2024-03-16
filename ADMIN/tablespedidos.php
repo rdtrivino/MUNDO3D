@@ -295,17 +295,48 @@
                                 </div>
                                 
                                 <div class="row mt-4">
-                                    <div class="col d-flex justify-content-end">
-                                        <div class="col-auto">
-                                            <div class="input-group input-group-sm rounded-pill">
-                                                <input type="text" class="form-control rounded-start" id="searchInput" placeholder="Buscar...">
-                                                <button class="btn btn-outline-light rounded-end" type="button">
-                                                    <i class="fas fa-search"></i>
-                                                </button>
-                                            </div>
+                                <div class="col d-flex justify-content-end">
+                                    <div class="col-auto">
+                                        <div class="input-group input-group-sm rounded-pill" style="width: 300px;"> <!-- Ajusta el ancho total aquí -->
+                                            <span class="input-group-text" id="basic-addon1"> <!-- Espacio adicional para la izquierda -->
+                                                <i class="fas fa-search"></i>
+                                            </span>
+                                            <input type="text" class="form-control rounded-end" id="searchInput" placeholder="Buscar..." oninput="searchTable()" style="width: 250px;"> <!-- Ajusta el ancho del campo de entrada aquí -->
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <script>
+                            function searchTable() {
+                                var input, filter, table, tr, td, i, txtValue;
+                                input = document.getElementById("searchInput");
+                                filter = input.value.toUpperCase();
+                                table = document.getElementById("datatables");
+                                tr = table.getElementsByTagName("tr");
+                                for (i = 0; i < tr.length; i++) {
+                                    // Verifica si es la fila del encabezado
+                                    if (tr[i].getElementsByTagName("th").length > 0) {
+                                        continue; // Si es el encabezado, pasa a la siguiente fila
+                                    }
+                                    td = tr[i].getElementsByTagName("td");
+                                    var found = false;
+                                    for (var j = 0; j < td.length; j++) {
+                                        if (td[j]) {
+                                            txtValue = td[j].textContent || td[j].innerText;
+                                            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                                                found = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    if (found) {
+                                        tr[i].style.display = "";
+                                    } else {
+                                        tr[i].style.display = "none";
+                                    }
+                                }
+                            }
+                            </script>
                                 <div class="row mt-4">
                                     <div class="col">
                                         <div class="table-responsive" style="background-color: #f8f9fa; border-radius: 10px;">

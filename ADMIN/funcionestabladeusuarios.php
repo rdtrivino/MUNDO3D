@@ -47,10 +47,11 @@ if (isset($_POST['id_usuario'])) {
 }
 
 
+
 // Verificar si se recibió una solicitud POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Verificar si se recibieron todos los datos del formulario
-    if (isset($_POST['Identificacion'], $_POST['nombre'], $_POST['telefono'], $_POST['email'], $_POST['ciudad'], $_POST['direccion'], $_POST['contraseña'], $_POST['rol'], $_POST['pedidos'], $_POST['estado'])) {
+    if (isset($_POST['Identificacion'], $_POST['nombre'], $_POST['telefono'], $_POST['email'], $_POST['ciudad'], $_POST['direccion'], $_POST['rol'], $_POST['estado'])) {
         // Incluir las clases de PHPMailer
         require '../programas/phpmailer/Exception.php';
         require '../programas/phpmailer/PHPMailer.php';
@@ -58,9 +59,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Establecer conexión a la base de datos (reemplaza esto con tus credenciales)
         $servername = "localhost";
-        $username = "usuario";
+        $username = "root";
         $password = "";
-        $dbname = "nombre_base_de_datos";
+        $dbname = "mundo3d";
         $link = mysqli_connect($servername, $username, $password, $dbname);
         if (!$link) {
             die("Error al conectar a la base de datos: " . mysqli_connect_error());
@@ -73,34 +74,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $email = $_POST['email'];
         $ciudad = $_POST['ciudad'];
         $direccion = $_POST['direccion'];
-        $contraseña = password_hash($_POST['contraseña'], PASSWORD_DEFAULT); // Encriptar la contraseña
+        // Generar la contraseña
+        $contraseña = generarContraseña(12); // Longitud de la contraseña: 12 caracteres
         $rol = $_POST['rol'];
-        $pedidos = $_POST['pedidos'];
         $estado = $_POST['estado'];
 
         // Insertar los datos del nuevo colaborador en la base de datos
-        $sql = "INSERT INTO usuario (Usu_Identificacion, Usu_Nombre_completo, Usu_Telefono, Usu_Email, Usu_Ciudad, Usu_Direccion, Usu_Contraseña, Usu_Rol, Usu_Pedidos, Usu_Estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO usuario (Usu_Identificacion, Usu_Nombre_completo, Usu_Telefono, Usu_Email, Usu_Ciudad, Usu_Direccion, Usu_Contraseña, Usu_Rol, Usu_Estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = mysqli_prepare($link, $sql);
-        mysqli_stmt_bind_param($stmt, "ssssssssss", $identificacion, $nombre, $telefono, $email, $ciudad, $direccion, $contraseña, $rol, $pedidos, $estado);
+        mysqli_stmt_bind_param($stmt, "sssssssss", $identificacion, $nombre, $telefono, $email, $ciudad, $direccion, $contraseña, $rol, $estado);
 
         if (mysqli_stmt_execute($stmt)) {
             // Registro exitoso, enviar correo electrónico con los datos de inicio de sesión
             $subject = "Datos de inicio de sesión";
-            $message = "Hola $nombre,\n\nBienvenido al sistema.\n\nTu información de inicio de sesión es la siguiente:\n\nCorreo electrónico: $email\nRol: ";
-            switch ($rol) {
-                case "1":
-                    $message .= "Administrador";
-                    break;
-                case "2":
-                    $message .= "Colaborador";
-                    break;
-                case "3":
-                    $message .= "Cliente";
-                    break;
-                default:
-                    $message .= "Rol no válido";
-            }
-            $message .= "\n\nPor favor, inicia sesión en el sistema.\n\nGracias,\nEquipo del Sistema";
+            $message = "Hola $nombre,\n\nBienvenido a MUNDO 3D.\n\nTu información de inicio de sesión es la siguiente:\n\nCorreo electrónico: $email\nContraseña: $contraseña";
+
+            $message .= "\n\nTe recomendamos cambiar tu contraseña al ingresar al sistema.";
+            $message .= "\n\nGracias por ser parte de la mejor empresa,\nEquipo de soporte MUNDO 3D";
 
             $mail = new PHPMailer();
             $mail->isSMTP();
@@ -110,11 +100,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $mail->Password = 'Mundo3D123';
             $mail->SMTPSecure = 'tls';
             $mail->Port = 587;
+            $mail->CharSet = 'UTF-8';
+            $mail->Encoding = 'base64'; 
             $mail->setFrom('Mundo3D.RYSJ@outlook.com', 'MUNDO 3D');
             $mail->addAddress($email, $nombre);
             $mail->Subject = $subject;
             $mail->Body = $message;
-
             // Enviar correo electrónico
             if ($mail->send()) {
                 // Envío de correo exitoso
@@ -143,6 +134,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $response['message'] = 'Se esperaba una solicitud POST.';
 }
 
+// Función para generar una contraseña aleatoria
+function generarContraseña($longitud = 10) {
+    $caracteres = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+';
+    $contraseña = '';
+    $maxCaracteres = strlen($caracteres) - 1;
+    for ($i = 0; $i < $longitud; $i++) {
+        $contraseña .= $caracteres[rand(0, $maxCaracteres)];
+    }
+    return $contraseña;
+}
+
 // Devolver respuesta como JSON
 echo json_encode($response);
-?>
+

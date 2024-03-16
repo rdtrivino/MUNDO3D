@@ -101,17 +101,12 @@
                                     <i class="fas fa-file-pdf me-1"></i> Generar Reporte PDF
                                 </button>                                
                             </div>
-                        <div class="mb-3">
-                            <button type="button" class="btn btn-primary w-100" onclick="generarReporteExcel()">
-                                <i class="fas fa-file-excel me-1"></i> Generar Reporte Excel
-                            </button>
-                        </div>
                         <script>
                             function generarReportePDF() {
                                 window.open("generar_reporte_usuarios.php", "_blank");
                             }
                         </script>
-                        <div class="mb-3 text-center" style="margin-top: 30px;"> 
+                        <div class="mb-3 text-center" style="margin-top: 50px;"> 
                             <h4>USUARIOS</h4>
                             <div style="max-width: 80%; margin: 0 auto;"> 
                                 <div class="caja-giratoria" style="display: inline-block;">
@@ -144,11 +139,11 @@
                             <div class="row mt-4">
                                 <div class="col d-flex justify-content-end">
                                     <div class="col-auto">
-                                        <div class="input-group input-group-sm rounded-pill">
-                                        <input type="text" class="form-control rounded-start" id="searchInput" placeholder="Buscar..." oninput="searchTable()">
-                                            <button class="btn btn-outline-light rounded-end" type="button">
+                                        <div class="input-group input-group-sm rounded-pill" style="width: 300px;"> <!-- Ajusta el ancho total aquí -->
+                                            <span class="input-group-text" id="basic-addon1"> <!-- Espacio adicional para la izquierda -->
                                                 <i class="fas fa-search"></i>
-                                            </button>
+                                            </span>
+                                            <input type="text" class="form-control rounded-end" id="searchInput" placeholder="Buscar..." oninput="searchTable()" style="width: 250px;"> <!-- Ajusta el ancho del campo de entrada aquí -->
                                         </div>
                                     </div>
                                 </div>
@@ -184,107 +179,110 @@
                                 }
                             }
                             </script>
+                                        <div class="modal fade" id="agregarColaboradorModal" tabindex="-1" aria-labelledby="agregarColaboradorModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="agregarColaboradorModalLabel">Agregar Nuevo Colaborador</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <!-- Aquí va el formulario para agregar un nuevo colaborador -->
+                                                        <form id="formulario-colaborador">
+                                                            <div class="mb-3">
+                                                                <label for="Identificacion" class="form-label">Identificación</label>
+                                                                <input type="text" class="form-control" id="Identificacion" name="Identificacion" required>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="nombre" class="form-label">Nombre de Colaborador</label>
+                                                                <input type="text" class="form-control" id="nombre" name="nombre" required>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="telefono" class="form-label">Teléfono</label>
+                                                                <input type="tel" class="form-control" id="telefono" name="telefono" required>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="email" class="form-label">Email</label>
+                                                                <input type="email" class="form-control" id="email" name="email" required>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="ciudad" class="form-label">Ciudad</label>
+                                                                <select class="form-select" id="ciudad" name="ciudad" required>
+                                                                    <option value="" disabled selected>Seleccione una ciudad</option>
+                                                                    <option value="Bogotá">Bogotá D.C.</option>
+                                                                    <option value="Medellín">Medellín</option>
+                                                                    <option value="Cali">Cali</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="direccion" class="form-label">Dirección</label>
+                                                                <input type="text" class="form-control" id="direccion" name="direccion" required>
+                                                            </div>
+                                                            <!-- Campo oculto para la contraseña, se llenará automáticamente con JavaScript -->
+                                                            <input type="hidden" id="contraseña" name="contraseña">
+                                                            <!-- Los campos para rol, pedidos y estado pueden necesitar ajustarse según su lógica de negocio -->
+                                                            <input type="hidden" name="rol" value="2"> <!-- Por ejemplo, aquí asignamos un valor por defecto para el rol -->
+                                                            <input type="hidden" name="pedidos" value="0"> <!-- Por ejemplo, aquí asignamos un valor por defecto para los pedidos -->
+                                                            <input type="hidden" name="estado" value="activo"> <!-- Por ejemplo, aquí asignamos un valor por defecto para el estado -->
 
-<!-- Modal de Agregar Nuevo Colaborador -->
-<div class="modal fade" id="agregarColaboradorModal" tabindex="-1" aria-labelledby="agregarColaboradorModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="agregarColaboradorModalLabel">Agregar Nuevo Colaborador</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <!-- Aquí va el formulario para agregar un nuevo colaborador -->
-                <form id="formulario-colaborador">
-                    <div class="mb-3">
-                        <label for="Identificacion" class="form-label">Identificación</label>
-                        <input type="text" class="form-control" id="Identificacion" name="Identificacion" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="nombre" class="form-label">Nombre de Colaborador</label>
-                        <input type="text" class="form-control" id="nombre" name="nombre" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="telefono" class="form-label">Teléfono</label>
-                        <input type="tel" class="form-control" id="telefono" name="telefono" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="ciudad" class="form-label">Ciudad</label>
-                        <select class="form-select" id="ciudad" name="ciudad" required>
-                            <option value="" disabled selected>Seleccione una ciudad</option>
-                            <option value="Bogotá">Bogotá D.C.</option>
-                            <option value="Medellín">Medellín</option>
-                            <option value="Cali">Cali</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="direccion" class="form-label">Dirección</label>
-                        <input type="text" class="form-control" id="direccion" name="direccion" required>
-                    </div>
-                    <!-- Campo oculto para la contraseña, se llenará automáticamente con JavaScript -->
-                    <input type="hidden" id="contraseña" name="contraseña">
-                    <!-- Los campos para rol, pedidos y estado pueden necesitar ajustarse según su lógica de negocio -->
-                    <input type="hidden" name="rol" value="2"> <!-- Por ejemplo, aquí asignamos un valor por defecto para el rol -->
-                    <input type="hidden" name="pedidos" value="0"> <!-- Por ejemplo, aquí asignamos un valor por defecto para los pedidos -->
-                    <input type="hidden" name="estado" value="activo"> <!-- Por ejemplo, aquí asignamos un valor por defecto para el estado -->
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                                <button type="button" class="btn btn-primary" id="btnAgregarColaborador">Agregar Colaborador</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
 
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-primary" id="btnAgregarColaborador">Agregar Colaborador</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+                                        <script>
+                                        $(document).ready(function() {
+                                            // Manejar el clic en el botón "Agregar Colaborador"
+                                            $("#btnAgregarColaborador").click(function() {
+                                                // Generar una contraseña aleatoria
+                                                var contraseñaGenerada = generarContraseña();
 
-<script>
-    $(document).ready(function() {
-        // Manejar el clic en el botón "Agregar Colaborador"
-        $("#btnAgregarColaborador").click(function() {
-            // Obtener la contraseña
-            var contraseña = generarContraseña(); // Función para generar una contraseña aleatoria
+                                                // Asignar la contraseña generada al campo oculto
+                                                $("#contraseña").val(contraseñaGenerada);
 
-            // Asignar la contraseña al campo oculto
-            $("#contraseña").val(contraseña);
+                                                // Obtener los datos del formulario
+                                                var formData = $("#formulario-colaborador").serialize();
 
-            // Obtener los datos del formulario
-            var formData = $("#formulario-colaborador").serialize();
+                                                // Agregar manualmente la contraseña al objeto formData
+                                                formData += "&contraseña=" + contraseñaGenerada;
 
-            // Enviar la solicitud AJAX al servidor PHP
-            $.ajax({
-                type: "POST",
-                url: "funcionestabladeusuarios.php", // Reemplaza esto con la ruta correcta a tu archivo PHP
-                data: formData,
-                dataType: "json",
-                success: function(response) {
-                    // Manejar la respuesta del servidor
-                    if (response.success) {
-                        alert(response.message);
-                        location.reload(); // Recargar la página después de agregar el colaborador
-                    } else {
-                        alert("Error: " + response.message);
-                    }
-                },
-                error: function(xhr, status, error) {
-                    // Manejar errores de la solicitud AJAX
-                    console.error(xhr.responseText);
-                    alert("Error al procesar la solicitud. Por favor, inténtalo de nuevo más tarde.");
-                }
-            });
-        });
-    });
+                                                // Enviar la solicitud AJAX al servidor PHP
+                                                $.ajax({
+                                                    type: "POST",
+                                                    url: "funcionestabladeusuarios.php", // Reemplaza esto con la ruta correcta a tu archivo PHP
+                                                    data: formData,
+                                                    dataType: "json",
+                                                    success: function(response) {
+                                                        // Manejar la respuesta del servidor
+                                                        if (response.success) {
+                                                            alert(response.message);
+                                                            location.reload(); // Recargar la página después de agregar el colaborador
+                                                        } else {
+                                                            alert("Error: " + response.message);
+                                                        }
+                                                    },
+                                                    error: function(xhr, status, error) {
+                                                        // Manejar errores de la solicitud AJAX
+                                                        console.error(xhr.responseText);
+                                                        alert("Error al procesar la solicitud. Por favor, inténtalo de nuevo más tarde.");
+                                                    }
+                                                });
+                                            });
+                                        });
 
-    // Función para generar una contraseña aleatoria
-    function generarContraseña() {
-        // Lógica para generar una contraseña aleatoria
-        // Retorna la contraseña generada
-    }
-</script>
+                                        // Función para generar una contraseña aleatoria
+                                        function generarContraseña() {
+                                            // Lógica para generar una contraseña aleatoria
+                                            // Retorna la contraseña generada
+                                        }
+
+
+                                        </script>
 
 
 

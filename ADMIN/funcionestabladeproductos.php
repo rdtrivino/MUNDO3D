@@ -1,4 +1,4 @@
-ADMIN/funcionestabladeproductos.php<?php
+<?php
 session_start();
 require '../conexion.php';
 
@@ -37,7 +37,6 @@ while ($row = mysqli_fetch_assoc($resultado_categorias)) {
 
 // Verificar si se recibió una solicitud para guardar cambios
 if (isset($_POST['guardar_cambios'])) {
-    // Verificar si se ha recibido el código del producto
     if (isset($_POST['identificador'])) {
         // Obtener el código del producto a actualizar
         $identificador = $_POST['identificador'];
@@ -58,7 +57,7 @@ if (isset($_POST['guardar_cambios'])) {
         }
 
         // Consulta para obtener los datos actuales del producto
-        $consulta_actualizar = "SELECT Pro_Nombre, Pro_Descripcion, Pro_PrecioVenta, Pro_Categoria, Pro_Cantidad, Pro_Costo, imagen_principal FROM producto WHERE Pro_Codigo=?";
+        $consulta_actualizar = "SELECT Pro_Nombre, Pro_Descripcion, Pro_PrecioVenta, Pro_Categoria, Pro_Cantidad, Pro_Costo, imagen_principal FROM productos WHERE Identificador=?";
         $stmt_actualizar = mysqli_prepare($link, $consulta_actualizar);
         mysqli_stmt_bind_param($stmt_actualizar, "i", $identificador);
         mysqli_stmt_execute($stmt_actualizar);
@@ -79,10 +78,10 @@ if (isset($_POST['guardar_cambios'])) {
             $imagen_contenido = empty($imagen_contenido) ? $imagen_actual : $imagen_contenido;
 
             // Actualizar los datos en la base de datos
-            $consulta = "UPDATE productos SET Pro_Nombre=?, Pro_Descripcion=?, Pro_PrecioVenta=?, Pro_Categoria=?, Pro_Cantidad=?, Pro_Costo=?, imagen_principal=? WHERE Pro_Codigo=?";
+            $consulta = "UPDATE productos SET Pro_Nombre=?, Pro_Descripcion=?, Pro_PrecioVenta=?, Pro_Categoria=?, Pro_Cantidad=?, Pro_Costo=?, imagen_principal=? WHERE Identificador=?";
             $stmt = mysqli_prepare($link, $consulta);
             if ($stmt) {
-                mysqli_stmt_bind_param($stmt, "ssdsddsi", $nombre, $descripcion, $precio, $categoria, $cantidad, $costo, $imagen_contenido, $codigo);
+                mysqli_stmt_bind_param($stmt, "ssdsddsi", $nombre, $descripcion, $precio, $categoria, $cantidad, $costo, $imagen_contenido, $identificador);
                 if (mysqli_stmt_execute($stmt)) {
                     // Si la consulta se ejecutó con éxito, devuelve un mensaje de éxito
                     echo "success";
@@ -116,7 +115,7 @@ if (isset($_POST['codigo'])) {
     $codigoProducto = mysqli_real_escape_string($link, $_POST['codigo']);
 
     // Consulta para cambiar el estado del producto en la base de datos
-    $sql = "UPDATE productos SET Pro_Estado = IF(Pro_Estado = 'activo', 'inactivo', 'activo') WHERE Pro_Codigo = '$codigoProducto'";
+    $sql = "UPDATE productos SET Pro_Estado = IF(Pro_Estado = 'activo', 'inactivo', 'activo') WHERE Identificador = '$codigoProducto'";
 
     // Ejecuta la consulta
     if (mysqli_query($link, $sql)) {
@@ -173,6 +172,5 @@ if (isset($_POST['nombre']) && isset($_POST['descripcion']) && isset($_POST['pre
     // Cierra la conexión a la base de datos
     mysqli_close($link);
 }
-
 
 ?>

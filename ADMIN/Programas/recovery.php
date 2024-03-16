@@ -64,6 +64,8 @@ function enviarCorreoRecuperacion($email, $nueva_contrasena) {
         $mail->Password = 'Mundo3D123';
         $mail->SMTPSecure = 'tls';
         $mail->Port = 587;
+        $mail->CharSet = 'UTF-8';
+        $mail->Encoding = 'base64';
 
         $mail->setFrom('Mundo3D.RYSJ@outlook.com', 'MUNDO 3D');
         $mail->addAddress($email);
