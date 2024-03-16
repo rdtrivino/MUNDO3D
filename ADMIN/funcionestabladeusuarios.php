@@ -31,12 +31,11 @@ if (isset($_POST['id_usuario'])) {
     $ciudad = $_POST['ciudad'];
     $direccion = $_POST['direccion'];
     $rol = $_POST['rol'];
-    $pedidos = ($_POST['rol'] == 1 || $_POST['rol'] == 2) ? null : $_POST['pedidos']; // Establece pedidos como NULL si el rol es 1 o 2
     $estado = $_POST['estado']; 
 
-    $sql_actualizar = "UPDATE usuario SET Usu_Nombre_completo=?, Usu_Telefono=?, Usu_Email=?, Usu_Ciudad=?, Usu_Direccion=?, Usu_Rol=?, Usu_Pedidos=?, Usu_Estado=? WHERE Usu_Identificacion=?";
+    $sql_actualizar = "UPDATE usuario SET Usu_Nombre_completo=?, Usu_Telefono=?, Usu_Email=?, Usu_Ciudad=?, Usu_Direccion=?, Usu_Rol=?, Usu_Estado=? WHERE Usu_Identificacion=?";
     $stmt = mysqli_prepare($link, $sql_actualizar);
-    mysqli_stmt_bind_param($stmt, "ssssssssi", $nombre, $telefono, $email, $ciudad, $direccion, $rol, $pedidos, $estado, $id_usuario);
+    mysqli_stmt_bind_param($stmt, "sssssssi", $nombre, $telefono, $email, $ciudad, $direccion, $rol, $estado, $id_usuario);
 
     if (mysqli_stmt_execute($stmt)) {
         header("Location: tables.php");
@@ -46,7 +45,6 @@ if (isset($_POST['id_usuario'])) {
     }
     mysqli_stmt_close($stmt);
 }
-
 
 
 // Verificar si se recibió una solicitud POST

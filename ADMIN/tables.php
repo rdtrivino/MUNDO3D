@@ -323,7 +323,6 @@
                                     <th>Ciudad</th>
                                     <th>Dirección</th>
                                     <th>Rol</th>
-                                    <th>Pedidos</th>
                                     <th>Acciones</th> 
                                     <th>Estado</th>
                                 </tr>
@@ -359,7 +358,6 @@
                                         }
                                         ?>
                                     </td>
-                                    <td><?php echo $row['Usu_Pedidos']; ?></td>
                                     <td>
                                         <div class="btn-group d-flex justify-content-center" role="group" aria-label="Acciones">
                                             <button type="button" class="btn btn-primary btn-sm align-items-center" style="max-width: 50px;" data-bs-toggle="modal" data-bs-target="#editarModal<?php echo $row['Usu_Identificacion']; ?>" data-toggle="tooltip" data-placement="top" title="Editar">
@@ -414,16 +412,6 @@
                                                             <option value="3" <?php echo ($row['Usu_Rol'] == 3) ? 'selected' : ''; ?>>Cliente</option>
                                                         </select>
                                                     </div>
-                                                    <div class="mb-3">
-                                                        <label for="pedidos">Pedidos:</label>
-                                                        <?php if ($rol == 3) : ?> <!-- Si el rol es Cliente -->
-                                                            <input type="number" class="form-control" id="pedidos" name="pedidos" value="<?php echo $row['Usu_Pedidos']; ?>">
-                                                        <?php else : ?>
-                                                            <input type="number" class="form-control" id="pedidos" name="pedidos" value="<?php echo $row['Usu_Pedidos']; ?>" disabled>
-                                                            <input type="hidden" id="pedidos" name="pedidos" value="<?php echo $row['Usu_Pedidos']; ?>">
-                                                        <?php endif; ?>
-                                                    </div>
-
                                                     <label for="estado">Estado:</label>
                                                         <select class="form-select" id="estado" name="estado">
                                                             <option value="activo" <?php echo ($row['Usu_Estado'] == 'activo') ? 'selected' : ''; ?>>Activo</option>
