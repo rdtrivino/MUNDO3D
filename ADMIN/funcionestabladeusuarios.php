@@ -20,6 +20,8 @@ if (!$resultado) {
     die("Error en la consulta: " . mysqli_error($link));
 }
 
+
+// Verifica si se recibieron los datos del formulario de actualización
 if (isset($_POST['id_usuario'])) {
     // Manejo de la actualización del usuario existente
     $id_usuario = $_POST['id_usuario'];
@@ -29,7 +31,7 @@ if (isset($_POST['id_usuario'])) {
     $ciudad = $_POST['ciudad'];
     $direccion = $_POST['direccion'];
     $rol = $_POST['rol'];
-    $pedidos = $_POST['pedidos'];
+    $pedidos = ($_POST['rol'] == 1 || $_POST['rol'] == 2) ? null : $_POST['pedidos']; // Establece pedidos como NULL si el rol es 1 o 2
     $estado = $_POST['estado']; 
 
     $sql_actualizar = "UPDATE usuario SET Usu_Nombre_completo=?, Usu_Telefono=?, Usu_Email=?, Usu_Ciudad=?, Usu_Direccion=?, Usu_Rol=?, Usu_Pedidos=?, Usu_Estado=? WHERE Usu_Identificacion=?";
@@ -45,31 +47,48 @@ if (isset($_POST['id_usuario'])) {
     mysqli_stmt_close($stmt);
 }
 
+
+
+// Verificar si se recibió una solicitud POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['nombre'], $_POST['telefono'], $_POST['email'], $_POST['ciudad'], $_POST['direccion'], $_POST['Contraseña'], $_POST['rol'], $_POST['pedidos'], $_POST['estado'])) {
+    // Verificar si se recibieron todos los datos del formulario
+    if (isset($_POST['Identificacion'], $_POST['nombre'], $_POST['telefono'], $_POST['email'], $_POST['ciudad'], $_POST['direccion'], $_POST['contraseña'], $_POST['rol'], $_POST['pedidos'], $_POST['estado'])) {
+        // Incluir las clases de PHPMailer
         require '../programas/phpmailer/Exception.php';
         require '../programas/phpmailer/PHPMailer.php';
         require '../programas/phpmailer/SMTP.php';
-        $identificacion = $_POST['nombre'];
+
+        // Establecer conexión a la base de datos (reemplaza esto con tus credenciales)
+        $servername = "localhost";
+        $username = "usuario";
+        $password = "";
+        $dbname = "nombre_base_de_datos";
+        $link = mysqli_connect($servername, $username, $password, $dbname);
+        if (!$link) {
+            die("Error al conectar a la base de datos: " . mysqli_connect_error());
+        }
+
+        // Obtener los datos del formulario
+        $identificacion = $_POST['Identificacion'];
         $nombre = $_POST['nombre'];
         $telefono = $_POST['telefono'];
         $email = $_POST['email'];
         $ciudad = $_POST['ciudad'];
         $direccion = $_POST['direccion'];
-        $contraseña = $_POST["Contraseña"]; // Asegúrate de encriptar la contraseña
+        $contraseña = password_hash($_POST['contraseña'], PASSWORD_DEFAULT); // Encriptar la contraseña
         $rol = $_POST['rol'];
         $pedidos = $_POST['pedidos'];
         $estado = $_POST['estado'];
 
         // Insertar los datos del nuevo colaborador en la base de datos
-        $sql = "INSERT INTO usuario (Usu_Nombre_completo, Usu_Telefono, Usu_Email, Usu_Ciudad, Usu_Direccion, Usu_Contraseña, Usu_Rol, Usu_Pedidos, Usu_Estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO usuario (Usu_Identificacion, Usu_Nombre_completo, Usu_Telefono, Usu_Email, Usu_Ciudad, Usu_Direccion, Usu_Contraseña, Usu_Rol, Usu_Pedidos, Usu_Estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = mysqli_prepare($link, $sql);
-        mysqli_stmt_bind_param($stmt, "ssssssssi", $nombre, $telefono, $email, $ciudad, $direccion, $contraseña, $rol, $pedidos, $estado);
+        mysqli_stmt_bind_param($stmt, "ssssssssss", $identificacion, $nombre, $telefono, $email, $ciudad, $direccion, $contraseña, $rol, $pedidos, $estado);
 
         if (mysqli_stmt_execute($stmt)) {
             // Registro exitoso, enviar correo electrónico con los datos de inicio de sesión
             $subject = "Datos de inicio de sesión";
-            $message = "Hola $nombre,\n\nBienvenido al sistema.\n\nTu información de inicio de sesión es la siguiente:\n\nCorreo electrónico: $email\nContraseña: $contraseña\nRol: ";
+            $message = "Hola $nombre,\n\nBienvenido al sistema.\n\nTu información de inicio de sesión es la siguiente:\n\nCorreo electrónico: $email\nRol: ";
             switch ($rol) {
                 case "1":
                     $message .= "Administrador";
@@ -83,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 default:
                     $message .= "Rol no válido";
             }
-            $message .= "\n\nPor favor, inicia sesión en el sistema utilizando esta información.\n\nGracias,\nEquipo del Sistema";
+            $message .= "\n\nPor favor, inicia sesión en el sistema.\n\nGracias,\nEquipo del Sistema";
 
             $mail = new PHPMailer();
             $mail->isSMTP();
@@ -114,10 +133,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $response['message'] = 'Error al agregar el colaborador: ' . mysqli_error($link);
         }
         mysqli_stmt_close($stmt);
+        mysqli_close($link); // Cerrar conexión a la base de datos
     } else {
-        // No se recibieron datos del formulario
+        // No se recibieron todos los datos del formulario
         $response['success'] = false;
-        $response['message'] = 'No se recibieron datos del formulario para agregar un nuevo colaborador.';
+        $response['message'] = 'No se recibieron todos los datos del formulario para agregar un nuevo colaborador.';
     }
 } else {
     // No se recibió una solicitud POST

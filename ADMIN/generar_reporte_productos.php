@@ -59,7 +59,7 @@ function generarReporteProductos($conexion) {
     $pdf->Cell(15, 10, 'Estado', 1, 1, 'C', true); // Encabezado de la columna 9 (Achicada)
 
     // Consultar la base de datos para obtener los datos de la tabla de productos
-    $sql = "SELECT Pro_Nombre, Pro_Codigo, Pro_Descripcion, Pro_PrecioVenta, Pro_Categoria, Pro_Cantidad, Pro_Costo, imagen_principal, Pro_Estado FROM producto";
+    $sql = "SELECT Pro_Nombre, Identificador, Pro_Descripcion, Pro_PrecioVenta, Pro_Categoria, Pro_Cantidad, Pro_Costo, imagen_principal, Pro_Estado FROM productos";
     $resultado = mysqli_query($conexion, $sql);
     
     // Comprobar si la consulta fue exitosa
@@ -97,7 +97,7 @@ function generarReporteProductos($conexion) {
 
         // Imprimir los datos en formato horizontal
         $pdf->Cell(20, $alturaMaxima, utf8_decode($row['Pro_Nombre']), 1, 'C', true); // Datos de la columna 1
-        $pdf->Cell(15, $alturaMaxima, utf8_decode($row['Pro_Codigo']), 1, 'C', true); // Datos de la columna 2
+        $pdf->Cell(15, $alturaMaxima, utf8_decode($row['Identificador']), 1, 'C', true); // Datos de la columna 2
         $pdf->Cell(80, $alturaMaxima, utf8_decode($row['Pro_Descripcion']), 1, 'L', true); // Datos de la columna 3
         $pdf->Cell(20, $alturaMaxima, utf8_decode($row['Pro_PrecioVenta']), 1, 'C', true); // Datos de la columna 4
         $pdf->Cell(20, $alturaMaxima, utf8_decode($row['Pro_Categoria']), 1, 'C', true); // Datos de la columna 5

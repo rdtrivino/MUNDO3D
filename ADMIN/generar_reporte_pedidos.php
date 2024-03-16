@@ -27,7 +27,7 @@ function obtenerNombreCliente($conexion, $codigoCliente) {
 }
 
 function obtenerNombreProducto($conexion, $codigoProducto) {
-    $sql = "SELECT Pro_Nombre FROM producto WHERE Pro_Codigo = '$codigoProducto'";
+    $sql = "SELECT Pro_Nombre FROM productos WHERE Identificador = '$codigoProducto'";
     $resultado = mysqli_query($conexion, $sql);
     $row = mysqli_fetch_assoc($resultado);
     return $row['Pro_Nombre'];
@@ -69,11 +69,10 @@ function generarReportePedidos($conexion) {
     $pdf->SetFillColor(50, 50, 50);
     $pdf->SetTextColor(255, 255, 255);
     $pdf->SetFont('Arial', 'B', 8);
-    $pdf->Cell(15, 10, 'Código', 1, 0, 'C', true);
+    $pdf->Cell(15, 10, 'Codigo', 1, 0, 'C', true);
     $pdf->Cell(20, 10, 'Estado', 1, 0, 'C', true);
-    $pdf->Cell(60, 10, 'Producto', 1, 0, 'C', true);
+    $pdf->Cell(80, 10, 'Producto', 1, 0, 'C', true);
     $pdf->Cell(15, 10, 'Cantidad', 1, 0, 'C', true);
-    $pdf->Cell(20, 10, 'Precio', 1, 0, 'C', true);
     $pdf->Cell(25, 10, 'Fecha de Entrega', 1, 0, 'C', true);
     $pdf->Cell(25, 10, 'Fecha de Pedido', 1, 0, 'C', true);
     $pdf->Cell(30, 10, 'Cliente', 1, 0, 'C', true);
@@ -81,7 +80,7 @@ function generarReportePedidos($conexion) {
 
     $colorFondo = true;
 
-    $sql = "SELECT * FROM pedido";
+    $sql = "SELECT * FROM pedidos";
     $resultado = mysqli_query($conexion, $sql);
     
     if (!$resultado) {
@@ -92,23 +91,23 @@ function generarReportePedidos($conexion) {
         $estado = obtenerNombreEstado($conexion, $row['Pe_Estado']);
         $cliente = obtenerNombreCliente($conexion, $row['Pe_Cliente']);
         $producto = obtenerNombreProducto($conexion, $row['Pe_Producto']);
-
+    
         $pdf->SetFillColor($colorFondo ? 200 : 255, 255, 255);
         $pdf->SetTextColor(0);
         $pdf->SetFont('Arial', '', 8);
-
-        $pdf->Cell(15, 10, utf8_decode($row['Pe_Codigo']), 1, 0, 'C', $colorFondo);
+    
+        $pdf->Cell(15, 10, utf8_decode(isset($row['Identificador']) ? $row['Identificador'] : ''), 1, 0, 'C', $colorFondo);
         $pdf->Cell(20, 10, utf8_decode($estado), 1, 0, 'C', $colorFondo);
-        $pdf->Cell(60, 10, utf8_decode(truncarTexto($producto, 40)), 1, 0, 'C', $colorFondo);
-        $pdf->Cell(15, 10, utf8_decode($row['Pe_Cantidad']), 1, 0, 'C', $colorFondo);
-        $pdf->Cell(20, 10, utf8_decode($row['Pe_Precio']), 1, 0, 'C', $colorFondo);
-        $pdf->Cell(25, 10, utf8_decode($row['Pe_Fechaentrega']), 1, 0, 'C', $colorFondo);
-        $pdf->Cell(25, 10, utf8_decode($row['Pe_Fechapedido']), 1, 0, 'C', $colorFondo);
+        $pdf->Cell(80, 10, utf8_decode(truncarTexto($producto, 40)), 1, 0, 'C', $colorFondo);
+        $pdf->Cell(15, 10, utf8_decode(isset($row['Pe_Cantidad']) ? $row['Pe_Cantidad'] : ''), 1, 0, 'C', $colorFondo);
+        $pdf->Cell(25, 10, utf8_decode(isset($row['Pe_Fechaentrega']) ? $row['Pe_Fechaentrega'] : ''), 1, 0, 'C', $colorFondo);
+        $pdf->Cell(25, 10, utf8_decode(isset($row['Pe_Fechapedido']) ? $row['Pe_Fechapedido'] : ''), 1, 0, 'C', $colorFondo);
         $pdf->Cell(30, 10, utf8_decode($cliente), 1, 0, 'C', $colorFondo);
-        $pdf->MultiCell(65, 10, utf8_decode(truncarTexto($row['Pe_Observacion'], 40)), 1, 'C', $colorFondo);
-
+        $pdf->MultiCell(65, 10, utf8_decode(truncarTexto(isset($row['Pe_Observacion']) ? $row['Pe_Observacion'] : '', 40)), 1, 'C', $colorFondo);
+    
         $colorFondo = !$colorFondo;
     }
+    
 
     $pdf->Output('Reporte_Pedidos.pdf', 'D');
 }

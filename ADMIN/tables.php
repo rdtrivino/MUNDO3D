@@ -15,11 +15,18 @@
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
         <link href="css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-        <style>
-    body {
-        background-color: #add8e6; /* Azul claro */
+    <body style="background: linear-gradient(135deg, #2980b9, #2c3e50); color: white;">
+    <style>
+    .modal-content {
+        background-color: rgba(255, 255, 255, 0.9) !important; /* Color de fondo */
+        color: #000 !important; /* Color del texto */
+    }
+
+    .modal-title {
+        color: #000 !important;
     }
     </style>
+
     </head>
     <body class="sb-nav-fixed">
     <?php include 'funcionestabladeusuarios.php'; ?>
@@ -88,24 +95,37 @@
                             <a class="nav-link" href="tablesproductos.php">
                                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                                 Tablas Productos
-                            </a>
-                            
-                        <div class="mb-3">
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agregarColaboradorModal">
-                                <i class="fas fa-plus-circle me-1"></i> Agregar Nuevo Colaborador
-                            </button>
-                        </div>
+                            </a>                        
                             <div class="mb-3">
                                 <button type="button" class="btn btn-primary w-100" onclick="generarReportePDF()">
                                     <i class="fas fa-file-pdf me-1"></i> Generar Reporte PDF
-                                </button>
+                                </button>                                
                             </div>
+                        <div class="mb-3">
+                            <button type="button" class="btn btn-primary w-100" onclick="generarReporteExcel()">
+                                <i class="fas fa-file-excel me-1"></i> Generar Reporte Excel
+                            </button>
+                        </div>
                         <script>
                             function generarReportePDF() {
                                 window.open("generar_reporte_usuarios.php", "_blank");
                             }
                         </script>
+                        <div class="mb-3 text-center" style="margin-top: 30px;"> 
+                            <h4>USUARIOS</h4>
+                            <div style="max-width: 80%; margin: 0 auto;"> 
+                                <div class="caja-giratoria" style="display: inline-block;">
+                                    <img src="..\images\User_icon_2.png" alt="Pedidos" class="img-fluid gira">
+                                </div>
+                            </div>
                         </div>
+                        </div>
+                        
+                    </div>
+                    <div class="mb-3">
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#agregarColaboradorModal">
+                            <i class="fas fa-plus-circle me-1"></i> Agregar Nuevo Colaborador
+                        </button>
                     </div>
                     <div class="sb-sidenav-footer">
                         <div class="small"></div>
@@ -115,31 +135,56 @@
             </div>
             <div id="layoutSidenav_content">
                 <main>
-                <div class="container-fluid px-4">
-                    <div class="row align-items-center justify-content-between mb-4">
-                        <div class="col">
-                            <h1 class="mt-4">Tabla de usuarios</h1>
-                        </div>
-                    </div>
-                    <div class="row align-items-start justify-content-end mb-4">
-                        <div class="col-auto">
-                            <img src="../images/Logo Mundo 3d.png" alt="Logo de la empresa" style="height: 100px; margin-top: -80px; margin-right: 20px;"> <!-- Ajustamos el margen superior -->
-                        </div>
-                    </div>
-                        <ol class="breadcrumb mb-4">
-                            <li class="breadcrumb-item"><a href="index.php">Inicio</a></li>
-                            <li class="breadcrumb-item active">Tablas</li>
-                        </ol>
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                Esta tabla almacena información de los usuarios registrados en el sistema.
+                <div class="container-fluid px-4" style="padding-top: 20px; padding-bottom: 20px;">
+                         <div class="row mt-4">
+                                <div class="col text-center">
+                                    <h1 class="display-2 mb-0" style="font-family: 'Arial Black', sans-serif;">USUARIOS</h1> <!-- Cambiar tamaño del texto y fuente -->
+                                </div>
                             </div>
-                        </div>
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <i class="fas fa-table me-1"></i>
-                                USUARIOS
+                            <div class="row mt-4">
+                                <div class="col d-flex justify-content-end">
+                                    <div class="col-auto">
+                                        <div class="input-group input-group-sm rounded-pill">
+                                        <input type="text" class="form-control rounded-start" id="searchInput" placeholder="Buscar..." oninput="searchTable()">
+                                            <button class="btn btn-outline-light rounded-end" type="button">
+                                                <i class="fas fa-search"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
+                            <script>
+                            function searchTable() {
+                                var input, filter, table, tr, td, i, txtValue;
+                                input = document.getElementById("searchInput");
+                                filter = input.value.toUpperCase();
+                                table = document.getElementById("datatables-usuarios");
+                                tr = table.getElementsByTagName("tr");
+                                for (i = 0; i < tr.length; i++) {
+                                    // Verifica si es la fila del encabezado
+                                    if (tr[i].getElementsByTagName("th").length > 0) {
+                                        continue; // Si es el encabezado, pasa a la siguiente fila
+                                    }
+                                    td = tr[i].getElementsByTagName("td");
+                                    var found = false;
+                                    for (var j = 0; j < td.length; j++) {
+                                        if (td[j]) {
+                                            txtValue = td[j].textContent || td[j].innerText;
+                                            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                                                found = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    if (found) {
+                                        tr[i].style.display = "";
+                                    } else {
+                                        tr[i].style.display = "none";
+                                    }
+                                }
+                            }
+                            </script>
+
 <!-- Modal de Agregar Nuevo Colaborador -->
 <div class="modal fade" id="agregarColaboradorModal" tabindex="-1" aria-labelledby="agregarColaboradorModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -180,6 +225,13 @@
                         <label for="direccion" class="form-label">Dirección</label>
                         <input type="text" class="form-control" id="direccion" name="direccion" required>
                     </div>
+                    <!-- Campo oculto para la contraseña, se llenará automáticamente con JavaScript -->
+                    <input type="hidden" id="contraseña" name="contraseña">
+                    <!-- Los campos para rol, pedidos y estado pueden necesitar ajustarse según su lógica de negocio -->
+                    <input type="hidden" name="rol" value="2"> <!-- Por ejemplo, aquí asignamos un valor por defecto para el rol -->
+                    <input type="hidden" name="pedidos" value="0"> <!-- Por ejemplo, aquí asignamos un valor por defecto para los pedidos -->
+                    <input type="hidden" name="estado" value="activo"> <!-- Por ejemplo, aquí asignamos un valor por defecto para el estado -->
+
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                         <button type="button" class="btn btn-primary" id="btnAgregarColaborador">Agregar Colaborador</button>
@@ -212,13 +264,10 @@
                 success: function(response) {
                     // Manejar la respuesta del servidor
                     if (response.success) {
-                        // Mostrar un mensaje de éxito
                         alert(response.message);
-                        // Actualizar la página o realizar otras acciones necesarias
-                        location.reload(); // Por ejemplo, recargar la página
+                        location.reload(); // Recargar la página después de agregar el colaborador
                     } else {
-                        // Mostrar un mensaje de error
-                        alert(response.message);
+                        alert("Error: " + response.message);
                     }
                 },
                 error: function(xhr, status, error) {
@@ -238,32 +287,34 @@
 </script>
 
 
-                            <style>
-                                .pdf-link-container {
-                                    position: fixed;
-                                    bottom: 20px;
-                                    right: 20px; 
-                                    z-index: 9999;
-                                }
 
-                                .pdf-link {
-                                    display: inline-block;
-                                    text-decoration: none;
-                                    font-size: 18px;
-                                    background-color: #2433bd; 
-                                    color: #fff; 
-                                    padding: 10px 15px;
-                                    border-radius: 5px; 
-                                }
+                                                        <style>
+                                                            .pdf-link-container {
+                                                                position: fixed;
+                                                                bottom: 20px;
+                                                                right: 20px; 
+                                                                z-index: 9999;
+                                                            }
 
-                                .pdf-icon {
-                                    margin-left: 5px;
-                                }
-                            </style>
-                            <div class="card-body">
-                            <body>
-                            <table id="datatablesSimple">
-                                <thead>
+                                                            .pdf-link {
+                                                                display: inline-block;
+                                                                text-decoration: none;
+                                                                font-size: 18px;
+                                                                background-color: #2433bd; 
+                                                                color: #fff; 
+                                                                padding: 10px 15px;
+                                                                border-radius: 5px; 
+                                                            }
+
+                                                            .pdf-icon {
+                                                                margin-left: 5px;
+                                                            }
+                                                        </style>
+                                <div class="row mt-4">
+                                    <div class="col">
+                                        <div class="table-responsive" style="background-color: #f8f9fa; border-radius: 10px;">
+                                        <table id="datatables-usuarios" class="table table-striped table-bordered table-hover">
+                                                <thead>
                                 <tr>
                                     <th>Identificación</th>
                                     <th>Nombre completo</th>
@@ -277,20 +328,6 @@
                                     <th>Estado</th>
                                 </tr>
                                 </thead>
-                                <tfoot>
-                                <tr>
-                                    <th>Identificación</th>
-                                    <th>Nombre completo</th>
-                                    <th>Teléfono</th>
-                                    <th>Email</th>
-                                    <th>Ciudad</th>
-                                    <th>Dirección</th>
-                                    <th>Rol</th>
-                                    <th>Pedidos</th>
-                                    <th>Acciones</th> 
-                                    <th>Estado</th>
-                                </tr>
-                                </tfoot>
                                 <tbody>
                                 <?php
                                 while ($row = mysqli_fetch_assoc($resultado)) {
@@ -379,8 +416,14 @@
                                                     </div>
                                                     <div class="mb-3">
                                                         <label for="pedidos">Pedidos:</label>
-                                                        <input type="number" class="form-control" id="pedidos" name="pedidos" value="<?php echo $row['Usu_Pedidos']; ?>">
+                                                        <?php if ($rol == 3) : ?> <!-- Si el rol es Cliente -->
+                                                            <input type="number" class="form-control" id="pedidos" name="pedidos" value="<?php echo $row['Usu_Pedidos']; ?>">
+                                                        <?php else : ?>
+                                                            <input type="number" class="form-control" id="pedidos" name="pedidos" value="<?php echo $row['Usu_Pedidos']; ?>" disabled>
+                                                            <input type="hidden" id="pedidos" name="pedidos" value="<?php echo $row['Usu_Pedidos']; ?>">
+                                                        <?php endif; ?>
                                                     </div>
+
                                                     <label for="estado">Estado:</label>
                                                         <select class="form-select" id="estado" name="estado">
                                                             <option value="activo" <?php echo ($row['Usu_Estado'] == 'activo') ? 'selected' : ''; ?>>Activo</option>
@@ -435,7 +478,7 @@
                 <footer class="py-4 bg-light mt-auto">
                     <div class="container-fluid px-4">
                         <div class="d-flex align-items-center justify-content-between small">
-                            <div class="text-muted">Copyright &copy; Your Website 2023</div>
+                            <div class="text-muted">Copyright &copy; MUNDO 3D</div>
                             <div>
                                 <a href="#">Privacy Policy</a>
                                 &middot;
