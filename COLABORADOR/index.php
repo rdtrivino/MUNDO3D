@@ -3,7 +3,8 @@
     include __DIR__ . '/../conexion.php';
         //Confirmacion de que el usuario ha realizado el proceso de autenticación
         if(!isset($_SESSION['confirmado']) || $_SESSION['confirmado'] == false){
-            die("No ha iniciado sesión !!!");
+            //die("No ha iniciado sesión !!!");
+            header("Location: autenticacion.php");
         }
 
         $nombreCompleto = $_SESSION['username'];
