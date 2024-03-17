@@ -2,9 +2,10 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>ventana modal css</title>
+    <title>Autenticación</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/modal.css">
+    <link rel="shortcut icon" href="../images/Logo Mundo 3d.png" type="image/x-icon">
 </head>
 <body>
 <!--Ventana Modal-->
