@@ -37,9 +37,9 @@ while ($row = mysqli_fetch_assoc($resultado_categorias)) {
 
 // Verificar si se recibió una solicitud para guardar cambios
 if (isset($_POST['guardar_cambios'])) {
-    if (isset($_POST['identificador'])) {
+    if (isset($_POST['Identificador'])) {
         // Obtener el código del producto a actualizar
-        $identificador = $_POST['identificador'];
+        $identificador = $_POST['Identificador'];
 
         // Obtener los demás datos del formulario
         $nombre = $_POST['nombre'];

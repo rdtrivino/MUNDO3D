@@ -119,7 +119,6 @@
                     <div class="row mt-4">
                         <div class="col text-center">
                             <h1 class="display-4 mb-2" style="font-family: 'Arial Black', sans-serif;">PRODUCTOS</h1>
-                            <!-- Cambiar tamaño del texto y fuente -->
                         </div>
                     </div>
                 </div>
@@ -336,15 +335,22 @@
                                                                     <input type="number" class="form-control" id="precio-<?php echo $row['Identificador']; ?>" name="precio" step="0.01" value="<?php echo $row['Pro_PrecioVenta']; ?>" required>
                                                                 </div>
                                                                 <div class="mb-3">
-                                                                    <label for="categoria" class="form-label">Categoría</label>
+                                                                <label for="categoria" class="form-label">Categoría</label>
                                                                     <select class="form-select" id="categoria-<?php echo $row['Identificador']; ?>" name="categoria" required>
                                                                         <?php
-                                                                        foreach ($categorias as $categoria) {
-                                                                            $selected = ($categoria['Cgo_Codigo'] == $row['Pro_Categoria']) ? 'selected' : '';
-                                                                            echo "<option value=\"{$categoria['Cgo_Codigo']}\" $selected>{$categoria['Cgo_Nombre']}</option>";
+                                                                        // Verificar si $categorias está definido y no está vacío
+                                                                        if (isset($categorias) && !empty($categorias)) {
+                                                                            foreach ($categorias as $categoria) {
+                                                                                // Verificar si la categoría actual coincide con la categoría del producto
+                                                                                $selected = ($categoria['Cgo_Codigo'] == $row['Pro_Categoria']) ? 'selected' : '';
+                                                                                echo "<option value=\"{$categoria['Cgo_Codigo']}\" $selected>{$categoria['Cgo_Nombre']}</option>";
+                                                                            }
+                                                                        } else {
+                                                                            echo "<option value=\"\">No hay categorías disponibles</option>";
                                                                         }
                                                                         ?>
                                                                     </select>
+
                                                                 </div>
 
                                                                 <div class="mb-3">

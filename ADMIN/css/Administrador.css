@@ -130,6 +130,7 @@ body {
     align-items: center; /* Centra los botones verticalmente */
     padding: 10px 0;
     margin-left: 100px;
+    
 }
 
 /* Estilos para los botones */
@@ -144,7 +145,8 @@ body {
     background-size: cover;
     min-width: auto; /* Puedes ajustar este valor según sea necesario para hacer los botones más anchos */
     transition: background-color 0.3s;
-    margin: 0 10px 0 15px; /* Añade un espacio horizontal a la derecha para separar los botones */
+    margin: 0 10px 0 15px; 
+    border: solid red;/* Añade un espacio horizontal a la derecha para separar los botones */
 }
 
 
@@ -382,3 +384,33 @@ h4 {
 
     /* Otros ajustes para pantallas más pequeñas */
 }
+.modal-fixed-size {
+    max-width: 600px;
+    width: 100%;
+    margin: 0;
+    position: fixed;
+    top: 20%;
+    left: 30%;
+    transform: translate(-50%, -50%);
+    overflow: auto;
+}
+
+@media (max-width: 768px) {
+    .modal-fixed-size {
+        max-width: 90%;
+    }
+}
+.green-box {
+background-color: #218838; /* Color de fondo verde oscuro */
+color: #fff; /* Color de texto blanco */
+padding: 5px; /* Espacio interno */
+border-radius: 15px; /* Borde redondeado */
+max-width: 200px; /* Ancho máximo */
+text-align: center; /* Centra el contenido horizontalmente */
+margin: auto; /* Centra la caja horizontalmente */
+white-space: nowrap; /* Evita el salto de línea */
+display: flex; /* Usa flexbox */
+align-items: center; /* Centra verticalmente */
+justify-content: center; /* Centra horizontalmente */
+}
+

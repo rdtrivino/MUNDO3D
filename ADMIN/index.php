@@ -138,7 +138,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guardar_cambios'])) {
                                     <a class="nav-link" href="../Administrador.html">Catalogo</a>
                                 </nav>
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="../Administrador.html">Repuestos</a>
+                                    <a class="nav-link" href="../usuariologincatalogo.php">Repuestos</a>
                                 </nav>
                                 <nav class="sb-sidenav-menu-nested nav">
                                     <a class="nav-link" href="../Administrador.html">Archivos 3D</a>
