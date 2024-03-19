@@ -48,6 +48,7 @@ if (isset($_POST['id_usuario'])) {
 
 
 
+
 // Verificar si se recibió una solicitud POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Verificar si se recibieron todos los datos del formulario
@@ -79,10 +80,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $rol = $_POST['rol'];
         $estado = $_POST['estado'];
 
+        // Cifrar la contraseña para almacenarla en la base de datos
+        $contraseña_cifrada = password_hash($contraseña, PASSWORD_DEFAULT);
+
         // Insertar los datos del nuevo colaborador en la base de datos
         $sql = "INSERT INTO usuario (Usu_Identificacion, Usu_Nombre_completo, Usu_Telefono, Usu_Email, Usu_Ciudad, Usu_Direccion, Usu_Contraseña, Usu_Rol, Usu_Estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = mysqli_prepare($link, $sql);
-        mysqli_stmt_bind_param($stmt, "sssssssss", $identificacion, $nombre, $telefono, $email, $ciudad, $direccion, $contraseña, $rol, $estado);
+        mysqli_stmt_bind_param($stmt, "sssssssss", $identificacion, $nombre, $telefono, $email, $ciudad, $direccion, $contraseña_cifrada, $rol, $estado);
 
         if (mysqli_stmt_execute($stmt)) {
             // Registro exitoso, enviar correo electrónico con los datos de inicio de sesión
@@ -147,4 +151,6 @@ function generarContraseña($longitud = 10) {
 
 // Devolver respuesta como JSON
 echo json_encode($response);
+?>
+
 

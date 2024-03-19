@@ -48,18 +48,22 @@ function generarReporteProductos($conexion) {
     $pdf->SetTextColor(255, 255, 255); // Color de texto blanco
     $pdf->SetFillColor(50, 50, 50); // Color de fondo oscuro
     $pdf->SetFont('Arial', 'B', 8); // Negrita para el encabezado y reducir el tamaño de las letras
-    $pdf->Cell(20, 10, 'Nombre', 1, 0, 'C', true); // Encabezado de la columna 1 (Achicada)
-    $pdf->Cell(15, 10, 'Código', 1, 0, 'C', true); // Encabezado de la columna 2 (Achicada)
-    $pdf->Cell(80, 10, 'Descripción', 1, 0, 'C', true); // Encabezado de la columna 3 (Agrandada)
-    $pdf->Cell(20, 10, 'Precio Venta', 1, 0, 'C', true); // Encabezado de la columna 4 (Achicada)
-    $pdf->Cell(20, 10, 'Categoría', 1, 0, 'C', true); // Encabezado de la columna 5 (Achicada)
-    $pdf->Cell(15, 10, 'Cantidad', 1, 0, 'C', true); // Encabezado de la columna 6 (Achicada)
-    $pdf->Cell(15, 10, 'Costo', 1, 0, 'C', true); // Encabezado de la columna 7 (Achicada)
-    $pdf->Cell(30, 10, 'Imagen', 1, 0, 'C', true); // Encabezado de la columna 8 (Agrandada)
-    $pdf->Cell(15, 10, 'Estado', 1, 1, 'C', true); // Encabezado de la columna 9 (Achicada)
+
+    // Encabezados de las columnas con celdas del mismo tamaño
+    $alturaCelda = 15; // Ajustar la altura de las celdas
+    $pdf->Cell(85, $alturaCelda, 'Nombre', 1, 0, 'C', true); // Encabezado de la columna 1
+    $pdf->Cell(15, $alturaCelda, 'Codigo', 1, 0, 'C', true); // Encabezado de la columna 2
+    $pdf->Cell(25, $alturaCelda, 'Categoría', 1, 0, 'C', true); // Encabezado de la columna 3
+    $pdf->Cell(20, $alturaCelda, 'Precio Venta', 1, 0, 'C', true); // Encabezado de la columna 4
+    $pdf->Cell(20, $alturaCelda, 'Cantidad', 1, 0, 'C', true); // Encabezado de la columna 5
+    $pdf->Cell(15, $alturaCelda, 'Costo', 1, 0, 'C', true); // Encabezado de la columna 6
+    $pdf->Cell(100, $alturaCelda, 'Descripción', 1, 0, 'C', true); // Encabezado de la columna 7
 
     // Consultar la base de datos para obtener los datos de la tabla de productos
-    $sql = "SELECT Pro_Nombre, Identificador, Pro_Descripcion, Pro_PrecioVenta, Pro_Categoria, Pro_Cantidad, Pro_Costo, imagen_principal, Pro_Estado FROM productos";
+    $sql = "SELECT p.Pro_Nombre, p.Identificador, p.Pro_Descripcion, p.Pro_PrecioVenta, c.Cgo_Nombre AS Pro_Categoria, p.Pro_Cantidad, p.Pro_Costo
+    FROM productos p
+    INNER JOIN categoria c ON p.Pro_Categoria = c.Cgo_Codigo";
+    
     $resultado = mysqli_query($conexion, $sql);
     
     // Comprobar si la consulta fue exitosa
@@ -71,42 +75,18 @@ function generarReporteProductos($conexion) {
     $pdf->SetTextColor(0, 0, 0); // Restaurar el color de texto a negro
     $pdf->SetFont('Arial', '', 8); // Restaurar el tamaño normal de letra
 
-    // Variable para controlar el color de fondo de las celdas
-    $colorFondo = true;
-
     // Construir la tabla con los datos de la consulta
     while ($row = mysqli_fetch_assoc($resultado)) {
-        // Obtener el número de líneas para el nombre
-        $numLinesNombre = ceil($pdf->GetStringWidth($row['Pro_Nombre']) / 20);
-
-        // Determinar la altura de la celda para el nombre
-        $alturaNombre = 10 * $numLinesNombre;
-
-        // Obtener el número de líneas para la descripción
-        $numLinesDescripcion = ceil($pdf->GetStringWidth($row['Pro_Descripcion']) / 80);
-
-        // Determinar la altura de la celda para la descripción
-        $alturaDescripcion = 5 * $numLinesDescripcion;
-
-        // Calcular la altura máxima entre la altura del nombre y la descripción
-        $alturaMaxima = max($alturaNombre, $alturaDescripcion);
-
-        // Cambiar el color de fondo
-        $pdf->SetFillColor($colorFondo ? 200 : 255);
-        $colorFondo = !$colorFondo;
-
-        // Imprimir los datos en formato horizontal
-        $pdf->Cell(20, $alturaMaxima, utf8_decode($row['Pro_Nombre']), 1, 'C', true); // Datos de la columna 1
-        $pdf->Cell(15, $alturaMaxima, utf8_decode($row['Identificador']), 1, 'C', true); // Datos de la columna 2
-        $pdf->Cell(80, $alturaMaxima, utf8_decode($row['Pro_Descripcion']), 1, 'L', true); // Datos de la columna 3
-        $pdf->Cell(20, $alturaMaxima, utf8_decode($row['Pro_PrecioVenta']), 1, 'C', true); // Datos de la columna 4
-        $pdf->Cell(20, $alturaMaxima, utf8_decode($row['Pro_Categoria']), 1, 'C', true); // Datos de la columna 5
-        $pdf->Cell(15, $alturaMaxima, utf8_decode($row['Pro_Cantidad']), 1, 'C', true); // Datos de la columna 6
-        $pdf->Cell(15, $alturaMaxima, utf8_decode($row['Pro_Costo']), 1, 'C', true); // Datos de la columna 7
-        $pdf->Cell(30, $alturaMaxima, utf8_decode($row['imagen_principal']), 1, 'C', true); // Datos de la columna 8
-        $pdf->Cell(15, $alturaMaxima, utf8_decode($row['Pro_Estado']), 1, 'C', true); // Datos de la columna 9
-
-        // Salto de línea
+        // Rellenar las celdas con los datos obtenidos de la base de datos
+        $pdf->Cell(85, $alturaCelda, utf8_decode($row['Pro_Nombre']), 1, 0, 'C'); // Celda para el nombre
+        $pdf->Cell(15, $alturaCelda, utf8_decode($row['Identificador']), 1, 0, 'C'); // Celda para el identificador
+        $pdf->Cell(25, $alturaCelda, utf8_decode($row['Pro_Categoria']), 1, 0, 'C'); // Celda para la categoría
+        $pdf->Cell(20, $alturaCelda, utf8_decode($row['Pro_PrecioVenta']), 1, 0, 'C'); // Celda para el precio de venta
+        $pdf->Cell(20, $alturaCelda, utf8_decode($row['Pro_Cantidad']), 1, 0, 'C'); // Celda para la cantidad
+        $pdf->Cell(15, $alturaCelda, utf8_decode($row['Pro_Costo']), 1, 0, 'C'); // Celda para el costo
+        // Celda para la descripción con MultiCell para manejar saltos de línea
+        $pdf->MultiCell(100, 6, utf8_decode($row['Pro_Descripcion']), 1, 'C'); 
+        // Salto de línea después de cada fila
         $pdf->Ln();
     }
 
@@ -116,4 +96,7 @@ function generarReporteProductos($conexion) {
 
 // Generar el reporte de productos
 generarReporteProductos($conexion);
+
+// Cerrar la conexión a la base de datos
+mysqli_close($conexion);
 ?>
