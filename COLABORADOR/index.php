@@ -1,3 +1,6 @@
+<!DOCTYPE html>
+<!-- http://localhost/MUNDO 3D/COLABORADOR/index.php -->
+<html lang="es">
 <?php
     session_start();
     include __DIR__ . '/../conexion.php';
@@ -10,9 +13,7 @@
         $nombreCompleto = $_SESSION['username'];
         $usuario_id = $_SESSION['user_id'];
 ?>
-<!DOCTYPE html>
-<!-- http://localhost/MUNDO 3D/COLABORADOR/index.php -->
-<html lang="es">
+
     <head>
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />

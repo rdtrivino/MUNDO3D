@@ -1,5 +1,15 @@
+<!DOCTYPE html>
+<!-- http://localhost/MUNDO 3D/COLABORADOR/adicionar.php -->
+<html lang="en">
+
 <?php
-include "../conexion.php";
+    session_start();
+    include __DIR__ . '/../conexion.php';
+        //Confirmacion de que el usuario ha realizado el proceso de autenticación
+        if(!isset($_SESSION['confirmado']) || $_SESSION['confirmado'] == false){
+            //die("No ha iniciado sesión !!!");
+            header("Location: ../Programas/autenticacion.php");
+        }
 ?>
 
 <!DOCTYPE html>
