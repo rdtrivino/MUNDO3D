@@ -98,7 +98,7 @@ if ($conn->connect_error) {
     </div>
     <div class="user-controls">
     <div class="user-info">
-        <button id="user-button">Bienvenido: <span id="user-name">Nombre de usuario</span></button>
+        <button id="user-button">Bienwvenido: <span id="user-name">Nombre de usuario</span></button>
         <div class="user-menu" id="user-menu">
             <ul>
                 <li><a href="#">Panel de control</a></li>
