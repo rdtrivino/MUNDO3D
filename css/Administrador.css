@@ -1,0 +1,173 @@
+:root {
+    --color-title: #001A49;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+}
+
+.hero {
+    min-height: 300px;
+    max-height: 600px;
+    background: linear-gradient(45deg, #E42E24 0%, #E42E24 25%, #2433bd 25%, #2433bd 75%, #E42E24 75%, #E42E24 100%);
+    color: #fff;
+    padding: 20px;
+}
+
+.user-controls {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.user-info {
+    margin-right: 20px;
+}
+
+#user-button {
+    font-size: 16px;
+    padding: 10px 20px;
+    background: transparent;
+    color: #0c0c0c;
+    cursor: pointer;
+    border-radius: 40px;
+    font-weight: bold;
+}
+
+.user-menu {
+    display: none;
+    right: 0;
+    top: 100%;
+    font-size: 16px;
+    position: absolute;
+    padding: auto;
+}
+
+.user-menu ul {
+    list-style-type: none;
+}
+
+.user-menu a {
+    text-decoration: none;
+    color: #ffffff;
+    border-radius: 34px;
+    padding: 10px;
+}
+
+.user-menu.show {
+    display: block;
+}
+
+.logo {
+    height: 170px;
+    width: 170px;
+    margin-top: 40px;
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.nav__link {
+    color: #fff;
+    text-decoration: none;
+}
+
+.gradient-stripe {
+    height: 15px;
+    background: linear-gradient(45deg, #E42E24 0%, #E42E24 25%, #2433bd 25%, #2433bd 75%, #E42E24 75%, #E42E24 100%);
+}
+
+h4 {
+    font-size: 40px;
+}
+
+.product-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.product {
+    width: 23%;
+    padding: 10px;
+    margin-bottom: 20px;
+    background-color: #d6e9ec;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.product img {
+    max-width: 100%;
+    display: block;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+.footer {
+    background-color: #1D293F;
+    padding: 20px;
+    color: #fff;
+    margin-top: 20px;
+}
+
+.footer__container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid #fff;
+    padding: 10px 0;
+}
+
+.contactactanos {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    font-size: 15px;
+    color: rgb(245, 242, 242);
+    margin-top: 10px;
+}
+
+.contactactanos img {
+    margin-left: 10px;
+    filter: invert(100%);
+}
+
+.footer__icons {
+    margin-bottom: 10px;
+}
+
+.footer__img {
+    width: 30px;
+    margin: 0 10px;
+}
+
+@media screen and (max-width: 768px) {
+    .hero {
+        padding: 50px;
+    }
+
+    .user-menu {
+        margin-top: -540px;
+        margin-right: 150px;
+    }
+
+    .nav.container {
+        margin-left: 100px;
+    }
+
+    .contactactanos {
+        flex-direction: row;
+    }
+
+    .footer__container {
+        flex-direction: column;
+    }
+}
