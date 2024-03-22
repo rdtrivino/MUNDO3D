@@ -38,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             header("Location: ../COLABORADOR/index.php");
                             exit();
                         case "3":
-                            header("Location: ../indexusuario.html");
+                            header("Location: ../USUARIO/indexusuario.html");
                             exit();
                         default:
                             echo "Rol no válido.";
