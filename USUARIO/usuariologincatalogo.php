@@ -98,7 +98,7 @@ if ($conn->connect_error) {
     </div>
     <div class="user-controls">
     <div class="user-info">
-        <button id="user-button">Bienwvenido: <span id="user-name">Nombre de usuario</span></button>
+        <button id="user-button">Bienvenido: <span id="user-name">Nombre de usuario</span></button>
         <div class="user-menu" id="user-menu">
             <ul>
                 <li><a href="#">Panel de control</a></li>
@@ -145,7 +145,7 @@ if ($conn->connect_error) {
     logoutButton.addEventListener("click", function () {
         var confirmLogout = confirm("¿Estás seguro de que deseas cerrar sesión?");
         if (confirmLogout) {
-            window.location.href = "logout.php"; // Redirige al script de cierre de sesión
+            window.location.href = "../Index.html"; // Redirige al script de cierre de sesión
         }
     });
 

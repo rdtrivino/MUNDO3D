@@ -157,31 +157,19 @@ if ($conn->connect_error) {
 
 
 <script>
-    <div class="logout-controls" style="margin-right: 20px; margin-top: 1%;"> 
-        <div class="logout-icon">
-            <a href="../index.html" id="logout-button">
-                <i class="fas fa-sign-out-alt fa-3x"></i>
-            </a>
-        </div>
-    </div>
-</div>
-
-
-
-<script>
     var userButton = document.getElementById("user-button");
     var userMenu = document.getElementById("user-menu");
     var logoutButton = document.getElementById("logout-button");
 
     userButton.addEventListener("click", function (e) {
-        e.stopPropagation();
+        e.stopPropagation(); // Evitar que el clic llegue a la ventana principal
         userMenu.classList.toggle("show");
     });
 
     logoutButton.addEventListener("click", function () {
         var confirmLogout = confirm("¿Estás seguro de que deseas cerrar sesión?");
         if (confirmLogout) {
-            window.location.href = "logout.php";
+            window.location.href = "../Index.html"; // Redirige al script de cierre de sesión
         }
     });
 
@@ -192,6 +180,8 @@ if ($conn->connect_error) {
         }
     });
 </script>
+
+
         </div>
         <nav class="nav container" style="margin-top: 5%;">
     <div class="row">
