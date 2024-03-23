@@ -12,8 +12,11 @@ if (!$conexion) {
     die("Error al conectarse a la Base de Datos: " . mysqli_connect_error());
 }
 
-// Consulta SQL para obtener los productos con stock medio
-$sql = "SELECT p.*, c.Cgo_Nombre AS nombre_categoria FROM productos p JOIN categoria c ON p.Pro_Categoria = c.Cgo_Codigo WHERE p.Pro_Cantidad >= 10 AND p.Pro_Cantidad < 50";
+// Consulta SQL para obtener los productos con stock medio y estado activo
+$sql = "SELECT p.*, c.Cgo_Nombre AS nombre_categoria 
+        FROM productos p 
+        JOIN categoria c ON p.Pro_Categoria = c.Cgo_Codigo 
+        WHERE p.Pro_Cantidad >= 10 AND p.Pro_Cantidad < 50 AND p.Pro_Estado = 'activo'";
 $resultado = mysqli_query($conexion, $sql);
 
 // Comprobar si la consulta fue exitosa
@@ -39,7 +42,7 @@ if (!$resultado) {
         <?php while ($row = mysqli_fetch_assoc($resultado)): ?>
             <tr>
                 <td style="border: 1px solid #dddddd; padding: 8px;"><?php echo $row['Pro_Nombre']; ?></td>
-                <td style="border: 1px solid #dddddd; padding: 8px;"><?php echo $row['Pro_Codigo']; ?></td>
+                <td style="border: 1px solid #dddddd; padding: 8px;"><?php echo $row['Identificador']; ?></td>
                 <td style="border: 1px solid #dddddd; padding: 8px;"><?php echo $row['Pro_Descripcion']; ?></td>
                 <td style="border: 1px solid #dddddd; padding: 8px;"><?php echo $row['Pro_PrecioVenta']; ?></td>
                 <td style="border: 1px solid #dddddd; padding: 8px;"><?php echo $row['nombre_categoria']; ?></td>

@@ -12,6 +12,7 @@
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
     <link href="css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    
 
 
     <!-- jQuery -->
@@ -20,8 +21,6 @@
     <!-- jQuery UI -->
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-    <!-- Otros scripts -->
-    <script src="tu-script.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" />
 
 
@@ -84,46 +83,6 @@
                                 <i class="fas fa-file-pdf me-1"></i> Generar Reporte PDF
                             </button>
                         </div>
-                        <div class="mb-3">
-                            <button type="button" class="btn btn-primary w-100" onclick="generarReporteExcel()">
-                                <i class="fas fa-file-excel me-1"></i> Generar Reporte Excel
-                            </button>
-                        </div>
-                        <script>
-                            function generarReporteExcel() {
-                                // Enviar una solicitud AJAX al servidor
-                                var xhr = new XMLHttpRequest();
-                                xhr.open('GET', 'generar_reporte_excel.php', true);
-                                xhr.responseType = 'blob';  // Especificar el tipo de respuesta como blob
-
-                                // Manejar la respuesta
-                                xhr.onload = function() {
-                                    if (xhr.status === 200) {
-                                        // Crear una URL del blob de respuesta
-                                        var blob = new Blob([xhr.response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-                                        var url = window.URL.createObjectURL(blob);
-
-                                        // Crear un enlace para descargar el archivo Excel y hacer clic en él
-                                        var a = document.createElement('a');
-                                        a.href = url;
-                                        a.download = 'reporte_excel.xlsx';
-                                        document.body.appendChild(a);
-                                        a.click();
-
-                                        // Limpiar después de la descarga
-                                        window.URL.revokeObjectURL(url);
-                                        document.body.removeChild(a);
-                                    } else {
-                                        // Manejar errores
-                                        console.error('Error al generar el reporte Excel');
-                                    }
-                                };
-
-                                // Enviar la solicitud
-                                xhr.send();
-                            }
-                        </script>
-
                         <script>
                             function generarReportePDF() {
                                 // Redirige a la página que genera el reporte PDF
@@ -199,13 +158,6 @@
                                             <label for="cantidad" class="form-label">Cantidad</label>
                                             <input type="number" class="form-control" id="cantidad" name="cantidad" required>
                                         </div>
-
-                                        <!-- Campo Pe_Precio -->
-                                        <div class="mb-3">
-                                            <label for="precio" class="form-label">Precio</label>
-                                            <input type="number" class="form-control" id="precio" name="precio" required>
-                                        </div>
-
                                         <!-- Campo Pe_Fechaentrega -->
                                         <div class="mb-3">
                                             <label for="fechaEntrega" class="form-label">Fecha de Entrega</label>
@@ -355,7 +307,7 @@
                                                     </tr>
                                                 </thead>
                                                 <?php
-                                                $sql_pedidos = "SELECT * FROM pedidos WHERE Pe_Estado <> 'inactivo'";
+                                                $sql_pedidos = "SELECT * FROM pedidos WHERE Acciones <> 'inactivo'";
                                                 $resultado_pedidos = mysqli_query($link, $sql_pedidos);
 
                                                 // Verificar si la consulta tuvo éxito
@@ -394,13 +346,38 @@
                                                             </td>
                                                             <td><?php echo $row['Pe_Observacion']; ?></td>
                                                             <td>
+                                                                
                                                             <div class="btn-group" role="group" aria-label="Acciones">
-                                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editarModal<?php echo $identificador; ?>" data-toggle="tooltip" data-placement="top" title="Editar">
+                                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editarModal<?php echo $row['Identificador']; ?>" data-toggle="tooltip" data-placement="top" title="Editar">
                                                                     <i class="fas fa-edit"></i>
                                                                 </button>
+
                                                                 <button type="button" class="btn btn-danger" onclick="eliminarPedido(<?php echo $row['Identificador']; ?>)" data-toggle="tooltip" data-placement="top" title="Eliminar">
                                                                     <i class="fas fa-trash"></i>
                                                                 </button>
+                                                                <script>
+                                                                function eliminarPedido(identificador) {
+                                                                    if (confirm("¿Estás seguro de que deseas eliminar este pedido?")) {
+                                                                        // Realizar la solicitud AJAX
+                                                                        $.ajax({
+                                                                            type: 'POST',
+                                                                            url: 'funcionestabladepedidos.php', // Ruta al script PHP que procesará la solicitud
+                                                                            data: { identificador: identificador },
+                                                                            success: function(response) {
+                                                                                // Manejar la respuesta del servidor
+                                                                                alert(response); // Puedes mostrar un mensaje de éxito o hacer alguna otra acción
+                                                                                location.reload(); // Recargar la página para actualizar la tabla de pedidos
+                                                                            },
+                                                                            error: function(xhr, status, error) {
+                                                                                // Manejar los errores
+                                                                                console.error('Error al eliminar el pedido:', error);
+                                                                                alert('Error al eliminar el pedido. Por favor, inténtalo de nuevo.');
+                                                                            }
+                                                                        });
+                                                                    }
+                                                                }
+                                                            </script>
+
                                                             </div>
                                                         </td>
 

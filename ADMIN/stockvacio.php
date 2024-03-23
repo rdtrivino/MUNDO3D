@@ -12,11 +12,11 @@ if (!$conexion) {
     die("Error al conectarse a la Base de Datos: " . mysqli_connect_error());
 }
 
-// Consulta SQL para obtener los productos con stock entre 0 y 10
+// Consulta SQL para obtener los productos con stock entre 0 y 10 y estado activo
 $sql = "SELECT p.*, c.Cgo_Nombre AS nombre_categoria 
         FROM productos p 
         JOIN categoria c ON p.Pro_Categoria = c.Cgo_Codigo 
-        WHERE p.Pro_Cantidad > 0 AND p.Pro_Cantidad < 10";
+        WHERE p.Pro_Cantidad > 0 AND p.Pro_Cantidad < 10 AND p.Pro_Estado = 'activo'";
 $resultado = mysqli_query($conexion, $sql);
 
 // Comprobar si la consulta fue exitosa

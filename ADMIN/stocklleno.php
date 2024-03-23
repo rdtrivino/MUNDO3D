@@ -12,8 +12,11 @@ if (!$conexion) {
     die("Error al conectarse a la Base de Datos: " . mysqli_connect_error());
 }
 
-// Consulta SQL para obtener los productos con más de 50 unidades en stock
-$sql = "SELECT p.*, c.Cgo_Nombre AS nombre_categoria FROM productos p JOIN categoria c ON p.Pro_Categoria = c.Cgo_Codigo WHERE p.Pro_Cantidad >= 50";
+// Consulta SQL para obtener los productos activos con más de 50 unidades en stock
+$sql = "SELECT p.*, c.Cgo_Nombre AS nombre_categoria 
+        FROM productos p 
+        JOIN categoria c ON p.Pro_Categoria = c.Cgo_Codigo 
+        WHERE p.Pro_Estado = 'activo' AND p.Pro_Cantidad >= 50";
 $resultado = mysqli_query($conexion, $sql);
 
 // Comprobar si la consulta fue exitosa

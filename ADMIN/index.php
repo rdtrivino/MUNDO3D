@@ -83,7 +83,90 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guardar_cambios'])) {
         echo "Datos del formulario incompletos o incorrectos.";
     }
 }
+function obtenerNombreMes($numero_mes) {
+    $meses = [
+        1 => 'Enero',
+        2 => 'Febrero',
+        3 => 'Marzo',
+        4 => 'Abril',
+        5 => 'Mayo',
+        6 => 'Junio',
+        7 => 'Julio',
+        8 => 'Agosto',
+        9 => 'Septiembre',
+        10 => 'Octubre',
+        11 => 'Noviembre',
+        12 => 'Diciembre'
+    ];
+
+    // Verificar si el índice existe en el array antes de acceder a él
+    if (array_key_exists($numero_mes, $meses)) {
+        return $meses[$numero_mes];
+    } else {
+        return 'Mes inválido';
+    }
+}
+
+// Consulta para obtener la cantidad de pedidos por mes
+$sql_pedidos_por_mes = "SELECT MONTH(Pe_Fechapedido) AS Mes, COUNT(*) AS CantidadPedidos
+                        FROM pedidos
+                        WHERE Pe_Estado <> 'inactivo'
+                        GROUP BY MONTH(Pe_Fechapedido)";
+
+// Ejecutar la consulta
+$resultado_pedidos_por_mes = mysqli_query($link, $sql_pedidos_por_mes);
+
+// Verificar si la consulta tuvo éxito y si hay al menos un resultado
+if ($resultado_pedidos_por_mes && mysqli_num_rows($resultado_pedidos_por_mes) > 0) {
+    // Arreglo para almacenar los datos del primer gráfico (doughnut)
+    $data1 = [
+        'labels' => [],
+        'datasets' => [
+            [
+                'label' => 'Cantidad de Pedidos',
+                'data' => [],
+                'backgroundColor' => ['rgb(255, 99, 132)', 'rgb(54, 162, 235)', 'rgb(255, 205, 86)'],
+                'hoverOffset' => 4
+            ]
+        ]
+    ];
+
+    // Arreglo para almacenar los datos del segundo gráfico (bar)
+    $data2 = [
+        'labels' => [],
+        'datasets' => [
+            [
+                'label' => 'Cantidad de Pedidos',
+                'data' => [],
+                'backgroundColor' => 'rgb(54, 162, 235)',
+                'borderColor' => 'rgb(54, 162, 235)',
+                'borderWidth' => 1
+            ]
+        ]
+    ];
+
+    // Procesar los resultados de la consulta y llenar los arreglos de datos
+    while ($row = mysqli_fetch_assoc($resultado_pedidos_por_mes)) {
+        // Agregar el mes y la cantidad de pedidos al arreglo de datos del primer gráfico (doughnut)
+        $nombre_mes = obtenerNombreMes($row['Mes']); // Función para obtener el nombre del mes
+        $data1['labels'][] = $nombre_mes;
+        $data1['datasets'][0]['data'][] = $row['CantidadPedidos'];
+
+        // Agregar el mes y la cantidad de pedidos al arreglo de datos del segundo gráfico (bar)
+        $data2['labels'][] = $nombre_mes;
+        $data2['datasets'][0]['data'][] = $row['CantidadPedidos'];
+    }
+
+    // Convertir los arreglos de datos a JSON para utilizarlos en el script de JavaScript
+    $data1_json = json_encode($data1);
+    $data2_json = json_encode($data2);
+} else {
+    // Si no hay resultados en la consulta, asignar valores predeterminados
+    $data1_json = json_encode(['labels' => [], 'datasets' => []]);
+    $data2_json = json_encode(['labels' => [], 'datasets' => []]);
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
     <head>
@@ -100,9 +183,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guardar_cambios'])) {
         <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
-
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     </head>
+    <body style="background: linear-gradient(135deg, #2980b9, #2c3e50); color: white;">
     <body class="sb-nav-fixed">
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <a class="navbar-brand ps-3" href="index.php">ADMINISTRADOR</a>
@@ -128,26 +211,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guardar_cambios'])) {
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                                 Inicio
                             </a>
-                            <div class="sb-sidenav-menu-heading">MENU</div>
-                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
-                                <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                                Modulos
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                            </a>
-                            <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="../Administrador.html">Catalogo</a>
-                                </nav>
-                                <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="../usuariologincatalogo.php">Repuestos</a>
-                                </nav>
-                                <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="../Administrador.html">Archivos 3D</a>
-                                </nav>
-                                <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="../Administrador.html">Servicio de impresión</a>
-                                </nav>
-                            </div>
                             <div class="sb-sidenav-menu-heading">Administrar</div>
 
                             <a class="nav-link" href="tables.php">
@@ -162,6 +225,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guardar_cambios'])) {
                                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                                 Tabla Productos
                             </a>
+                        </div>
+                        <div class="mb-3 text-center" style="margin-top: 70px;"> 
+                            <div style="max-width: 80%; margin: 0 auto;"> 
+                                <div class="caja-giratoria" style="display: inline-block;">
+                                    <img src="../images/Logo Mundo 3d.png" alt="Pedidos" class="img-fluid gira">
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="sb-sidenav-footer">
@@ -273,8 +343,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guardar_cambios'])) {
                                     xhr.send();
                                 }
                             </script>
-
-                            <!-- Coloca este código donde quieras que aparezca el botón de "Ver Detalles" -->
                             <div class="col-xl-3 col-md-6">
                                 <div class="card bg-danger text-white mb-4">
                                     <div class="card-body">stock vacio</div>
@@ -327,71 +395,136 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guardar_cambios'])) {
                                     xhr.send();
                                 }
                             </script>
+                            <div style="width: 40%; margin: 0 auto; padding: 10px; background-color: #fff; border: 1px solid #ccc; border-radius: 10px;">
+                                <canvas id="chart1" width="200" height="200"></canvas>
+                            </div>
+                            <div style="width: 40%; margin: 20px auto; padding: 10px; background-color: #fff; border: 1px solid #ccc; border-radius: 10px;">
+                                <canvas id="chart2" width="200" height="200"></canvas>
+                            </div>
 
+                            <script>
+                                // Datos para el primer gráfico (doughnut)
+                                const data1 = <?php echo $data1_json; ?>;
 
+                                // Configuración para el primer gráfico (doughnut)
+                                const config1 = {
+                                    type: 'doughnut',
+                                    data: data1,
+                                    options: {
+                                        responsive: true,
+                                        plugins: {
+                                            legend: {
+                                                position: 'top',
+                                            },
+                                            title: {
+                                                display: true,
+                                                text: 'Cantidad de Pedidos por Mes'
+                                            }
+                                        },
+                                    },
+                                };
+
+                                // Datos para el segundo gráfico (bar)
+                                const data2 = <?php echo $data2_json; ?>;
+
+                                // Configuración para el segundo gráfico (bar)
+                                const config2 = {
+                                    type: 'bar',
+                                    data: data2,
+                                    options: {
+                                        responsive: true,
+                                        plugins: {
+                                            legend: {
+                                                position: 'top',
+                                            },
+                                            title: {
+                                                display: true,
+                                                text: 'Cantidad de Pedidos por Mes'
+                                            }
+                                        },
+                                    },
+                                };
+
+                                // Obtener los contextos de los canvas y dibujar los gráficos
+                                var ctx1 = document.getElementById('chart1').getContext('2d');
+                                var ctx2 = document.getElementById('chart2').getContext('2d');
+                                new Chart(ctx1, config1);
+                                new Chart(ctx2, config2);
+                            </script>
                         </div>
-                        <div class="row">
-                            <div class="col-xl-6">
-                                <div class="card mb-4">
-                                    <div class="card-header">
-                                        <i class="fas fa-chart-area me-1"></i>
-                                        VENTAS ULTIMO AÑO
+                        <div class="row mt-4">
+                            <div class="container mb-4">
+                                <div class="col">
+                                    <div class="table-responsive" style="background-color: #f8f9fa; border-radius: 10px;">
+                                        <h4 style="text-align: center; color: black;">Lista de Pedidos Nuevos</h4>
+                                        <table id="datatables" class="table table-striped table-bordered table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Código</th>
+                                                    <th>Estado</th>
+                                                    <th>Producto</th>
+                                                    <th>Cantidad</th>
+                                                    <th>Fecha de Entrega</th>
+                                                    <th>Fecha de Pedido</th>
+                                                    <th>Cliente</th>
+                                                    <th>Observación</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                $sql_pedidos = "SELECT * FROM pedidos WHERE Pe_Estado = 1 ORDER BY Pe_Fechapedido ASC";
+                                                $resultado_pedidos = mysqli_query($link, $sql_pedidos);
+
+                                                // Verificar si la consulta tuvo éxito
+                                                if ($resultado_pedidos && mysqli_num_rows($resultado_pedidos) > 0) {
+                                                    while ($row = mysqli_fetch_assoc($resultado_pedidos)) {
+                                                        ?>
+                                                        <tr style="background-color: tomato;">
+                                                            <td><?php echo $row['Identificador']; ?></td>
+                                                            <td><?php echo obtenerNombreEstado($row['Pe_Estado'], $link); ?></td>
+                                                            <td><?php echo obtenerNombreProducto($row['Pe_Producto'], $link); ?></td>
+                                                            <td><?php echo $row['Pe_Cantidad']; ?></td>
+                                                            <td><?php echo $row['Pe_Fechaentrega']; ?></td>
+                                                            <td><?php echo $row['Pe_Fechapedido']; ?></td>
+                                                            <td>
+                                                                <?php
+                                                                // ID del cliente asociado al pedido
+                                                                $id_cliente = $row['Pe_Cliente'];
+
+                                                                // Consulta para obtener el nombre del cliente
+                                                                $sql_cliente = "SELECT Usu_Nombre_completo FROM usuario WHERE Usu_Identificacion = ?";
+                                                                $stmt_cliente = mysqli_prepare($link, $sql_cliente);
+                                                                mysqli_stmt_bind_param($stmt_cliente, "i", $id_cliente);
+                                                                mysqli_stmt_execute($stmt_cliente);
+                                                                mysqli_stmt_bind_result($stmt_cliente, $nombre_cliente);
+
+                                                                // Recuperar el nombre del cliente
+                                                                if (mysqli_stmt_fetch($stmt_cliente)) {
+                                                                    echo $nombre_cliente;
+                                                                } else {
+                                                                    echo "Cliente desconocido";
+                                                                }
+
+                                                                // Cerrar la consulta
+                                                                mysqli_stmt_close($stmt_cliente);
+                                                                ?>
+                                                            </td>
+                                                            <td><?php echo $row['Pe_Observacion']; ?></td>
+                                                        </tr>
+                                                    <?php
+                                                    }
+                                                } else {
+                                                    echo "<tr><td colspan='8'>No se encontraron pedidos en estado 'Nuevo'.</td></tr>";
+                                                }
+                                                ?>
+                                            </tbody>
+                                        </table>
                                     </div>
-                                    <div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas></div>
                                 </div>
                             </div>
-                            <div class="col-xl-6">
-                                <div class="card mb-4">
-                                    <div class="card-header">
-                                        <i class="fas fa-chart-bar me-1"></i>
-                                        VENTAS ULTIMO AÑO
-                                    </div>
-                                    <div class="card-body"><canvas id="myBarChart" width="100%" height="40"></canvas></div>
-                                </div>
-                            </div>
                         </div>
-                        <div class="card mb-4">
-                        <div class="card-body">
-                        <table id="datatablesSimple" class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Código</th>
-                                            <th>Estado</th>
-                                            <th>Producto</th>
-                                            <th>Cantidad</th>
-                                            <th>Fecha de Entrega</th>
-                                            <th>Fecha de Pedido</th>
-                                            <th>Cliente</th>
-                                            <th>Observación</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
-                                        while ($row = mysqli_fetch_assoc($resultado)) {
-                                        ?>
-                                        <tr>
-                                            <td><?php echo $row['Identificador']; ?></td>
-                                            <td><?php echo obtenerNombreEstado($row['Pe_Estado'], $link); ?></td>
-                                            <td><?php echo obtenerNombreProducto($row['Pe_Producto'], $link); ?></td>
-                                            <td><?php echo $row['Pe_Cantidad']; ?></td>
-                                            <td><?php echo $row['Pe_Fechaentrega']; ?></td>
-                                            <td><?php echo $row['Pe_Fechapedido']; ?></td>
-                                            <td><?php echo $row['Pe_Cliente']; ?></td>
-                                            <td><?php echo $row['Pe_Observacion']; ?></td>
-                                        </td>
-                                        </tr>
 
-                                            </div>
-                                        </div>
-                                        <?php
-                                        }
-                                        ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </main>
+                
                 <footer class="py-4 bg-light mt-auto">
                     <div class="container-fluid px-4">
                         <div class="d-flex align-items-center justify-content-between small">

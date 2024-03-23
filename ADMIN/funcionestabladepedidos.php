@@ -10,7 +10,6 @@ if (!isset($_SESSION['username'])) {
 $nombreCompleto = $_SESSION['username'];
 $usuario_id = $_SESSION['user_id'];
 
-// Función para obtener el nombre del producto a partir de su código
 function obtenerNombreProducto($IdentificadorProducto, $conexion) {
     $sql = "SELECT pro_nombre FROM productos WHERE Identificador = ?";
     $stmt = mysqli_prepare($conexion, $sql);
@@ -34,95 +33,108 @@ function obtenerNombreEstado($IdentificadorEstado, $conexion) {
     return $nombreEstado ? $nombreEstado : "Estado no encontrado";
 }
 
-// Verificar si se recibió una solicitud para guardar cambios en el pedido
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['guardar_cambios_pedido'])) {
-    // Código para guardar los cambios en el pedido
-    if (isset($_POST['Identificador'])) {
-        // Obtener el código del pedido a actualizar
-        $IdentificadorPedido = $_POST['Identificador'];
+// Verificar si se recibió una solicitud para agregar un nuevo pedido
+if (isset($_POST['cliente'], $_POST['producto'], $_POST['cantidad'], $_POST['fechaPedido'], $_POST['fechaEntrega'], $_POST['observacion'])) {
+    // Incluir la conexión a la base de datos
+    include 'conexion.php';
 
-        // Obtener los demás datos del formulario
-        $cantidad = $_POST['cantidad'];
-        $precio = $_POST['precio'];
-        $fechaEntrega = $_POST['fechaEntrega'];
-        $fechaPedido = $_POST['fechaPedido'];
-        $estado = $_POST['estado'];
-        $observacion = $_POST['observacion'];
+    // Obtener los datos del formulario
+    $cliente = $_POST['cliente'];
+    $producto = $_POST['producto'];
+    $cantidad = $_POST['cantidad'];
+    $fechaPedido = $_POST['fechaPedido'];
+    $fechaEntrega = $_POST['fechaEntrega'];
+    $observacion = $_POST['observacion'];
 
-        // Consulta para actualizar los datos del pedido en la base de datos
-        $consulta_actualizar = "UPDATE pedidos SET Pe_Cantidad=?, Pe_Precio=?, Pe_Fechaentrega=?, Pe_Fechapedido=?, Pe_Estado=?, Pe_Observacion=? WHERE Identificador=?";
-        $stmt_actualizar = mysqli_prepare($link, $consulta_actualizar);
-        mysqli_stmt_bind_param($stmt_actualizar, "ddssssi", $cantidad, $precio, $fechaEntrega, $fechaPedido, $estado, $observacion, $IdentificadorPedido);
+    // Consulta SQL para insertar un nuevo pedido
+    $consulta = "INSERT INTO pedidos (Pe_Cliente, Pe_Estado, Pe_Producto, Pe_Cantidad, Pe_Fechapedido, Pe_Fechaentrega, Pe_Observacion) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    $stmt = mysqli_prepare($link, $consulta);
 
-        // Ejecutar la consulta de actualización
-        if (mysqli_stmt_execute($stmt_actualizar)) {
-            echo "Los cambios se han guardado correctamente.";
+    // Verificar si la preparación de la consulta fue exitosa
+    if ($stmt) {
+        $estado = 1; // Estado por defecto del pedido (puedes ajustarlo según tus necesidades)
+
+        // Vincular parámetros a la consulta
+        mysqli_stmt_bind_param($stmt, "iiissss", $cliente, $estado, $producto, $cantidad, $fechaPedido, $fechaEntrega, $observacion);
+
+        // Ejecutar la consulta
+        if (mysqli_stmt_execute($stmt)) {
+            echo "Pedido agregado exitosamente.";
         } else {
-            echo "Error al guardar los cambios en el pedido: " . mysqli_error($link);
+            echo "Error al agregar el pedido: " . mysqli_error($link);
         }
 
-        // Cerrar la consulta preparada
-        mysqli_stmt_close($stmt_actualizar);
+        // Cerrar la declaración
+        mysqli_stmt_close($stmt);
     } else {
-        echo "No se recibió el código del pedido a actualizar.";
+        echo "Error al preparar la consulta: " . mysqli_error($link);
     }
 
-    // Terminar la ejecución del script
-    exit;
+    // Cerrar la conexión a la base de datos
+    mysqli_close($link);
+} else {
+}
+// Verificar si se recibió el formulario para guardar cambios en el pedido
+if (isset($_POST['guardarCambiosPedido'])) {
+    // Verificar que se recibieron todos los datos necesarios
+    if (isset($_POST['Identificador'], $_POST['cliente'], $_POST['estado'], $_POST['producto'], $_POST['cantidad'], $_POST['fechapedido'], $_POST['fechaentrega'], $_POST['observacion'])) {
+        // Obtener los datos del formulario
+        $identificador = $_POST['Identificador'];
+        $cliente = $_POST['cliente'];
+        $estado = $_POST['estado'];
+        $producto = $_POST['producto'];
+        $cantidad = $_POST['cantidad'];
+        $fechapedido = $_POST['fechapedido'];
+        $fechaentrega = $_POST['fechaentrega'];
+        $observacion = $_POST['observacion'];
+
+        // Actualizar el pedido en la base de datos
+        $consulta = "UPDATE pedidos SET Pe_Cliente=?, Pe_Estado=?, Pe_Producto=?, Pe_Cantidad=?, Pe_Fechapedido=?, Pe_Fechaentrega=?, Pe_Observacion=? WHERE Identificador=?";
+        $stmt = mysqli_prepare($link, $consulta);
+
+        // Verificar si la preparación de la consulta fue exitosa
+        if ($stmt) {
+            mysqli_stmt_bind_param($stmt, "iisdsdssi", $cliente, $estado, $producto, $cantidad, $fechapedido, $fechaentrega, $observacion, $identificador);
+
+            // Ejecutar la consulta
+            if (mysqli_stmt_execute($stmt)) {
+                echo json_encode(["success" => true, "message" => "Datos actualizados correctamente."]);
+            } else {
+                echo json_encode(["success" => false, "message" => "Error al actualizar los datos del pedido: " . mysqli_error($link)]);
+            }
+
+            // Cerrar la declaración
+            mysqli_stmt_close($stmt);
+        } else {
+            echo json_encode(["success" => false, "message" => "Error al preparar la consulta: " . mysqli_error($link)]);
+        }
+    } else {
+        echo json_encode(["success" => false, "message" => "No se recibieron todos los datos necesarios para actualizar el pedido."]);
+    }
 }
 
-// Verificar si se recibió una solicitud para ocultar un pedido
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ocultar_pedido'])) {
-    // Código para ocultar un pedido
-    // Sanitiza y obtén el código del pedido
-    $IdentificadorPedido = mysqli_real_escape_string($link, $_POST['Identificador']);
 
-    // Consulta para cambiar el estado del pedido en la base de datos
-    $sql = "UPDATE pedidos SET Acciones = 'inactivo' WHERE Identificador = '$IdentificadorPedido'";
+// Verificar si se recibió el identificador del pedido a eliminar
+if (isset($_POST['identificador'])) {
+    // Obtener el identificador del pedido
+    $identificador = $_POST['identificador'];
+    
+    $consulta = "UPDATE pedidos SET Acciones = 'inactivo' WHERE identificador = ?";
+    $stmt = mysqli_prepare($link, $consulta);
+    mysqli_stmt_bind_param($stmt, "i", $identificador);
 
-    // Ejecuta la consulta
-    if (mysqli_query($link, $sql)) {
-        // Si la consulta se ejecuta con éxito, devuelve un mensaje de éxito
-        echo "El pedido se ha eliminado correctamente.";
+    // Ejecutar la consulta
+    if (mysqli_stmt_execute($stmt)) {
+        // Si la consulta se ejecutó correctamente, enviar mensaje de éxito
+        echo "El pedido ha sido eliminado correctamente.";
     } else {
-        // Si hay algún error en la consulta, devuelve un mensaje de error
+        // Si hubo un error al ejecutar la consulta, enviar mensaje de error
         echo "Error al eliminar el pedido: " . mysqli_error($link);
     }
 
-    // Terminar la ejecución del script
-    exit;
-}
-
-// Verificar si se recibieron los datos del formulario para agregar un nuevo pedido
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['agregar_pedido'])) {
-    // Código para agregar un nuevo pedido
-    // Obtener los datos del formulario
-    $Identificador = $_POST['Identificador'];
-    $estado = $_POST['estado'];
-    $producto = $_POST['producto'];
-    $cantidad = $_POST['cantidad'];
-    $precio = $_POST['precio'];
-    $fechaEntrega = $_POST['fechaEntrega'];
-    $fechaPedido = $_POST['fechaPedido'];
-    $cliente = $_POST['cliente'];
-    $observacion = $_POST['observacion'];
-    // Asignar el valor 'Activo' al campo 'Acciones' por defecto
-    $acciones = 'Activo';
-
-    // Query SQL para insertar el nuevo pedido
-    $sql = "INSERT INTO pedidos (Identificador, Pe_Estado, Pe_Producto, Pe_Cantidad, Pe_Precio, Pe_Fechaentrega, Pe_Fechapedido, Pe_Cliente, Pe_Observacion, Acciones) 
-            VALUES ('$Identificador', '$estado', '$producto', '$cantidad', '$precio', '$fechaEntrega', '$fechaPedido', '$cliente', '$observacion', '$acciones')";
-
-    // Ejecutar la consulta
-    if (mysqli_query($link, $sql)) {
-        // Si la inserción fue exitosa, mostrar un mensaje de éxito
-        echo "¡Pedido agregado correctamente!";
-    } else {
-        // Si ocurrió un error, mostrar un mensaje de error
-        echo "Error al agregar el pedido: " . mysqli_error($link);
-    }
-
-    // Terminar la ejecución del script
-    exit;
+    // Cerrar la declaración
+    mysqli_stmt_close($stmt);
+} else {
+    // Si no se recibió el identificador del pedido, enviar un mensaje de error
 }
 ?>

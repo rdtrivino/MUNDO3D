@@ -45,7 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             break;
                     }
                 } else {
-                    echo "<script>alert('Credenciales incorrectas.'); window.location.href = '../index.html';</script>";
+                    echo "<script>alert('Credenciales incorrectas.'); window.location.href = '../Index.html';</script>";
                 }
             }
         } else {
