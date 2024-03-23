@@ -145,10 +145,10 @@ if ($conn->connect_error) {
     };
     xhr.send();
 </script>
-    <div class="logout-controls" style="margin-right: 20px; margin-top: 1%;"> <!-- Ajuste del margen superior -->
+    <div class="logout-controls" style="margin-right: 20px; margin-top: 1%;"> 
         <div class="logout-icon">
             <a href="#" id="logout-button">
-                <i class="fas fa-sign-out-alt fa-3x"></i> <!-- Font Awesome logout icon -->
+                <i class="fas fa-sign-out-alt fa-3x"></i> 
             </a>
         </div>
     </div>
@@ -157,10 +157,10 @@ if ($conn->connect_error) {
 
 
 <script>
-    <div class="logout-controls" style="margin-right: 20px; margin-top: 1%;"> <!-- Ajuste del margen superior -->
+    <div class="logout-controls" style="margin-right: 20px; margin-top: 1%;"> 
         <div class="logout-icon">
             <a href="../index.html" id="logout-button">
-                <i class="fas fa-sign-out-alt fa-3x"></i> <!-- Font Awesome logout icon -->
+                <i class="fas fa-sign-out-alt fa-3x"></i>
             </a>
         </div>
     </div>
@@ -174,14 +174,14 @@ if ($conn->connect_error) {
     var logoutButton = document.getElementById("logout-button");
 
     userButton.addEventListener("click", function (e) {
-        e.stopPropagation(); // Evitar que el clic llegue a la ventana principal
+        e.stopPropagation();
         userMenu.classList.toggle("show");
     });
 
     logoutButton.addEventListener("click", function () {
         var confirmLogout = confirm("¿Estás seguro de que deseas cerrar sesión?");
         if (confirmLogout) {
-            window.location.href = "logout.php"; // Redirige al script de cierre de sesión
+            window.location.href = "logout.php";
         }
     });
 
