@@ -61,26 +61,28 @@ body {
     margin-top: 40px;
 }
 
+/* Media query para pantallas pequeñas */
+@media screen and (max-width: 768px) {
+    .logo {
+        height: 100px; /* Ajusta el tamaño del logo para pantallas pequeñas */
+        width: 100px;
+        left: 20px; /* Ajusta la posición del logo si es necesario */
+        margin-top: 20px; /* Ajusta el margen superior del logo si es necesario */
+    }
+}
+
+
 .nav {
     height: 5px; /* Cambia la altura a "auto" para que se ajuste automáticamente al contenido */
     display: flex;
     align-items: center;
+    
 }
 
 .nav__title {
     font-weight: 100;
 
 }
-/* Estilos para el contenedor de la barra de navegación */
-/* Estilos para el contenedor de la barra de navegación */
-.nav.container {
-    display: flex;
-    justify-content: center; /* Centra los botones horizontalmente */
-    align-items: center; /* Centra los botones verticalmente */
-    padding: 10px 0;
-    margin-left: 100px;
-}
-
 /* Estilos para los botones */
 /* Estilos para los botones */
 .nav__button {
