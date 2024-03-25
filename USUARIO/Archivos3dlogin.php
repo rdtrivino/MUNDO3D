@@ -1,3 +1,26 @@
+<?php
+$host = "localhost";
+$user = "root";
+$password = "";
+$dbname = "mundo3d";
+
+$link = mysqli_connect($host, $user, $password);
+
+if (!$link) {
+    die("Error al conectarse al servidor: " . mysqli_connect_error());
+}
+
+if (!mysqli_select_db($link, $dbname)) {
+    die("Error al conectarse a la Base de Datos: " . mysqli_error($link));
+}
+
+
+// Consulta a la base de datos para obtener productos de la categoría 5
+$sql = "SELECT * FROM productos WHERE Pro_Categoria = 5";
+$result = mysqli_query($link, $sql);
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,21 +30,11 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Free HTML Templates" name="keywords">
     <meta content="Free HTML Templates" name="description">
-
-    <!-- Favicon -->
     <link href="img/favicon.ico" rel="icon">
-
-    <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;800&display=swap" rel="stylesheet"> 
-
-    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css" rel="stylesheet">
-
-    <!-- Libraries Stylesheet -->
     <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
-
-    <!-- Customized Bootstrap Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
 </head>
 
@@ -33,23 +46,61 @@
             <!-- Icono de usuario -->
             <div class="d-inline-flex align-items-center">
                 <i class="fas fa-user fa-lg text-white mr-2"></i>
-                <!-- Texto de bienvenida y nombre de usuario -->
-                <div class="text-white">
-                    Bienvenido {{ user.name }}
+                <div class="text-white" id="user-name">
+                    Bienvenido:
                 </div>
+
+                <script>
+                // Función para hacer una solicitud AJAX al servidor y obtener el nombre de usuario
+                function getUsername() {
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('GET', '../Programas/get_username.php', true);
+                    xhr.onreadystatechange = function () {
+                        if (xhr.readyState === 4 && xhr.status === 200) {
+                            // Parsea la respuesta JSON para obtener el objeto de usuario
+                            var userData = JSON.parse(xhr.responseText);
+                            // Obtiene el nombre completo del objeto de usuario
+                            var nombreCompleto = userData.nombreCompleto;
+                            // Actualiza el contenido del elemento user-name con el nombre completo de usuario
+                            document.getElementById('user-name').textContent = 'Bienvenido ' + nombreCompleto;
+                        }
+                    };
+                    xhr.send();
+                }
+
+                // Llama a la función getUsername al cargar la página para obtener el nombre de usuario
+                window.onload = function () {
+                    getUsername();
+                };
+                </script>
             </div>
         </div>
         <div class="col-md-6 text-center text-lg-right">
             <div class="d-inline-flex align-items-center">
                 <!-- Icono de salir -->
-                <div>
-                    <i class="fas fa-sign-out-alt fa-lg text-white"></i>
+                <div id="logout">
+                    <i id="logout-button" class="fas fa-sign-out-alt fa-lg text-white"></i>
                 </div>
+                <script>
+                var logoutButton = document.getElementById("logout-button");
+
+                logoutButton.addEventListener("click", function(e) {
+                    e.stopPropagation(); // Evitar que el clic llegue a la ventana principal
+                    var confirmLogout = confirm("¿Estás seguro de que deseas cerrar sesión?");
+                    if (confirmLogout) {
+                        window.location.href = "../index.html"; // Redirige al script de cierre de sesión
+                    }
+                });
+                </script>
+                <style>
+                    #logout-button:hover {
+                        cursor: pointer;
+                    }
+                </style>
             </div>
         </div>
     </div>
 </div>
-
     <!-- Navbar Start -->
     <div class="container-fluid position-relative nav-bar p-0">
         <div class="container-lg position-relative p-0 px-lg-3" style="z-index: 9;">
@@ -83,70 +134,113 @@
                     <h1 class="mb-4 mb-md-0 text-white">Archivos 3D</h1>
                 </div>
                 <div class="col-md-6 text-center text-md-right">
-                    <div class="d-inline-flex align-items-center">
-                        <a class="btn text-white" href="">INICIO</a>
-                        <i class="fas fa-angle-right text-white"></i>
-                        <a class="btn text-white disabled" href="">Archivos 3D</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Page Header Start -->
-
-<!-- Catalog Start -->
-<div class="container-fluid pt-5">
-    <div class="container">
-        <h6 class="text-secondary text-uppercase text-center font-weight-medium mb-3">Nuestros Productos</h6>
-        <h1 class="display-4 text-center mb-5">Explore nuestros Archivos 3D</h1>
-        <div class="row">
-            <!-- Producto 1 -->
-            <div class="col-lg-3 col-md-6">
-                <div class="card mb-5">
-                    <img src="product1.jpg" class="card-img-top" alt="Product 1">
-                    <div class="card-body">
-                        <h5 class="card-title">Product 1</h5>
-                        <p class="card-text">Description of Product 1.</p>
-                        <a href="#" class="btn btn-primary">Buy Now</a>
-                    </div>
-                </div>
-            </div>
-            <!-- Producto 2 -->
-            <div class="col-lg-3 col-md-6">
-                <div class="card mb-5">
-                    <img src="product2.jpg" class="card-img-top" alt="Product 2">
-                    <div class="card-body">
-                        <h5 class="card-title">Product 2</h5>
-                        <p class="card-text">Description of Product 2.</p>
-                        <a href="#" class="btn btn-primary">Buy Now</a>
-                    </div>
-                </div>
-            </div>
-            <!-- Producto 3 -->
-            <div class="col-lg-3 col-md-6">
-                <div class="card mb-5">
-                    <img src="product3.jpg" class="card-img-top" alt="Product 3">
-                    <div class="card-body">
-                        <h5 class="card-title">Product 3</h5>
-                        <p class="card-text">Description of Product 3.</p>
-                        <a href="#" class="btn btn-primary">Buy Now</a>
-                    </div>
-                </div>
-            </div>
-            <!-- Producto 4 -->
-            <div class="col-lg-3 col-md-6">
-                <div class="card mb-5">
-                    <img src="product4.jpg" class="card-img-top" alt="Product 4">
-                    <div class="card-body">
-                        <h5 class="card-title">Product 4</h5>
-                        <p class="card-text">Description of Product 4.</p>
-                        <a href="#" class="btn btn-primary">Buy Now</a>
-                    </div>
+                <div class="d-inline-flex align-items-center">
+                    <form class="form-inline mr-3">
+                        <input class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Buscar" oninput="searchProducts(this.value)">
+                        <!-- Cambiar el evento a "input" para que se ejecute cada vez que se ingresa una letra -->
+                        <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Buscar</button>
+                    </form>
+                    <a class="btn text-white ml-3" href="#">
+                        <i class="fas fa-shopping-cart mr-2"></i>Carrito
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<script>
+    function searchProducts(searchTerm) {
+        // Obtener todos los elementos de productos
+        var products = document.querySelectorAll('.product');
+        
+        // Convertir el término de búsqueda a mayúsculas para hacer una comparación insensible a mayúsculas y minúsculas
+        searchTerm = searchTerm.toUpperCase();
+        
+        // Iterar sobre todos los productos
+        products.forEach(function(product) {
+            // Obtener el nombre del producto
+            var productName = product.querySelector('.card-title').textContent.toUpperCase();
+            
+            // Obtener la descripción del producto
+            var productDescription = product.querySelector('.card-text').textContent.toUpperCase();
+            
+            // Comprobar si el término de búsqueda está presente en el nombre o la descripción del producto
+            if (productName.includes(searchTerm) || productDescription.includes(searchTerm)) {
+                // Mostrar el producto si coincide con el término de búsqueda
+                product.style.display = 'block';
+            } else {
+                // Ocultar el producto si no coincide con el término de búsqueda
+                product.style.display = 'none';
+            }
+        });
+    }
+</script>
+    <div class="container-fluid pt-5">
+    <div class="container">
+        <h6 class="text-secondary text-uppercase text-center font-weight-medium mb-3">Nuestros Productos</h6>
+        <h1 class="display-4 text-center mb-5">Explore nuestros Archivos 3D</h1>
+        <div class="row">
+            <?php
+            // Mostrar productos si hay resultados
+            if (mysqli_num_rows($result) > 0) {
+                while ($row = mysqli_fetch_assoc($result)) {
+            ?>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="card mb-5 h-100">
+                            <img src="data:image/jpeg;base64,<?php echo base64_encode($row['imagen_principal']); ?>" class="card-img-top" alt="<?php echo $row["Pro_Nombre"]; ?>">
+                            <div class="card-body">
+                                <h5 class="card-title"><?php echo $row["Pro_Nombre"]; ?></h5>
+                                <p class="card-text"><?php echo $row["Pro_Descripcion"]; ?></p>
+                                <a href="#" class="btn btn-secondary" data-toggle="modal" data-target="#modal_<?php echo $row["Identificador"]; ?>">Ver Detalles</a>
+                                <a href="#" class="btn btn-success" onclick="downloadImage('<?php echo base64_encode($row['imagen_principal']); ?>', '<?php echo $row["Pro_Nombre"]; ?>.jpg')">Descargar</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="modal_<?php echo $row["Identificador"]; ?>" tabindex="-1" role="dialog" aria-labelledby="modalTitle_<?php echo $row["Identificador"]; ?>" aria-hidden="true">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="modalTitle_<?php echo $row["Identificador"]; ?>"><?php echo $row["Pro_Nombre"]; ?></h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <img src="data:image/jpeg;base64,<?php echo base64_encode($row['imagen_principal']); ?>" class="img-fluid" alt="<?php echo $row["Pro_Nombre"]; ?>">
+                                    <p><?php echo $row["Pro_Descripcion"]; ?></p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                    <a href="#" class="btn btn-success" onclick="downloadImage('<?php echo base64_encode($row['imagen_principal']); ?>', '<?php echo $row["Pro_Nombre"]; ?>.jpg')">Descargar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            <?php
+                }
+            } else {
+                echo "No se encontraron productos en esta categoría.";
+            }
+            ?>
+        </div>
+    </div>
+</div>
+
+<script>
+// Función para descargar la imagen
+function downloadImage(imageData, imageName) {
+    // Crear un enlace temporal
+    var link = document.createElement('a');
+    link.href = 'data:image/jpeg;base64,' + imageData;
+    link.download = imageName;
+    // Simular un clic en el enlace para iniciar la descarga
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+</script>
 
  <!-- Footer Start -->
  <div class="container-fluid bg-primary text-white mt-5 pt-5 px-sm-3 px-md-5">
