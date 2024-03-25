@@ -185,7 +185,7 @@ $result = mysqli_query($link, $sql);
             if (mysqli_num_rows($result) > 0) {
                 while ($row = mysqli_fetch_assoc($result)) {
             ?>
-                    <div class="col-lg-3 col-md-6">
+                    <div class="col-lg-3 col-md-6 product">
                         <div class="card mb-5 h-100">
                             <img src="data:image/jpeg;base64,<?php echo base64_encode($row['imagen_principal']); ?>" class="card-img-top" alt="<?php echo $row["Pro_Nombre"]; ?>">
                             <div class="card-body">
