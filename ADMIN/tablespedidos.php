@@ -294,17 +294,21 @@
                                         <div class="table-responsive" style="background-color: #f8f9fa; border-radius: 10px;">
                                             <table id="datatables" class="table table-striped table-bordered table-hover">
                                                 <thead>
-                                                    <tr>
-                                                        <th>Código</th>
-                                                        <th>Estado</th>
-                                                        <th>Producto</th>
-                                                        <th>Cantidad</th>
-                                                        <th>Fecha de Entrega</th>
-                                                        <th>Fecha de Pedido</th>
-                                                        <th>Cliente</th>
-                                                        <th>Observación</th>
-                                                        <th>Acciones</th>
-                                                    </tr>
+                                                <tr>
+                                                    <th>Código</th>
+                                                    <th>Estado</th>
+                                                    <th>Producto</th>
+                                                    <th>Cantidad</th>
+                                                    <th>Fecha de Entrega</th>
+                                                    <th>Fecha de Pedido</th>
+                                                    <th>Cliente</th>
+                                                    <th>Nombre de Pedido</th>
+                                                    <th>Imagen</th>
+                                                    <th>Tipo de Impresión</th>
+                                                    <th>Color</th>
+                                                    <th>Observación</th>
+                                                    <th>Acciones</th>
+                                                </tr>
                                                 </thead>
                                                 <?php
                                                 $sql_pedidos = "SELECT * FROM pedidos WHERE Acciones <> 'inactivo'";
@@ -316,6 +320,7 @@
                                                         ?>
                                                         <tr id="pedidoRow<?php echo $row['Identificador']; ?>">
                                                             <td><?php echo $row['Identificador']; ?></td>
+                                                            
                                                             <td><?php echo obtenerNombreEstado($row['Pe_Estado'], $link); ?></td>
                                                             <td><?php echo obtenerNombreProducto($row['Pe_Producto'], $link); ?></td>
                                                             <td><?php echo $row['Pe_Cantidad']; ?></td>
@@ -344,6 +349,10 @@
                                                                 mysqli_stmt_close($stmt_cliente);
                                                                 ?>
                                                             </td>
+                                                            <td><?php echo $row['pe_nombre_pedido']; ?></td>
+                                                            <td><img src="data:image/png;base64,<?php echo base64_encode($row['pe_imagen_pedido']); ?>" alt="Imagen del pedido" style="width: 200px; height: 200px;"></td>
+                                                            <td><?php echo $row['pe_tipo_impresion']; ?></td>
+                                                            <td><?php echo $row['pe_color']; ?></td>
                                                             <td><?php echo $row['Pe_Observacion']; ?></td>
                                                             <td>
                                                                 

@@ -22,7 +22,7 @@ $result = mysqli_query($link, $sql);
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="utf-8">
@@ -30,21 +30,11 @@ $result = mysqli_query($link, $sql);
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Free HTML Templates" name="keywords">
     <meta content="Free HTML Templates" name="description">
-
-    <!-- Favicon -->
-    <link href="img/favicon.ico" rel="icon">
-
-    <!-- Google Web Fonts -->
+    <link rel="shortcut icon" href="../images/Logo Mundo 3d.png" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;800&display=swap" rel="stylesheet"> 
-
-    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css" rel="stylesheet">
-
-    <!-- Libraries Stylesheet -->
     <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
-
-    <!-- Customized Bootstrap Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
 </head>
 
@@ -228,11 +218,12 @@ $result = mysqli_query($link, $sql);
             </div>
         </div>
 
-        <div class="container-fluid bg-primary text-white mt-5 pt-5 px-sm-3 px-md-5">
+         <!-- Footer Start -->
+         <div class="container-fluid bg-primary text-white mt-5 pt-5 px-sm-3 px-md-5">
         <div class="row pt-5">
             <div class="col-lg-3 col-md-6 mb-5">
                 <a href=""><h1 class="text-secondary mb-3"><span class="text-white">MUNDO</span>3D</h1></a>
-                <p>Volup amet magna clita tempor. Tempor sea eos vero ipsum. Lorem lorem sit sed elitr sit no, sed kasd et ipsum dolor duo dolor</p>
+                <p>¡Adéntrate en un mundo tridimensional como nunca antes! ¡Bienvenid@ nuestra página 3D, donde tus sueños cobran vida!</p>
                 <div class="d-flex justify-content-start mt-4">
                     <a class="btn btn-outline-light rounded-circle text-center mr-2 px-0" style="width: 38px; height: 38px;" href="#"><i class="fas fa-times"></i></a>
                     <a class="btn btn-outline-light rounded-circle text-center mr-2 px-0" style="width: 38px; height: 38px;" href="#"><i class="fab fa-facebook-f"></i></a>
@@ -243,9 +234,9 @@ $result = mysqli_query($link, $sql);
             <div class="col-lg-3 col-md-6 mb-5">
                 <h4 class="text-white mb-4">Ponerse en contacto</h4>
                 <p>Contactanos para tener el gusto de atenderlos.</p>
-                <p><i class="fa fa-map-marker-alt mr-2"></i>123 Street, New York, USA</p>
-                <p><i class="fab fa-whatsapp mr-2"></i>+012 345 67890</p>
-                <p><i class="fa fa-envelope mr-2"></i>info@example.com</p>
+                <p><i class="fa fa-map-marker-alt mr-2"></i>Calle 15 #31-42 Bogotá, Colombia</p>
+                <p><i class="fab fa-whatsapp mr-2"></i>3124672836</p>
+                <p><i class="fa fa-envelope mr-2"></i>rdtrivino6@misena.edu.co</p>
             </div>
             <div class="col-lg-3 col-md-6 mb-5">
                 <h4 class="text-white mb-4">Enlaces Rápidos</h4>
@@ -258,16 +249,16 @@ $result = mysqli_query($link, $sql);
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 mb-5">
-                <h4 class="text-white mb-4">Newsletter</h4>
+                <h4 class="text-white mb-4">Recibe nuevas noticias</h4>
                 <form action="">
                     <div class="form-group">
-                        <input type="text" class="form-control border-0" placeholder="Your Name" required="required" />
+                        <input type="text" class="form-control border-0" placeholder="Nombre" required="required" />
                     </div>
                     <div class="form-group">
-                        <input type="email" class="form-control border-0" placeholder="Your Email" required="required" />
+                        <input type="email" class="form-control border-0" placeholder="Email" required="required" />
                     </div>
                     <div>
-                        <button class="btn btn-lg btn-secondary btn-block border-0" type="submit">Submit Now</button>
+                        <button class="btn btn-lg btn-secondary btn-block border-0" type="submit">ENVIAR</button>
                     </div>
                 </form>
             </div>
