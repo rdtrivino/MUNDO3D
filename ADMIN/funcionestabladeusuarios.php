@@ -48,6 +48,7 @@ if (isset($_POST['id_usuario'])) {
 
 
 
+$response = array();
 
 // Verificar si se recibió una solicitud POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -65,7 +66,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $dbname = "mundo3d";
         $link = mysqli_connect($servername, $username, $password, $dbname);
         if (!$link) {
-            die("Error al conectar a la base de datos: " . mysqli_connect_error());
+            $response['success'] = false;
+            $response['message'] = "Error al conectar a la base de datos: " . mysqli_connect_error();
+            echo json_encode($response);
+            exit;
         }
 
         // Obtener los datos del formulario
@@ -110,6 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $mail->addAddress($email, $nombre);
             $mail->Subject = $subject;
             $mail->Body = $message;
+            
             // Enviar correo electrónico
             if ($mail->send()) {
                 // Envío de correo exitoso
@@ -138,8 +143,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $response['message'] = 'Se esperaba una solicitud POST.';
 }
 
+// Devolver respuesta como JSON
+echo json_encode($response);
+
 // Función para generar una contraseña aleatoria
-function generarContraseña($longitud = 10) {
+function generarContraseña($longitud = 8) {
     $caracteres = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+';
     $contraseña = '';
     $maxCaracteres = strlen($caracteres) - 1;
@@ -148,9 +156,3 @@ function generarContraseña($longitud = 10) {
     }
     return $contraseña;
 }
-
-// Devolver respuesta como JSON
-echo json_encode($response);
-?>
-
-
