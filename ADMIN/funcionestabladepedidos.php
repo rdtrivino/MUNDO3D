@@ -74,45 +74,6 @@ if (isset($_POST['cliente'], $_POST['producto'], $_POST['cantidad'], $_POST['fec
     mysqli_close($link);
 } else {
 }
-// Verificar si se recibió el formulario para guardar cambios en el pedido
-if (isset($_POST['guardarCambiosPedido'])) {
-    // Verificar que se recibieron todos los datos necesarios
-    if (isset($_POST['Identificador'], $_POST['cliente'], $_POST['estado'], $_POST['producto'], $_POST['cantidad'], $_POST['fechapedido'], $_POST['fechaentrega'], $_POST['observacion'])) {
-        // Obtener los datos del formulario
-        $identificador = $_POST['Identificador'];
-        $cliente = $_POST['cliente'];
-        $estado = $_POST['estado'];
-        $producto = $_POST['producto'];
-        $cantidad = $_POST['cantidad'];
-        $fechapedido = $_POST['fechapedido'];
-        $fechaentrega = $_POST['fechaentrega'];
-        $observacion = $_POST['observacion'];
-
-        // Actualizar el pedido en la base de datos
-        $consulta = "UPDATE pedidos SET Pe_Cliente=?, Pe_Estado=?, Pe_Producto=?, Pe_Cantidad=?, Pe_Fechapedido=?, Pe_Fechaentrega=?, Pe_Observacion=? WHERE Identificador=?";
-        $stmt = mysqli_prepare($link, $consulta);
-
-        // Verificar si la preparación de la consulta fue exitosa
-        if ($stmt) {
-            mysqli_stmt_bind_param($stmt, "iisdsdssi", $cliente, $estado, $producto, $cantidad, $fechapedido, $fechaentrega, $observacion, $identificador);
-
-            // Ejecutar la consulta
-            if (mysqli_stmt_execute($stmt)) {
-                echo json_encode(["success" => true, "message" => "Datos actualizados correctamente."]);
-            } else {
-                echo json_encode(["success" => false, "message" => "Error al actualizar los datos del pedido: " . mysqli_error($link)]);
-            }
-
-            // Cerrar la declaración
-            mysqli_stmt_close($stmt);
-        } else {
-            echo json_encode(["success" => false, "message" => "Error al preparar la consulta: " . mysqli_error($link)]);
-        }
-    } else {
-        echo json_encode(["success" => false, "message" => "No se recibieron todos los datos necesarios para actualizar el pedido."]);
-    }
-}
-
 
 // Verificar si se recibió el identificador del pedido a eliminar
 if (isset($_POST['identificador'])) {

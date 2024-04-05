@@ -409,7 +409,7 @@
                     </div>
                     <div class="mb-3">
     <label for="pe_i<div class="mb-3">
-    <label for="imagen" class="form-label">Imagen Principal</label>
+    <label for="imagen" class="form-label">Imagen</label>
     <?php if (!empty($row['pe_imagen_pedido	'])) : ?>
         <!-- Muestra la imagen actual si existe -->
         <img src="<?php echo $row['pe_imagen_pedido	']; ?>" alt="Imagen actual" style="width: 100px; height: 100px;">
