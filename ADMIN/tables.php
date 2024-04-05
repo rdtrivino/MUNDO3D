@@ -236,56 +236,66 @@
                                         </div>
 
                                         <script>
-                                        $(document).ready(function() {
-                                            // Manejar el clic en el botón "Agregar Colaborador"
-                                            $("#btnAgregarColaborador").click(function() {
-                                                // Generar una contraseña aleatoria
-                                                var contraseñaGenerada = generarContraseña();
-
-                                                // Asignar la contraseña generada al campo oculto
-                                                $("#contraseña").val(contraseñaGenerada);
-
-                                                // Obtener los datos del formulario
-                                                var formData = $("#formulario-colaborador").serialize();
-
-                                                // Agregar manualmente la contraseña al objeto formData
-                                                formData += "&contraseña=" + contraseñaGenerada;
-
-                                                // Enviar la solicitud AJAX al servidor PHP
-                                                $.ajax({
-                                                    type: "POST",
-                                                    url: "funcionestabladeusuarios.php", // Reemplaza esto con la ruta correcta a tu archivo PHP
-                                                    data: formData,
-                                                    dataType: "json",
-                                                    success: function(response) {
-                                                        // Manejar la respuesta del servidor
-                                                        if (response.success) {
-                                                            alert(response.message);
-                                                            location.reload(); // Recargar la página después de agregar el colaborador
-                                                        } else {
-                                                            alert("Error: " + response.message);
-                                                        }
-                                                    },
-                                                    error: function(xhr, status, error) {
-                                                        // Manejar errores de la solicitud AJAX
-                                                        console.error(xhr.responseText);
-                                                        alert("Error al procesar la solicitud. Por favor, inténtalo de nuevo más tarde.");
-                                                    }
+                                            $(document).ready(function() {
+                                                // Manejar el clic en el botón "Agregar Colaborador"
+                                                $("#btnAgregarColaborador").click(function() {
+                                                    enviarFormulario();
                                                 });
+
+                                                // Función para enviar el formulario
+                                                function enviarFormulario() {
+                                                    // Generar una contraseña aleatoria
+                                                    var contraseñaGenerada = generarContraseña();
+
+                                                    // Asignar la contraseña generada al campo oculto
+                                                    $("#contraseña").val(contraseñaGenerada);
+
+                                                    // Obtener los datos del formulario
+                                                    var formData = $("#formulario-colaborador").serialize();
+
+                                                    // Agregar manualmente la contraseña al objeto formData
+                                                    formData += "&contraseña=" + contraseñaGenerada;
+
+                                                    // Enviar la solicitud AJAX al servidor PHP
+                                                    $.ajax({
+                                                        type: "POST",
+                                                        url: "funcionestabladeusuarios.php", // Reemplaza esto con la ruta correcta a tu archivo PHP
+                                                        data: formData,
+                                                        dataType: "json",
+                                                        success: function(response) {
+                                                            // Manejar la respuesta del servidor
+                                                            if (response.success) {
+                                                                // Mostrar alerta de éxito
+                                                                
+                                                                // Recargar la página
+                                                                location.reload();
+                                                            } else {
+                                                                alert("Error: " + response.message);
+                                                            }
+                                                        },
+                                                        error: function(xhr, status, error) {
+                                                            // Manejar errores de la solicitud AJAX
+                                                            console.error(xhr.responseText);
+                                                            alert("Error al procesar la solicitud. Por favor, inténtalo de nuevo más tarde.");
+                                                        }
+                                                    });
+
+                                                    // Mostrar alerta de éxito inmediatamente después de enviar la solicitud
+                                                    alert("El colaborador se ha agregado correctamente.");
+                                                }
+
+                                                // Función para generar una contraseña aleatoria
+                                                function generarContraseña() {
+                                                    var caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
+                                                    var longitud = 12;
+                                                    var contraseña = "";
+                                                    for (var i = 0; i < longitud; i++) {
+                                                        contraseña += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+                                                    }
+                                                    return contraseña;
+                                                }
                                             });
-                                        });
-
-                                        // Función para generar una contraseña aleatoria
-                                        function generarContraseña() {
-                                            // Lógica para generar una contraseña aleatoria
-                                            // Retorna la contraseña generada
-                                        }
-
-
-                                        </script>
-
-
-
+                                            </script>
                                                         <style>
                                                             .pdf-link-container {
                                                                 position: fixed;

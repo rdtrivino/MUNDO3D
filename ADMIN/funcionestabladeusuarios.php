@@ -46,8 +46,7 @@ if (isset($_POST['id_usuario'])) {
     mysqli_stmt_close($stmt);
 }
 
-
-
+// Inicializar la respuesta
 $response = array();
 
 // Verificar si se recibió una solicitud POST
@@ -59,7 +58,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         require '../programas/phpmailer/PHPMailer.php';
         require '../programas/phpmailer/SMTP.php';
 
-        // Establecer conexión a la base de datos (reemplaza esto con tus credenciales)
+        // Obtener los datos del formulario
+        $identificacion = $_POST['Identificacion'];
+        $nombre = $_POST['nombre'];
+        $telefono = $_POST['telefono'];
+        $email = $_POST['email'];
+        $ciudad = $_POST['ciudad'];
+        $direccion = $_POST['direccion'];
+        // Generar la contraseña
+        $contraseña = generarContraseña(8); // Longitud de la contraseña: 12 caracteres
+        $rol = $_POST['rol'];
+        $estado = $_POST['estado'];
+
+        // Cifrar la contraseña para almacenarla en la base de datos
+        $contraseña_cifrada = password_hash($contraseña, PASSWORD_DEFAULT);
+
+        // Insertar los datos del nuevo colaborador en la base de datos
         $servername = "localhost";
         $username = "root";
         $password = "";
@@ -72,58 +86,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
-        // Obtener los datos del formulario
-        $identificacion = $_POST['Identificacion'];
-        $nombre = $_POST['nombre'];
-        $telefono = $_POST['telefono'];
-        $email = $_POST['email'];
-        $ciudad = $_POST['ciudad'];
-        $direccion = $_POST['direccion'];
-        // Generar la contraseña
-        $contraseña = generarContraseña(12); // Longitud de la contraseña: 12 caracteres
-        $rol = $_POST['rol'];
-        $estado = $_POST['estado'];
-
-        // Cifrar la contraseña para almacenarla en la base de datos
-        $contraseña_cifrada = password_hash($contraseña, PASSWORD_DEFAULT);
-
-        // Insertar los datos del nuevo colaborador en la base de datos
         $sql = "INSERT INTO usuario (Usu_Identificacion, Usu_Nombre_completo, Usu_Telefono, Usu_Email, Usu_Ciudad, Usu_Direccion, Usu_Contraseña, Usu_Rol, Usu_Estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = mysqli_prepare($link, $sql);
         mysqli_stmt_bind_param($stmt, "sssssssss", $identificacion, $nombre, $telefono, $email, $ciudad, $direccion, $contraseña_cifrada, $rol, $estado);
 
         if (mysqli_stmt_execute($stmt)) {
             // Registro exitoso, enviar correo electrónico con los datos de inicio de sesión
-            $subject = "Datos de inicio de sesión";
-            $message = "Hola $nombre,\n\nBienvenido a MUNDO 3D.\n\nTu información de inicio de sesión es la siguiente:\n\nCorreo electrónico: $email\nContraseña: $contraseña";
+            if (!empty($email)) {
+                $mail = new PHPMailer();
+                $mail->isSMTP();
+                $mail->Host = 'smtp.office365.com';
+                $mail->SMTPAuth = true;
+                $mail->Username = 'Mundo3D.RYSJ@outlook.com';
+                $mail->Password = 'Mundo3D123';
+                $mail->SMTPSecure = 'tls';
+                $mail->Port = 587;
+                $mail->CharSet = 'UTF-8';
+                $mail->Encoding = 'base64'; 
+                $mail->setFrom('Mundo3D.RYSJ@outlook.com', 'MUNDO 3D');
+                $mail->addAddress($email, $nombre);
+                $mail->Subject = 'Datos de inicio de sesión';
+                $mail->Body = "Hola $nombre,\n\nBienvenido a MUNDO 3D.\n\nTu información de inicio de sesión es la siguiente:\n\nCorreo electrónico: $email\nContraseña: $contraseña\n\nTe recomendamos cambiar tu contraseña al ingresar al sistema.\n\nGracias por ser parte de la mejor empresa,\nEquipo de soporte MUNDO 3D";
 
-            $message .= "\n\nTe recomendamos cambiar tu contraseña al ingresar al sistema.";
-            $message .= "\n\nGracias por ser parte de la mejor empresa,\nEquipo de soporte MUNDO 3D";
-
-            $mail = new PHPMailer();
-            $mail->isSMTP();
-            $mail->Host = 'smtp.office365.com';
-            $mail->SMTPAuth = true;
-            $mail->Username = 'Mundo3D.RYSJ@outlook.com';
-            $mail->Password = 'Mundo3D123';
-            $mail->SMTPSecure = 'tls';
-            $mail->Port = 587;
-            $mail->CharSet = 'UTF-8';
-            $mail->Encoding = 'base64'; 
-            $mail->setFrom('Mundo3D.RYSJ@outlook.com', 'MUNDO 3D');
-            $mail->addAddress($email, $nombre);
-            $mail->Subject = $subject;
-            $mail->Body = $message;
-            
-            // Enviar correo electrónico
-            if ($mail->send()) {
-                // Envío de correo exitoso
-                $response['success'] = true;
-                $response['message'] = 'El colaborador se ha agregado correctamente.';
+                if ($mail->send()) {
+                    // Envío de correo exitoso
+                    $response['success'] = true;
+                    $response['message'] = 'El colaborador se ha agregado correctamente.';
+                } else {
+                    // Error al enviar el correo
+                    $response['success'] = false;
+                    $response['message'] = 'Error al enviar el correo electrónico: ' . $mail->ErrorInfo;
+                }
             } else {
-                // Error al enviar el correo
+                // No se proporcionó una dirección de correo electrónico válida
                 $response['success'] = false;
-                $response['message'] = 'Error al enviar el correo electrónico: ' . $mail->ErrorInfo;
+                $response['message'] = 'No se proporcionó una dirección de correo electrónico válida.';
             }
         } else {
             // Error al registrar el colaborador en la base de datos
