@@ -249,8 +249,8 @@
                                 <div class="row mt-4">
                                 <div class="col d-flex justify-content-end">
                                     <div class="col-auto">
-                                        <div class="input-group input-group-sm rounded-pill" style="width: 300px;"> <!-- Ajusta el ancho total aquí -->
-                                            <span class="input-group-text" id="basic-addon1"> <!-- Espacio adicional para la izquierda -->
+                                        <div class="input-group input-group-sm rounded-pill" style="width: 300px;"> 
+                                            <span class="input-group-text" id="basic-addon1"> 
                                                 <i class="fas fa-search"></i>
                                             </span>
                                             <input type="text" class="form-control rounded-end" id="searchInput" placeholder="Buscar..." oninput="searchTable()" style="width: 250px;"> <!-- Ajusta el ancho del campo de entrada aquí -->
@@ -357,9 +357,137 @@
                                                             <td>
                                                                 
                                                             <div class="btn-group" role="group" aria-label="Acciones">
-                                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editarModal<?php echo $row['Identificador']; ?>" data-toggle="tooltip" data-placement="top" title="Editar">
-                                                                    <i class="fas fa-edit"></i>
-                                                                </button>
+                                                            
+
+<!-- Botón Editar en cada fila de la tabla -->
+<button type="button" class="btn btn-primary" onclick="abrirModalEditar(<?php echo $row['Identificador']; ?>)" data-toggle="tooltip" data-placement="top" title="Editar Pedido">
+    <i class="fas fa-edit"></i>
+</button>
+
+<!-- Modal de Edición -->
+<div class="modal fade" id="editarModal<?php echo $row['Identificador']; ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Editar Pedido</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Formulario de edición de pedido -->
+                <form id="formularioEditar<?php echo $row['Identificador']; ?>">
+                    <div class="mb-3">
+                        <label for="pe_cliente" class="form-label">Cliente</label>
+                        <input type="text" class="form-control" id="pe_cliente" name="pe_cliente" value="<?php echo $row['Pe_Cliente']; ?>">
+                    </div>
+                    <div class="mb-3">
+                        <label for="pe_tipo_impresion" class="form-label">Tipo de Impresión</label>
+                        <input type="text" class="form-control" id="pe_tipo_impresion" name="pe_tipo_impresion" value="<?php echo $row['pe_tipo_impresion']; ?>">
+                    </div>
+                    <div class="mb-3">
+                        <label for="pe_estado" class="form-label">Estado</label>
+                        <input type="text" class="form-control" id="pe_estado" name="pe_estado" value="<?php echo $row['Pe_Estado']; ?>">
+                    </div>
+                    <div class="mb-3">
+                        <label for="pe_producto" class="form-label">Producto</label>
+                        <input type="text" class="form-control" id="pe_producto" name="pe_producto" value="<?php echo $row['Pe_Producto']; ?>">
+                    </div>
+                    <div class="mb-3">
+                        <label for="pe_cantidad" class="form-label">Cantidad</label>
+                        <input type="text" class="form-control" id="pe_cantidad" name="pe_cantidad" value="<?php echo $row['Pe_Cantidad']; ?>">
+                    </div>
+                    <div class="mb-3">
+                        <label for="pe_fechapedido" class="form-label">Fecha de Pedido</label>
+                        <input type="text" class="form-control" id="pe_fechapedido" name="pe_fechapedido" value="<?php echo $row['Pe_Fechapedido']; ?>">
+                    </div>
+                    <div class="mb-3">
+                        <label for="pe_fechaentrega" class="form-label">Fecha de Entrega</label>
+                        <input type="text" class="form-control" id="pe_fechaentrega" name="pe_fechaentrega" value="<?php echo $row['Pe_Fechaentrega']; ?>">
+                    </div>
+                    <div class="mb-3">
+                        <label for="pe_color" class="form-label">Color</label>
+                        <input type="text" class="form-control" id="pe_color" name="pe_color" value="<?php echo $row['pe_color']; ?>">
+                    </div>
+                    <div class="mb-3">
+    <label for="pe_i<div class="mb-3">
+    <label for="imagen" class="form-label">Imagen Principal</label>
+    <?php if (!empty($row['pe_imagen_pedido	'])) : ?>
+        <!-- Muestra la imagen actual si existe -->
+        <img src="<?php echo $row['pe_imagen_pedido	']; ?>" alt="Imagen actual" style="width: 100px; height: 100px;">
+    <?php else : ?>
+        <!-- Muestra un mensaje si no hay imagen actual -->
+        <p>No hay imagen actual.</p>
+    <?php endif; ?>
+    <!-- Input para seleccionar una nueva imagen -->
+    <input type="file" class="form-control" id="imagen-<?php echo $row['Identificador']; ?>" name="imagen" accept="image/*">
+</div>
+
+
+         <!-- Otros campos del formulario de edición -->
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" onclick="guardarCambios(<?php echo $row['Identificador']; ?>)">Guardar Cambios</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Función para abrir el modal de edición
+    function abrirModalEditar(identificador) {
+        $("#editarModal" + identificador).modal("show");
+    }
+
+    // Función para enviar los datos del formulario de edición al servidor y guardar los cambios
+    function guardarCambios(identificador) {
+        // Obtener los datos del formulario
+        var formData = $("#formularioEditar" + identificador).serialize();
+
+        // Enviar los datos al servidor mediante AJAX
+        $.ajax({
+            type: "POST",
+            url: "actualizar_pedido.php", // Reemplaza esto con la ruta correcta a tu archivo PHP para actualizar el pedido
+            data: formData,
+            dataType: "json",
+            success: function(response) {
+                // Manejar la respuesta del servidor
+                if (response.success) {
+                    alert("Pedido actualizado correctamente.");
+                    $("#editarModal" + identificador).modal("hide");
+                    // Puedes agregar aquí cualquier otra acción que desees después de guardar los cambios
+                } else {
+                    alert("Error al actualizar el pedido: " + response.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr.responseText);
+                alert("Error al procesar la solicitud. Por favor, inténtalo de nuevo más tarde.");
+            }
+        });
+    }
+</script>
+
+<?php
+// Manejar el envío del formulario de edición aquí mismo
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Recibir los datos del formulario
+    $nombre = $_POST['nombre'];
+    $apellido = $_POST['apellido'];
+
+    // Aquí puedes agregar la lógica para actualizar los datos en la base de datos
+    // Por ejemplo, puedes usar una consulta SQL para actualizar los datos en la tabla correspondiente
+    // Luego, puedes mostrar una alerta o redireccionar al usuario según sea necesario
+
+    // Ejemplo:
+    // $sql = "UPDATE tu_tabla SET nombre = '$nombre', apellido = '$apellido' WHERE id = $id";
+    // if (mysqli_query($conexion, $sql)) {
+    //     echo '<script>alert("Cambios guardados correctamente");</script>';
+    // } else {
+    //     echo '<script>alert("Error al guardar cambios");</script>';
+    // }
+}
+?>
 
                                                                 <button type="button" class="btn btn-danger" onclick="eliminarPedido(<?php echo $row['Identificador']; ?>)" data-toggle="tooltip" data-placement="top" title="Eliminar">
                                                                     <i class="fas fa-trash"></i>
