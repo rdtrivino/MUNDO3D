@@ -11,7 +11,6 @@
         $usuario_id = $_SESSION['user_id'];
 ?>
 <?php
-session_start();
 
 $host = "localhost";
 $user = "root";
