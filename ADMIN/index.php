@@ -196,7 +196,7 @@ if ($resultado_pedidos_por_mes && mysqli_num_rows($resultado_pedidos_por_mes) > 
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                         <li><a class="dropdown-item" href="confi.php">Configuracion de cuenta</a></li>
                          <li><hr class="dropdown-divider" /></li>
-                        <li><a class="dropdown-item" href="../index.html" id="cerrar-sesion-button">Cerrar sesión</a></li>                        
+                        <li><a class="dropdown-item" href="../Programas/logout.php" id="cerrar-sesion-button">Cerrar sesión</a></li>                        
                     </ul>
                 </li>
             </ul>

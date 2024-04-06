@@ -1,4 +1,16 @@
 <?php
+    session_start();
+    include __DIR__ . '/../conexion.php';
+        //Confirmacion de que el usuario ha realizado el proceso de autenticación
+        if(!isset($_SESSION['confirmado']) || $_SESSION['confirmado'] == false){
+            //die("No ha iniciado sesión !!!");
+            header("Location: ../Programas/autenticacion.php");
+        }
+
+        $nombreCompleto = $_SESSION['username'];
+        $usuario_id = $_SESSION['user_id'];
+?>
+<?php
 $host = "localhost";
 $user = "root";
 $password = "";
@@ -88,7 +100,7 @@ $result = mysqli_query($link, $sql);
                     e.stopPropagation(); // Evitar que el clic llegue a la ventana principal
                     var confirmLogout = confirm("¿Estás seguro de que deseas cerrar sesión?");
                     if (confirmLogout) {
-                        window.location.href = "../index.html"; // Redirige al script de cierre de sesión
+                        window.location.href = "../Programas/logout.php"; // Redirige al script de cierre de sesión
                     }
                 });
                 </script>
@@ -113,7 +125,6 @@ $result = mysqli_query($link, $sql);
                 </button>
                 <div class="collapse navbar-collapse justify-content-between px-3" id="navbarCollapse">
                 <div class="navbar-nav ml-auto py-0">
-                        <a href="indexusuario.html" class="nav-item nav-link active">INICIO</a>
                         <a href="Catalogologin.php" class="nav-item nav-link">CATALOGO</a>
                         <a href="Respuestoslogin.php" class="nav-item nav-link">REPUESTOS</a>
                         <a href="Archivos3dlogin.php" class="nav-item nav-link">ARCHIVOS 3D</a>
