@@ -1,0 +1,13 @@
+/*Estilo para el boton home*/
+.link-container img {
+  position: fixed;
+  top: 10px; /* Ajusta la posición vertical según sea necesario */
+  left: 10px; /* Ajusta la posición horizontal según sea necesario */
+  z-index: 999; /* Para asegurarse de que esté por encima del resto del contenido */
+  height: 40px; /* Ajusta el tamaño de la imagen según sea necesario */
+  width: auto; /* Esto asegura que la anchura se ajuste automáticamente */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Opcional: añade una sombra si lo deseas */
+  border: none; /* Elimina completamente el borde */
+}
+
+

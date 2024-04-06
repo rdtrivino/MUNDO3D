@@ -20,6 +20,7 @@
     <title>Crear</title>
     <link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/checkout/">
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/estilo.css" rel="stylesheet">
     <link rel="shortcut icon" href="../images/Logo Mundo 3d.png" type="image/x-icon">
     <style>
         .bd-placeholder-img {
@@ -46,69 +47,174 @@
 <body class="bg-light">
 
 <div class="link-container">
-    <a href="index.php">
-        <img class="#" src="../images/bx-home-alt-2.svg" alt="Home">
+    <?php $tabla = $_GET['tabla'];?>
+    <a href="index.php?tabla=<?php echo $tabla;?>">
+        <img class="home" src="../images/bx-home-alt-2.svg" alt="Home">
     </a>
 </div>
 
 <div class="container">
     <div class="py-5 text-center">
-        <img class="#" src="../images/Logo Mundo 3d.png" alt="" width="150" height="150">
-    </div>
+        <img class="mundo" src="../images/Logo Mundo 3d.png" alt="" width="150" height="150">
+</div>
 
-    <form class="needs-validation" novalidate method="POST" action="procesarnuevo.php">
+    <form class="needs-validation" novalidate method="POST" action="procesarnuevo.php?tabla=<?php echo $tabla; ?>">
         <input type="hidden" class="form-control" id="address2" name="tabla" value="<?php echo $_GET['tabla'] ?>">
+        <?php if ($_GET['tabla'] == 'pedidos') { ?>
 
-        <?php
-        if (isset($_GET['tabla'])) {
-            $peticion = "SHOW COLUMNS FROM " . $_GET['tabla'] . ";";
-            $result = mysqli_query($link, $peticion);
+            <div class="form-group" style="display: none;"><!--Se oculta etiqueta-->
+                <label for="identificador">Identificador</label>
+                <input type="text" class="form-control" id="identificador" name="identificador"/> 
+            </div>
 
-            while ($fila = $result->fetch_assoc()) {
-                $campo = $fila['Field'];
-
-                // Si el campo es 'Pe_Cliente', mostramos una lista desplegable con los identificadores de la tabla 'usuario'
-                if ($campo == 'Pe_Cliente') {
-                    echo '<div class="mb-3">
-                            <label for="Pe_Cliente" style="text-transform: capitalize;">Cliente<span class="text-muted"></span></label>
-                            <select class="form-control" id="Pe_Cliente" name="Pe_Cliente" required>';
-                    // Consultamos los identificadores de la tabla 'usuario'
-                    $query = "SELECT Identificador FROM usuario";
-                    $result_usuario = mysqli_query($link, $query);
-
-                    // Agregamos opciones al select
-                    while ($row_usuario = mysqli_fetch_assoc($result_usuario)) {
-                        echo '<option value="' . $row_usuario['Identificador'] . '">' . $row_usuario['Identificador'] . '</option>';
+            <div class="form-group">
+                <label for="cliente">Cliente (*)</label>
+                <select class="form-control" id="cliente" name="cliente">
+                    <option value="">Seleccionar cliente</option> <!-- Opción vacía por defecto -->
+                    <?php
+                    // Realizar la consulta SQL para obtener la lista de clientes
+                    $consulta = "SELECT Usu_Identificacion, Usu_Nombre_Completo FROM usuario";
+                    $resultado = mysqli_query($link, $consulta);
+                    
+                    // Verificar si la consulta tuvo éxito y mostrar las opciones
+                    if ($resultado && mysqli_num_rows($resultado) > 0) {
+                        while ($fila = mysqli_fetch_assoc($resultado)) {
+                            // Concatenar Identificador y Nombre con un guion (-)
+                            $opcion = $fila['Usu_Identificacion'] . ' - ' . $fila['Usu_Nombre_Completo'];
+                            echo '<option value="' . $fila['Usu_Identificacion'] . '">' . $opcion . '</option>';
+                        }
                     }
+                    ?>
+                </select>
+            </div>
 
-                    echo '</select></div>';
-                } elseif ($campo != 'Identificador') {
-                    // Resto del código para los campos que no son 'Pe_Cliente' ni 'Identificador'
-                    $tipoInput = 'text';
-                    if ($campo == 'Pe_Fechapedido' || $campo == 'Pe_Fechaentrega') {
-                        $tipoInput = 'date';
-                    } elseif ($campo == 'imagen_principal') {
-                        $tipoInput = 'file';
-                    }
+            <div class="form-group">
+                <label for="estado">Estado (*)</label>
+                <select class="form-control" id="estado" name="estado">
+                    <option value="">Seleccionar estado del pédido</option>
+                    <?php
+                        $consulta = "SELECT Es_Codigo, Es_Nombre FROM pedido_estado";
+                        $resultado = mysqli_query($link, $consulta);
+                        if ($resultado && mysqli_num_rows($resultado) > 0) {
+                            while ($fila = mysqli_fetch_assoc($resultado)) {
+                                $opcion = $fila['Es_Nombre'];
+                                echo '<option value="' . $fila['Es_Codigo'] . '">' . $opcion . '</option>';
+                            }
+                        }
+                    ?>
+                </select>
+            </div>
 
-                    echo '
-                        <div class="mb-3">
-                            <label for="' . $campo . '" style="text-transform: capitalize;">' . $campo . '<span class="text-muted"></span></label>
-                            <input type="' . $tipoInput . '" class="form-control" id="' . $campo . '" name="' . $campo . '" placeholder="Ingrese ' . $campo . '" required>
-                        </div>
-                    ';
-                }
-            }
-        }
-        ?>
+            <div class="form-group">
+                <label for="producto">Producto (*)</label>
+                <select class="form-control" id="producto" name="producto">
+                    <option value="">Seleccionar producto</option>
+                    <?php
+                        $consulta = "SELECT Identificador, Pro_Nombre FROM productos";
+                        $resultado = mysqli_query($link, $consulta);
+                        if ($resultado && mysqli_num_rows($resultado) > 0) {
+                            while ($fila = mysqli_fetch_assoc($resultado)) {
+                                $opcion = $fila['Pro_Nombre'];
+                                echo '<option value="' . $fila['Identificador'] . '">' . $opcion . '</option>';
+                            }
+                        }
+                    ?>
+                </select> 
+            </div>
 
-        <hr class="mb-4">
-        <button class="btn btn-primary btn-lg btn-block" type="submit">Procesar</button>
+            <div class="form-group">
+                <label for="cantidad">Cantidad (*)</label>
+                <input type="text" class="form-control" id="cantidad" name="cantidad" />
+            </div>
+
+            <div class="form-group">
+                <label for="fechapedido">Fecha de Pedido (*)</label>
+                <input type="date" class="form-control" id="fechapedido" name="fechapedido" /> 
+            </div>
+
+            <div class="form-group">
+                <label for="fechaentrega">Fecha estimada de entrega</label>
+                <input type="date" class="form-control" id="fechaentrega" name="fechaentrega" /> 
+            </div>
+
+            <div class="form-group">
+                <label for="imagenproducto">Imagen del producto</label>
+                <input type="file" class="form-control-file" id="imagenproducto" name="imagenproducto" accept="image/*">  
+            </div>
+
+            <div class="form-group">
+                <label for="tipoimpresion">Tipo de impresión</label>
+                <input type="text" class="form-control" id="tipoimpresion" name="tipoimpresion" /> 
+            </div>
+
+            <div class="form-group">
+                <label for="color">Color de la impresión</label>
+                <input type="text" class="form-control" id="color" name="color" /> 
+            </div>
+
+            <div class="form-group">
+                <label for="observacion">Observación</label>
+                <input type="text" class="form-control" id="observacion" name="observacion" /> 
+            </div>
+        <?php } elseif ($_GET['tabla'] == 'productos') { ?>
+
+
+            <div class="form-group">
+                <label for="nombre">Nombre (*)</label>
+                <input type="text" class="form-control" id="nombre" name="nombre" /> 
+            </div>
+
+            <div class="form-group">
+                <label for="descripcion">Descripción (*)</label>
+                <input type="text" class="form-control" id="descripcion" name="descripcion" />
+            </div>
+
+            <div class="form-group">
+                <label for="categoria">Categoría (*)</label>
+                <select class="form-control" id="categoria" name="categoria">
+                    <option value="">Seleccionar la categoría del producto</option>
+                    <?php
+                        $consulta = "SELECT Cgo_Codigo, Cgo_Nombre FROM categoria";
+                        $resultado = mysqli_query($link, $consulta);
+                        if ($resultado && mysqli_num_rows($resultado) > 0) {
+                            while ($fila = mysqli_fetch_assoc($resultado)) {
+                                $opcion = $fila['Cgo_Nombre'];
+                                echo '<option value="' . $fila['Cgo_Codigo'] . '">' . $opcion . '</option>';
+                            }
+                        }
+                    ?>
+                </select> 
+            </div>
+
+            <div class="form-group">
+                <label for="cantidad">Cantidad (*)</label>
+                <input type="text" class="form-control" id="cantidad" name="cantidad" />
+            </div>
+
+            <div class="form-group">
+                <label for="precioventa">Precio de Venta (*)</label>
+                <input type="text" class="form-control" id="precioventa" name="precioventa" /> 
+            </div>
+
+            <div class="form-group">
+                <label for="costo">Costo (*)</label>
+                <input type="text" class="form-control" id="costo" name="costo" /> 
+            </div>
+
+            <div class="form-group">
+                <label for="imagen">Imagen (*)</label>
+                <input type="file" class="form-control-file" id="imagen" name="imagen" accept="image/*"> 
+            </div>
+
+        <?php } ?>
+
+                <hr class="mb-4">
+                <button class="btn btn-primary btn-lg btn-block" type="submit">Procesar</button>
     </form>
 </div>
 
 <footer class="my-5 pt-5 text-muted text-center text-small">
-    <p class="mb-1">&copy; 2024 Orion ERP</p>
+    <p class="mb-1">&copy; 2024 Mundo 3D</p>
 </footer>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>

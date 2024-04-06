@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <!-- http://localhost/MUNDO 3D/COLABORADOR/index.php -->
 <html lang="es">
@@ -13,7 +14,6 @@
         $nombreCompleto = $_SESSION['username'];
         $usuario_id = $_SESSION['user_id'];
 ?>
-
     <head>
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -52,25 +52,27 @@
                 <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                     <div class="sb-sidenav-menu">
                         <div class="nav">
-                            <div class="sb-sidenav-menu-heading">INICIO</div>
+                            <div class="sb-sidenav-menu-heading">PROCESOS</div>
                             <!--Listar las tablas disponibles en la base de datos-->
-                                <?php
-                                    $peticion = "SHOW TABLES WHERE Tables_in_mundo3d IN ('productos', 'pedidos');";
-                                    $result = mysqli_query($link, $peticion);
+                            <?php
+                                $peticion = "SHOW TABLES WHERE Tables_in_mundo3d IN ('productos', 'pedidos');";
+                                $result = mysqli_query($link, $peticion);
 
-                                        while ($fila = $result->fetch_assoc()) {
-                                            echo '
-                                            <li class="nav-item">
-                                            <a class="nav-link" href="?tabla='.$fila['Tables_in_mundo3d'].'">
-                                                <span data-feather="file"></span>
-                                                '.$fila['Tables_in_mundo3d'].'
-                                            </a>
-                                            </li>
-                                            ';
-                                        }
-                                ?> 
+                                while ($fila = $result->fetch_assoc()) {
+                                    $nombre_tabla = ucfirst($fila['Tables_in_mundo3d']); // Capitalizar la primera letra
+                                    echo '
+                                    <li class="nav-item">
+                                    <a class="nav-link" href="?tabla='.$fila['Tables_in_mundo3d'].'">
+                                        <span data-feather="file"></span>
+                                        '.$nombre_tabla.'
+                                    </a>
+                                    </li>
+                                    ';
+                                }
+                            ?>
+ 
                         <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-                            <span>Reportes</span>
+                            <span>REPORTES</span>
                             <a class="d-flex align-items-center text-muted" href="#" aria-label="Add a new report">
                                 <span data-feather="plus-circle"></span>
                             </a>
@@ -78,7 +80,7 @@
                             <ul class="nav flex-column mb-2">
                                 <!--Mostrar todas las vistas creadas la base de datos-->
                                 <?php
-                                    include "../conexion.php";
+                                    /*include "../conexion.php";
                                     $peticion = "SHOW FULL TABLES IN mundo3d WHERE TABLE_TYPE LIKE 'VIEW'";
                                         $result = mysqli_query($link, $peticion);
                                         while ($fila = $result->fetch_assoc()){
@@ -90,7 +92,7 @@
                                             </a>
                                             </li>
                                             ';
-                                        }
+                                        }*/
                                 ?>
                             </ul>   
                         </div>
@@ -110,8 +112,8 @@
                             <?php
                             if (isset($_GET['tabla'])) {
                                 echo '<a href="adicionar.php?tabla=' . $_GET['tabla'] . '" class="btn btn-sm btn-outline-secondary">Adicionar registro</a>';
-                                echo '<a href="crear_excel.php" type="button" class="btn btn-sm btn-outline-secondary">Exportar</a>';
-                                echo '<a href="crear_pdf.php" type="button" class="btn btn-sm btn-outline-secondary">Imprimir</a>';
+                                echo '<a href="crear_excel.php?tabla=' . $_GET['tabla'] . '" type="button" class="btn btn-sm btn-outline-secondary">Exportar</a>';
+                                echo '<a href="crear_pdf.php?tabla=' . $_GET['tabla'] . '" type="button" class="btn btn-sm btn-outline-secondary" target="_blank">Imprimir</a>';
                             }
                             ?>
                         </div>
@@ -123,63 +125,82 @@
             <!--Mostrar los encabezados de la tabla seleccionada-->
             <?php  
                 if (isset($_GET['tabla'])) {
-                  
-                $peticion = "SHOW COLUMNS FROM " . $_GET['tabla'] . ";";
-                $result = mysqli_query($link, $peticion);
-                $contador = 0;
-                $cabeceras = array();
-
-                while ($fila = $result->fetch_assoc()) {
-                    $cabeceras[$contador] = $fila['Field'];
-                    echo '<th>' . $fila['Field'] . '</th>';
-                    $contador++;
+                    $tabla_seleccionada = $_GET['tabla'];
+                    
+                    // Definir encabezados específicos para cada tabla
+                    $encabezados_pedidos = array("ID", "Cliente", "Estado", "Producto", "Cantidad", "Fecha Pedido", "Fecha Entrega", "Imagen", "Tipo", "Color", "Observación", "Editar");
+                    $encabezados_productos = array("ID", "Nombre", "Descripción", "Categoría", "Cantidad", "Precio Venta", "Costo", "Imagen", "Estado", "Editar");
+                    
+                    // Mostrar los encabezados según la tabla seleccionada
+                    if ($tabla_seleccionada === 'pedidos') {
+                        foreach ($encabezados_pedidos as $encabezado) {
+                            echo '<th>' . $encabezado . '</th>';
+                        }
+                    } elseif ($tabla_seleccionada === 'productos') {
+                        foreach ($encabezados_productos as $encabezado) {
+                            echo '<th>' . $encabezado . '</th>';
+                        }
+                    }
                 }
-                //Sirve para mostrar en pantalla el contenido
-                //var_dump($cabeceras);
-                echo '<th>Actualizar</th>';
-                } else {
-                echo "";
-                }  
             ?>
                 
             </tr>
           </thead>
           <tbody>
-            <!--Mostrar contenido de la tabla seleccionada-->
-            <?php
-                if (isset($_GET['tabla'])) {
-                    $peticion = "SELECT * FROM " . $_GET['tabla'] . ";";
-                    $result = mysqli_query($link, $peticion);
-                
-                    while ($fila = $result->fetch_array()) {
-                        echo '<tr>'; // Arranca la fila
-                        $contador = 0;
-                        for ($i = 0; $i < count($fila) / 2; $i++) {
-                            // Verificar si la columna es la de la imagen
-                            if ($cabeceras[$contador] === 'imagen_principal') {
-                                echo '<td cabecera="' . $cabeceras[$contador] . '" identificador="' . $fila[0] . '">';
-                                // Mostrar la imagen como un elemento <img>
-                                echo '<img height="150px" src="data:image/jpg;base64,' . base64_encode($fila['imagen_principal']) . '">';
-                                echo '</td>';
-                            } else {
-                                // Si no es una imagen, solo mostrar el contenido de la celda
-                                echo '<td cabecera="' . $cabeceras[$contador] . '" identificador="' . $fila[0] . '">' . $fila[$i] . '</td>';
+                <!--Mostrar contenido de la tabla-->
+                <?php
+                    include __DIR__ . '/../conexion.php';
+
+                    if (isset($_GET['tabla'])) {
+                        if ($_GET['tabla'] == 'pedidos') {
+                            $peticion = "SELECT pedidos.*, pedido_estado.Es_Nombre AS Pe_Estado, productos.Pro_Nombre AS Pe_Producto 
+                                        FROM pedidos
+                                        INNER JOIN pedido_estado ON pedidos.Pe_Estado = pedido_estado.Es_Codigo
+                                        INNER JOIN productos ON pedidos.Pe_Producto = productos.Identificador";           
+                            
+                            $result = mysqli_query($link, $peticion);
+                            foreach ($result as $row) {
+                                echo '<tr>
+                                    <th scope="row">' . $row['Identificador'] . '</th>
+                                    <td>' . $row['Pe_Cliente'] . '</td>
+                                    <td>' . $row['Pe_Estado'] . '</td>
+                                    <td>' . $row['Pe_Producto'] . '</td>
+                                    <td>' . $row['Pe_Cantidad'] . '</td>
+                                    <td>' . $row['Pe_Fechapedido'] . '</td>
+                                    <td>' . $row['Pe_Fechaentrega'] . '</td>
+                                    <td><img height="150px" src="data:image/jpg;base64,' . base64_encode($row['pe_imagen_pedido']) . '"></td>
+                                    <td>' . $row['pe_tipo_impresion'] . '</td>
+                                    <td>' . $row['pe_color'] . '</td>
+                                    <td>' . $row['Pe_Observacion'] . '</td>
+                                    <td><a href="editar.php?tabla=' . $_GET['tabla'] . '&id=' . $row['Identificador'] . '"><i class="fas fa-edit"></i></a></td>
+                                    </tr>';
                             }
-                            $contador++;
+                        } elseif ($_GET['tabla'] == 'productos') {
+                            $peticion2 = "SELECT productos.*, categoria.Cgo_Nombre AS Pro_Categoria 
+                                        FROM productos
+                                        INNER JOIN categoria ON productos.Pro_Categoria = categoria.Cgo_Codigo";
+                            $result = mysqli_query($link, $peticion2);
+                            foreach ($result as $row) {
+                                echo '<tr>
+                                    <th scope="row">' . $row['Identificador'] . '</th>
+                                    <td>' . $row['Pro_Nombre'] . '</td>
+                                    <td>' . $row['Pro_Descripcion'] . '</td>
+                                    <td>' . $row['Pro_Categoria'] . '</td>
+                                    <td>' . $row['Pro_Cantidad'] . '</td>
+                                    <td>' . $row['Pro_PrecioVenta'] . '</td>
+                                    <td>' . $row['Pro_Costo'] . '</td>
+                                    <td><img height="150px" src="data:image/jpg;base64,' . base64_encode($row['imagen_principal']) . '"></td>
+                                    <td>' . $row['Pro_Estado'] . '</td>
+                                    <td><a href="editar.php?tabla=' . $_GET['tabla'] . '&id=' . $row['Identificador'] . '"><i class="fas fa-edit"></i></a></td>
+                                    </tr>';
+                            }
                         }
-                        echo '
-                            <td><a href="editar.php?tabla=' . $_GET['tabla'] . '&id=' . $fila[0] . '"><i class="fas fa-edit"></i></a></td>
-                            ';
-                        echo '</tr>'; // Cierra la fila
-                    }
-                } else {
-                    echo "";
-                }
-            ?>
-
-
-            </tr>
-          </tbody>
+                        } else {
+                            // Mensaje cuando no se selecciona ninguna tabla
+                            echo '<tr><td colspan="35" style="text-align:center; font-weight: bold;">¿Qué quieres hacer hoy?</td></tr>';
+                        }
+                    ?>
+            </tbody>
         </table>
       </div>
                         </div>
@@ -190,9 +211,9 @@
                         <div class="d-flex align-items-center justify-content-between small">
                             <div class="text-muted">Copyright &copy; Mundo3d 2023</div>
                             <div>
-                                <a href="#">politica de privacidad</a>
+                                <a href="#">Política de privacidad</a>
                                 &middot;
-                                <a href="#">Terminos &amp; Condiciones</a>
+                                <a href="#">Términos &amp; Condiciones</a>
                             </div>
                         </div>
                     </div>
