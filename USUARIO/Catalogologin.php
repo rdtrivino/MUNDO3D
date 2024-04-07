@@ -149,82 +149,272 @@ $result = mysqli_query($link, $sql);
                         <!-- Cambiar el evento a "input" para que se ejecute cada vez que se ingresa una letra -->
                         <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Buscar</button>
                     </form>
-                    <a class="btn text-white ml-3" href="..\mi_carrito\index.php">
-                        <i class="fas fa-shopping-cart mr-2"></i>Carrito
+                    <!-- Botón para abrir el modal del carrito -->
+                    <a id="carritoBtn" class="btn text-white ml-3" href="#" data-toggle="modal" data-target="#carritoModal">
+                        <i class="fas fa-shopping-cart mr-2"></i>Carrito <span id="contadorProductos" class="badge badge-light contador-rojo">0</span>
                     </a>
+                            <style>
+                                .contador-rojo {
+                                color: red;
+                            }
+                            </style>
+                            <!-- Modal del carrito -->
+                            <div class="modal fade" id="carritoModal" tabindex="-1" role="dialog" aria-labelledby="carritoModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="carritoModalLabel">Contenido del Carrito</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <!-- Contenedor para mostrar los productos agregados al carrito -->
+                                            <div id="carritoContenido"></div>
+                                            <!-- Mostrar el total de todos los productos -->
+                                            <div id="totalProductos"></div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                            <button type="button" class="btn btn-primary" id="irAPagarBtn">Ir a pagar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <script>
+                                    document.addEventListener("DOMContentLoaded", function() {
+                                        // Obtener referencia al botón "Ir a pagar"
+                                        var irAPagarBtn = document.getElementById('irAPagarBtn');
+                                        
+                                        // Agregar un evento clic al botón
+                                        irAPagarBtn.addEventListener('click', function(event) {
+                                            // Aquí puedes agregar la lógica para redirigir al usuario a la página de pago
+                                            // Utiliza una ruta absoluta y barras inclinadas hacia adelante
+                                            window.location.href = '../carrito/index.php';
+                                            alert('¡Redirigiendo a la página de pago!');
+                                        });
+                                    });
+                            </script>
+                            <!-- JavaScript -->
+                            <script>
+                                // Variable para almacenar los productos en el carrito
+                                var carritoProductos = [];
+
+                                // Función para agregar un producto al carrito
+                                function agregarAlCarrito(producto) {
+                                    carritoProductos.push(producto);
+                                    mostrarCarrito();
+                                    actualizarContadorProductos();
+                                }
+
+                                // Función para mostrar el carrito
+                                function mostrarCarrito() {
+                                    var carritoContenido = document.getElementById('carritoContenido');
+                                    var totalProductos = document.getElementById('totalProductos');
+                                    var total = 0;
+
+                                    // Limpiar contenido previo
+                                    carritoContenido.innerHTML = '';
+
+                                    // Mostrar cada producto en el carrito
+                                    carritoProductos.forEach(function(producto) {
+                                        carritoContenido.innerHTML += '<p>' + producto.nombre + ' - Precio: $' + producto.precio + '</p>';
+                                        total += producto.precio;
+                                    });
+
+                                    // Mostrar el total de todos los productos
+                                    totalProductos.innerHTML = '<p>Total: $' + total + '</p>';
+                                }
+
+                                // Función para actualizar el contador de productos en el botón del carrito
+                                function actualizarContadorProductos() {
+                                    var contadorProductos = document.getElementById('contadorProductos');
+                                    contadorProductos.textContent = carritoProductos.length;
+                                }
+
+                                // Esperar a que el DOM esté completamente cargado
+                                document.addEventListener("DOMContentLoaded", function() {
+                                    // Obtener todos los botones "Agregar al carrito"
+                                    var agregarAlCarritoBtns = document.querySelectorAll('.agregarAlCarritoBtn');
+
+                                    agregarAlCarritoBtns.forEach(function(btn) {
+                                        btn.addEventListener('click', function(event) {
+                                            event.preventDefault();
+                                            var productId = this.getAttribute('data-id');
+                                            var productName = this.getAttribute('data-name');
+                                            var productPrice = parseFloat(this.getAttribute('data-price'));
+
+                                            // Agregar el producto al carrito
+                                            agregarAlCarrito({nombre: productName, precio: productPrice});
+                                        });
+                                    });
+                                });
+                                </script>
+                        </div>
+                    </div>
                 </div>
+            </div>
+        </div>
+        <script>
+            function searchProducts(searchTerm) {
+                // Obtener todos los elementos de productos
+                var products = document.querySelectorAll('.product');
+                
+                // Convertir el término de búsqueda a mayúsculas para hacer una comparación insensible a mayúsculas y minúsculas
+                searchTerm = searchTerm.toUpperCase();
+                
+                // Iterar sobre todos los productos
+                products.forEach(function(product) {
+                    // Obtener el nombre del producto
+                    var productName = product.querySelector('.card-title').textContent.toUpperCase();
+                    
+                    // Obtener la descripción del producto
+                    var productDescription = product.querySelector('.card-text').textContent.toUpperCase();
+                    
+                    // Comprobar si el término de búsqueda está presente en el nombre o la descripción del producto
+                    if (productName.includes(searchTerm) || productDescription.includes(searchTerm)) {
+                        // Mostrar el producto si coincide con el término de búsqueda
+                        product.style.display = 'block';
+                    } else {
+                        // Ocultar el producto si no coincide con el término de búsqueda
+                        product.style.display = 'none';
+                    }
+                });
+            }
+        </script>
+<!-- Catalog Start -->
+<div class="container-fluid pt-5">
+    <div class="container">
+        <h6 class="text-secondary text-uppercase text-center font-weight-medium mb-3">NUESTROS PRODUCTOS</h6>
+        <h1 class="display-4 text-center mb-5">Explora nuestro catálogo</h1>
+        <div class="row row-cols-lg-4 row-cols-md-3 justify-content-center">
+            <?php
+            // Consulta a la base de datos para obtener productos de la categoría 5
+            $sql = "SELECT * FROM productos WHERE Pro_Categoria = 1";
+            $result = mysqli_query($link, $sql);
+
+            // Verificar si se encontraron productos en la categoría 1b
+            if (mysqli_num_rows($result) > 0) {
+                // Iterar sobre los resultados y mostrar cada producto
+                while ($row = mysqli_fetch_assoc($result)) {
+            ?>
+                <div class="col mb-4">
+                    <div class="card h-100 position-relative">
+                        <?php
+                        // Convertir la imagen binaria a una URL de imagen
+                        $imageData = base64_encode($row['imagen_principal']);
+                        $imageSrc = 'data:image/jpeg;base64,' . $imageData;
+                        ?>
+                        <img src="<?php echo $imageSrc; ?>" class="card-img-top" alt="<?php echo $row['Pro_Nombre']; ?>">
+                        <div class="overlay position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
+                            <?php if ($row['Pro_Cantidad'] > 0) { ?>
+                                <a href="#" class="btn btn-primary btn-lg agregarAlCarritoBtn" data-id="<?php echo $row['Identificador']; ?>" data-name="<?php echo $row['Pro_Nombre']; ?>" data-price="<?php echo $row['Pro_PrecioVenta']; ?>"><i class="fas fa-cart-plus"></i></a>
+                            <?php } else { ?>
+                                <button class="btn btn-primary btn-lg agregarAlCarritoBtn" disabled><i class="fas fa-cart-plus"></i></button>
+                            <?php } ?>
+                            <a href="#" class="btn btn-secondary btn-lg mx-2 detallesBtn" data-toggle="modal" data-target="#detalleProductoModal" data-id="<?php echo $row['Identificador']; ?>" data-name="<?php echo $row['Pro_Nombre']; ?>" data-description="<?php echo $row['Pro_Descripcion']; ?>" data-price="<?php echo $row['Pro_PrecioVenta']; ?>"><i class="fas fa-search"></i></a>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title"><?php echo $row['Pro_Nombre']; ?></h5>
+                            <p class="card-text"><?php echo $row['Pro_Descripcion']; ?></p>
+                            <?php if ($row['Pro_Cantidad'] == 0) { ?>
+                                <p class="text-danger lead">Agotado</p>
+                            <?php } else { ?>
+                                <div class="price-box">
+                                    <p class="price"><?php echo $row['Pro_PrecioVenta']; ?></p>
+                                </div>
+                            <?php } ?>
+                        </div>
+                    </div>
+                </div>
+            <?php
+                }
+            } else {
+                echo "No se encontraron productos en la categoría 1b.";
+            }
+            ?>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de detalles del producto -->
+<div class="modal fade" id="detalleProductoModal" tabindex="-1" role="dialog" aria-labelledby="detalleProductoModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detalleProductoModalLabel">Detalles del Producto</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="detalleProductoBody">
+                <!-- Aquí se cargarán los detalles del producto -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
             </div>
         </div>
     </div>
 </div>
+
 <script>
-    function searchProducts(searchTerm) {
-        // Obtener todos los elementos de productos
-        var products = document.querySelectorAll('.product');
-        
-        // Convertir el término de búsqueda a mayúsculas para hacer una comparación insensible a mayúsculas y minúsculas
-        searchTerm = searchTerm.toUpperCase();
-        
-        // Iterar sobre todos los productos
-        products.forEach(function(product) {
-            // Obtener el nombre del producto
-            var productName = product.querySelector('.card-title').textContent.toUpperCase();
-            
-            // Obtener la descripción del producto
-            var productDescription = product.querySelector('.card-text').textContent.toUpperCase();
-            
-            // Comprobar si el término de búsqueda está presente en el nombre o la descripción del producto
-            if (productName.includes(searchTerm) || productDescription.includes(searchTerm)) {
-                // Mostrar el producto si coincide con el término de búsqueda
-                product.style.display = 'block';
-            } else {
-                // Ocultar el producto si no coincide con el término de búsqueda
-                product.style.display = 'none';
-            }
+    document.addEventListener("DOMContentLoaded", function() {
+        var detallesBtns = document.querySelectorAll('.detallesBtn');
+
+        detallesBtns.forEach(function(btn) {
+            btn.addEventListener('click', function(event) {
+                event.preventDefault();
+                var productId = this.getAttribute('data-id');
+                var productName = this.getAttribute('data-name');
+                var productDescription = this.getAttribute('data-description');
+                var productPrice = this.getAttribute('data-price');
+                var productImage = this.closest('.card').querySelector('.card-img-top').getAttribute('src');
+
+                cargarDetallesProducto(productName, productDescription, productPrice, productImage);
+            });
         });
+    });
+
+    function cargarDetallesProducto(productName, productDescription, productPrice, productImage) {
+        var modalBody = document.getElementById('detalleProductoBody');
+        modalBody.innerHTML = `
+            <img src="${productImage}" class="img-fluid mb-3" alt="${productName}">
+            <h4>${productName}</h4>
+            <p><strong>Descripción:</strong> ${productDescription}</p>
+            <p><strong>Precio:</strong> $${productPrice}</p>`;
+        $('#detalleProductoModal').modal('show');
     }
 </script>
-        <!-- Catalog Start -->
-        <div class="container-fluid pt-5">
-            <div class="container">
-                <h6 class="text-secondary text-uppercase text-center font-weight-medium mb-3">NUESTROS PRODUCTOS</h6>
-                <h1 class="display-4 text-center mb-5">Explora nuestro catálogo</h1>
-                <div class="row">
-                    <?php
-                    // Verificar si se encontraron productos en la categoría 1b
-                    if (mysqli_num_rows($result) > 0) {
-                        // Iterar sobre los resultados y mostrar cada producto
-                        while ($row = mysqli_fetch_assoc($result)) {
-                            ?>
-                            <div class="col-lg-3 col-md-6 mb-5 product">
-                                <div class="card h-100">
-                                    <?php
-                                    // Convertir la imagen binaria a una URL de imagen
-                                    $imageData = base64_encode($row['imagen_principal']);
-                                    $imageSrc = 'data:image/jpeg;base64,'.$imageData;
-                                    ?>
-                                    <img src="<?php echo $imageSrc; ?>" class="card-img-top" alt="<?php echo $row['Pro_Nombre']; ?>">
-                                    <div class="card-body">
-                                        <h5 class="card-title"><?php echo $row['Pro_Nombre']; ?></h5>
-                                        <p class="card-text"><?php echo $row['Pro_Descripcion']; ?></p>
-                                        <?php if ($row['Pro_Cantidad'] > 0) { ?>
-                                            <a href="#" class="btn btn-primary btn-lg">Agregar al carrito</a>
-                                            <a href="#" class="btn btn-secondary btn-lg">Ver detalles</a>
-                                        <?php } else { ?>
-                                            <p class="text-danger lead">Agotado</p>
-                                        <?php } ?>
-                                    </div>
-                                </div>
-                            </div>
-                            <?php
-                        }
-                    } else {
-                        echo "No se encontraron productos en la categoría 1b.";
-                    }
-                    ?>
-                </div>
+            <style>
+                /* Estilo para la superposición */
+            .overlay {
+                background-color: rgba(0, 0, 0, 0.5);
+                opacity: 0;
+                transition: opacity 0.3s;
+            }
+
+            /* Estilo para mostrar la superposición al pasar el mouse */
+            .card:hover .overlay {
+                opacity: 1;
+            }
+            .price-box {
+                background-color: #f8d7da; /* Color de fondo */
+                padding: 5px 10px; /* Espaciado interno */
+                border-radius: 5px; /* Bordes redondeados */
+                display: inline-block; /* Mostrar en línea */
+            }
+
+            .price {
+                margin: 0; /* Eliminar el margen interior */
+                color: #721c24; /* Color del texto */
+                font-weight: bold; /* Texto en negrita */
+            }
+
+
+            </style>
             </div>
-        </div>
+            </div>
+
         <!-- Footer Start -->
         <div class="container-fluid bg-primary text-white mt-5 pt-5 px-sm-3 px-md-5">
         <div class="row pt-5">
