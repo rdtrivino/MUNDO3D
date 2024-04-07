@@ -18,7 +18,7 @@
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <title>MUNDO 3D</title>
+        <title>MUNDO3D-COLABORADOR</title>
         <link rel="shortcut icon" href="../images/Logo Mundo 3d.png" type="image/x-icon">
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
         <link href="css/styles.css" rel="stylesheet" />

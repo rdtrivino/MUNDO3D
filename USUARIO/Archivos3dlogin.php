@@ -38,7 +38,7 @@ $result = mysqli_query($link, $sql);
 
 <head>
     <meta charset="utf-8">
-    <title>MUNDO 3D</title>
+    <title>MUNDO3D-USUARIO</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Free HTML Templates" name="keywords">
     <meta content="Free HTML Templates" name="description">
@@ -74,7 +74,7 @@ $result = mysqli_query($link, $sql);
                             // Obtiene el nombre completo del objeto de usuario
                             var nombreCompleto = userData.nombreCompleto;
                             // Actualiza el contenido del elemento user-name con el nombre completo de usuario
-                            document.getElementById('user-name').textContent = 'Bienvenido ' + nombreCompleto;
+                            document.getElementById('user-name').textContent = 'Bienvenid@ ' + nombreCompleto;
                         }
                     };
                     xhr.send();
