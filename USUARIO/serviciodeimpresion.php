@@ -1,5 +1,16 @@
 <?php
-session_start();
+    session_start();
+    include __DIR__ . '/../conexion.php';
+        //Confirmacion de que el usuario ha realizado el proceso de autenticación
+        if(!isset($_SESSION['confirmado']) || $_SESSION['confirmado'] == false){
+            //die("No ha iniciado sesión !!!");
+            header("Location: ../Programas/autenticacion.php");
+        }
+
+        $nombreCompleto = $_SESSION['username'];
+        $usuario_id = $_SESSION['user_id'];
+?>
+<?php
 
 $host = "localhost";
 $user = "root";
@@ -74,7 +85,7 @@ mysqli_close($link);
 
 <head>
     <meta charset="utf-8">
-    <title>MUNDO 3D</title>
+    <title>MUNDO3D-USUARIO</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Free HTML Templates" name="keywords">
     <meta content="Free HTML Templates" name="description">
@@ -114,7 +125,7 @@ mysqli_close($link);
                             // Obtiene el nombre completo del objeto de usuario
                             var nombreCompleto = userData.nombreCompleto;
                             // Actualiza el contenido del elemento user-name con el nombre completo de usuario
-                            document.getElementById('user-name').textContent = 'Bienvenido ' + nombreCompleto;
+                            document.getElementById('user-name').textContent = 'Bienvenid@ ' + nombreCompleto;
                         }
                     };
                     xhr.send();
@@ -140,7 +151,7 @@ mysqli_close($link);
                     e.stopPropagation(); // Evitar que el clic llegue a la ventana principal
                     var confirmLogout = confirm("¿Estás seguro de que deseas cerrar sesión?");
                     if (confirmLogout) {
-                        window.location.href = "../index.html"; // Redirige al script de cierre de sesión
+                        window.location.href = "../Programas/logout.php"; // Redirige al script de cierre de sesión
                     }
                 });
                 </script>
@@ -165,7 +176,6 @@ mysqli_close($link);
                 </button>
                 <div class="collapse navbar-collapse justify-content-between px-3" id="navbarCollapse">
                 <div class="navbar-nav ml-auto py-0">
-                        <a href="indexusuario.html" class="nav-item nav-link active">INICIO</a>
                         <a href="Catalogologin.php" class="nav-item nav-link">CATALOGO</a>
                         <a href="Respuestoslogin.php" class="nav-item nav-link">REPUESTOS</a>
                         <a href="Archivos3dlogin.php" class="nav-item nav-link">ARCHIVOS 3D</a>

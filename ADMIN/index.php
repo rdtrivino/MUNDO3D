@@ -173,7 +173,7 @@ if ($resultado_pedidos_por_mes && mysqli_num_rows($resultado_pedidos_por_mes) > 
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <title>MUNDO3D-ADMIN</title>
+        <title>MUNDO3D-ADMINISTRADOR</title>
         <link rel="shortcut icon" href="../images/Logo Mundo 3d.png" type="image/x-icon">
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
         <link href="css/styles.css" rel="stylesheet" />
@@ -196,7 +196,7 @@ if ($resultado_pedidos_por_mes && mysqli_num_rows($resultado_pedidos_por_mes) > 
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                         <li><a class="dropdown-item" href="confi.php">Configuracion de cuenta</a></li>
                          <li><hr class="dropdown-divider" /></li>
-                        <li><a class="dropdown-item" href="../index.html" id="cerrar-sesion-button">Cerrar sesión</a></li>                        
+                        <li><a class="dropdown-item" href="../Programas/logout.php" id="cerrar-sesion-button">Cerrar sesión</a></li>                        
                     </ul>
                 </li>
             </ul>
