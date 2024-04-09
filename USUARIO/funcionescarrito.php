@@ -1,43 +1,49 @@
 <?php
-// Conectar a la base de datos
-// Reemplaza 'localhost', 'usuario', 'contraseña' y 'basededatos' con tus propios valores
-$link = mysqli_connect('localhost', 'root', '', 'mundo3d');
+// Verificar si se recibieron datos del carrito
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['carrito'])) {
+    // Decodificar los datos del carrito desde JSON a un array de PHP
+    $carrito = json_decode($_POST['carrito'], true);
 
-// Verificar la conexión
-if ($link === false) {
-    die("ERROR: No se pudo conectar a la base de datos. " . mysqli_connect_error());
-}
+    // Conectar a la base de datos (cambia estos valores según tu configuración)
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "mundo3d";
 
-// Obtener los datos del producto enviados desde el cliente
-$data = json_decode(file_get_contents("php://input"), true);
+    $conn = new mysqli($servername, $username, $password, $dbname);
 
-// Extraer los datos del producto
-$producto_id = $data['producto_id']; // Por ejemplo, el ID del producto
-$producto_nombre = $data['producto_nombre']; // Nombre del producto
-$producto_precio = $data['producto_precio']; // Precio del producto
+    // Verificar la conexión
+    if ($conn->connect_error) {
+        die("Error de conexión a la base de datos: " . $conn->connect_error);
+    }
 
-// Preparar la consulta SQL para insertar el producto en la tabla de pagos
-$sql = "INSERT INTO pagos (Identificador_Producto, Monto, Metodo_Pago, Estado) VALUES (?, ?, ?, ?)";
+    // Preparar y ejecutar una consulta para insertar cada producto del carrito en la base de datos
+    $stmt = $conn->prepare("INSERT INTO carrito (Ca_Nombre, Ca_PrecioVenta, Ca_Cantidad, imagen_principal) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("ssds", $nombre, $precioVenta, $cantidad, $imagenPrincipal);
 
-// Preparar la declaración
-$stmt = mysqli_prepare($link, $sql);
+    foreach ($carrito as $producto) {
+        // Validar y limpiar los datos del producto
+        $nombre = $conn->real_escape_string($producto['nombre']);
+        $precioVenta = floatval($producto['precio']); // Convertir a número de punto flotante
+        $cantidad = 1; // Puedes cambiar esto según lo que necesites
+        $imagenPrincipal = $conn->real_escape_string($producto['imagen_principal']);
 
-// Vincular los parámetros
-mysqli_stmt_bind_param($stmt, "isds", $producto_id, $producto_precio, $metodo_pago, $estado);
+        // Ejecutar la consulta
+        if (!$stmt->execute()) {
+            echo "Error al insertar el producto " . $nombre . ": " . $conn->error;
+        }
+    }
 
-// Definir valores para los parámetros
-$metodo_pago = "Efectivo"; // Por ejemplo, método de pago
-$estado = "Pendiente"; // Por ejemplo, estado del pago
+    // Cerrar la conexión
+    $stmt->close();
+    $conn->close();
 
-// Ejecutar la declaración
-if (mysqli_stmt_execute($stmt)) {
-    // El producto se guardó correctamente en la base de datos
-    echo "Producto guardado correctamente en la base de datos.";
+    // Redirigir a una página de confirmación
+    header("Location:..\carrito\index.php");
+    exit();
 } else {
-    // Ocurrió un error al guardar el producto en la base de datos
-    echo "ERROR: No se pudo guardar el producto en la base de datos. " . mysqli_error($link);
+    // Si no se recibieron datos del carrito, redirigir a una página de error
+    header("Location: error.php");
+    exit();
 }
-
-// Cerrar la conexión
-mysqli_close($link);
 ?>

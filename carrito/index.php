@@ -1,53 +1,37 @@
-<?php 
-// SDK de Mercado Pago
-require __DIR__ .  '/vendor/autoload.php';
+<?php
+// Realizar la conexión a la base de datos
+$host = "localhost";
+$user = "root";
+$password = "";
+$dbname = "mundo3d";
 
-// MercadoPago\SDK::setAccessToken('TEST-6196813918475187-062612-3841e0096245caf473519eb7ff6674f0-252204241');
-MercadoPago\SDK::setAccessToken('TEST-7756684308165475-071912-f10fa977f33f99dffbc360b0926c9438-1163486988');
+$link = mysqli_connect($host, $user, $password);
 
-// Crea un objeto de preferencia
-$preference = new MercadoPago\Preference();
-
-//CONFIGURACION DE BACK_URL PARA QUE AL FINALIZAR ME REGRESE A LA RUTA ESPECIFICADA
-$preference->back_urls = array(
-    "success" => "http://localhost:8080/componentes/sdkMercadoPago/pagoexitoso.php",
-    "failure" => "http://localhost:8080/componentes/sdkMercadoPago/pagofallido.php",
-    "pending" => "http://localhost:8080/componentes/sdkMercadoPago/pagopendiente.php"
-);
-//Redirecciona en automatico desdepues de ser aprovado
-$preference->auto_return = "approved";
-
-$preference->name = "JESUS";
-$preference->surname = "TESTWOC5R05W";
-$preference->email = "test_user_11948090@testuser.com";
-$preference->date_created = "2018-06-02T12:58:41.425-04:00";
-
-$preference->phone = array(
-    "area_code" => "",
-    "number" => "949 128 866"
-  );
-  
-  $preference->address = array(
-    "street_name" => "Cuesta Miguel Armendáriz",
-    "street_number" => 1004,
-    "zip_code" => "11020"
-  );
-// Crea un ítem en la preferencia
-$datos = array();
-
-for ($i=0; $i < 5; $i++) { 
-    $item = new MercadoPago\Item();
-    $item->title = 'pantalon';
-    $item->quantity = 1;
-    $item->unit_price = 75.56;
-    $item->currency_id = "MXN";
-    $item->description = "Table is made of heavy duty white plastic and is 96 inches wide and 29 inches tall";
-    $item->category_id = "otros";
-    $datos[] = $item;
+if (!$link) {
+    die("Error al conectarse al servidor: " . mysqli_connect_error());
 }
-$preference->items = $datos;
-$preference->save();
-// echo $preference->id; 
+
+if (!mysqli_select_db($link, $dbname)) {
+    die("Error al conectarse a la Base de Datos: " . mysqli_error($link));
+}
+
+// Verificar si se ha enviado la solicitud para vaciar el carrito
+if (isset($_GET['vaciar']) && $_GET['vaciar'] == 1) {
+    // Realizar la consulta para eliminar todos los registros de la tabla 'carrito'
+    $sql = "DELETE FROM carrito";
+    if (mysqli_query($link, $sql)) {
+        // Redirigir al usuario de nuevo a la misma página después de vaciar el carrito
+        header("Location: index.php");
+        exit; // Terminar el script después de redirigir
+    } else {
+        // Opcional: mostrar un mensaje de error en caso de fallo en la eliminación
+        echo "<p>Error al vaciar el carrito.</p>";
+    }
+}
+
+// Consulta SQL para obtener los datos del carrito
+$sql = "SELECT id, nombre, descripcion, precio, cantidad, imagen_principal FROM carrito";
+$resultado = mysqli_query($link, $sql);
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -162,109 +146,124 @@ $preference->save();
       background: linear-gradient(to bottom right, #6ca6cd, #ffb6c1);
     }
   </style>
+<body>
     <a href="../USUARIO/Catalogologin.php" class="btn btn-link">
         <i class="bi bi-house-door" style="color: black; font-size: 48px;"></i>
     </a>
-<div class="container">
-    <div class="cuadro-global">
-        <h2 class="titulo">
-            <!-- Icono del carrito junto al título -->
-            <i class="bi bi-cart-fill"></i> Mi Carrito
-        </h2>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="cuadro-productos">
-                    <h3 class="titulo">Productos en el Carrito</h3>
-                    <div class="text-right mb-3">
-                        <a href="index.php?vaciar=1" class="btn btn-danger btn-vaciar-carrito">
-                            <!-- Icono del carrito en el botón -->
-                            <i class="bi bi-cart-fill"></i> Vaciar 
-                        </a>
-                    </div>       
-                    <!-- Producto en el carrito -->
-                    <div class="card">
-                        <div class="row no-gutters">
-                            <div class="col-md-4">
-                                <img src="ruta/a/la/imagen/ejemplo.jpg" class="card-img" alt="Producto Ejemplo">
-                            </div>
-                            <div class="col-md-8">
-                                <div class="card-body">
-                                    <h5 class="card-title">Producto Ejemplo</h5>
-                                    <p class="card-text">Descripción del Producto Ejemplo.</p>
-                                    <p class="card-text precio-producto">$10</p>
-                                    <div class="cantidad-container">
-                                        <button class="btn btn-outline-secondary btn-cantidad" onclick="restarCantidad()">-</button>
-                                        <input type="text" class="form-control text-center selector-cantidad" value="1" aria-label="Cantidad">
-                                        <button class="btn btn-outline-secondary btn-cantidad" onclick="sumarCantidad()">+</button>
-                                    </div>
-                                </div>
+    <div class="container">
+        <div class="cuadro-global">
+            <h2 class="titulo">
+                <!-- Icono del carrito junto al título -->
+                <i class="bi bi-cart-fill"></i> Mi Carrito
+            </h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="cuadro-productos">
+                        <h3 class="titulo">Productos en el Carrito</h3>
+                        <div class="text-right mb-3">
+                            <a href="index.php?vaciar=1" class="btn btn-danger btn-vaciar-carrito">
+                                <i class="bi bi-cart-fill"></i> Vaciar 
+                            </a>
+                        </div>
+
+                        <!-- Iterar sobre los resultados de la consulta -->
+                        <?php
+    if (mysqli_num_rows($resultado) > 0) {
+        while ($fila = mysqli_fetch_assoc($resultado)) {
+            // Convertir la imagen binaria a una URL de imagen
+            $imageData = base64_encode($fila['imagen_principal']);
+            $imageSrc = 'data:image/jpeg;base64,' . $imageData;
+    ?>
+            <!-- Mostrar el producto en el carrito -->
+            <div class="card">
+                <div class="row no-gutters">
+                    <div class="col-md-4">
+                        <img src="<?php echo $imageSrc; ?>" class="card-img" alt="<?php echo $fila['nombre']; ?>">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title"><?php echo $fila['nombre']; ?></h5>
+                            <p class="card-text"><?php echo $fila['descripcion']; ?></p>
+                            <p class="card-text precio-producto">$<?php echo $fila['precio']; ?></p>
+                            <div class="cantidad-container">
+                                <!-- Botones para ajustar la cantidad -->
+                                <button class="btn btn-outline-secondary btn-cantidad" onclick="restarCantidad()">-</button>
+                                <input type="text" class="form-control text-center selector-cantidad" value="<?php echo $fila['cantidad']; ?>" aria-label="Cantidad">
+                                <button class="btn btn-outline-secondary btn-cantidad" onclick="sumarCantidad()">+</button>
                             </div>
                         </div>
                     </div>
-                    <!-- Agregar más productos aquí -->
                 </div>
             </div>
+    <?php
+        }
+    } else {
+        // Si no hay productos en el carrito, mostrar un mensaje indicando que está vacío
+        echo "<p>No hay productos en el carrito.</p>";
+    }
 
-            <div class="col-md-6">
-                <div class="cuadro-pago">
-                    <h2 class="titulo">Resumen y Pago</h2>
-                    <!-- Subtotal -->
-                    <div class="subtotal">
-                        Subtotal: <span id="subtotal">$10</span>
-                    </div>
-                    <!-- Botones de Pago -->
-                    <div class="checkoutpro">
-                        <label>Selecciona tu método de pago:</label><br>
-                        <!-- Botón de PayPal -->
-                        <a href="#" class="btn btn-primary btn-paypal btn-block">
-                            <i class="bi bi-paypal"></i> Pagar con PayPal
-                        </a>
-                        <br>
-                        <!-- Botón de Mercado Pago -->
-                        <a target="_blank" href="<?php echo $preference->init_point; ?>" class="btn btn-success btn-mercado-pago btn-block">
-                            <i class="bi bi-shop"></i> Pagar con Mercado Pago
-                        </a>
-                    </div>
-                    <!-- Textarea para depuración (opcional) -->
-                    <div class="checkoutpro">
+    // Cerrar la conexión a la base de datos
+    mysqli_close($link);
+    ?>
 
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="cuadro-pago">
+                        <h2 class="titulo">Resumen y Pago</h2>
+                        <!-- Subtotal -->
+                        <div class="subtotal">
+                            Subtotal: <span id="subtotal">$0</span>
+                        </div>
+                        <!-- Botones de Pago -->
+                        <div class="checkoutpro">
+                            <label>Selecciona tu método de pago:</label><br>
+                            <!-- Botón de PayPal -->
+                            <a href="#" class="btn btn-primary btn-paypal btn-block">
+                                <i class="bi bi-paypal"></i> Pagar con PayPal
+                            </a>
+                        </div>
+                        <!-- Textarea para depuración (opcional) -->
+                        <div class="checkoutpro">
+
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<script>
-    $(document).ready(function() {
-        // Agregar event listener para el cambio en el selector de cantidad
-        $(".selector-cantidad").change(function() {
-            actualizarSubtotal();
+    <script>
+        $(document).ready(function() {
+            // Agregar event listener para el cambio en el selector de cantidad
+            $(".selector-cantidad").change(function() {
+                actualizarSubtotal();
+            });
         });
-    });
 
-    function restarCantidad() {
-        var cantidad = parseInt(document.querySelector('.selector-cantidad').value);
-        if (cantidad > 1) {
-            cantidad--;
+        function restarCantidad() {
+            var cantidad = parseInt(document.querySelector('.selector-cantidad').value);
+            if (cantidad > 1) {
+                cantidad--;
+                document.querySelector('.selector-cantidad').value = cantidad;
+                actualizarSubtotal();
+            }
+        }
+
+        function sumarCantidad() {
+            var cantidad = parseInt(document.querySelector('.selector-cantidad').value);
+            cantidad++;
             document.querySelector('.selector-cantidad').value = cantidad;
             actualizarSubtotal();
         }
-    }
 
-    function sumarCantidad() {
-        var cantidad = parseInt(document.querySelector('.selector-cantidad').value);
-        cantidad++;
-        document.querySelector('.selector-cantidad').value = cantidad;
-        actualizarSubtotal();
-    }
-
-    function actualizarSubtotal() {
-        var precioProducto = parseFloat($(".precio-producto").text().substring(1));
-        var cantidad = parseInt($(".selector-cantidad").val());
-        var subtotal = precioProducto * cantidad;
-        $("#subtotal").text("$" + subtotal.toFixed(2));
-    }
-</script>
+        function actualizarSubtotal() {
+            var precioProducto = parseFloat($(".precio-producto").text().substring(1));
+            var cantidad = parseInt($(".selector-cantidad").val());
+            var subtotal = precioProducto * cantidad;
+            $("#subtotal").text("$" + subtotal.toFixed(2));
+        }
+    </script>
 </body>
 </html>

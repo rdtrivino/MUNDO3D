@@ -32,7 +32,6 @@ $sql = "SELECT * FROM productos WHERE Pro_Categoria = 2";
 $result = mysqli_query($link, $sql);
 
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 
@@ -58,7 +57,6 @@ $result = mysqli_query($link, $sql);
             <!-- Icono de usuario -->
             <div class="d-inline-flex align-items-center">
                 <i class="fas fa-user fa-lg text-white mr-2"></i>
-                <!-- Texto de bienvenida y nombre de usuario -->
                 <div class="text-white" id="user-name">
                     Bienvenido:
                 </div>
@@ -114,7 +112,6 @@ $result = mysqli_query($link, $sql);
         </div>
     </div>
 </div>
-
     <!-- Navbar Start -->
     <div class="container-fluid position-relative nav-bar p-0">
         <div class="container-lg position-relative p-0 px-lg-3" style="z-index: 9;">
@@ -136,21 +133,23 @@ $result = mysqli_query($link, $sql);
             </nav>
         </div>
     </div>
-    <!-- Page Header Start -->
+    <!-- Navbar End -->
+
+
     <div class="page-header container-fluid bg-secondary pt-2 pt-lg-5 pb-2 mb-5">
-        <div class="container py-5">
-            <div class="row align-items-center py-4">
-                <div class="col-md-6 text-center text-md-left">
-                    <h1 class="mb-4 mb-md-0 text-white">REPUESTOS</h1>
-                </div>
-                <div class="col-md-6 text-center text-md-right">
+    <div class="container py-5">
+        <div class="row align-items-center py-4">
+            <div class="col-md-6 text-center text-md-left">
+                <h1 class="mb-4 mb-md-0 text-white">REPUESTOS</h1>
+            </div>
+            <div class="col-md-6 text-center text-md-right">
                 <div class="d-inline-flex align-items-center">
                     <form class="form-inline mr-3">
                         <input class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Buscar" oninput="searchProducts(this.value)">
                         <!-- Cambiar el evento a "input" para que se ejecute cada vez que se ingresa una letra -->
                         <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Buscar</button>
                     </form>
-                  <!-- Botón para abrir el modal del carrito -->
+                    <!-- Botón para abrir el modal del carrito -->
                     <a id="carritoBtn" class="btn text-white ml-3" href="#" data-toggle="modal" data-target="#carritoModal">
                         <i class="fas fa-shopping-cart mr-2"></i>Carrito <span id="contadorProductos" class="badge badge-light contador-rojo">0</span>
                     </a>
@@ -256,39 +255,38 @@ $result = mysqli_query($link, $sql);
                 </div>
             </div>
         </div>
-<script>
-    function searchProducts(searchTerm) {
-        // Obtener todos los elementos de productos
-        var products = document.querySelectorAll('.product');
-        
-        // Convertir el término de búsqueda a mayúsculas para hacer una comparación insensible a mayúsculas y minúsculas
-        searchTerm = searchTerm.toUpperCase();
-        
-        // Iterar sobre todos los productos
-        products.forEach(function(product) {
-            // Obtener el nombre del producto
-            var productName = product.querySelector('.card-title').textContent.toUpperCase();
-            
-            // Obtener la descripción del producto
-            var productDescription = product.querySelector('.card-text').textContent.toUpperCase();
-            
-            // Comprobar si el término de búsqueda está presente en el nombre o la descripción del producto
-            if (productName.includes(searchTerm) || productDescription.includes(searchTerm)) {
-                // Mostrar el producto si coincide con el término de búsqueda
-                product.style.display = 'block';
-            } else {
-                // Ocultar el producto si no coincide con el término de búsqueda
-                product.style.display = 'none';
+        <script>
+            function searchProducts(searchTerm) {
+                // Obtener todos los elementos de productos
+                var products = document.querySelectorAll('.product');
+                
+                // Convertir el término de búsqueda a mayúsculas para hacer una comparación insensible a mayúsculas y minúsculas
+                searchTerm = searchTerm.toUpperCase();
+                
+                // Iterar sobre todos los productos
+                products.forEach(function(product) {
+                    // Obtener el nombre del producto
+                    var productName = product.querySelector('.card-title').textContent.toUpperCase();
+                    
+                    // Obtener la descripción del producto
+                    var productDescription = product.querySelector('.card-text').textContent.toUpperCase();
+                    
+                    // Comprobar si el término de búsqueda está presente en el nombre o la descripción del producto
+                    if (productName.includes(searchTerm) || productDescription.includes(searchTerm)) {
+                        // Mostrar el producto si coincide con el término de búsqueda
+                        product.style.display = 'block';
+                    } else {
+                        // Ocultar el producto si no coincide con el término de búsqueda
+                        product.style.display = 'none';
+                    }
+                });
             }
-        });
-    }
-</script>
-    <!-- Page Header Start -->
-
-<<div class="container-fluid pt-5">
+        </script>
+<!-- Catalog Start -->
+<div class="container-fluid pt-5">
     <div class="container">
         <h6 class="text-secondary text-uppercase text-center font-weight-medium mb-3">NUESTROS PRODUCTOS</h6>
-        <h1 class="display-4 text-center mb-5">Explora nuestro catálogo</h1>
+        <h1 class="display-4 text-center mb-5">Explora nuestros Repuestos</h1>
         <div class="row row-cols-lg-4 row-cols-md-3 justify-content-center">
             <?php
             // Consulta a la base de datos para obtener productos de la categoría 5
@@ -416,8 +414,9 @@ $result = mysqli_query($link, $sql);
             </style>
             </div>
             </div>
-         <!-- Footer Start -->
-         <div class="container-fluid bg-primary text-white mt-5 pt-5 px-sm-3 px-md-5">
+
+        <!-- Footer Start -->
+        <div class="container-fluid bg-primary text-white mt-5 pt-5 px-sm-3 px-md-5">
         <div class="row pt-5">
             <div class="col-lg-3 col-md-6 mb-5">
                 <a href=""><h1 class="text-secondary mb-3"><span class="text-white">MUNDO</span>3D</h1></a>
@@ -489,5 +488,6 @@ $result = mysqli_query($link, $sql);
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
 </body>
+
 
 </html>
