@@ -188,43 +188,43 @@ $resultado = mysqli_query($link, $sql);
 
                         <!-- Iterar sobre los resultados de la consulta -->
                         <?php
-    if (mysqli_num_rows($resultado) > 0) {
-        while ($fila = mysqli_fetch_assoc($resultado)) {
-            // Convertir la imagen binaria a una URL de imagen
-            $imageData = base64_encode($fila['imagen_principal']);
-            $imageSrc = 'data:image/jpeg;base64,' . $imageData;
-    ?>
-            <!-- Mostrar el producto en el carrito -->
-            <div class="card">
-                <div class="row no-gutters">
-                    <div class="col-md-4">
-                        <img src="<?php echo $imageSrc; ?>" class="card-img" alt="<?php echo $fila['nombre']; ?>">
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <h5 class="card-title"><?php echo $fila['nombre']; ?></h5>
-                            <p class="card-text"><?php echo $fila['descripcion']; ?></p>
-                            <p class="card-text precio-producto">$<?php echo $fila['precio']; ?></p>
-                            <div class="cantidad-container">
-                                <!-- Botones para ajustar la cantidad -->
-                                <button class="btn btn-outline-secondary btn-cantidad" onclick="restarCantidad(<?php echo $fila['id']; ?>)">-</button>
-                                <input type="text" id="cantidad-<?php echo $fila['id']; ?>" class="form-control text-center selector-cantidad" value="<?php echo $fila['cantidad']; ?>" aria-label="Cantidad">
-                                <button class="btn btn-outline-secondary btn-cantidad" onclick="sumarCantidad(<?php echo $fila['id']; ?>)">+</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-    <?php
-        }
-    } else {
-        // Si no hay productos en el carrito, mostrar un mensaje indicando que está vacío
-        echo "<p>No hay productos en el carrito.</p>";
-    }
+                            if (mysqli_num_rows($resultado) > 0) {
+                                while ($fila = mysqli_fetch_assoc($resultado)) {
+                                    // Convertir la imagen binaria a una URL de imagen
+                                    $imageData = base64_encode($fila['imagen_principal']);
+                                    $imageSrc = 'data:image/jpeg;base64,' . $imageData;
+                        ?>
+                                    <!-- Mostrar el producto en el carrito -->
+                                    <div class="card">
+                                        <div class="row no-gutters">
+                                            <div class="col-md-4">
+                                                <img src="<?php echo $imageSrc; ?>" class="card-img" alt="<?php echo $fila['nombre']; ?>">
+                                            </div>
+                                            <div class="col-md-8">
+                                                <div class="card-body">
+                                                    <h5 class="card-title"><?php echo $fila['nombre']; ?></h5>
+                                                    <p class="card-text"><?php echo $fila['descripcion']; ?></p>
+                                                    <p class="card-text precio-producto">$<?php echo $fila['precio']; ?></p>
+                                                    <div class="cantidad-container">
+                                                        <!-- Botones para ajustar la cantidad -->
+                                                        <button class="btn btn-outline-secondary btn-cantidad" onclick="restarCantidad(<?php echo $fila['id']; ?>)">-</button>
+                                                        <input type="text" id="cantidad-<?php echo $fila['id']; ?>" class="form-control text-center selector-cantidad" value="<?php echo $fila['cantidad']; ?>" aria-label="Cantidad">
+                                                        <button class="btn btn-outline-secondary btn-cantidad" onclick="sumarCantidad(<?php echo $fila['id']; ?>)">+</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                        <?php
+                                }
+                            } else {
+                                // Si no hay productos en el carrito, mostrar un mensaje indicando que está vacío
+                                echo "<p>No hay productos en el carrito.</p>";
+                            }
 
-    // Cerrar la conexión a la base de datos
-    mysqli_close($link);
-    ?>
+                            // Cerrar la conexión a la base de datos
+                            mysqli_close($link);
+                        ?>
 
                     </div>
                 </div>
@@ -284,15 +284,15 @@ $resultado = mysqli_query($link, $sql);
 
         function actualizarCantidadEnBD(productId, cantidad) {
             // Enviar una solicitud AJAX al servidor para actualizar la cantidad en la base de datos
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "actualizar_cantidad.php", true);
-            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4 && xhr.status === 200) {
+            $.ajax({
+                type: "POST",
+                url: "actualizar_cantidad.php", // Cambiar por la URL correcta si es necesario
+                data: { product_id: productId, quantity: cantidad }, // Pasar los parámetros
+                success: function(response) {
                     // Manejar la respuesta del servidor si es necesario
+                    console.log(response);
                 }
-            };
-            xhr.send("product_id=" + productId + "&quantity=" + cantidad);
+            });
         }
 
         function actualizarSubtotal() {
