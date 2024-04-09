@@ -29,6 +29,26 @@ if (isset($_GET['vaciar']) && $_GET['vaciar'] == 1) {
     }
 }
 
+// Actualizar la cantidad en la base de datos si se ha enviado una solicitud AJAX
+if (isset($_POST['product_id']) && isset($_POST['quantity'])) {
+    $productId = $_POST['product_id'];
+    $quantity = $_POST['quantity'];
+
+    // Consulta preparada para evitar la inyección SQL
+    $sql = "UPDATE carrito SET cantidad = ? WHERE id = ?";
+    $stmt = mysqli_prepare($link, $sql);
+    mysqli_stmt_bind_param($stmt, "ii", $quantity, $productId);
+
+    if (mysqli_stmt_execute($stmt)) {
+        echo "Cantidad actualizada correctamente";
+    } else {
+        echo "Error al actualizar la cantidad: " . mysqli_error($link);
+    }
+
+    // Cerrar la declaración preparada
+    mysqli_stmt_close($stmt);
+}
+
 // Consulta SQL para obtener los datos del carrito
 $sql = "SELECT id, nombre, descripcion, precio, cantidad, imagen_principal FROM carrito";
 $resultado = mysqli_query($link, $sql);
@@ -187,9 +207,9 @@ $resultado = mysqli_query($link, $sql);
                             <p class="card-text precio-producto">$<?php echo $fila['precio']; ?></p>
                             <div class="cantidad-container">
                                 <!-- Botones para ajustar la cantidad -->
-                                <button class="btn btn-outline-secondary btn-cantidad" onclick="restarCantidad()">-</button>
-                                <input type="text" class="form-control text-center selector-cantidad" value="<?php echo $fila['cantidad']; ?>" aria-label="Cantidad">
-                                <button class="btn btn-outline-secondary btn-cantidad" onclick="sumarCantidad()">+</button>
+                                <button class="btn btn-outline-secondary btn-cantidad" onclick="restarCantidad(<?php echo $fila['id']; ?>)">-</button>
+                                <input type="text" id="cantidad-<?php echo $fila['id']; ?>" class="form-control text-center selector-cantidad" value="<?php echo $fila['cantidad']; ?>" aria-label="Cantidad">
+                                <button class="btn btn-outline-secondary btn-cantidad" onclick="sumarCantidad(<?php echo $fila['id']; ?>)">+</button>
                             </div>
                         </div>
                     </div>
@@ -242,27 +262,49 @@ $resultado = mysqli_query($link, $sql);
             });
         });
 
-        function restarCantidad() {
-            var cantidad = parseInt(document.querySelector('.selector-cantidad').value);
-            if (cantidad > 1) {
+        function restarCantidad(productId) {
+            var cantidadInput = document.getElementById('cantidad-' + productId);
+            var cantidad = parseInt(cantidadInput.value);
+            if (cantidad > 0) {
                 cantidad--;
-                document.querySelector('.selector-cantidad').value = cantidad;
+                cantidadInput.value = cantidad;
                 actualizarSubtotal();
+                actualizarCantidadEnBD(productId, cantidad);
             }
         }
 
-        function sumarCantidad() {
-            var cantidad = parseInt(document.querySelector('.selector-cantidad').value);
+        function sumarCantidad(productId) {
+            var cantidadInput = document.getElementById('cantidad-' + productId);
+            var cantidad = parseInt(cantidadInput.value);
             cantidad++;
-            document.querySelector('.selector-cantidad').value = cantidad;
+            cantidadInput.value = cantidad;
             actualizarSubtotal();
+            actualizarCantidadEnBD(productId, cantidad);
+        }
+
+        function actualizarCantidadEnBD(productId, cantidad) {
+            // Enviar una solicitud AJAX al servidor para actualizar la cantidad en la base de datos
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "actualizar_cantidad.php", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    // Manejar la respuesta del servidor si es necesario
+                }
+            };
+            xhr.send("product_id=" + productId + "&quantity=" + cantidad);
         }
 
         function actualizarSubtotal() {
-            var precioProducto = parseFloat($(".precio-producto").text().substring(1));
-            var cantidad = parseInt($(".selector-cantidad").val());
-            var subtotal = precioProducto * cantidad;
-            $("#subtotal").text("$" + subtotal.toFixed(2));
+            var precioProducto = 0;
+            var cantidadTotal = 0;
+            $(".card").each(function() {
+                var precio = parseFloat($(this).find(".precio-producto").text().substring(1));
+                var cantidad = parseInt($(this).find(".selector-cantidad").val());
+                precioProducto += precio * cantidad;
+                cantidadTotal += cantidad;
+            });
+            $("#subtotal").text("$" + precioProducto.toFixed(2));
         }
     </script>
 </body>
