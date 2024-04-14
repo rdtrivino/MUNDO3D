@@ -53,7 +53,7 @@
     <div class="py-5 text-center">
         <img class="" src="../images/Logo Mundo 3d.png" alt="" width="150" height="150">
     </div>
-    <form class="needs-validation" novalidate method="POST" action="procesaractualizar.php?tabla=<?php echo $tabla; ?>&id=<?php echo $id; ?>">
+    <form class="needs-validation" novalidate method="POST" enctype="multipart/form-data" action="procesaractualizar.php?tabla=<?php echo $tabla; ?>&id=<?php echo $id; ?>">
         <input type="hidden" class="form-control" id="address2" name="tabla" value="<?php echo $_GET['tabla']; ?>">
 
         <?php
@@ -165,10 +165,14 @@
                     $peticion2 = "SELECT * FROM productos WHERE Identificador = $Identificador";
                     $result = mysqli_query($link, $peticion2);
                     if ($result && $fila = mysqli_fetch_assoc($result)) {
+                        // Consulta SQL para obtener los datos de la tabla categoria
+                        $queryCategoria = "SELECT Cgo_Codigo, Cgo_Nombre FROM categoria";
+                        $resultCategoria = mysqli_query($link, $queryCategoria);
+
                         echo '
                         <div class="form-group">
                             <label for="identificador">Identificador</label>
-                            <input type="text" class="form-control" id="identificador" name="identificador" value="' . $fila['Identificador'] . '"/> 
+                            <input type="text" class="form-control" id="identificador" name="identificador" value="' . $fila['Identificador'] . '" readonly/> 
                         </div>
 
                         <div class="form-group">
@@ -183,7 +187,13 @@
 
                         <div class="form-group">
                             <label for="categoria">Categoría</label>
-                            <input type="text" class="form-control" id="categoria" name="categoria" value="' . $fila['Pro_Categoria'] . '"/> 
+                            <select class="form-control" id="categoria_select" name="categoria_select">'; 
+                        // Agregar opciones a la lista desplegable
+                        while ($categoria = mysqli_fetch_assoc($resultCategoria)) {
+                            $selected = ($categoria['Cgo_Codigo'] == $fila['Pro_Categoria']) ? 'selected' : '';
+                            echo '<option value="' . $categoria['Cgo_Codigo'] . '" ' . $selected . '>' . $categoria['Cgo_Nombre'] . '</option>';
+                        }
+                        echo '</select>
                         </div>
 
                         <div class="form-group">
@@ -205,13 +215,13 @@
                             <label for="imagen">Imagen Actual</label>
                             <img src="data:image/png;base64,' . base64_encode($fila['imagen_principal']) . '" alt="Imagen del producto" style="width: 200px; height: 200px;">
                             <label for="imagen">Nueva Imagen
-                                <input type="file" class="form-control-file" id="imagen" name="imagen" accept="image/*">
+                            <input type="file" class="form-control-file" id="imagen" name="imagen" accept="image/*">
                             </label>
                         </div>
 
                         <div class="form-group">
                             <label for="estado">Estado</label>
-                            <input type="text" class="form-control" id="estado" name="estado" value="' . $fila['Pro_Estado'] . '"/> 
+                            <input type="text" class="form-control" id="estado" name="estado" value="' . $fila['Pro_Estado'] . '" readonly/> 
                         </div>';
                     }
                 }

@@ -22,6 +22,7 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/estilo.css" rel="stylesheet">
     <link rel="shortcut icon" href="../images/Logo Mundo 3d.png" type="image/x-icon">
+    <script src="js/scripts.js"></script>
     <style>
         .bd-placeholder-img {
             font-size: 1.125rem;
@@ -48,6 +49,7 @@
 
 <div class="link-container">
     <?php $tabla = $_GET['tabla'];?>
+    
     <a href="index.php?tabla=<?php echo $tabla;?>">
         <img class="home" src="../images/bx-home-alt-2.svg" alt="Home">
     </a>
@@ -58,14 +60,9 @@
         <img class="mundo" src="../images/Logo Mundo 3d.png" alt="" width="150" height="150">
 </div>
 
-    <form class="needs-validation" novalidate method="POST" action="procesarnuevo.php?tabla=<?php echo $tabla; ?>">
+    <form class="needs-validation" novalidate method="POST" enctype="multipart/form-data" action="procesarnuevo.php?tabla=<?php echo $tabla; ?>">
         <input type="hidden" class="form-control" id="address2" name="tabla" value="<?php echo $_GET['tabla'] ?>">
         <?php if ($_GET['tabla'] == 'pedidos') { ?>
-
-            <div class="form-group" style="display: none;"><!--Se oculta etiqueta-->
-                <label for="identificador">Identificador</label>
-                <input type="text" class="form-control" id="identificador" name="identificador"/> 
-            </div>
 
             <div class="form-group">
                 <label for="cliente">Cliente (*)</label>
@@ -108,7 +105,7 @@
             <div class="form-group">
                 <label for="producto">Producto (*)</label>
                 <select class="form-control" id="producto" name="producto">
-                    <option value="">Seleccionar producto</option>
+                    <option value="">Seleccionar el producto</option>
                     <?php
                         $consulta = "SELECT Identificador, Pro_Nombre FROM productos";
                         $resultado = mysqli_query($link, $consulta);
@@ -138,18 +135,36 @@
             </div>
 
             <div class="form-group">
-                <label for="imagenproducto">Imagen del producto</label>
-                <input type="file" class="form-control-file" id="imagenproducto" name="imagenproducto" accept="image/*">  
+                <label for="imagen">Imagen del producto</label>
+                <input type="file" class="form-control-file" id="imagen" name="imagen" accept="image/*">  
             </div>
 
             <div class="form-group">
                 <label for="tipoimpresion">Tipo de impresión</label>
-                <input type="text" class="form-control" id="tipoimpresion" name="tipoimpresion" /> 
+                <select class="form-control" id="tipoimpresion" name="tipoimpresion">
+                <option value="No informado">Seleccionar el tipo de impresión</option>
+                    <option value="Poliácido Láctico">Poliácido Láctico</option>
+                    <option value="Acrilonitrilo Butadieno Estireno">Acrilonitrilo Butadieno Estireno</option>
+                    <option value="Tereftalato de Polietileno">Tereftalato de Polietileno</option>
+                    <option value="Tereftalato de Polietileno Glicol">Tereftalato de Polietileno Glicol</option>
+                    <option value="Nylon">Nylon</option>
+                    <option value="Poliestireno de alto impacto">Poliestireno de alto impacto</option>
+                    <option value="Elastómero termoplástico o TPE">Elastómero termoplástico o TPE</option>
+                    <option value="Filamento Fibra de Carbono">Filamento Fibra de Carbono</option>
+                    <option value="Filamento PP Polipropileno">Filamento PP Polipropileno</option>
+                </select>
             </div>
 
             <div class="form-group">
                 <label for="color">Color de la impresión</label>
-                <input type="text" class="form-control" id="color" name="color" /> 
+                <select class="form-control" id="color" name="color">
+                    <option value="No informado">Seleccionar el color de impresión</option>
+                    <option value="Negro Fibra de Carbono">Negro Fibra de Carbono</option>
+                    <option value="Blanco Menta">Blanco Menta</option>
+                    <option value="Negro Clásico">Negro Clásico</option>
+                    <option value="Naranja metálizado">Naranja metálizado</option>
+                    <option value="Verde Glass">Verde Glass</option>
+                </select>
             </div>
 
             <div class="form-group">
@@ -202,7 +217,7 @@
             </div>
 
             <div class="form-group">
-                <label for="imagen">Imagen (*)</label>
+                <label for="imagen" class="form-label">Imagen (*)</label>
                 <input type="file" class="form-control-file" id="imagen" name="imagen" accept="image/*"> 
             </div>
 
@@ -210,6 +225,14 @@
 
                 <hr class="mb-4">
                 <button class="btn btn-primary btn-lg btn-block" type="submit">Procesar</button>
+                <!-- Modal de confirmacion -->
+                    <dialog id="modal">
+                        <h2>!Alerta¡</h2>
+                        <p>Registro almacenado con éxito</p>
+                        <p></p>
+                        <button id="btn-cerrar-modal">Cerrar modal</button>
+                    </dialog>
+                <!----------------------------->
     </form>
 </div>
 
