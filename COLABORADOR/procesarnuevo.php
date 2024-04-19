@@ -14,7 +14,7 @@
     // Verificar si se ha enviado el formulario y se ha establecido la tabla adecuada
     if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['tabla'])) {
         if ($_POST['tabla'] == 'pedidos') {
-            var_dump($_POST['color']);
+            //var_dump($_POST['color']);
           // Verificar si se ha subido un archivo y si no hay errores
             if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
                 // Obtener el contenido de la imagen

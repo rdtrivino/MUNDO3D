@@ -1,10 +1,42 @@
 <?php
-    session_start();
-    include __DIR__ . '/../conexion.php';
-        //Confirmacion de que el usuario ha realizado el proceso de autenticación
-        if(!isset($_SESSION['confirmado']) || $_SESSION['confirmado'] == false){
-            //die("No ha iniciado sesión !!!");
+        session_start();
+        include __DIR__ . '/../conexion.php';
+
+        // Confirmación de que el usuario ha realizado el proceso de autenticación
+        if (!isset($_SESSION['confirmado']) || $_SESSION['confirmado'] == false) {
             header("Location: ../Programas/autenticacion.php");
+            exit(); // Terminamos la ejecución del script después de redirigir
+        }
+
+        // Realizamos la consulta para obtener el rol del usuario
+        $peticion = "SELECT Usu_rol FROM usuario WHERE Usu_Identificacion = '".$_SESSION['user_id']."'";
+        $result = mysqli_query($link, $peticion);
+
+        // Verificamos si la consulta tuvo éxito
+        if (!$result) {
+            // Manejo de errores de consulta
+            // Redirigir a la página de autenticación o mostrar un mensaje de error
+            header("Location: ../Programas/autenticacion.php");
+            exit(); // Terminamos la ejecución del script después de redirigir
+        }
+
+        // Verificamos si la consulta devolvió exactamente un resultado
+        if (mysqli_num_rows($result) != 1) {
+            // Si la consulta no devuelve un solo resultado, puede ser un problema de base de datos
+            // Redirigir a la página de autenticación o mostrar un mensaje de error
+            header("Location: ../Programas/autenticacion.php");
+            exit(); // Terminamos la ejecución del script después de redirigir
+        }
+
+        // Obtenemos el rol del usuario
+        $fila = mysqli_fetch_assoc($result);
+        $rolUsuario = $fila['Usu_rol'];
+
+        // Verificar si el rol del usuario es diferente de 1
+        if ($rolUsuario != 1) {
+            // Si el rol no es 1, redirigir a la página de autenticación
+            header("Location: ../Programas/autenticacion.php");
+            exit(); // Terminamos la ejecución del script después de redirigir
         }
 
 $nombreCompleto = $_SESSION['username'];

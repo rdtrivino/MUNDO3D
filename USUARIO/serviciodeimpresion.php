@@ -46,6 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $imagenBinaria = mysqli_real_escape_string($link, $imagenBinaria);
 
     // Obtener la fecha actual
+    date_default_timezone_set('America/Bogota');
     $fechaPedido = date("Y-m-d");
 
     // Calcular la fecha de entrega según el tipo de impresión
