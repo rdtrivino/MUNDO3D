@@ -25,7 +25,7 @@
         }
 
         // Verificamos si la consulta devolvió exactamente un resultado
-        if (mysqli_num_rows($result) != 2) {
+        if (mysqli_num_rows($result) != 1) {
             // Si la consulta no devuelve un solo resultado, puede ser un problema de base de datos
             // Redirigir a la página de autenticación o mostrar un mensaje de error
             header("Location: ../Programas/autenticacion.php");
