@@ -1,6 +1,7 @@
 <?php
-$consulta_eventos = "SELECT identificador, titulo, color, inicio, fin FROM calendario";
+$consulta_eventos = "SELECT identificador, titulo, color, inicio, fin, usuario FROM calendario";
 $resultado_eventos = mysqli_query($link, $consulta_eventos);
+$usuario = $_SESSION['user_id'];
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -147,10 +148,10 @@ body {
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-						<h4 class="modal-title text-center">Registrar Evento</h4>
+						<h4 class="modal-title text-center">Registrar evento</h4>
 					</div>
 					<div class="modal-body">
-						<form class="form-horizontal" method="POST" action="calendario/proceso.php">
+					<form class="form-horizontal" method="POST" action="calendario/proceso.php?usuario=<?php echo $usuario; ?>">
 							<div class="form-group">
 								<label for="inputEmail3" class="col-sm-2 control-label">Titulo</label>
 								<div class="col-sm-10">

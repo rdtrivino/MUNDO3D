@@ -23,7 +23,8 @@ if(!empty($titulo) && !empty($color) && !empty($inicio) && !empty($fin)){
 	$data_barra = implode("-", $data_barra);
 	$fin_barra = $data_barra . " " . $hora;
 	
-	$consulta_eventos = "INSERT INTO calendario (titulo, color, inicio, fin) VALUES ('$titulo', '$color', '$inicio_barra', '$fin_barra')";
+	$usuario = mysqli_real_escape_string($link, $_GET['usuario']);
+	$consulta_eventos = "INSERT INTO calendario (titulo, color, inicio, fin, usuario) VALUES ('$titulo', '$color', '$inicio_barra', '$fin_barra', '$usuario')";
 	$resultado_eventos = mysqli_query($link, $consulta_eventos);
 	
 	//Comprobar si guardó en la base de datos a través de "mysqli_insert_id" el cual comprueba si existe el ID del último dato insertado
