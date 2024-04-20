@@ -11,7 +11,7 @@
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <title>MUNDO3D-COLABORADOR</title>
+        <title>COLABORADOR</title>
         <link rel="shortcut icon" href="../images/Logo Mundo 3d.png" type="image/x-icon">
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
         <link href="css/styles.css" rel="stylesheet" />
@@ -25,6 +25,7 @@
     </head>
 
     <body class="sb-nav-fixed">
+        <!--Inicia el codigo de la barra lateral izquierda de navegacion-->
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <a class="navbar-brand ps-3" href="index.php">COLABORADOR</a>
             <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>        
@@ -46,7 +47,7 @@
                     <div class="sb-sidenav-menu">
                         <div class="nav">
                             <div class="sb-sidenav-menu-heading">PROCESOS</div>
-                            <!--Listar las tablas disponibles en la base de datos-->
+                            <!--Listar las tablas de productos y pedidos-->
                             <?php
                                 $peticion = "SHOW TABLES WHERE Tables_in_mundo3d IN ('productos', 'pedidos');";
                                 $result = mysqli_query($link, $peticion);
@@ -63,13 +64,13 @@
                                     ';
                                 }
                             ?>
- 
-                        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-                            <span>REPORTES</span>
-                            <a class="d-flex align-items-center text-muted" href="#" aria-label="Add a new report">
-                                <span data-feather="plus-circle"></span>
-                            </a>
-                        </h6>
+                            <!--Listar los reportes requeridos-->
+                            <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                                <span>REPORTES</span>
+                                <a class="d-flex align-items-center text-muted" href="#" aria-label="Add a new report">
+                                    <span data-feather="plus-circle"></span>
+                                </a>
+                            </h6>
                             <ul class="nav flex-column mb-2">
                                 <!--Mostrar todas las vistas creadas la base de datos-->
                                 <?php
@@ -96,12 +97,15 @@
                     </div>
                 </nav>
             </div>
-            <div id="layoutSidenav_content">
-                <main>
-                    <div class="container-fluid px-4">
-                        <h1 class="mt-4">MUNDO 3D</h1>
+
+        <!--Inicia el contenido del cuerpo principal de la pagina-->
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4">
+                    <h1 class="mt-4">MUNDO 3D</h1>
+                    <div><?php include('calendario/calendario.php'); ?></div>
                         <div class="btn-group mr-2">
-                            <!--Si hay una tabla seleccionada mostrar el boton adicionar-->  
+                            <!--Si hay una tabla seleccionada mostrar los botones adicionar, exportar e imprimir-->  
                             <?php
                             if (isset($_GET['tabla'])) {
                                 echo '<a href="adicionar.php?tabla=' . $_GET['tabla'] . '" class="btn btn-sm btn-outline-secondary">Adicionar registro</a>';
@@ -111,109 +115,109 @@
                             ?>
                         </div>
                          
-        <style>.table-responsive{overflow-x: visible !important;}</style>
-        <table class="table table-striped table-sm">
-          <thead>
-            <tr>
-            <!--Mostrar los encabezados de la tabla seleccionada-->
-            <?php  
-                if (isset($_GET['tabla'])) {
-                    $tabla_seleccionada = $_GET['tabla'];
-                    
-                    // Definir encabezados específicos para cada tabla
-                    $encabezados_pedidos = array("ID", "Cliente", "Estado", "Producto", "Cantidad", "Fecha Pedido", "Fecha Entrega", "Imagen", "Tipo", "Color", "Observación", "Editar");
-                    $encabezados_productos = array("ID", "Nombre", "Descripción", "Categoría", "Cantidad", "Precio Venta", "Costo", "Imagen", "Estado", "Editar");
-                    
-                    // Mostrar los encabezados según la tabla seleccionada
-                    if ($tabla_seleccionada === 'pedidos') {
-                        foreach ($encabezados_pedidos as $encabezado) {
-                            echo '<th>' . $encabezado . '</th>';
-                        }
-                    } elseif ($tabla_seleccionada === 'productos') {
-                        foreach ($encabezados_productos as $encabezado) {
-                            echo '<th>' . $encabezado . '</th>';
-                        }
-                    }
-                }
-            ?>
+                    <style>.table-responsive{overflow-x: visible !important;}</style>
+                    <table class="table table-striped table-sm">
+                        <thead>
+                            <tr>
+                            <!--Mostrar los encabezados de la tabla seleccionada-->
+                            <?php  
+                                if (isset($_GET['tabla'])) {
+                                    $tabla_seleccionada = $_GET['tabla'];
+                                    
+                                    // Definir encabezados específicos para cada tabla
+                                    $encabezados_pedidos = array("ID", "Cliente", "Estado", "Producto", "Cantidad", "Fecha Pedido", "Fecha Entrega", "Imagen", "Tipo", "Color", "Observación", "Editar");
+                                    $encabezados_productos = array("ID", "Nombre", "Descripción", "Categoría", "Cantidad", "Precio Venta", "Costo", "Imagen", "Estado", "Editar");
+                                    
+                                    // Mostrar los encabezados según la tabla seleccionada
+                                    if ($tabla_seleccionada === 'pedidos') {
+                                        foreach ($encabezados_pedidos as $encabezado) {
+                                            echo '<th>' . $encabezado . '</th>';
+                                        }
+                                    } elseif ($tabla_seleccionada === 'productos') {
+                                        foreach ($encabezados_productos as $encabezado) {
+                                            echo '<th>' . $encabezado . '</th>';
+                                        }
+                                    }
+                                }
+                            ?>
                 
-            </tr>
-          </thead>
-          <tbody>
-                <!--Mostrar contenido de la tabla-->
-                <?php
-                    include __DIR__ . '/../conexion.php';
+                            </tr>
+                        </thead>
+                        <!--Mostrar contenido de la tabla-->
+                        <tbody>
+                
+                        <?php
+                            include __DIR__ . '/../conexion.php';
 
-                    if (isset($_GET['tabla'])) {
-                        if ($_GET['tabla'] == 'pedidos') {
-                            $peticion = "SELECT pedidos.*, pedido_estado.Es_Nombre AS Pe_Estado, productos.Pro_Nombre AS Pe_Producto 
-                                        FROM pedidos
-                                        INNER JOIN pedido_estado ON pedidos.Pe_Estado = pedido_estado.Es_Codigo
-                                        INNER JOIN productos ON pedidos.Pe_Producto = productos.Identificador";           
-                            
-                            $result = mysqli_query($link, $peticion);
-                            foreach ($result as $row) {
-                                echo '<tr>
-                                    <th scope="row">' . $row['Identificador'] . '</th>
-                                    <td>' . $row['Pe_Cliente'] . '</td>
-                                    <td>' . $row['Pe_Estado'] . '</td>
-                                    <td>' . $row['Pe_Producto'] . '</td>
-                                    <td>' . $row['Pe_Cantidad'] . '</td>
-                                    <td>' . $row['Pe_Fechapedido'] . '</td>
-                                    <td>' . $row['Pe_Fechaentrega'] . '</td>
-                                    <td><img height="150px" src="data:image/jpg;base64,' . base64_encode($row['pe_imagen_pedido']) . '"></td>
-                                    <td>' . $row['pe_tipo_impresion'] . '</td>
-                                    <td>' . $row['pe_color'] . '</td>
-                                    <td>' . $row['Pe_Observacion'] . '</td>
-                                    <td><a href="editar.php?tabla=' . $_GET['tabla'] . '&id=' . $row['Identificador'] . '"><i class="fas fa-edit"></i></a></td>
-                                    </tr>';
-                            }
-                        } elseif ($_GET['tabla'] == 'productos') {
-                            $peticion2 = "SELECT productos.*, categoria.Cgo_Nombre AS Pro_Categoria 
-                                        FROM productos
-                                        INNER JOIN categoria ON productos.Pro_Categoria = categoria.Cgo_Codigo";
-                            $result = mysqli_query($link, $peticion2);
-                            foreach ($result as $row) {
-                                echo '<tr>
-                                    <th scope="row">' . $row['Identificador'] . '</th>
-                                    <td>' . $row['Pro_Nombre'] . '</td>
-                                    <td>' . $row['Pro_Descripcion'] . '</td>
-                                    <td>' . $row['Pro_Categoria'] . '</td>
-                                    <td>' . $row['Pro_Cantidad'] . '</td>
-                                    <td>' . $row['Pro_PrecioVenta'] . '</td>
-                                    <td>' . $row['Pro_Costo'] . '</td>
-                                    <td><img height="150px" src="data:image/jpg;base64,' . base64_encode($row['imagen_principal']) . '"></td>
-                                    <td>' . $row['Pro_Estado'] . '</td>
-                                    <td><a href="editar.php?tabla=' . $_GET['tabla'] . '&id=' . $row['Identificador'] . '"><i class="fas fa-edit"></i></a></td>
-                                    </tr>';
-                            }
-                        }
-                        } else {
-                            // Mensaje cuando no se selecciona ninguna tabla
-                            echo '<tr><td colspan="35" style="text-align:center; font-weight: bold;">¿Qué quieres hacer hoy?</td></tr>';
-                        }
-                    ?>
-            </tbody>
-        </table>
-        
-      </div>
-        </div>
-        </div>
-    </main>
-    <footer class="py-4 bg-light mt-auto">
-        <div class="container-fluid px-4">
-            <div class="d-flex align-items-center justify-content-between small">
-                <div class="text-muted">Copyright &copy; Mundo3d 2023</div>
-                <div>
-                    <a href="#">Política de privacidad</a>
-                    &middot;
-                    <a href="#">Términos &amp; Condiciones</a>
+                            if (isset($_GET['tabla'])) {
+                                if ($_GET['tabla'] == 'pedidos') {
+                                    $peticion = "SELECT pedidos.*, pedido_estado.Es_Nombre AS Pe_Estado, productos.Pro_Nombre AS Pe_Producto 
+                                                FROM pedidos
+                                                INNER JOIN pedido_estado ON pedidos.Pe_Estado = pedido_estado.Es_Codigo
+                                                INNER JOIN productos ON pedidos.Pe_Producto = productos.Identificador";           
+                                    
+                                    $result = mysqli_query($link, $peticion);
+                                    foreach ($result as $row) {
+                                        echo '<tr>
+                                            <th scope="row">' . $row['Identificador'] . '</th>
+                                            <td>' . $row['Pe_Cliente'] . '</td>
+                                            <td>' . $row['Pe_Estado'] . '</td>
+                                            <td>' . $row['Pe_Producto'] . '</td>
+                                            <td>' . $row['Pe_Cantidad'] . '</td>
+                                            <td>' . $row['Pe_Fechapedido'] . '</td>
+                                            <td>' . $row['Pe_Fechaentrega'] . '</td>
+                                            <td><img height="150px" src="data:image/jpg;base64,' . base64_encode($row['pe_imagen_pedido']) . '"></td>
+                                            <td>' . $row['pe_tipo_impresion'] . '</td>
+                                            <td>' . $row['pe_color'] . '</td>
+                                            <td>' . $row['Pe_Observacion'] . '</td>
+                                            <td><a href="editar.php?tabla=' . $_GET['tabla'] . '&id=' . $row['Identificador'] . '"><i class="fas fa-edit"></i></a></td>
+                                            </tr>';
+                                    }
+                                } elseif ($_GET['tabla'] == 'productos') {
+                                    $peticion2 = "SELECT productos.*, categoria.Cgo_Nombre AS Pro_Categoria 
+                                                FROM productos
+                                                INNER JOIN categoria ON productos.Pro_Categoria = categoria.Cgo_Codigo";
+                                    $result = mysqli_query($link, $peticion2);
+                                    foreach ($result as $row) {
+                                        echo '<tr>
+                                            <th scope="row">' . $row['Identificador'] . '</th>
+                                            <td>' . $row['Pro_Nombre'] . '</td>
+                                            <td>' . $row['Pro_Descripcion'] . '</td>
+                                            <td>' . $row['Pro_Categoria'] . '</td>
+                                            <td>' . $row['Pro_Cantidad'] . '</td>
+                                            <td>' . $row['Pro_PrecioVenta'] . '</td>
+                                            <td>' . $row['Pro_Costo'] . '</td>
+                                            <td><img height="150px" src="data:image/jpg;base64,' . base64_encode($row['imagen_principal']) . '"></td>
+                                            <td>' . $row['Pro_Estado'] . '</td>
+                                            <td><a href="editar.php?tabla=' . $_GET['tabla'] . '&id=' . $row['Identificador'] . '"><i class="fas fa-edit"></i></a></td>
+                                            </tr>';
+                                    }
+                                }
+                                } else {
+                                    // Mensaje cuando no se selecciona ninguna tabla
+                                    echo '<tr><td colspan="35" style="text-align:center; font-weight: bold;">¿Qué quieres hacer hoy?</td></tr>';
+                                }
+                        ?>
+                        </tbody>
+                    </table>       
+                    </div>
+                    </div>
                 </div>
-            </div>
+            </main>
+            <footer class="py-4 bg-light mt-auto">
+                <div class="container-fluid px-4">
+                    <div class="d-flex align-items-center justify-content-between small">
+                        <div class="text-muted">Copyright &copy; Mundo3d 2023</div>
+                        <div>
+                            <a href="#">Política de privacidad</a>
+                            &middot;
+                            <a href="#">Términos &amp; Condiciones</a>
+                        </div>
+                    </div>
+                </div>
+            </footer>   
         </div>
-    </footer>
-            </div>
-        </div>
+    </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         <script src="js/scripts.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>

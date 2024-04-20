@@ -1,5 +1,6 @@
 <?php
     // Establecer las cabeceras para indicar que se va a enviar un archivo de Excel
+    date_default_timezone_set('America/Bogota');
     header("Content-Type: application/vnd.ms-excel");
     header("Content-Disposition: attachment; filename=exportar_" . date('Y_m_d_H_i_s') . ".xls");
 

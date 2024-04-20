@@ -14,6 +14,6 @@
         die("Error al conectarse a la Base de Datos: " . mysqli_error($link));
     }
 
-    // No es necesario retornar $link en este caso
+    mysqli_set_charset($link, "utf8");
 
 ?>
