@@ -91,9 +91,17 @@
                             </ul>   
                         </div>
                     </div>
+
+                    <div class="mb-3 text-center" style="margin-top: 70px;"> 
+                        <div style="max-width: 80%; margin: 0 auto;"> 
+                            <div class="caja-giratoria" style="display: inline-block;">
+                                <img src="../images/Logo Mundo 3d.png" alt="Pedidos" class="img-fluid gira">
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="sb-sidenav-footer">
                         <div class="small"></div>
-                        Mundo 3D
                     </div>
                 </nav>
             </div>
