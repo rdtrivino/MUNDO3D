@@ -1,4 +1,3 @@
-
 <?php
 $consulta_eventos = "SELECT identificador, titulo, color, inicio, fin FROM calendario";
 $resultado_eventos = mysqli_query($link, $consulta_eventos);
@@ -7,10 +6,10 @@ $resultado_eventos = mysqli_query($link, $consulta_eventos);
 <html lang="pt-br">
 	<head>
 		<meta charset='utf-8' />
-		<link href='css/bootstrap.min.css' rel='stylesheet'>
-		<link href='css/fullcalendar.min.css' rel='stylesheet' />
-		<link href='css/fullcalendar.print.min.css' rel='stylesheet' media='print' />
-		<link href='css/personalizado.css' rel='stylesheet' />
+		<link href='calendario/css/bootstrap.min.css' rel='stylesheet'>
+		<link href='calendario/css/fullcalendar.min.css' rel='stylesheet' />
+		<link href='calendario/css/fullcalendar.print.min.css' rel='stylesheet' media='print' />
+		<link href='calendario/css/personalizado.css' rel='stylesheet' />
 		<style type="text/css">
 		body {
 			margin: 0px 0px;
@@ -19,11 +18,11 @@ $resultado_eventos = mysqli_query($link, $consulta_eventos);
 			font-size: 14px;
 		}
 		</style>
-		<script src='js/jquery.min.js'></script>
-		<script src='js/bootstrap.min.js'></script>
-		<script src='js/moment.min.js'></script>
-		<script src='js/fullcalendar.min.js'></script>
-		<script src='locale/es-es.js'></script>
+		<script src='calendario/js/jquery.min.js'></script>
+		<script src='calendario/js/bootstrap.min.js'></script>
+		<script src='calendario/js/moment.min.js'></script>
+		<script src='calendario/js/fullcalendar.min.js'></script>
+		<script src='calendario/locale/es-es.js'></script>
 		<script>
 			$(document).ready(function() {
 				$('#calendar').fullCalendar({

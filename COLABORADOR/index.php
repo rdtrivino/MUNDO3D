@@ -102,8 +102,25 @@
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
-                    <h1 class="mt-4">MUNDO 3D</h1>
-                    <div><?php include('calendario/calendario.php'); ?></div>
+                    <!--Definir el titulo de la pagina-->
+                        <?php 
+                        $titulo = "";
+
+                        if (isset($_GET['tabla'])) { 
+                            // Si 'tabla' es 'pedidos', asignar el título correspondiente
+                            if ($_GET['tabla'] == 'pedidos'){
+                                $titulo = "Gestión de Pedidos";
+                            } 
+                            // Si 'tabla' es 'productos', asignar el título correspondiente
+                            else if ($_GET['tabla'] == 'productos') {
+                                $titulo = "Gestión de Productos";
+                            }
+                        }
+                    ?>
+                    <?php if (!empty($titulo)): ?>
+                        <h1 class="mt-4"><?php echo $titulo; ?></h1>
+                    <?php endif; ?>
+
                         <div class="btn-group mr-2">
                             <!--Si hay una tabla seleccionada mostrar los botones adicionar, exportar e imprimir-->  
                             <?php
@@ -201,7 +218,23 @@
                         </tbody>
                     </table>       
                     </div>
+                        <!--Definicion para incluir o no el calendario-->
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <!-- Verifica si se debe mostrar el calendario -->
+                                    <?php if (isset($_GET['tabla']) && ($_GET['tabla'] == 'pedidos' || $_GET['tabla'] == 'productos')) { 
+                                        $mostrarCalendario = false;
+                                    } else {
+                                        //Incluir el archivo calendario.php
+                                        include('calendario.php');
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                    
                 </div>
             </main>
             <footer class="py-4 bg-light mt-auto">
