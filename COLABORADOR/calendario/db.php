@@ -1,7 +1,7 @@
 <?php
 $hostname = "localhost";
 $usuariodb = "root";
-$contrasenadb = "root";
+$contrasenadb = "";
 $dbname = "php_evento";
 	
 // Generar conexion con el servidor MySQl

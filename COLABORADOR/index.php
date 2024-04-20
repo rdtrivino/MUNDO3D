@@ -218,6 +218,21 @@
                         </tbody>
                     </table>       
                     </div>
+                    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+                    <script src="calendario/js/scripts.js"></script>
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+                    <script src="assets/demo/chart-area-demo.js"></script>
+                    <script src="assets/demo/chart-bar-demo.js"></script>
+                    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
+                    <script src="calendario/js/datatables-simple-demo.js"></script>
+
+                    <!-- Agrega esta parte para incluir tus scripts de calendario -->
+                    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+                    <script src="calendario/js/moment.min.js"></script>
+                    <script src="calendario/js/fullcalendar.min.js"></script>
+                    <script src="calendario/locale/es-es.js"></script>
+                    <script src="calendario/js/calendario.js"></script>
                         <!--Definicion para incluir o no el calendario-->
                         <div class="container">
                             <div class="row">
