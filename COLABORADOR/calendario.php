@@ -196,19 +196,9 @@ body {
 					</div>
 				</div>
 			</div>
-
-
-
-
-
 <!--Fin elementos contenedor-->
 </div>
 </div>
-  </div>
-</div>
-<div class="panel-footer">
-  <div class="container">
-    <p>Códigos <a href="https://www.baulphp.com/" target="_blank">BaulPHP</a></p>
   </div>
 </div>
 
