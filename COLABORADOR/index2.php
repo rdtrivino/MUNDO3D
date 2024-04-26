@@ -9,7 +9,7 @@
     <?php
     session_start();
     include_once("../conexion.php");
-    include('calendario.php');
+    include('calendario/index.php');
 
     ?>
     
