@@ -2,7 +2,9 @@
 date_default_timezone_set("America/Bogota");
 setlocale(LC_ALL,"es_ES");
 
-include('config.php');
+include __DIR__ . '../../../conexion.php';
+session_start();
+$usuario_id = $_SESSION['user_id'];
                         
 $idEvento         = $_POST['idEvento'];
 
@@ -20,9 +22,10 @@ $UpdateProd = ("UPDATE calendario
     SET evento ='$evento',
         fecha_inicio ='$fecha_inicio',
         fecha_fin ='$fecha_fin',
-        color_evento ='$color_evento'
+        color_evento ='$color_evento',
+        usuario ='$usuario_id'
     WHERE identificador='".$idEvento."' ");
-$result = mysqli_query($con, $UpdateProd);
+$result = mysqli_query($link, $UpdateProd);
 
-header("Location:index.php?ea=1");
+header("Location:../index.php");
 ?>

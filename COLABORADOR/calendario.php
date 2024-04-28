@@ -1,5 +1,9 @@
 <!DOCTYPE html>
 <html>
+<?php 
+    include __DIR__ . '/../conexion.php';
+    $id = $_SESSION['user_id']
+  ?>
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -18,10 +22,8 @@
 <body>
 
 <?php
-include('calendar/config.php');
-
-  $SqlEventos   = ("SELECT * FROM calendario");
-  $resulEventos = mysqli_query($con, $SqlEventos);
+  $SqlEventos   = ("SELECT * FROM calendario WHERE usuario = $id");
+  $resulEventos = mysqli_query($link, $SqlEventos);
 
 ?>
 <div class="mt-5"></div>
@@ -42,8 +44,8 @@ include('calendar/config.php');
 
 
 <?php  
-  include('modalNuevoEvento.php');
-  include('modalUpdateEvento.php');
+  include('calendar/modalNuevoEvento.php');
+  include('calendar/modalUpdateEvento.php');
 ?>
 
 <script type="text/javascript">
@@ -98,14 +100,14 @@ eventRender: function(event, element) {
     //Eliminar evento
     element.find(".closeon").on("click", function() {
 
-  var pregunta = confirm("Deseas Borrar este Evento?");   
+  var pregunta = confirm("Deseas borrar este evento?");   
   if (pregunta) {
 
     $("#calendar").fullCalendar("removeEvents", event._id);
 
      $.ajax({
             type: "POST",
-            url: 'deleteEvento.php',
+            url: 'calendar/deleteEvento.php',
             data: {id:event._id},
             success: function(datos)
             {
