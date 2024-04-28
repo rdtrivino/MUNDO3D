@@ -8,8 +8,7 @@
 <body>
     <?php
     session_start();
-    include_once("../conexion.php");
-    include('calendario/index.php');
+    include('calendario.php');
 
     ?>
     

@@ -3,18 +3,24 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Mi Calendario:: Ing. Urian Viera</title>
-	<link rel="stylesheet" type="text/css" href="css/fullcalendar.min.css">
+	<link rel="stylesheet" type="text/css" href="calendar/css/fullcalendar.min.css">
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-  <link rel="stylesheet" type="text/css" href="css/home.css">
+	<link rel="stylesheet" type="text/css" href="calendar/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="calendar/css/home.css">
+  <script src="calendar/js/jquery-3.0.0.min.js"></script>
+  <script src="calendar/js/popper.min.js"></script>
+  <script src="calendar/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="calendar/js/moment.min.js"></script>	
+  <script type="text/javascript" src="calendar/js/fullcalendar.min.js"></script>
+  <script src='calendar/locales/es.js'></script>
 </head>
 <body>
 
 <?php
+include('calendar/config.php');
 
-  $SqlEventos   = ("SELECT * FROM eventoscalendar");
+  $SqlEventos   = ("SELECT * FROM calendario");
   $resulEventos = mysqli_query($con, $SqlEventos);
 
 ?>
@@ -24,18 +30,12 @@
   <div class="row">
     <div class="col msjs">
       <?php
-        include('msjs.php');
+        include('calendar/msjs.php');
       ?>
     </div>
   </div>
 
-<div class="row">
-  <div class="col-md-12 mb-3">
-  <h3 class="text-center" id="title">Como crear un Calendario de Eventos con PHP y MYSQL</h3>
-  </div>
 </div>
-</div>
-
 
 
 <div id="calendar"></div>
@@ -45,16 +45,6 @@
   include('modalNuevoEvento.php');
   include('modalUpdateEvento.php');
 ?>
-
-
-
-<script src ="js/jquery-3.0.0.min.js"> </script>
-<script src="js/popper.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-
-<script type="text/javascript" src="js/moment.min.js"></script>	
-<script type="text/javascript" src="js/fullcalendar.min.js"></script>
-<script src='locales/es.js'></script>
 
 <script type="text/javascript">
 $(document).ready(function() {
@@ -89,7 +79,7 @@ $(document).ready(function() {
       <?php
        while($dataEvento = mysqli_fetch_array($resulEventos)){ ?>
           {
-          _id: '<?php echo $dataEvento['id']; ?>',
+          _id: '<?php echo $dataEvento['identificador']; ?>',
           title: '<?php echo $dataEvento['evento']; ?>',
           start: '<?php echo $dataEvento['fecha_inicio']; ?>',
           end:   '<?php echo $dataEvento['fecha_fin']; ?>',
@@ -172,11 +162,6 @@ eventClick:function(event){
 });
 
 </script>
-
-
-<!--------- WEB DEVELOPER ------>
-<!--------- URIAN VIERA   ----------->
-<!--------- PORTAFOLIO:  https://blogangular-c7858.web.app  -------->
 
 </body>
 </html>

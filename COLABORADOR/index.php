@@ -191,7 +191,7 @@
                                             <td>' . $row['Pe_Cantidad'] . '</td>
                                             <td>' . $row['Pe_Fechapedido'] . '</td>
                                             <td>' . $row['Pe_Fechaentrega'] . '</td>
-                                            <td><img height="150px" src="data:image/jpg;base64,' . base64_encode($row['pe_imagen_pedido']) . '"></td>
+                                            <td><img height="150px" src="../images/imagenes_pedidos/' . $row['nombre_imagen'] . '"></td>
                                             <td>' . $row['pe_tipo_impresion'] . '</td>
                                             <td>' . $row['pe_color'] . '</td>
                                             <td>' . $row['Pe_Observacion'] . '</td>
@@ -212,7 +212,7 @@
                                             <td>' . $row['Pro_Cantidad'] . '</td>
                                             <td>' . $row['Pro_PrecioVenta'] . '</td>
                                             <td>' . $row['Pro_Costo'] . '</td>
-                                            <td><img height="150px" src="data:image/jpg;base64,' . base64_encode($row['imagen_principal']) . '"></td>
+                                            <td><img height="150px" src="../images/imagenes_catalogo/' . $row['nombre_imagen'] . '"></td>
                                             <td>' . $row['Pro_Estado'] . '</td>
                                             <td><a href="editar.php?tabla=' . $_GET['tabla'] . '&id=' . $row['Identificador'] . '"><i class="fas fa-edit"></i></a></td>
                                             </tr>';
@@ -235,7 +235,7 @@
                                         $mostrarCalendario = false;
                                     } else {
                                         //Incluir el archivo calendario.php
-                                        include('calendario/index.php');
+                                        include('calendario.php');
                                     }
                                     ?>
                                 </div>
@@ -260,7 +260,7 @@
         </div>
     </div>
         <!--Este es el script que tiene conflictos-->                            
-        <script src="js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        <!--<script src="js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>-->
         <script src="js/scripts.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
         <script src="assets/demo/chart-area-demo.js"></script>

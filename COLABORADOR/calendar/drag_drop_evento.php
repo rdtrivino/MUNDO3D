@@ -11,12 +11,12 @@ $end              = $_REQUEST['end'];
 $fecha_fin        = date('Y-m-d', strtotime($end));  
 
 
-$UpdateProd = ("UPDATE eventoscalendar 
+$UpdateProd = ("UPDATE calendario 
     SET 
         fecha_inicio ='$fecha_inicio',
         fecha_fin ='$fecha_fin'
 
-    WHERE id='".$idEvento."' ");
+    WHERE identificador='".$idEvento."' ");
 $result = mysqli_query($con, $UpdateProd);
 
 ?>
