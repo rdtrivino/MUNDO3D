@@ -178,7 +178,7 @@
 
                         <div class="form-group">
                             <label for="imagen">Imagen Actual</label>
-                            <img src="data:image/png;base64,' . base64_encode($fila['pe_imagen_pedido']) . '" alt="" style="width: 200px; height: 200px;">
+                            <img src="../images/imagenes_pedidos/' . $fila['nombre_imagen'] . '" alt="" style="width: 200px; height: 200px;">
                             <label for="imagen">Nueva Imagen
                                 <input type="file" class="form-control-file" id="imagen" name="imagen" accept="image/*">
                             </label>
@@ -251,7 +251,7 @@
 
                         <div class="form-group">
                             <label for="imagen">Imagen Actual</label>
-                            <img src="data:image/png;base64,' . base64_encode($fila['imagen_principal']) . '" alt="Imagen del producto" style="width: 200px; height: 200px;">
+                            <img src="../images/imagenes_catalogo/' . $fila['nombre_imagen'] . '" alt="" style="width: 200px; height: 200px;">
                             <label for="imagen">Nueva Imagen
                             <input type="file" class="form-control-file" id="imagen" name="imagen" accept="image/*">
                             </label>

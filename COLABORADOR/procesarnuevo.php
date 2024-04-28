@@ -29,7 +29,7 @@
                 $max_id = '1';
             }
 
-            $identificador = $max_id+1;
+            $identificador = $max_id + 1;
 
             //Obtener la extension de la imagen
             if(isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
@@ -49,7 +49,7 @@
                 
                 // Mover la imagen cargada a la ruta específica
                 if(move_uploaded_file($_FILES['imagen']['tmp_name'], $ruta_completa)){
-                    echo "La imagen se ha guardado correctamente en: " . $ruta_completa;
+                    //echo "La imagen se ha guardado correctamente en: " . $ruta_completa;
                 } else {
                     echo "Error al guardar la imagen.";
                 }
@@ -70,24 +70,57 @@
                 } else {
                     $mensaje = "Error al insertar el registro: " . mysqli_error($link);
                 }
-            } else {
-                $mensaje = "Error al cargar la imagen.";
-            }
 
         } elseif ($_POST['tabla'] == 'productos') {
+
+            //Obetener el identificador mas alto de la tabla
+            include __DIR__ . '/../conexion.php';
+            $sql = "SELECT MAX(Identificador) AS max_id FROM productos";
+            $resultado = mysqli_query($link, $sql);
+            // Verificar si se encontraron resultados
+            if (mysqli_num_rows($resultado) > 0) {
+                // Obtener el resultado como un array asociativo
+                $fila = mysqli_fetch_assoc($resultado);
+                // Almacenar el valor del identificador más alto en una variable
+                $max_id = $fila['max_id'];
+            } else {
+                $max_id = '1';
+            }
+
+            $identificador = $max_id+1;
+
+            //Obtener la extension de la imagen
+            if(isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
+                // Obtiene la información del archivo
+                $info_archivo = pathinfo($_FILES['imagen']['name']); 
+                // Obtiene la extensión del archivo
+                $extension = strtolower($info_archivo['extension']);
+            }
+
             // Verificar si se ha subido un archivo y si no hay errores
-            if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
-                // Obtener el contenido de la imagen
-                $imagen_contenido = file_get_contents($_FILES['imagen']['tmp_name']);
-        
+            if(isset($_FILES['imagen'])){
+                $ruta_destino = "../images/imagenes_catalogo/"; // Ruta donde quieres guardar la imagen
+                $nombre_imagen = "catalogo-" . ($max_id + 1) . ".$extension"; // Nombre que deseas para la imagen
+                
+                // Combinar la ruta de destino con el nombre de la imagen
+                $ruta_completa = $ruta_destino . $nombre_imagen;
+                
+                // Mover la imagen cargada a la ruta específica
+                if(move_uploaded_file($_FILES['imagen']['tmp_name'], $ruta_completa)){
+                    //echo "La imagen se ha guardado correctamente en: " . $ruta_completa;
+                } else {
+                    echo "Error al guardar la imagen.";
+                }
+                }
+            }
                 // Preparar la consulta
-                $peticion = "INSERT INTO productos (Pro_Nombre, Pro_Descripcion, Pro_Categoria, Pro_Cantidad, Pro_PrecioVenta, Pro_Costo, imagen_principal, Pro_Estado) 
-                            VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                $peticion = "INSERT INTO productos (Identificador, Pro_Nombre, Pro_Descripcion, Pro_Categoria, Pro_Cantidad, Pro_PrecioVenta, Pro_Costo, Pro_Estado, nombre_imagen) 
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
                 $estado = "inactivo";
                 $stmt = mysqli_prepare($link, $peticion);
                 
                 // Vincular parámetros
-                mysqli_stmt_bind_param($stmt, "ssssssss", $_POST['nombre'], $_POST['descripcion'], $_POST['categoria'], $_POST['cantidad'], $_POST['precioventa'], $_POST['costo'], $imagen_contenido, $estado);
+                mysqli_stmt_bind_param($stmt, "sssssssss", $identificador ,$_POST['nombre'], $_POST['descripcion'], $_POST['categoria'], $_POST['cantidad'], $_POST['precioventa'], $_POST['costo'], $estado, $nombre_imagen);
                 
                 // Ejecutar la consulta preparada
                 if (mysqli_stmt_execute($stmt)) {
@@ -95,9 +128,6 @@
                 } else {
                     $mensaje = "Error al insertar el registro: " . mysqli_error($link);
                 }
-            } else {
-                $mensaje = "Error al cargar la imagen.";
-            }
         
         // Cerrar la consulta preparada
         mysqli_stmt_close($stmt);

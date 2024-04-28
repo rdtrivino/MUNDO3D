@@ -8,7 +8,7 @@ if (!isset($_SESSION['confirmado']) || $_SESSION['confirmado'] == false) {
     exit; // Es importante salir del script después de redireccionar
 }
 
-//Obtener dato de consulta
+// Obtener dato de consulta
 $id = $_GET['id'];
 
 // Definir $stmt fuera del bloque condicional
@@ -17,23 +17,37 @@ $stmt = null;
 // Verificar si se ha enviado el formulario y se ha establecido la tabla adecuada
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['tabla'])) {
     if ($_POST['tabla'] == 'pedidos') {
-        if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
-            // Obtener el contenido de la imagen
-            $imagen_contenido = file_get_contents($_FILES['imagen']['tmp_name']);
-        } else {
-            // Obtener el contenido de la imagen principal desde la base de datos
-            $query = "SELECT pe_imagen_pedido FROM pedidos WHERE Identificador = $id";
-            $result = mysqli_query($link, $query);
-            $row = mysqli_fetch_assoc($result);
-            $imagen_contenido = $row['pe_imagen_pedido'];
-        }
+        // Establecer parametros para almacenar imagen 
+        // Obtener la extensión del archivo
+        if(isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK){
+            // Obtener la extensión del archivo
+            $extension = strtolower(pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION));
+            $ruta_destino = "../images/imagenes_pedidos/"; // Ruta donde quieres guardar la imagen
+            $nombre_imagen = "pedido-" . $id . ".$extension"; // Nombre que deseas para la imagen
+            
+            // Combinar la ruta de destino con el nombre de la imagen
+            $ruta_completa = $ruta_destino . $nombre_imagen;
+            
+            // Mover la imagen cargada a la ruta específica
+            if(move_uploaded_file($_FILES['imagen']['tmp_name'], $ruta_completa)){
+                //echo "La imagen se ha guardado correctamente en: " . $ruta_completa;
+            } else {
+                echo "Error al guardar la imagen.";
+            } 
+            } else {
+                // Si no se ha cargado ninguna imagen nueva, obtener el nombre de imagen existente de la base de datos
+                $query = "SELECT nombre_imagen FROM pedidos WHERE Identificador = $id";
+                $result = mysqli_query($link, $query);
+                $row = mysqli_fetch_assoc($result);
+                $nombre_imagen = $row['nombre_imagen'];
+            }
         
         // Preparar la consulta
-        $peticion = "UPDATE pedidos SET Pe_Cliente=?, Pe_Estado=?, Pe_Producto=?, Pe_Cantidad=?, Pe_Fechapedido=?, Pe_Fechaentrega=?, pe_imagen_pedido=?, pe_tipo_impresion=?, pe_color=?, Pe_Observacion=? WHERE Identificador=$id";
+        $peticion = "UPDATE pedidos SET Pe_Cliente=?, Pe_Estado=?, Pe_Producto=?, Pe_Cantidad=?, Pe_Fechapedido=?, Pe_Fechaentrega=?, pe_tipo_impresion=?, pe_color=?, Pe_Observacion=?, nombre_imagen=?  WHERE Identificador=$id";
         $stmt = mysqli_prepare($link, $peticion);
 
         // Vincular parámetros
-        mysqli_stmt_bind_param($stmt, "ssssssssss", $_POST['cliente_select'], $_POST['estado_select'], $_POST['producto_select'] , $_POST['cantidad'], $_POST['fechapedido'], $_POST['fechaentrega'], $imagen_contenido, $_POST['tipo'], $_POST['color'], $_POST['observacion']);
+        mysqli_stmt_bind_param($stmt, "ssssssssss", $_POST['cliente_select'], $_POST['estado_select'], $_POST['producto_select'] , $_POST['cantidad'], $_POST['fechapedido'], $_POST['fechaentrega'], $_POST['tipo'], $_POST['color'], $_POST['observacion'], $nombre_imagen);
         
         // Ejecutar la consulta preparada
         if (mysqli_stmt_execute($stmt)) {
@@ -44,26 +58,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['tabla'])) {
         
         // Cerrar la consulta preparada
         mysqli_stmt_close($stmt);
-    }
 
     } elseif ($_POST['tabla'] == 'productos') {
-        if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
-            // Obtener el contenido de la imagen
-            $imagen_contenido = file_get_contents($_FILES['imagen']['tmp_name']);
-        } else {
-            // Obtener el contenido de la imagen principal desde la base de datos
-            $query = "SELECT imagen_principal FROM productos WHERE Identificador = $id";
-            $result = mysqli_query($link, $query);
-            $row = mysqli_fetch_assoc($result);
-            $imagen_contenido = $row['imagen_principal'];
-        }
+        // Establecer parametros para almacenar imagen 
+        // Obtener la extensión del archivo
+        if(isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK){
+            // Obtener la extensión del archivo
+            $extension = strtolower(pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION));
+            $ruta_destino = "../images/imagenes_catalogo/"; // Ruta donde quieres guardar la imagen
+            $nombre_imagen = "catalogo-" . $id . ".$extension"; // Nombre que deseas para la imagen
+            
+            // Combinar la ruta de destino con el nombre de la imagen
+            $ruta_completa = $ruta_destino . $nombre_imagen;
+            
+            // Mover la imagen cargada a la ruta específica
+            if(move_uploaded_file($_FILES['imagen']['tmp_name'], $ruta_completa)){
+                //echo "La imagen se ha guardado correctamente en: " . $ruta_completa;
+            } else {
+                echo "Error al guardar la imagen.";
+            } 
+            } else {
+                // Si no se ha cargado ninguna imagen nueva, obtener el nombre de imagen existente de la base de datos
+                $query = "SELECT nombre_imagen FROM productos WHERE Identificador = $id";
+                $result = mysqli_query($link, $query);
+                $row = mysqli_fetch_assoc($result);
+                $nombre_imagen = $row['nombre_imagen'];
+            }
         
         // Preparar la consulta
-        $peticion = "UPDATE productos SET Pro_Nombre=?, Pro_Descripcion=?, Pro_Categoria=?, Pro_Cantidad=?, Pro_PrecioVenta=?, Pro_Costo=?, imagen_principal=?, Pro_Estado=? WHERE Identificador= $id";
+        $peticion = "UPDATE productos SET Pro_Nombre=?, Pro_Descripcion=?, Pro_Categoria=?, Pro_Cantidad=?, Pro_PrecioVenta=?, Pro_Costo=?, Pro_Estado=?, nombre_imagen=? WHERE Identificador= $id";
         $stmt = mysqli_prepare($link, $peticion);
         
         // Vincular parámetros
-        mysqli_stmt_bind_param($stmt, "ssssssss", $_POST['nombre'], $_POST['descripcion'], $_POST['categoria_select'] , $_POST['cantidad'], $_POST['precioventa'], $_POST['costo'], $imagen_contenido, $_POST['estado']);
+        mysqli_stmt_bind_param($stmt, "ssssssss", $_POST['nombre'], $_POST['descripcion'], $_POST['categoria_select'] , $_POST['cantidad'], $_POST['precioventa'], $_POST['costo'], $_POST['estado'], $nombre_imagen);
         
         // Ejecutar la consulta preparada
         if (mysqli_stmt_execute($stmt)) {
@@ -75,6 +102,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['tabla'])) {
         // Cerrar la consulta preparada
         mysqli_stmt_close($stmt);
     }
+}
 //Inicia modal
 ?>
 <!DOCTYPE html>
