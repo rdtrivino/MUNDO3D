@@ -173,7 +173,7 @@
             </div>
 
             <div class="form-group">
-                <label for="imagen" class="form-label">Imagen del producto</label>
+                <label for="imagen" class="form-control">Imagen del producto</label>
                 <input type="file" class="form-control-file" id="imagen" name="imagen" accept="image/*">  
             </div>
 

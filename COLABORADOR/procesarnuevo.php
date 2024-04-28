@@ -111,7 +111,6 @@
                 } else {
                     echo "Error al guardar la imagen.";
                 }
-                }
             }
                 // Preparar la consulta
                 $peticion = "INSERT INTO productos (Identificador, Pro_Nombre, Pro_Descripcion, Pro_Categoria, Pro_Cantidad, Pro_PrecioVenta, Pro_Costo, Pro_Estado, nombre_imagen) 
@@ -131,6 +130,7 @@
         
         // Cerrar la consulta preparada
         mysqli_stmt_close($stmt);
+        }
     }
 
 ?>
