@@ -1,3 +1,7 @@
+<a href="../index.php" class="link-container">
+    <img class="home" src="../../images/bx-home-alt-2.svg" alt="Home">
+</a>
+
 <?php
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
@@ -55,7 +59,7 @@ if (!empty($_POST['Nueva_Contrasena'])) {
 }
 
     // Puedes redirigir al usuario a otra página después de guardar cambios si es necesario
-    header("Location: index.php");
+    header("Location: ../index.php");
     exit();
 }
 
@@ -106,7 +110,7 @@ mysqli_close($link);
             width: 100%;
             height: 100%;
             z-index: -1;
-            background: url('path/to/your-image.png') repeat; /* Puedes reemplazar esto con una imagen de fondo */
+            background: url('') repeat; /* Puedes reemplazar esto con una imagen de fondo */
             clip-path: polygon(0 0, 100% 0, 100% 80%, 0% 100%);
         }
 
@@ -183,7 +187,7 @@ mysqli_close($link);
     <h2 class="mb-4">Editar Usuario</h2>
 
     <!-- Formulario para editar datos del usuario -->
-    <form id="editForm" method="POST" action="confi.php">
+    <form id="editForm" method="POST" action="../index.php">
         <!-- Agrega tus campos de formulario aquí -->
         <div class="mb-3 blocked-field">
             <label for="edit-identificacion" class="form-label">Identificación:</label>
@@ -222,7 +226,7 @@ mysqli_close($link);
         </div>
 
 
-        <button type="button" class="btn btn-danger cancel-btn" onclick="window.location.href='index.php'">Cancelar</button>
+        <button type="button" class="btn btn-danger cancel-btn" onclick="window.location.href='../index.php'">Cancelar</button>
         <button type="button" class="btn btn-primary" onclick="guardarCambios()">Guardar Cambios</button>
     </form>
 </div>
@@ -238,7 +242,7 @@ mysqli_close($link);
         // Ejemplo básico con jQuery:
             $.post($("#editForm").attr("action"), $("#editForm").serialize(), function(response) {
                 console.log(response);
-                window.location.href = 'index.php';
+                window.location.href = '../index.php';
             });
 
     }

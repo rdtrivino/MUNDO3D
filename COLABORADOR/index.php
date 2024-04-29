@@ -29,7 +29,7 @@
                 <li class="nav-item dropdown">
                 <a class="nav-link dropdown" data-bs-toggle="" aria-expanded="">Bienvenid@ <?php echo $nombreCompleto; ?></a>
                 <div>
-                    <li><a class="nav-link dropdown" href="../Programas/confi.php">Configuracion de cuenta</a></li>
+                    <li><a class="nav-link dropdown" href="Programas/config.php">Configuracion de cuenta</a></li>
                     <li><a class="nav-link dropdown" href="../Programas/logout.php" id="cerrar-sesion-button">Cerrar sesión</a></li>                       
                 </div>
             </li>
