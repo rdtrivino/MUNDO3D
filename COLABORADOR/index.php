@@ -243,7 +243,11 @@
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; Mundo3d 2023</div>
+                        <?php
+                        // Obtener el año actual
+                        $anio = date("Y");
+                        ?>
+                        <div class="text-muted">Copyright &copy; Mundo3d <?php echo $anio;?></div>
                         <div>
                             <a href="#">Política de privacidad</a>
                             &middot;
