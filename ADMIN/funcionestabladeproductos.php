@@ -10,10 +10,9 @@ if (!isset($_SESSION['username'])) {
 $nombreCompleto = $_SESSION['username'];
 $usuario_id = $_SESSION['user_id'];
 
-$sql = "SELECT p.Pro_Nombre, p.Identificador, p.Pro_Descripcion, p.Pro_PrecioVenta, c.Cgo_Nombre, p.Pro_Cantidad, p.Pro_Costo, p.imagen_principal
+$sql = "SELECT p.Pro_Nombre, p.Identificador, p.Pro_Descripcion, p.Pro_PrecioVenta, c.Cgo_Nombre, p.Pro_Cantidad, p.Pro_Costo, p.imagen_principal, p.Pro_Estado
         FROM productos p
-        INNER JOIN categoria c ON p.Pro_Categoria = c.Cgo_Codigo
-        WHERE p.Pro_Estado = 'activo'";
+        INNER JOIN categoria c ON p.Pro_Categoria = c.Cgo_Codigo";
 
 $resultado = mysqli_query($link, $sql);
 

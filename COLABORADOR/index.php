@@ -207,7 +207,7 @@
                                             <td>' . $row['Pro_Cantidad'] . '</td>
                                             <td>' . $row['Pro_PrecioVenta'] . '</td>
                                             <td>' . $row['Pro_Costo'] . '</td>
-                                            <td><img height="150px" src="../images/imagenes_catalogo/' . $row['nombre_imagen'] . '"></td>
+                                            <td><img height="150px" src="' . $row['nombre_imagen'] . '"></td>
                                             <td>' . $row['Pro_Estado'] . '</td>
                                             <td><a href="editar.php?tabla=' . $_GET['tabla'] . '&id=' . $row['Identificador'] . '"><i class="fas fa-edit"></i></a></td>
                                             </tr>';

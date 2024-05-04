@@ -338,6 +338,7 @@
                                                 <th>Cantidad</th>
                                                 <th>Costo</th>
                                                 <th>Imágenes</th>
+                                                <th>Estado</th>
                                                 <th>Acciones</th>
                                             </tr>
                                         </thead>
@@ -352,6 +353,7 @@
                                                     <td><?php echo $row['Pro_Cantidad']; ?></td>
                                                     <td><?php echo $row['Pro_Costo']; ?></td>
                                                     <td><img src="data:image/png;base64,<?php echo base64_encode($row['imagen_principal']); ?>" alt="Imagen del producto" style="width: 200px; height: 200px;"></td>
+                                                    <td><?php echo $row['Pro_Estado']; ?></td>
                                                     <td>
                                                     <div class="btn-group" role="group" aria-label="Acciones">
                                                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editarModal<?php echo $row['Identificador']; ?>" data-toggle="tooltip" data-placement="top" title="Editar">
