@@ -4,7 +4,6 @@ setlocale(LC_ALL,"es_ES");
 //$hora = date("g:i:A");
 include __DIR__ . '../../../conexion.php';
 
-require("config.php");
 $evento            = ucwords($_REQUEST['evento']);
 $f_inicio          = $_REQUEST['fecha_inicio'];
 $fecha_inicio      = date('Y-m-d', strtotime($f_inicio)); 
@@ -49,7 +48,7 @@ $InsertNuevoEvento = "INSERT INTO calendario(
       '" .$color_evento. "',
       '" .$usuario_id. "'
   )";
-$resultadoNuevoEvento = mysqli_query($con, $InsertNuevoEvento);
+$resultadoNuevoEvento = mysqli_query($link, $InsertNuevoEvento);
 
 header("Location:../index.php");
 

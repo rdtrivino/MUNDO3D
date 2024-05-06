@@ -62,7 +62,7 @@
             $stmt = mysqli_prepare($link, $peticion);
 
             // Vincular parámetros
-            mysqli_stmt_bind_param($stmt, "sssssssssss", $identificador , $_POST['cliente'], $_POST['estado'], $_POST['producto'], $_POST['cantidad'], $_POST['fechapedido'], $_POST['fechaentrega'], $_POST['tipoimpresion'], $_POST['color'], $_POST['observacion'], $ruta_completa);
+            mysqli_stmt_bind_param($stmt, "sssssssssss", $identificador , $_POST['cliente'], $_POST['estado'], $_POST['producto'], $_POST['cantidad'], $_POST['fechapedido'], $_POST['fechaentrega'], $_POST['tipoimpresion'], $_POST['color'], $_POST['observacion'], $nombre_imagen);
                 
                 // Ejecutar la consulta preparada
                 if (mysqli_stmt_execute($stmt)) {
@@ -119,7 +119,7 @@
                 $stmt = mysqli_prepare($link, $peticion);
                 
                 // Vincular parámetros
-                mysqli_stmt_bind_param($stmt, "sssssssss", $identificador ,$_POST['nombre'], $_POST['descripcion'], $_POST['categoria'], $_POST['cantidad'], $_POST['precioventa'], $_POST['costo'], $estado, $ruta_completa);
+                mysqli_stmt_bind_param($stmt, "sssssssss", $identificador ,$_POST['nombre'], $_POST['descripcion'], $_POST['categoria'], $_POST['cantidad'], $_POST['precioventa'], $_POST['costo'], $estado, $nombre_imagen);
                 
                 // Ejecutar la consulta preparada
                 if (mysqli_stmt_execute($stmt)) {
