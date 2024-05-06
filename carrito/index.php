@@ -52,6 +52,7 @@ if (isset($_POST['product_id']) && isset($_POST['quantity'])) {
 // Consulta SQL para obtener los datos del carrito
 $sql = "SELECT id,Pe_Cliente, nombre, precio, cantidad FROM carrito";
 $resultado = mysqli_query($link, $sql);
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -298,20 +299,26 @@ $resultado = mysqli_query($link, $sql);
                         </script>
 
 <div class="checkoutpro">
-        <label>Selecciona tu método de pago:</label><br>
-        <!-- Botón de Stripe -->
-        <form action="procesar_pago.php" method="POST">
-            <script
-                src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-                data-key="pk_test_51PCx2gRxUN5OHb78Un4Cxh9oWW7Xnk9nzmWDzPqyrjFbfDQP187to1ujx3eAsRByEIU8hHhMwxvgj2FiVq0rGRJ600hiaE79NV"
-                data-amount="PRECIO_TOTAL_EN_CENTAVOS"
-                data-name="MUNDO 3D"
-                data-description="Descripción del pedido"
-                data-image="-/../images/Logo Mundo 3d.png"
-                data-locale="auto"
-                data-currency="USD">
-            </script>
-        </form>
+    <label>Selecciona tu método de pago:</label><br>
+    <!-- Botón de Stripe -->
+    <form id="payment-form" action="procesar_pago.php" method="POST">
+        <!-- Campo oculto para enviar el monto -->
+        <input type="hidden" name="monto" id="monto" value="1000"> <!-- Ejemplo de monto predeterminado en centavos -->
+
+        <script
+            src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+            data-key="pk_test_51PCx2gRxUN5OHb78Un4Cxh9oWW7Xnk9nzmWDzPqyrjFbfDQP187to1ujx3eAsRByEIU8hHhMwxvgj2FiVq0rGRJ600hiaE79NV"
+            data-amount="1000" <!-- Cambiar el valor a la cantidad en centavos -->
+            data-name="MUNDO 3D" <!-- Cambiar el nombre de tu tienda -->
+            data-description="MUNDO 3D" <!-- Cambiar la descripción del pedido -->
+            data-image="RUTA_DE_LA_IMAGEN_DEL_PRODUCTO" <!-- Cambiar la ruta de la imagen del producto -->
+            data-locale="auto"
+            data-currency="USD">
+        </script>
+    </form>
+</div>
+
+
         <!-- Mostrar los métodos de pago que acepta Stripe -->
         <br>
         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Visa.svg/1200px-Visa.svg.png" alt="Visa" style="width: 50px;">
