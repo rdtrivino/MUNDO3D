@@ -2,7 +2,7 @@
 date_default_timezone_set("America/Bogota");
 setlocale(LC_ALL,"es_ES");
 
-include('config.php');
+include('../../conexion.php');
                         
 $idEvento         = $_POST['idEvento'];
 $start            = $_REQUEST['start'];

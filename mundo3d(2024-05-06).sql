@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 06-05-2024 a las 11:15:20
--- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.0.30
+-- Tiempo de generación: 06-05-2024 a las 14:26:48
+-- Versión del servidor: 10.4.28-MariaDB
+-- Versión de PHP: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -32,16 +32,9 @@ CREATE TABLE `calendario` (
   `evento` varchar(25) NOT NULL,
   `color_evento` varchar(25) NOT NULL,
   `fecha_inicio` date NOT NULL,
-  `fecha_fin` date NOT NULL
+  `fecha_fin` date NOT NULL,
+  `usuario` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `calendario`
---
-
-INSERT INTO `calendario` (`identificador`, `evento`, `color_evento`, `fecha_inicio`, `fecha_fin`) VALUES
-(9, 'Tres', '#FF5722', '2024-04-19', '2024-04-20'),
-(10, 'Dos', '#FF5722', '2024-04-10', '2024-04-11');
 
 -- --------------------------------------------------------
 
@@ -51,7 +44,7 @@ INSERT INTO `calendario` (`identificador`, `evento`, `color_evento`, `fecha_inic
 
 CREATE TABLE `carrito` (
   `id` int(11) NOT NULL,
-  `Pe_Cliente` int(255) NOT NULL,
+  `Pe_Cliente` int(10) NOT NULL,
   `nombre` varchar(255) DEFAULT NULL,
   `precio` decimal(10,2) DEFAULT NULL,
   `cantidad` int(11) DEFAULT NULL,
@@ -293,13 +286,15 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- Indices de la tabla `calendario`
 --
 ALTER TABLE `calendario`
-  ADD PRIMARY KEY (`identificador`);
+  ADD PRIMARY KEY (`identificador`),
+  ADD KEY `usuario` (`usuario`);
 
 --
 -- Indices de la tabla `carrito`
 --
 ALTER TABLE `carrito`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `Pe_Cliente` (`Pe_Cliente`);
 
 --
 -- Indices de la tabla `categoria`
@@ -374,6 +369,18 @@ ALTER TABLE `productos`
 --
 -- Restricciones para tablas volcadas
 --
+
+--
+-- Filtros para la tabla `calendario`
+--
+ALTER TABLE `calendario`
+  ADD CONSTRAINT `calendario_ibfk_1` FOREIGN KEY (`usuario`) REFERENCES `usuario` (`Usu_Identificacion`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `carrito`
+--
+ALTER TABLE `carrito`
+  ADD CONSTRAINT `carrito_ibfk_1` FOREIGN KEY (`Pe_Cliente`) REFERENCES `pedidos` (`Pe_Cliente`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `pedidos`

@@ -3,25 +3,21 @@
 <?php 
     include __DIR__ . '/../conexion.php';
     $id = $_SESSION['user_id']
-  ?>
+?>
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<link rel="stylesheet" type="text/css" href="calendar/css/fullcalendar.min.css">
+	<link rel="stylesheet" type="text/css" href="calendario/css/fullcalendar.min.css">
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link rel="stylesheet" type="text/css" href="calendar/css/estilos.css">
-  <link rel="stylesheet" type="text/css" href="calendar/css/home.css">
-  <script src="calendar/js/jquery-3.0.0.min.js"></script>
-  <script src="calendar/js/popper.min.js"></script>
-  <script src="calendar/js/bootstrap.min.js"></script>
-  <script type="text/javascript" src="calendar/js/moment.min.js"></script>	
-  <script type="text/javascript" src="calendar/js/fullcalendar.min.js"></script>
-  <script src='calendar/locales/es.js'></script>
+	<link rel="stylesheet" type="text/css" href="calendario/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="calendario/css/home.css">
 </head>
 <body>
 
 <?php
+include __DIR__ . '/../conexion.php';
+
   $SqlEventos   = ("SELECT * FROM calendario WHERE usuario = $id");
   $resulEventos = mysqli_query($link, $SqlEventos);
 
@@ -32,21 +28,27 @@
   <div class="row">
     <div class="col msjs">
       <?php
-        include('calendar/msjs.php');
+        include('calendario/msjs.php');
       ?>
     </div>
   </div>
-
 </div>
-
 
 <div id="calendar"></div>
 
 
 <?php  
-  include('calendar/modalNuevoEvento.php');
-  include('calendar/modalUpdateEvento.php');
+  include('calendario/modalNuevoEvento.php');
+  include('calendario/modalUpdateEvento.php');
 ?>
+
+<script src ="calendario/js/jquery-3.0.0.min.js"> </script>
+<script src="calendario/js/popper.min.js"></script>
+<script src="calendario/js/bootstrap.min.js"></script>
+
+<script type="text/javascript" src="calendario/js/moment.min.js"></script>	
+<script type="text/javascript" src="calendario/js/fullcalendar.min.js"></script>
+<script src='calendario/locales/es.js'></script>
 
 <script type="text/javascript">
 $(document).ready(function() {
@@ -100,14 +102,14 @@ eventRender: function(event, element) {
     //Eliminar evento
     element.find(".closeon").on("click", function() {
 
-  var pregunta = confirm("Deseas borrar este evento?");   
+  var pregunta = confirm("Deseas Borrar este Evento?");   
   if (pregunta) {
 
     $("#calendar").fullCalendar("removeEvents", event._id);
 
      $.ajax({
             type: "POST",
-            url: 'calendar/deleteEvento.php',
+            url: 'calendario/deleteEvento.php',
             data: {id:event._id},
             success: function(datos)
             {
@@ -164,6 +166,11 @@ eventClick:function(event){
 });
 
 </script>
+
+
+<!--------- WEB DEVELOPER ------>
+<!--------- URIAN VIERA   ----------->
+<!--------- PORTAFOLIO:  https://blogangular-c7858.web.app  -------->
 
 </body>
 </html>

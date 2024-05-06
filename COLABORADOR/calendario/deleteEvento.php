@@ -1,9 +1,8 @@
 <?php
-require_once('config.php');
+require_once('../../conexion.php');
 $id    		= $_REQUEST['id']; 
 
 $sqlDeleteEvento = ("DELETE FROM calendario WHERE  identificador='" .$id. "'");
-$resultProd = mysqli_query($con, $sqlDeleteEvento);
+$resultProd = mysqli_query($link, $sqlDeleteEvento);
 
 ?>
-  
