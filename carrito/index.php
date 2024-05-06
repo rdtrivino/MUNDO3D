@@ -50,19 +50,9 @@ if (isset($_POST['product_id']) && isset($_POST['quantity'])) {
 }
 
 // Consulta SQL para obtener los datos del carrito
-$sql = "SELECT id, Pe_Cliente, nombre, precio, cantidad FROM carrito";
+$sql = "SELECT id,Pe_Cliente, nombre, precio, cantidad FROM carrito";
 $resultado = mysqli_query($link, $sql);
-
-// Calcular el total a pagar desde la base de datos
-$totalPrecioProductos = obtener_total_a_pagar_desde_bd();
-
-function obtener_total_a_pagar_desde_bd() {
-    // Aquí deberías calcular el total a pagar consultando la base de datos
-    // Por ahora, simplemente devolveremos un valor fijo para fines de demostración
-    return 100; // Supongamos que el total es de $100 (en centavos)
-}
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -176,7 +166,6 @@ function obtener_total_a_pagar_desde_bd() {
       background: linear-gradient(to bottom right, #6ca6cd, #ffb6c1);
     }
   </style>
-<body>
     <a href="../USUARIO/Catalogologin.php" class="btn btn-link">
         <i class="bi bi-house-door" style="color: black; font-size: 48px;"></i>
     </a>
@@ -250,70 +239,91 @@ function obtener_total_a_pagar_desde_bd() {
                         <h2 class="titulo">Resumen y Pago</h2>
                         <!-- Subtotal -->
                         <div class="subtotal">
-                            <div id="totalProductos"><?php echo "Total a pagar: $" . $totalPrecioProductos; ?></div>
+                            Total a pagar: <span id="total">$0</span>
                         </div>
 
-                        <!-- Botón de Stripe -->
-                        <form action="procesar_pago.php" method="POST">
-                            <script
-                                src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-                                data-key="pk_test_51PCx2gRxUN5OHb78Un4Cxh9oWW7Xnk9nzmWDzPqyrjFbfDQP187to1ujx3eAsRByEIU8hHhMwxvgj2FiVq0rGRJ600hiaE79NV"
-                                data-amount="<?php echo $totalPrecioProductos * 100; ?>"
-                                data-name="MUNDO 3D"
-                                data-description="Descripción del pedido"
-                                data-image="../images/Logo Mundo 3d.png"
-                                data-locale="auto"
-                                data-currency="USD">
-                            </script>
-                        </form>
+                        <script>
+                            $(document).ready(function() {
+                                // Agregar event listener para el cambio en el selector de cantidad
+                                $(".selector-cantidad").change(function() {
+                                    actualizarTotal();
+                                });
 
-                        <!-- Mostrar los métodos de pago que acepta Stripe -->
-                        <div class="checkoutpro">
-                            <p>Aceptamos los siguientes métodos de pago:</p>
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Visa.svg/1200px-Visa.svg.png" alt="Visa" style="width: 50px;">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/MasterCard_Logo.svg/1200px-MasterCard_Logo.svg.png" alt="Mastercard" style="width: 50px;">
-                            <!-- Puedes añadir más imágenes según los métodos de pago que aceptes -->
+                                // Calcular el total inicial al cargar la página
+                                actualizarTotal();
+                            });
+
+                            function restarCantidad(productId) {
+                                var cantidadInput = document.getElementById('cantidad-' + productId);
+                                var cantidad = parseInt(cantidadInput.value);
+                                if (cantidad > 0) {
+                                    cantidad--;
+                                    cantidadInput.value = cantidad;
+                                    actualizarTotal(); // Llamar a actualizarTotal() después de restar la cantidad
+                                    actualizarCantidadEnBD(productId, cantidad);
+                                }
+                            }
+
+                            function sumarCantidad(productId) {
+                                var cantidadInput = document.getElementById('cantidad-' + productId);
+                                var cantidad = parseInt(cantidadInput.value);
+                                cantidad++;
+                                cantidadInput.value = cantidad;
+                                actualizarTotal(); // Llamar a actualizarTotal() después de sumar la cantidad
+                                actualizarCantidadEnBD(productId, cantidad);
+                            }
+
+                            function actualizarCantidadEnBD(productId, cantidad) {
+                                // Enviar una solicitud AJAX al servidor para actualizar la cantidad en la base de datos
+                                $.ajax({
+                                    type: "POST",
+                                    url: "actualizar_cantidad.php", // Cambiar por la URL correcta si es necesario
+                                    data: { product_id: productId, quantity: cantidad }, // Pasar los parámetros
+                                    success: function(response) {
+                                        // Manejar la respuesta del servidor si es necesario
+                                        console.log(response);
+                                    }
+                                });
+                            }
+
+                            function actualizarTotal() {
+                                var precioTotal = 0;
+                                $(".card").each(function() {
+                                    var precio = parseFloat($(this).find(".precio-producto").text().substring(1));
+                                    var cantidad = parseInt($(this).find(".selector-cantidad").val());
+                                    precioTotal += precio * cantidad;
+                                });
+                                $("#total").text("$" + precioTotal.toFixed(2));
+                            }
+                        </script>
+
+<div class="checkoutpro">
+        <label>Selecciona tu método de pago:</label><br>
+        <!-- Botón de Stripe -->
+        <form action="procesar_pago.php" method="POST">
+            <script
+                src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                data-key="pk_test_51PCx2gRxUN5OHb78Un4Cxh9oWW7Xnk9nzmWDzPqyrjFbfDQP187to1ujx3eAsRByEIU8hHhMwxvgj2FiVq0rGRJ600hiaE79NV"
+                data-amount="PRECIO_TOTAL_EN_CENTAVOS"
+                data-name="MUNDO 3D"
+                data-description="Descripción del pedido"
+                data-image="-/../images/Logo Mundo 3d.png"
+                data-locale="auto"
+                data-currency="USD">
+            </script>
+        </form>
+        <!-- Mostrar los métodos de pago que acepta Stripe -->
+        <br>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Visa.svg/1200px-Visa.svg.png" alt="Visa" style="width: 50px;">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/MasterCard_Logo.svg/1200px-MasterCard_Logo.svg.png" alt="Mastercard" style="width: 50px;">
+        <!-- Puedes añadir más imágenes según los métodos de pago que aceptes -->
+    </div>
+
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <script>
-        function sumarCantidad(productId) {
-            var cantidadInput = document.getElementById('cantidad-' + productId);
-            var nuevaCantidad = parseInt(cantidadInput.value) + 1;
-            cantidadInput.value = nuevaCantidad;
-
-            actualizarCantidadEnBD(productId, nuevaCantidad);
-        }
-
-        function restarCantidad(productId) {
-            var cantidadInput = document.getElementById('cantidad-' + productId);
-            var nuevaCantidad = parseInt(cantidadInput.value) - 1;
-            if (nuevaCantidad < 1) {
-                nuevaCantidad = 1;
-            }
-            cantidadInput.value = nuevaCantidad;
-
-            actualizarCantidadEnBD(productId, nuevaCantidad);
-        }
-
-        function actualizarCantidadEnBD(productId, nuevaCantidad) {
-            // Enviar la solicitud AJAX para actualizar la cantidad en la base de datos
-            $.ajax({
-                type: "POST",
-                url: "index.php",
-                data: {
-                    product_id: productId,
-                    quantity: nuevaCantidad
-                },
-                success: function(response) {
-                    console.log(response);
-                }
-            });
-        }
-    </script>
 </body>
 </html>
