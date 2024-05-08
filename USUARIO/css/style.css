@@ -1,10 +1,4 @@
-/******* Bootstrap Theming ********/
-/*!
- * Bootstrap v4.5.3 (https://getbootstrap.com/)
- * Copyright 2011-2020 The Bootstrap Authors
- * Copyright 2011-2020 Twitter, Inc.
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
- */
+
 :root {
   --blue: #007bff;
   --indigo: #6610f2;
@@ -3861,7 +3855,7 @@ input[type="button"].btn-block {
 }
 
 .custom-range::-ms-thumb:active {
-  background-color: #639bde;
+  background-color: #de7163;
 }
 
 .custom-range::-ms-track {
@@ -6094,7 +6088,7 @@ a.close.disabled {
 }
 
 .bg-primary {
-  background-color: #194376 !important;
+  background-color: #000000 !important;
 }
 
 a.bg-primary:hover, a.bg-primary:focus,
@@ -6103,8 +6097,9 @@ button.bg-primary:focus {
   background-color: #102b4c !important;
 }
 
+/* barra de navegacion azul */
 .bg-secondary {
-  background-color: #46C6CE !important;
+  background-color: #0047AB !important;
 }
 
 a.bg-secondary:hover, a.bg-secondary:focus,
@@ -9495,7 +9490,7 @@ h6,
     transform: translateY(-15px);
   }
 }
-
+/* barra de navegacion franja negra */
 .nav-bar::before {
   position: absolute;
   content: "";
@@ -9503,7 +9498,7 @@ h6,
   height: 50%;
   top: 0;
   left: 0;
-  background: #194376;
+  background: #000000 ;
 }
 
 .navbar-light .navbar-nav .nav-link {
