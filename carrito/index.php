@@ -1,4 +1,5 @@
 <?php
+session_start();
 // Realizar la conexión a la base de datos
 $host = "localhost";
 $user = "root";
@@ -14,28 +15,47 @@ if (!$link) {
 if (!mysqli_select_db($link, $dbname)) {
     die("Error al conectarse a la Base de Datos: " . mysqli_error($link));
 }
+
+// Verificar si el usuario está autenticado
+if (isset($_SESSION['user_id'])) {
+    $usuario_id = $_SESSION['user_id'];
+
+    // Consulta SQL para obtener los productos del carrito del usuario actualmente autenticado
+    $sql = "SELECT id, nombre, precio, cantidad FROM carrito WHERE Pe_Cliente = $usuario_id";
+    $resultado = mysqli_query($link, $sql);
+
+}
+
 // Verificar si se ha enviado la solicitud para vaciar el carrito
 if (isset($_GET['vaciar']) && $_GET['vaciar'] == 1) {
-    // Realizar la consulta para eliminar todos los registros de la tabla 'carrito'
-    $sql = "DELETE FROM carrito";
-    if (mysqli_query($link, $sql)) {
-        // Redirigir al usuario de nuevo a la misma página después de vaciar el carrito
-        header("Location: index.php");
-        exit; // Terminar el script después de redirigir
-    } else {
-        // Opcional: mostrar un mensaje de error en caso de fallo en la eliminación
-        echo "<p>Error al vaciar el carrito.</p>";
+    // Realizar la consulta para eliminar todos los registros de la tabla 'carrito' asociados al usuario actual
+    if (isset($_SESSION['user_id'])) {
+        $usuario_id = $_SESSION['user_id'];
+        $sql = "DELETE FROM carrito WHERE Pe_Cliente = $usuario_id";
+        if (mysqli_query($link, $sql)) {
+            // Redirigir al usuario de nuevo a la misma página después de vaciar el carrito
+            header("Location: index.php");
+            exit; // Terminar el script después de redirigir
+        } else {
+            // Opcional: mostrar un mensaje de error en caso de fallo en la eliminación
+            echo "<p>Error al vaciar el carrito.</p>";
+        }
     }
 }
 
 // Consulta SQL para obtener los datos del carrito
-$sql = "SELECT id, Pe_Cliente, nombre, precio, cantidad FROM carrito WHERE estado_pago = 'pendiente'";
-$resultado = mysqli_query($link, $sql);
+if (isset($_SESSION['user_id'])) {
+    $usuario_id = $_SESSION['user_id'];
+    $sql = "SELECT id, nombre, precio, cantidad FROM carrito WHERE Pe_Cliente = $usuario_id";
+    $resultado = mysqli_query($link, $sql);
 
-// Calcular el total a pagar
-$total_a_pagar = 0;
-while ($fila = mysqli_fetch_assoc($resultado)) {
-    $total_a_pagar += $fila['precio'] * $fila['cantidad'];
+    // Calcular el total a pagar
+    $total_a_pagar = 0;
+    while ($fila = mysqli_fetch_assoc($resultado)) {
+        $total_a_pagar += $fila['precio'] * $fila['cantidad'];
+    }
+
+
 }
 ?>
 
@@ -162,7 +182,7 @@ while ($fila = mysqli_fetch_assoc($resultado)) {
             <!-- Icono del carrito junto al título -->
             <i class="bi bi-cart-fill"></i> Mi Carrito
         </h2>
-        <div class="row">
+            <div class="row">
                 <div class="col-md-6">
                     <div class="cuadro-productos">
                         <h3 class="titulo">Productos en el Carrito</h3>
