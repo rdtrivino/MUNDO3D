@@ -1,20 +1,20 @@
 <?php return array(
     'root' => array(
-        'name' => 'rdtrivino/mundo3d',
+        'name' => 'rudat/carrito',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'a2f708d9b7abec0eaa00c79cd3b47721c5d63c4b',
-        'type' => 'library',
+        'reference' => '459e1b4195aa4131a7891adad84e1fc7cdff9b02',
+        'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
         'dev' => true,
     ),
     'versions' => array(
-        'rdtrivino/mundo3d' => array(
+        'rudat/carrito' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'a2f708d9b7abec0eaa00c79cd3b47721c5d63c4b',
-            'type' => 'library',
+            'reference' => '459e1b4195aa4131a7891adad84e1fc7cdff9b02',
+            'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
             'dev_requirement' => false,

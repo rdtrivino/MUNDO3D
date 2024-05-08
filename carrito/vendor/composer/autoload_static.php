@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitd393eb1061ce5fc79f199a95a6f92ecd
+class ComposerStaticInit463aacefda2fa947d5b31a599cd6e495
 {
     public static $prefixLengthsPsr4 = array (
         'S' => 
@@ -13,7 +13,7 @@ class ComposerStaticInitd393eb1061ce5fc79f199a95a6f92ecd
         ),
         'R' => 
         array (
-            'Rdtrivino\\Mundo3d\\' => 18,
+            'Rudat\\Carrito\\' => 14,
         ),
     );
 
@@ -22,7 +22,7 @@ class ComposerStaticInitd393eb1061ce5fc79f199a95a6f92ecd
         array (
             0 => __DIR__ . '/..' . '/stripe/stripe-php/lib',
         ),
-        'Rdtrivino\\Mundo3d\\' => 
+        'Rudat\\Carrito\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
         ),
@@ -35,9 +35,9 @@ class ComposerStaticInitd393eb1061ce5fc79f199a95a6f92ecd
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitd393eb1061ce5fc79f199a95a6f92ecd::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitd393eb1061ce5fc79f199a95a6f92ecd::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitd393eb1061ce5fc79f199a95a6f92ecd::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit463aacefda2fa947d5b31a599cd6e495::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit463aacefda2fa947d5b31a599cd6e495::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit463aacefda2fa947d5b31a599cd6e495::$classMap;
 
         }, null, ClassLoader::class);
     }

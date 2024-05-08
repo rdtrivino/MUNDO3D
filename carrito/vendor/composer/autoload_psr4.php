@@ -7,5 +7,5 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Stripe\\' => array($vendorDir . '/stripe/stripe-php/lib'),
-    'Rdtrivino\\Mundo3d\\' => array($baseDir . '/src'),
+    'Rudat\\Carrito\\' => array($baseDir . '/src'),
 );

@@ -226,7 +226,7 @@ $result = mysqli_query($link, $sql);
                                         $cliente = $_SESSION["user_id"];
 
                                         // Consultar el número de productos en el carrito para el cliente actual
-                                        $sql = "SELECT COUNT(*) AS total_productos FROM carrito WHERE Pe_Cliente = '$cliente'";
+                                        $sql = "SELECT COUNT(*) AS total_productos FROM carrito WHERE Pe_Cliente = '$cliente' AND estado_pago = 'pendiente'";
                                         $result = mysqli_query($link, $sql);
 
                                         // Verificar si se ejecutó la consulta correctamente
@@ -268,7 +268,9 @@ $result = mysqli_query($link, $sql);
                                         <div class="modal-body">
                                             <!-- Contenedor para mostrar los productos agregados al carrito -->
                                             <div id="carritoContenido">
-                                                <?php
+                                            <?php
+                                                $totalPrecioProductos = 0; // Declarar la variable fuera del bloque condicional y asignarle un valor predeterminado
+
                                                 if (isset($_SESSION["user_id"])) {
                                                     // Obtener el ID del usuario de la sesión
                                                     $cliente = $_SESSION["user_id"];
@@ -280,11 +282,12 @@ $result = mysqli_query($link, $sql);
                                                     // Contador de productos
                                                     $contadorProductos = mysqli_num_rows($result);
 
-                                                    // Verificar si se encontraron productos
-                                                    if ($contadorProductos > 0) {
-                                                        // Inicializar el total acumulado del precio de los productos en el carrito
-                                                        $totalPrecioProductos = 0;
+                                                    // Inicializar el total acumulado del precio de los productos en el carrito
+                                                    $totalPrecioProductos = 0;
 
+                                                    // Verificar si se encontraron productos pendientes
+                                                    if ($contadorProductos > 0) {
+                                                        echo '<div id="productosEnCarrito">';
                                                         // Iterar sobre los resultados y mostrar cada producto en el modal del carrito
                                                         while ($row = mysqli_fetch_assoc($result)) {
                                                             echo '<p>' . $row['nombre'] . ' - Precio: $' . $row['precio'] . '</p>';
@@ -292,6 +295,7 @@ $result = mysqli_query($link, $sql);
                                                             $totalPrecioProductos += $row['precio'];
                                                             // Puedes mostrar más detalles del producto si lo deseas
                                                         }
+                                                        echo '</div>';
                                                     } else {
                                                         echo "No hay productos pendientes en el carrito.";
                                                     }
@@ -360,11 +364,23 @@ $result = mysqli_query($link, $sql);
                                     xhr.send("producto=" + encodeURIComponent(data));
                                 }
 
-                                // Función para actualizar el contador de productos en el botón del carrito
+                                                            // Función para actualizar el contador de productos en el botón del carrito
                                 function actualizarContadorProductos() {
+                                    // Filtrar los productos en el carrito que tengan estado de pago "pendiente"
+                                    var productosPendientes = carritoProductos.filter(function(producto) {
+                                        return producto.estado_pago === 'pendiente';
+                                    });
+                                    
+                                    // Actualizar el contador de productos con la longitud del arreglo filtrado
                                     var contadorProductos = document.getElementById('contadorProductos');
-                                    contadorProductos.textContent = carritoProductos.length;
+                                    contadorProductos.textContent = productosPendientes.length;
+                                    
+                                    // Si no hay productos pendientes, mostrar 0 en el contador
+                                    if (productosPendientes.length === 0) {
+                                        contadorProductos.textContent = '0';
+                                    }
                                 }
+
 
                                 // Esperar a que el DOM esté completamente cargado
                                 document.addEventListener("DOMContentLoaded", function() {

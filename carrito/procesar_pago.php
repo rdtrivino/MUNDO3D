@@ -3,16 +3,31 @@ require_once('vendor/autoload.php');
 
 \Stripe\Stripe::setApiKey('sk_test_51PCx2gRxUN5OHb784L4vrVA5ta8V9wpXoHXThlHuiDh0cBAQs2VCdCEiAma1CtUJDz5QzBgBElhyB3fu3fDNg8JO008Tfah9xf');
 
+// Realizar la conexión a la base de datos
+$host = "localhost";
+$user = "root";
+$password = "";
+$dbname = "mundo3d";
+
+$link = mysqli_connect($host, $user, $password);
+
+if (!$link) {
+    die("Error al conectarse al servidor: " . mysqli_connect_error());
+}
+
+if (!mysqli_select_db($link, $dbname)) {
+    die("Error al conectarse a la Base de Datos: " . mysqli_error($link));
+}
+
 // Definir una variable para indicar si el pago fue exitoso o rechazado
 $pagoExitoso = false;
 
-// Verificar si la clave 'monto' está definida en $_POST
-if (isset($_POST['monto'])) {
+// Verificar si el monto total está definido en $_POST
+if (isset($_POST['monto']) && isset($_POST['stripeToken'])) {
     $monto = $_POST['monto'];
+    $token = $_POST['stripeToken'];
 
     try {
-        $token = $_POST['stripeToken'];
-
         $charge = \Stripe\Charge::create([
             'amount' => $monto,
             'currency' => 'USD',
@@ -22,10 +37,21 @@ if (isset($_POST['monto'])) {
 
         // Marcar el pago como exitoso si no se lanzó ninguna excepción
         $pagoExitoso = true;
+
+        // Actualizar el estado de pago en la base de datos de "pendiente" a "pagado"
+        if ($pagoExitoso) {
+            // Realizar la consulta SQL para actualizar el estado de pago
+            $sql_update = "UPDATE carrito SET estado_pago = 'pagado' WHERE estado_pago = 'pendiente'";
+            // Ejecutar la consulta SQL
+            mysqli_query($link, $sql_update);
+        }
+
     } catch (\Stripe\Exception\CardException $e) {
-        // El pago fue rechazado, no es necesario hacer nada ya que la variable $pagoExitoso ya es false
+        // El pago fue rechazado
+        echo 'Error al procesar el pago: ' . $e->getError()->message;
     } catch (Exception $e) {
-        // El pago falló por otro motivo, no es necesario hacer nada ya que la variable $pagoExitoso ya es false
+        // Otra excepción
+        echo 'Error al procesar el pago: ' . $e->getMessage();
     }
 }
 ?>
@@ -35,7 +61,7 @@ if (isset($_POST['monto'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="../images/Logo Mundo 3d.png" type="image/x-icon">
-    <title>pagos</title>
+    <title>Procesar Pago</title>
     <script src="https://js.stripe.com/v3/"></script>
     <style>
         /* Estilos para el modal */
@@ -62,12 +88,11 @@ if (isset($_POST['monto'])) {
     </style>
 </head>
 <body>
-    <!-- Contenido de tu formulario de pago aquí -->
 
     <!-- Modal de éxito -->
     <div id="modal-exito">
         <h2>Pago Exitoso</h2>
-        <p>Tu pago ha sido  un éxito.</p>
+        <p>Tu pago ha sido un éxito.</p>
     </div>
 
     <!-- Modal de rechazo -->

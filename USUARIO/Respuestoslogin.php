@@ -64,7 +64,43 @@ if (!mysqli_select_db($link, $dbname)) {
 // Consulta a la base de datos para obtener productos de la categoría 5
 $sql = "SELECT * FROM productos WHERE Pro_Categoria = 2";
 $result = mysqli_query($link, $sql);
+ // Manejar la solicitud AJAX en el mismo archivo PHP
+ if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Verificar si se recibió el producto
+    if (isset($_POST['producto'])) {
+        // Obtener el ID del usuario de la sesión
+        if (isset($_SESSION['user_id'])) {
+            $usuario_id = $_SESSION['user_id'];
 
+            // Convertir los datos del producto JSON en un array asociativo
+            $producto = json_decode($_POST['producto'], true);
+
+            // Definir la cantidad predeterminada (en este caso, 1)
+            $cantidad = 1;
+
+            // Aquí puedes realizar el procesamiento adicional, como guardar el producto en la base de datos
+            // Por ejemplo:
+            $nombre = $producto['nombre'];
+            $precio = $producto['precio'];
+
+            // Insertar el producto en la base de datos con el ID del usuario
+            $sql = "INSERT INTO carrito (Pe_Cliente, nombre, precio, cantidad) VALUES ('$usuario_id', '$nombre', $precio, $cantidad)";
+            mysqli_query($link, $sql);
+
+            // Simular una respuesta exitosa
+            echo "Producto agregado al carrito correctamente.";
+        } else {
+            // Si no hay un usuario logueado, mostrar un mensaje de error
+            echo "No hay un usuario logueado.";
+        }
+    } else {
+        // Si no se recibió el producto, mostrar un mensaje de error
+        echo "No se recibieron datos del producto.";
+    }
+
+    // Finalizar la ejecución del script para evitar la renderización adicional de HTML
+    exit();
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -185,14 +221,41 @@ $result = mysqli_query($link, $sql);
                     </form>
                     <!-- Botón para abrir el modal del carrito -->
                     <a id="carritoBtn" class="btn text-white ml-3" href="#" data-toggle="modal" data-target="#carritoModal">
-                        <i class="fas fa-shopping-cart mr-2"></i>Carrito <span id="contadorProductos" class="badge badge-light contador-rojo">0</span>
-                    </a>
+                                <i class="fas fa-shopping-cart mr-2"></i>Carrito <span id="contadorProductos" class="badge badge-light contador-rojo">
+                                    <?php
+                                    if (isset($_SESSION["user_id"])) {
+                                        // Obtener el ID del usuario de la sesión
+                                        $cliente = $_SESSION["user_id"];
+
+                                        // Consultar el número de productos en el carrito para el cliente actual
+                                        $sql = "SELECT COUNT(*) AS total_productos FROM carrito WHERE Pe_Cliente = '$cliente' AND estado_pago = 'pendiente'";
+                                        $result = mysqli_query($link, $sql);
+
+                                        // Verificar si se ejecutó la consulta correctamente
+                                        if ($result) {
+                                            // Obtener el resultado de la consulta
+                                            $row = mysqli_fetch_assoc($result);
+                                            $totalProductos = $row['total_productos'];
+
+                                            // Mostrar el total de productos en el carrito
+                                            echo $totalProductos;
+                                        } else {
+                                            // Mostrar un mensaje de error si la consulta falla
+                                            echo "Error";
+                                        }
+                                    } else {
+                                        // Si el usuario no está logueado, mostrar 0 productos
+                                        echo "0";
+                                    }
+                                    ?>
+                                </span>
+                            </a>
                             <style>
                                 .contador-rojo {
                                 color: red;
                             }
                             </style>
-                            <!-- Modal del carrito -->
+
                             <div class="modal fade" id="carritoModal" tabindex="-1" role="dialog" aria-labelledby="carritoModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
@@ -204,42 +267,138 @@ $result = mysqli_query($link, $sql);
                                         </div>
                                         <div class="modal-body">
                                             <!-- Contenedor para mostrar los productos agregados al carrito -->
-                                            <div id="carritoContenido"></div>
-                                            <!-- Mostrar el total de todos los productos -->
-                                            <div id="totalProductos"></div>
+                                            <div id="carritoContenido">
+                                            <?php
+                                                $totalPrecioProductos = 0; // Declarar la variable fuera del bloque condicional y asignarle un valor predeterminado
+
+                                                if (isset($_SESSION["user_id"])) {
+                                                    // Obtener el ID del usuario de la sesión
+                                                    $cliente = $_SESSION["user_id"];
+
+                                                    // Consulta para seleccionar los productos del cliente logueado en estado "pendiente"
+                                                    $sql = "SELECT * FROM carrito WHERE Pe_Cliente = '$cliente' AND estado_pago = 'pendiente'";
+                                                    $result = mysqli_query($link, $sql);
+
+                                                    // Contador de productos
+                                                    $contadorProductos = mysqli_num_rows($result);
+
+                                                    // Inicializar el total acumulado del precio de los productos en el carrito
+                                                    $totalPrecioProductos = 0;
+
+                                                    // Verificar si se encontraron productos pendientes
+                                                    if ($contadorProductos > 0) {
+                                                        echo '<div id="productosEnCarrito">';
+                                                        // Iterar sobre los resultados y mostrar cada producto en el modal del carrito
+                                                        while ($row = mysqli_fetch_assoc($result)) {
+                                                            echo '<p>' . $row['nombre'] . ' - Precio: $' . $row['precio'] . '</p>';
+                                                            // Sumar el precio del producto al total acumulado
+                                                            $totalPrecioProductos += $row['precio'];
+                                                            // Puedes mostrar más detalles del producto si lo deseas
+                                                        }
+                                                        echo '</div>';
+                                                    } else {
+                                                        echo "No hay productos pendientes en el carrito.";
+                                                    }
+                                                } else {
+                                                    echo "El usuario no está logueado.";
+                                                }
+                                                ?>
+                                            </div>
+                                            <!-- Mostrar el total acumulado del precio de todos los productos -->
+                                            <div id="totalProductos"><?php echo "Total a pagar: $" . $totalPrecioProductos; ?></div>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                                             <button type="button" class="btn btn-primary" id="irAPagarBtn">Ir a pagar</button>
+                                            <script>
+                                                document.addEventListener("DOMContentLoaded", function() {
+                                                    // Obtener referencia al botón "Ir a pagar"
+                                                    var irAPagarBtn = document.getElementById('irAPagarBtn');
+                                                    
+                                                    // Agregar un evento clic al botón
+                                                    irAPagarBtn.addEventListener('click', function(event) {
+                                                        // Aquí puedes agregar la lógica para redirigir al usuario a la página de pago
+                                                        // Utiliza una ruta absoluta y barras inclinadas hacia adelante
+                                                        window.location.href = '../carrito';
+                                                    });
+                                                });
+                                            </script>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <script>
-                                    document.addEventListener("DOMContentLoaded", function() {
-                                        // Obtener referencia al botón "Ir a pagar"
-                                        var irAPagarBtn = document.getElementById('irAPagarBtn');
-                                        
-                                        // Agregar un evento clic al botón
-                                        irAPagarBtn.addEventListener('click', function(event) {
-                                            // Aquí puedes agregar la lógica para redirigir al usuario a la página de pago
-                                            // Utiliza una ruta absoluta y barras inclinadas hacia adelante
-                                            window.location.href = '../carrito/index.php';
-                                            alert('¡Redirigiendo a la página de pago!');
-                                        });
-                                    });
-                            </script>
-                            <!-- JavaScript -->
+
                             <script>
                                 // Variable para almacenar los productos en el carrito
                                 var carritoProductos = [];
 
                                 // Función para agregar un producto al carrito
                                 function agregarAlCarrito(producto) {
+                                    // Agregar el producto al arreglo de productos en el carrito
                                     carritoProductos.push(producto);
+
+                                    // Mostrar el carrito actualizado
                                     mostrarCarrito();
+
+                                    // Actualizar el contador de productos
                                     actualizarContadorProductos();
+
+                                    // Enviar datos del producto al servidor mediante AJAX
+                                    var xhr = new XMLHttpRequest();
+                                    xhr.open("POST", "", true); // El mismo archivo PHP
+                                    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                                    xhr.onreadystatechange = function() {
+                                        if (xhr.readyState === XMLHttpRequest.DONE) {
+                                            if (xhr.status === 200) {
+                                                console.log(xhr.responseText); // Puedes mostrar un mensaje de éxito en la consola
+                                                // Recargar la página después de agregar un producto
+                                                location.reload();
+                                            } else {
+                                                console.error('Error al guardar el producto en el carrito.');
+                                            }
+                                        }
+                                    };
+
+                                    // Convertir el objeto producto a una cadena JSON para enviarlo al servidor
+                                    var data = JSON.stringify(producto);
+                                    xhr.send("producto=" + encodeURIComponent(data));
                                 }
+
+                                                            // Función para actualizar el contador de productos en el botón del carrito
+                                function actualizarContadorProductos() {
+                                    // Filtrar los productos en el carrito que tengan estado de pago "pendiente"
+                                    var productosPendientes = carritoProductos.filter(function(producto) {
+                                        return producto.estado_pago === 'pendiente';
+                                    });
+                                    
+                                    // Actualizar el contador de productos con la longitud del arreglo filtrado
+                                    var contadorProductos = document.getElementById('contadorProductos');
+                                    contadorProductos.textContent = productosPendientes.length;
+                                    
+                                    // Si no hay productos pendientes, mostrar 0 en el contador
+                                    if (productosPendientes.length === 0) {
+                                        contadorProductos.textContent = '0';
+                                    }
+                                }
+
+
+                                // Esperar a que el DOM esté completamente cargado
+                                document.addEventListener("DOMContentLoaded", function() {
+                                    // Obtener todos los botones "Agregar al carrito"
+                                    var agregarAlCarritoBtns = document.querySelectorAll('.agregarAlCarritoBtn');
+
+                                    agregarAlCarritoBtns.forEach(function(btn) {
+                                        btn.addEventListener('click', function(event) {
+                                            event.preventDefault();
+                                            var productId = this.getAttribute('data-id');
+                                            var productName = this.getAttribute('data-name');
+                                            var productPrice = parseFloat(this.getAttribute('data-price'));
+
+                                            // Agregar el producto al carrito
+                                            agregarAlCarrito({nombre: productName, precio: productPrice});
+                                        });
+                                    });
+                                });
 
                                 // Función para mostrar el carrito
                                 function mostrarCarrito() {
@@ -259,31 +418,7 @@ $result = mysqli_query($link, $sql);
                                     // Mostrar el total de todos los productos
                                     totalProductos.innerHTML = '<p>Total: $' + total + '</p>';
                                 }
-
-                                // Función para actualizar el contador de productos en el botón del carrito
-                                function actualizarContadorProductos() {
-                                    var contadorProductos = document.getElementById('contadorProductos');
-                                    contadorProductos.textContent = carritoProductos.length;
-                                }
-
-                                // Esperar a que el DOM esté completamente cargado
-                                document.addEventListener("DOMContentLoaded", function() {
-                                    // Obtener todos los botones "Agregar al carrito"
-                                    var agregarAlCarritoBtns = document.querySelectorAll('.agregarAlCarritoBtn');
-
-                                    agregarAlCarritoBtns.forEach(function(btn) {
-                                        btn.addEventListener('click', function(event) {
-                                            event.preventDefault();
-                                            var productId = this.getAttribute('data-id');
-                                            var productName = this.getAttribute('data-name');
-                                            var productPrice = parseFloat(this.getAttribute('data-price'));
-
-                                            // Agregar el producto al carrito
-                                            agregarAlCarrito({nombre: productName, precio: productPrice});
-                                        });
-                                    });
-                                });
-                                </script>
+                            </script>
                         </div>
                     </div>
                 </div>

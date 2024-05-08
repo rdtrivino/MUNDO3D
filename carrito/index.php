@@ -14,7 +14,6 @@ if (!$link) {
 if (!mysqli_select_db($link, $dbname)) {
     die("Error al conectarse a la Base de Datos: " . mysqli_error($link));
 }
-
 // Verificar si se ha enviado la solicitud para vaciar el carrito
 if (isset($_GET['vaciar']) && $_GET['vaciar'] == 1) {
     // Realizar la consulta para eliminar todos los registros de la tabla 'carrito'
@@ -29,31 +28,17 @@ if (isset($_GET['vaciar']) && $_GET['vaciar'] == 1) {
     }
 }
 
-// Actualizar la cantidad en la base de datos si se ha enviado una solicitud AJAX
-if (isset($_POST['product_id']) && isset($_POST['quantity'])) {
-    $productId = $_POST['product_id'];
-    $quantity = $_POST['quantity'];
-
-    // Consulta preparada para evitar la inyección SQL
-    $sql = "UPDATE carrito SET cantidad = ? WHERE id = ?";
-    $stmt = mysqli_prepare($link, $sql);
-    mysqli_stmt_bind_param($stmt, "ii", $quantity, $productId);
-
-    if (mysqli_stmt_execute($stmt)) {
-        echo "Cantidad actualizada correctamente";
-    } else {
-        echo "Error al actualizar la cantidad: " . mysqli_error($link);
-    }
-
-    // Cerrar la declaración preparada
-    mysqli_stmt_close($stmt);
-}
-
 // Consulta SQL para obtener los datos del carrito
-$sql = "SELECT id,Pe_Cliente, nombre, precio, cantidad FROM carrito";
+$sql = "SELECT id, Pe_Cliente, nombre, precio, cantidad FROM carrito WHERE estado_pago = 'pendiente'";
 $resultado = mysqli_query($link, $sql);
 
+// Calcular el total a pagar
+$total_a_pagar = 0;
+while ($fila = mysqli_fetch_assoc($resultado)) {
+    $total_a_pagar += $fila['precio'] * $fila['cantidad'];
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -167,16 +152,17 @@ $resultado = mysqli_query($link, $sql);
       background: linear-gradient(to bottom right, #6ca6cd, #ffb6c1);
     }
   </style>
-    <a href="../USUARIO/Catalogologin.php" class="btn btn-link">
+      <a href="../USUARIO/Catalogologin.php" class="btn btn-link">
         <i class="bi bi-house-door" style="color: black; font-size: 48px;"></i>
     </a>
-    <div class="container">
-        <div class="cuadro-global">
-            <h2 class="titulo">
-                <!-- Icono del carrito junto al título -->
-                <i class="bi bi-cart-fill"></i> Mi Carrito
-            </h2>
-            <div class="row">
+
+<div class="container">
+    <div class="cuadro-global">
+        <h2 class="titulo">
+            <!-- Icono del carrito junto al título -->
+            <i class="bi bi-cart-fill"></i> Mi Carrito
+        </h2>
+        <div class="row">
                 <div class="col-md-6">
                     <div class="cuadro-productos">
                         <h3 class="titulo">Productos en el Carrito</h3>
@@ -185,152 +171,149 @@ $resultado = mysqli_query($link, $sql);
                                 <i class="bi bi-cart-fill"></i> Vaciar 
                             </a>
                         </div>
-
-                        <!-- Iterar sobre los resultados de la consulta -->
-                        <?php
-                            if (mysqli_num_rows($resultado) > 0) {
-                                while ($fila = mysqli_fetch_assoc($resultado)) {
-                        ?>
-                                    <!-- Mostrar el producto en el carrito -->
-                                    <div class="card">
-                                        <div class="row no-gutters">
-                                            <div class="col-md-4">
-                                                <!-- Aquí puedes mostrar una imagen estática o cualquier otro contenido relacionado con el producto -->
-                                            </div>
-                                            <div class="col-md-8">
-                                                <div class="card-body">
-                                                    <h5 class="card-title"><?php echo $fila['nombre']; ?></h5>
-                                                    <?php
-                                                        // Verificar si la columna 'descripcion' está presente en $fila
-                                                        if (isset($fila['descripcion'])) {
-                                                    ?>
-                                                            <p class="card-text"><?php echo $fila['descripcion']; ?></p>
-                                                    <?php
-                                                        } else {
-                                                            // Si la columna 'descripcion' no está presente, puedes mostrar un mensaje alternativo o dejarlo en blanco
-                                                            echo "<p>No hay descripción disponible para este producto.</p>";
-                                                        }
-                                                    ?>
-                                                    <p class="card-text precio-producto">$<?php echo $fila['precio']; ?></p>
-                                                    <div class="cantidad-container">
-                                                        <!-- Botones para ajustar la cantidad -->
-                                                        <button class="btn btn-outline-secondary btn-cantidad" onclick="restarCantidad(<?php echo $fila['id']; ?>)">-</button>
-                                                        <input type="text" id="cantidad-<?php echo $fila['id']; ?>" class="form-control text-center selector-cantidad" value="<?php echo $fila['cantidad']; ?>" aria-label="Cantidad">
-                                                        <button class="btn btn-outline-secondary btn-cantidad" onclick="sumarCantidad(<?php echo $fila['id']; ?>)">+</button>
-                                                    </div>
-                                                </div>
+                    <!-- Iterar sobre los resultados de la consulta -->
+                    <?php
+                    if (mysqli_num_rows($resultado) > 0) {
+                        mysqli_data_seek($resultado, 0); // Reiniciar el puntero del resultado
+                        while ($fila = mysqli_fetch_assoc($resultado)) {
+                    ?>
+                            <!-- Mostrar el producto en el carrito -->
+                            <div class="card">
+                                <!-- Contenido de la tarjeta -->
+                                <div class="row no-gutters">
+                                    <div class="col-md-4">
+                                        <!-- Aquí puedes mostrar una imagen estática o cualquier otro contenido relacionado con el producto -->
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="card-body">
+                                            <h5 class="card-title"><?php echo $fila['nombre']; ?></h5>
+                                            <?php
+                                                // Verificar si la columna 'descripcion' está presente en $fila
+                                                if (isset($fila['descripcion'])) {
+                                            ?>
+                                                    <p class="card-text"><?php echo $fila['descripcion']; ?></p>
+                                            <?php
+                                                } else {
+                                                    // Si la columna 'descripcion' no está presente, puedes mostrar un mensaje alternativo o dejarlo en blanco
+                                                    echo "<p>No hay descripción disponible para este producto.</p>";
+                                                }
+                                            ?>
+                                            <p class="card-text precio-producto">$<?php echo $fila['precio']; ?></p>
+                                            <div class="cantidad-container">
+                                                <!-- Botones para ajustar la cantidad -->
+                                                <button class="btn btn-outline-secondary btn-cantidad" onclick="restarCantidad(<?php echo $fila['id']; ?>)">-</button>
+                                                <input type="text" id="cantidad-<?php echo $fila['id']; ?>" class="form-control text-center selector-cantidad" value="<?php echo $fila['cantidad']; ?>" aria-label="Cantidad">
+                                                <button class="btn btn-outline-secondary btn-cantidad" onclick="sumarCantidad(<?php echo $fila['id']; ?>)">+</button>
                                             </div>
                                         </div>
                                     </div>
-                        <?php
-                                }
-                            } else {
-                                // Si no hay productos en el carrito, mostrar un mensaje indicando que está vacío
-                                echo "<p>No hay productos en el carrito.</p>";
-                            }
-
-                            // Cerrar la conexión a la base de datos
-                            mysqli_close($link);
-                        ?>
-                    </div>
+                                </div>
+                            </div>
+                    <?php
+                        }
+                    } else {
+                        // Si no hay productos en el carrito, mostrar un mensaje indicando que está vacío
+                        echo "<p>No hay productos en el carrito.</p>";
+                    }
+                    ?>
                 </div>
+            </div>
 
-                <div class="col-md-6">
-                    <div class="cuadro-pago">
-                        <h2 class="titulo">Resumen y Pago</h2>
-                        <!-- Subtotal -->
-                        <div class="subtotal">
-                            Total a pagar: <span id="total">$0</span>
-                        </div>
-
-                        <script>
-                            $(document).ready(function() {
-                                // Agregar event listener para el cambio en el selector de cantidad
-                                $(".selector-cantidad").change(function() {
-                                    actualizarTotal();
-                                });
-
-                                // Calcular el total inicial al cargar la página
-                                actualizarTotal();
-                            });
-
-                            function restarCantidad(productId) {
-                                var cantidadInput = document.getElementById('cantidad-' + productId);
-                                var cantidad = parseInt(cantidadInput.value);
-                                if (cantidad > 0) {
-                                    cantidad--;
-                                    cantidadInput.value = cantidad;
-                                    actualizarTotal(); // Llamar a actualizarTotal() después de restar la cantidad
-                                    actualizarCantidadEnBD(productId, cantidad);
-                                }
-                            }
-
-                            function sumarCantidad(productId) {
-                                var cantidadInput = document.getElementById('cantidad-' + productId);
-                                var cantidad = parseInt(cantidadInput.value);
-                                cantidad++;
-                                cantidadInput.value = cantidad;
-                                actualizarTotal(); // Llamar a actualizarTotal() después de sumar la cantidad
-                                actualizarCantidadEnBD(productId, cantidad);
-                            }
-
-                            function actualizarCantidadEnBD(productId, cantidad) {
-                                // Enviar una solicitud AJAX al servidor para actualizar la cantidad en la base de datos
-                                $.ajax({
-                                    type: "POST",
-                                    url: "actualizar_cantidad.php", // Cambiar por la URL correcta si es necesario
-                                    data: { product_id: productId, quantity: cantidad }, // Pasar los parámetros
-                                    success: function(response) {
-                                        // Manejar la respuesta del servidor si es necesario
-                                        console.log(response);
-                                    }
-                                });
-                            }
-
-                            function actualizarTotal() {
-                                var precioTotal = 0;
-                                $(".card").each(function() {
-                                    var precio = parseFloat($(this).find(".precio-producto").text().substring(1));
-                                    var cantidad = parseInt($(this).find(".selector-cantidad").val());
-                                    precioTotal += precio * cantidad;
-                                });
-                                $("#total").text("$" + precioTotal.toFixed(2));
-                            }
-                        </script>
-
-<div class="checkoutpro">
-    <label>Selecciona tu método de pago:</label><br>
-    <!-- Botón de Stripe -->
-    <form id="payment-form" action="procesar_pago.php" method="POST">
-        <!-- Campo oculto para enviar el monto -->
-        <input type="hidden" name="monto" id="monto" value="1000"> <!-- Ejemplo de monto predeterminado en centavos -->
-
-        <script
-            src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-            data-key="pk_test_51PCx2gRxUN5OHb78Un4Cxh9oWW7Xnk9nzmWDzPqyrjFbfDQP187to1ujx3eAsRByEIU8hHhMwxvgj2FiVq0rGRJ600hiaE79NV"
-            data-amount="1000" <!-- Cambiar el valor a la cantidad en centavos -->
-            data-name="MUNDO 3D" <!-- Cambiar el nombre de tu tienda -->
-            data-description="MUNDO 3D" <!-- Cambiar la descripción del pedido -->
-            data-image="RUTA_DE_LA_IMAGEN_DEL_PRODUCTO" <!-- Cambiar la ruta de la imagen del producto -->
-            data-locale="auto"
-            data-currency="USD">
-        </script>
-    </form>
-</div>
-
-
-        <!-- Mostrar los métodos de pago que acepta Stripe -->
-        <br>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Visa.svg/1200px-Visa.svg.png" alt="Visa" style="width: 50px;">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/MasterCard_Logo.svg/1200px-MasterCard_Logo.svg.png" alt="Mastercard" style="width: 50px;">
-        <!-- Puedes añadir más imágenes según los métodos de pago que aceptes -->
-    </div>
-
-                        </div>
+            <div class="col-md-6">
+                <div class="cuadro-pago">
+                    <h2 class="titulo">Resumen y Pago</h2>
+                    <!-- Subtotal -->
+                    <div class="subtotal">
+                        Total a pagar: <span id="total">$<?php echo number_format($total_a_pagar, 2); ?></span>
                     </div>
+
+                    <!-- Otro contenido para métodos de pago -->
+                    <div class="checkoutpro">
+                        <label>Selecciona tu método de pago:</label><br>
+                        <!-- Botón de Stripe -->
+                        <form id="payment-form" action="procesar_pago.php" method="POST">
+                            <!-- Campo oculto para enviar el monto -->
+                            <input type="hidden" name="monto" id="monto" value="<?php echo $total_a_pagar * 100; ?>"> <!-- Convertir a centavos -->
+            
+                            <script
+                                src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                                data-key="pk_test_51PCx2gRxUN5OHb78Un4Cxh9oWW7Xnk9nzmWDzPqyrjFbfDQP187to1ujx3eAsRByEIU8hHhMwxvgj2FiVq0rGRJ600hiaE79NV"
+                                data-amount="<?php echo $total_a_pagar * 100; ?>" <!-- Convertir a centavos -->
+                                data-name="MUNDO 3D" <!-- Cambiar el nombre de tu tienda -->
+                                data-description="MUNDO 3D" <!-- Cambiar la descripción del pedido -->
+                                data-image="RUTA_DE_LA_IMAGEN_DEL_PRODUCTO" <!-- Cambiar la ruta de la imagen del producto -->
+                                data-locale="auto"
+                                data-currency="USD">
+                            </script>
+                        </form>
+                    </div>
+
+                    <!-- Mostrar los métodos de pago que acepta Stripe -->
+                    <br>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Visa.svg/1200px-Visa.svg.png" alt="Visa" style="width: 50px;">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/MasterCard_Logo.svg/1200px-MasterCard_Logo.svg.png" alt="Mastercard" style="width: 50px;">
+                    <!-- Puedes añadir más imágenes según los métodos de pago que aceptes -->
                 </div>
             </div>
         </div>
     </div>
+</div>
+
+<!-- Scripts JavaScript -->
+<script>
+    $(document).ready(function() {
+        // Agregar event listener para el cambio en el selector de cantidad
+        $(".selector-cantidad").change(function() {
+            actualizarTotal();
+        });
+
+        // Calcular el total inicial al cargar la página
+        actualizarTotal();
+    });
+
+    function restarCantidad(productId) {
+        var cantidadInput = document.getElementById('cantidad-' + productId);
+        var cantidad = parseInt(cantidadInput.value);
+        if (cantidad > 0) {
+            cantidad--;
+            cantidadInput.value = cantidad;
+            actualizarTotal(); // Llamar a actualizarTotal() después de restar la cantidad
+            actualizarCantidadEnBD(productId, cantidad);
+        }
+    }
+
+    function sumarCantidad(productId) {
+        var cantidadInput = document.getElementById('cantidad-' + productId);
+        var cantidad = parseInt(cantidadInput.value);
+        cantidad++;
+        cantidadInput.value = cantidad;
+        actualizarTotal(); // Llamar a actualizarTotal() después de sumar la cantidad
+        actualizarCantidadEnBD(productId, cantidad);
+    }
+
+    function actualizarCantidadEnBD(productId, cantidad) {
+        // Enviar una solicitud AJAX al servidor para actualizar la cantidad en la base de datos
+        $.ajax({
+            type: "POST",
+            url: "actualizar_cantidad.php", // Cambiar por la URL correcta si es necesario
+            data: { product_id: productId, quantity: cantidad }, // Pasar los parámetros
+            success: function(response) {
+                // Manejar la respuesta del servidor si es necesario
+                console.log(response);
+            }
+        });
+    }
+
+    function actualizarTotal() {
+        var precioTotal = 0;
+        $(".card").each(function() {
+            var precio = parseFloat($(this).find(".precio-producto").text().substring(1));
+            var cantidad = parseInt($(this).find(".selector-cantidad").val());
+            precioTotal += precio * cantidad;
+        });
+        $("#total").text("$" + precioTotal.toFixed(2));
+    }
+</script>
+
 </body>
 </html>

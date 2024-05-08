@@ -185,9 +185,6 @@ $result = mysqli_query($link, $sql);
                         <!-- Cambiar el evento a "input" para que se ejecute cada vez que se ingresa una letra -->
                         <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Buscar</button>
                     </form>
-                    <a class="btn text-white ml-3" href="#">
-                        <i class="fas fa-shopping-cart mr-2"></i>Carrito
-                    </a>
                 </div>
             </div>
         </div>
