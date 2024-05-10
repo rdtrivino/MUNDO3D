@@ -507,55 +507,94 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 </div>
 
-<!-- Modal de detalles del producto -->
-<div class="modal fade" id="detalleProductoModal" tabindex="-1" role="dialog" aria-labelledby="detalleProductoModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="detalleProductoModalLabel">Detalles del Producto</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+            <!-- Modal de detalles del producto -->
+            <div class="modal fade" id="detalleProductoModal" tabindex="-1" role="dialog" aria-labelledby="detalleProductoModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="detalleProductoModalLabel">Detalles del Producto</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-6 text-center img-container">
+                                    <!-- Imagen del producto -->
+                                    <img src="" id="productoImagen" class="img-fluid mb-3" alt="Producto">
+                                </div>
+                                <div class="col-md-6">
+                                    <!-- Descripción y precio del producto -->
+                                    <h4 id="productoNombre"></h4>
+                                    <p><strong>Descripción:</strong> <span id="productoDescripcion"></span></p>
+                                    <p><strong>Precio:</strong> <span id="productoPrecio" class="text-danger"></span></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="modal-body" id="detalleProductoBody">
-                <!-- Aquí se cargarán los detalles del producto -->
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-            </div>
-        </div>
-    </div>
-</div>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        var detallesBtns = document.querySelectorAll('.detallesBtn');
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    var detallesBtns = document.querySelectorAll('.detallesBtn');
 
-        detallesBtns.forEach(function(btn) {
-            btn.addEventListener('click', function(event) {
-                event.preventDefault();
-                var productId = this.getAttribute('data-id');
-                var productName = this.getAttribute('data-name');
-                var productDescription = this.getAttribute('data-description');
-                var productPrice = this.getAttribute('data-price');
-                var productImage = this.closest('.card').querySelector('.card-img-top').getAttribute('src');
+                    detallesBtns.forEach(function(btn) {
+                        btn.addEventListener('click', function(event) {
+                            event.preventDefault();
+                            var productName = this.getAttribute('data-name');
+                            var productDescription = this.getAttribute('data-description');
+                            var productPrice = this.getAttribute('data-price');
+                            var productImage = this.closest('.card').querySelector('.card-img-top').getAttribute('src');
 
-                cargarDetallesProducto(productName, productDescription, productPrice, productImage);
-            });
-        });
-    });
+                            cargarDetallesProducto(productName, productDescription, productPrice, productImage);
+                        });
+                    });
+                });
 
-    function cargarDetallesProducto(productName, productDescription, productPrice, productImage) {
-        var modalBody = document.getElementById('detalleProductoBody');
-        modalBody.innerHTML = `
-            <img src="${productImage}" class="img-fluid mb-3" alt="${productName}">
-            <h4>${productName}</h4>
-            <p><strong>Descripción:</strong> ${productDescription}</p>
-            <p><strong>Precio:</strong> $${productPrice}</p>`;
-        $('#detalleProductoModal').modal('show');
-    }
-</script>
+                function cargarDetallesProducto(productName, productDescription, productPrice, productImage) {
+                    var modalImagen = document.getElementById('productoImagen');
+                    var modalNombre = document.getElementById('productoNombre');
+                    var modalDescripcion = document.getElementById('productoDescripcion');
+                    var modalPrecio = document.getElementById('productoPrecio');
+
+                    modalImagen.src = productImage;
+                    modalNombre.textContent = productName;
+                    modalDescripcion.textContent = productDescription;
+                    modalPrecio.textContent = "$" + productPrice;
+
+                    $('#detalleProductoModal').modal('show');
+                }
+            </script>
             <style>
+                /* Estilo para el modal */
+                .modal-content {
+                    width: 80%; /* Ancho del modal */
+                    max-width: 100%; /* Ancho máximo */
+                }
+
+                /* Estilo para el contenedor de la imagen */
+                .img-container {
+                    height: 400px; /* Altura del contenedor de la imagen */
+                    overflow: hidden; /* Ocultar el desbordamiento */
+                }
+
+                /* Estilo para la imagen del producto */
+                #productoImagen {
+                    width: 100%; /* Ancho del 100% del contenedor */
+                    height: auto; /* Altura automática para mantener la proporción */
+                    transition: transform 0.3s ease; /* Transición suave de 0.3 segundos */
+                }
+
+                /* Estilo para el precio del producto */
+                #productoPrecio {
+                    color: #dc3545; /* Color rojo para el precio */
+                    font-weight: bold; /* Texto en negrita */
+                }
+                        
                 /* Estilo para la superposición */
             .overlay {
                 background-color: rgba(0, 0, 0, 0.5);
