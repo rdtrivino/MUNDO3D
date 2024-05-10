@@ -46,7 +46,9 @@ if (isset($_GET['vaciar']) && $_GET['vaciar'] == 1) {
 // Consulta SQL para obtener los datos del carrito
 if (isset($_SESSION['user_id'])) {
     $usuario_id = $_SESSION['user_id'];
-    $sql = "SELECT id, nombre, precio, cantidad FROM carrito WHERE Pe_Cliente = $usuario_id";
+    $sql = "SELECT id, nombre, precio, cantidad 
+        FROM carrito 
+        WHERE Pe_Cliente = $usuario_id AND estado_pago != 'pagado'";
     $resultado = mysqli_query($link, $sql);
 
     // Calcular el total a pagar
@@ -54,10 +56,24 @@ if (isset($_SESSION['user_id'])) {
     while ($fila = mysqli_fetch_assoc($resultado)) {
         $total_a_pagar += $fila['precio'] * $fila['cantidad'];
     }
-
-
-}
+        // Actualizar la cantidad del producto en la base de datos si se ha enviado un formulario para ello
+        if (isset($_POST['product_id']) && isset($_POST['quantity'])) {
+            $producto_id = $_POST['product_id'];
+            $cantidad = $_POST['quantity'];
+    
+            $sql_update = "UPDATE carrito SET cantidad = $cantidad WHERE Pe_Cliente = $usuario_id AND id = $producto_id";
+            if (mysqli_query($link, $sql_update)) {
+                echo "La cantidad del producto se ha actualizado correctamente en la base de datos.";
+            } else {
+                echo "Error al actualizar la cantidad del producto en la base de datos: " . mysqli_error($link);
+            }
+        }
+    } else {
+        echo "Error: Falta información requerida para actualizar la cantidad del producto.";
+    }
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="es">
@@ -285,6 +301,7 @@ if (isset($_SESSION['user_id'])) {
         // Agregar event listener para el cambio en el selector de cantidad
         $(".selector-cantidad").change(function() {
             actualizarTotal();
+            actualizarCantidadEnBD($(this).data('product-id'), $(this).val());
         });
 
         // Calcular el total inicial al cargar la página
@@ -292,21 +309,21 @@ if (isset($_SESSION['user_id'])) {
     });
 
     function restarCantidad(productId) {
-        var cantidadInput = document.getElementById('cantidad-' + productId);
-        var cantidad = parseInt(cantidadInput.value);
-        if (cantidad > 0) {
+        var cantidadInput = $("#cantidad-" + productId);
+        var cantidad = parseInt(cantidadInput.val());
+        if (cantidad > 1) {
             cantidad--;
-            cantidadInput.value = cantidad;
+            cantidadInput.val(cantidad);
             actualizarTotal(); // Llamar a actualizarTotal() después de restar la cantidad
             actualizarCantidadEnBD(productId, cantidad);
         }
     }
 
     function sumarCantidad(productId) {
-        var cantidadInput = document.getElementById('cantidad-' + productId);
-        var cantidad = parseInt(cantidadInput.value);
+        var cantidadInput = $("#cantidad-" + productId);
+        var cantidad = parseInt(cantidadInput.val());
         cantidad++;
-        cantidadInput.value = cantidad;
+        cantidadInput.val(cantidad);
         actualizarTotal(); // Llamar a actualizarTotal() después de sumar la cantidad
         actualizarCantidadEnBD(productId, cantidad);
     }
@@ -315,7 +332,7 @@ if (isset($_SESSION['user_id'])) {
         // Enviar una solicitud AJAX al servidor para actualizar la cantidad en la base de datos
         $.ajax({
             type: "POST",
-            url: "actualizar_cantidad.php", // Cambiar por la URL correcta si es necesario
+            url: "index.php", // Cambiar por la URL correcta si es necesario
             data: { product_id: productId, quantity: cantidad }, // Pasar los parámetros
             success: function(response) {
                 // Manejar la respuesta del servidor si es necesario

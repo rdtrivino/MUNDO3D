@@ -1,4 +1,17 @@
 <?php
+session_start(); // Iniciar sesión si no está iniciada
+
+// Verificar si el usuario está autenticado
+if (isset($_SESSION['user_id'])) {
+    // Obtener el ID de usuario de la sesión
+    $Pe_Cliente = $_SESSION['user_id'];
+} else {
+    // Manejar el caso en que el usuario no esté autenticado
+    // Por ejemplo, redirigir a la página de inicio de sesión
+    header("Location: login.php");
+    exit(); // Finalizar el script para evitar ejecución adicional
+}
+
 require_once('vendor/autoload.php');
 
 \Stripe\Stripe::setApiKey('sk_test_51PCx2gRxUN5OHb784L4vrVA5ta8V9wpXoHXThlHuiDh0cBAQs2VCdCEiAma1CtUJDz5QzBgBElhyB3fu3fDNg8JO008Tfah9xf');
@@ -41,9 +54,27 @@ if (isset($_POST['monto']) && isset($_POST['stripeToken'])) {
         // Actualizar el estado de pago en la base de datos de "pendiente" a "pagado"
         if ($pagoExitoso) {
             // Realizar la consulta SQL para actualizar el estado de pago
-            $sql_update = "UPDATE carrito SET estado_pago = 'pagado' WHERE estado_pago = 'pendiente'";
-            // Ejecutar la consulta SQL
-            mysqli_query($link, $sql_update);
+            $sql_update = "UPDATE carrito SET estado_pago = 'pagado' WHERE estado_pago = 'pendiente' AND Pe_Cliente = '$Pe_Cliente'";
+            
+            // Ejecutar la consulta SQL para actualizar el estado de pago
+            if (mysqli_query($link, $sql_update)) {
+                // Transferir los productos del carrito a la tabla de pedidos
+                $sql_transfer = "INSERT INTO pedidos (Pe_Cliente, Pe_Estado, Pe_Producto, Pe_Cantidad, Pe_Fechapedido)
+                SELECT '$Pe_Cliente', 1, productos.Identificador, carrito.cantidad, NOW()
+                FROM carrito
+                INNER JOIN productos ON carrito.id_producto = productos.Identificador
+                WHERE carrito.estado_pago = 'pagado' AND carrito.Pe_Cliente = '$Pe_Cliente'";
+
+                
+                // Ejecutar la consulta SQL para transferir productos a la tabla de pedidos
+                if (mysqli_query($link, $sql_transfer)) {
+                    echo "Productos transferidos a la tabla de pedidos con éxito.";
+                } else {
+                    echo "Error al transferir productos a la tabla de pedidos: " . mysqli_error($link);
+                }
+            } else {
+                echo "Error al actualizar el estado de pago en la tabla de carrito: " . mysqli_error($link);
+            }
         }
 
     } catch (\Stripe\Exception\CardException $e) {
@@ -106,21 +137,21 @@ if (isset($_POST['monto']) && isset($_POST['stripeToken'])) {
     if (<?php echo $pagoExitoso ? 'true' : 'false'; ?>) {
         // Muestra el modal de éxito
         document.getElementById('modal-exito').style.display = 'block';
-        // Cierra el modal de éxito después de 4 segundos
+        // Cierra el modal de éxito después de 10 segundos
         setTimeout(function() {
             document.getElementById('modal-exito').style.display = 'none';
             // Redirige a la página del carrito después de cerrar el modal
             window.location.href = 'index.php';
-        }, 3000);
+        }, 10000);
     } else {
         // Muestra el modal de rechazo si el pago fue rechazado
         document.getElementById('modal-rechazo').style.display = 'block';
-        // Cierra el modal de rechazo después de 4 segundos
+        // Cierra el modal de rechazo después de 10 segundos
         setTimeout(function() {
             document.getElementById('modal-rechazo').style.display = 'none';
             // Redirige a la página del carrito después de cerrar el modal
             window.location.href = 'index.php';
-        }, 3000);
+        }, 10000);
     }
 </script>
 

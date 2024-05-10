@@ -1,49 +1,49 @@
 <?php
-        session_start();
-        include __DIR__ . '/../conexion.php';
+session_start();
+include __DIR__ . '/../conexion.php';
 
-        // Confirmación de que el usuario ha realizado el proceso de autenticación
-        if (!isset($_SESSION['confirmado']) || $_SESSION['confirmado'] == false) {
-            header("Location: ../Programas/autenticacion.php");
-            exit(); // Terminamos la ejecución del script después de redirigir
-        }
+// Confirmación de que el usuario ha realizado el proceso de autenticación
+if (!isset($_SESSION['confirmado']) || $_SESSION['confirmado'] == false) {
+    header("Location: ../Programas/autenticacion.php");
+    exit(); // Terminamos la ejecución del script después de redirigir
+}
 
-        // Realizamos la consulta para obtener el rol del usuario
-        $peticion = "SELECT Usu_rol FROM usuario WHERE Usu_Identificacion = '".$_SESSION['user_id']."'";
-        $result = mysqli_query($link, $peticion);
+// Realizamos la consulta para obtener el rol del usuario
+$peticion = "SELECT Usu_rol FROM usuario WHERE Usu_Identificacion = '".$_SESSION['user_id']."'";
+$result = mysqli_query($link, $peticion);
 
-        // Verificamos si la consulta tuvo éxito
-        if (!$result) {
-            // Manejo de errores de consulta
-            // Redirigir a la página de autenticación o mostrar un mensaje de error
-            header("Location: ../Programas/autenticacion.php");
-            exit(); // Terminamos la ejecución del script después de redirigir
-        }
+// Verificamos si la consulta tuvo éxito
+if (!$result) {
+    // Manejo de errores de consulta
+    // Redirigir a la página de autenticación o mostrar un mensaje de error
+    header("Location: ../Programas/autenticacion.php");
+    exit(); // Terminamos la ejecución del script después de redirigir
+}
 
-        // Verificamos si la consulta devolvió exactamente un resultado
-        if (mysqli_num_rows($result) != 1) {
-            // Si la consulta no devuelve un solo resultado, puede ser un problema de base de datos
-            // Redirigir a la página de autenticación o mostrar un mensaje de error
-            header("Location: ../Programas/autenticacion.php");
-            exit(); // Terminamos la ejecución del script después de redirigir
-        }
+// Verificamos si la consulta devolvió exactamente un resultado
+if (mysqli_num_rows($result) != 1) {
+    // Si la consulta no devuelve un solo resultado, puede ser un problema de base de datos
+    // Redirigir a la página de autenticación o mostrar un mensaje de error
+    header("Location: ../Programas/autenticacion.php");
+    exit(); // Terminamos la ejecución del script después de redirigir
+}
 
-        // Obtenemos el rol del usuario
-        $fila = mysqli_fetch_assoc($result);
-        $rolUsuario = $fila['Usu_rol'];
+// Obtenemos el rol del usuario
+$fila = mysqli_fetch_assoc($result);
+$rolUsuario = $fila['Usu_rol'];
 
-        // Verificar si el rol del usuario es diferente de 3
-        if ($rolUsuario != 3) {
-            // Si el rol no es 3, redirigir a la página de autenticación
-            header("Location: ../Programas/autenticacion.php");
-            exit(); // Terminamos la ejecución del script después de redirigir
-        }
+// Verificar si el rol del usuario es diferente de 3
+if ($rolUsuario != 3) {
+    // Si el rol no es 3, redirigir a la página de autenticación
+    header("Location: ../Programas/autenticacion.php");
+    exit(); // Terminamos la ejecución del script después de redirigir
+}
 
-        // Si llegamos aquí, el usuario está autenticado y tiene el rol 3
-        // Continuar con el resto del código
-        $nombreCompleto = $_SESSION['username'];
-        $usuario_id = $_SESSION['user_id'];
-    ?>
+// Si llegamos aquí, el usuario está autenticado y tiene el rol 3
+// Continuar con el resto del código
+$nombreCompleto = $_SESSION['username'];
+$usuario_id = $_SESSION['user_id'];
+?>
 <?php
 $host = "localhost";
 $user = "root";
@@ -60,20 +60,20 @@ if (!mysqli_select_db($link, $dbname)) {
     die("Error al conectarse a la Base de Datos: " . mysqli_error($link));
 }
 
-
-// Consulta a la base de datos para obtener productos de la categoría 5
-$sql = "SELECT * FROM productos WHERE Pro_Categoria = 1";
-$result = mysqli_query($link, $sql);
- // Manejar la solicitud AJAX en el mismo archivo PHP
- if ($_SERVER["REQUEST_METHOD"] == "POST") {
+// Manejar la solicitud AJAX en el mismo archivo PHP
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Verificar si se recibió el producto
     if (isset($_POST['producto'])) {
+        var_dump($_POST['producto']);
         // Obtener el ID del usuario de la sesión
         if (isset($_SESSION['user_id'])) {
             $usuario_id = $_SESSION['user_id'];
 
             // Convertir los datos del producto JSON en un array asociativo
             $producto = json_decode($_POST['producto'], true);
+
+            // Obtener el identificador del producto de la tabla "productos"
+            $id_producto = $producto['Identificador']; // Se mantiene como 'Identificador'
 
             // Definir la cantidad predeterminada (en este caso, 1)
             $cantidad = 1;
@@ -83,8 +83,8 @@ $result = mysqli_query($link, $sql);
             $nombre = $producto['nombre'];
             $precio = $producto['precio'];
 
-            // Insertar el producto en la base de datos con el ID del usuario
-            $sql = "INSERT INTO carrito (Pe_Cliente, nombre, precio, cantidad) VALUES ('$usuario_id', '$nombre', $precio, $cantidad)";
+            // Insertar el producto en el carrito con el ID del usuario y el ID del producto
+            $sql = "INSERT INTO carrito (Pe_Cliente, nombre, precio, cantidad, id_producto) VALUES ('$usuario_id', '$nombre', $precio, $cantidad, '$id_producto')";
             mysqli_query($link, $sql);
 
             // Simular una respuesta exitosa
@@ -101,8 +101,9 @@ $result = mysqli_query($link, $sql);
     // Finalizar la ejecución del script para evitar la renderización adicional de HTML
     exit();
 }
-
 ?>
+
+
 <!DOCTYPE html>
 <html lang="es">
 
