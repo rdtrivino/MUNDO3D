@@ -64,16 +64,7 @@ if (isset($_POST['monto']) && isset($_POST['stripeToken'])) {
                 FROM carrito
                 INNER JOIN productos ON carrito.id_producto = productos.Identificador
                 WHERE carrito.estado_pago = 'pagado' AND carrito.Pe_Cliente = '$Pe_Cliente'";
-
                 
-                // Ejecutar la consulta SQL para transferir productos a la tabla de pedidos
-                if (mysqli_query($link, $sql_transfer)) {
-                    echo "Productos transferidos a la tabla de pedidos con éxito.";
-                } else {
-                    echo "Error al transferir productos a la tabla de pedidos: " . mysqli_error($link);
-                }
-            } else {
-                echo "Error al actualizar el estado de pago en la tabla de carrito: " . mysqli_error($link);
             }
         }
 

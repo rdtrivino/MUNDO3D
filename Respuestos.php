@@ -170,7 +170,6 @@ $result = mysqli_query($link, $sql);
 <!-- Catalog Start -->
 <div class="container-fluid pt-5">
     <div class="container">
-        <h6 class="text-secondary text-uppercase text-center font-weight-medium mb-3">NUESTROS PRODUCTOS</h6>
         <h1 class="display-4 text-center mb-5">Explora nuestros Repuestos</h1>
         <div class="row row-cols-lg-4 row-cols-md-3 justify-content-center">
             <?php
@@ -193,9 +192,6 @@ $result = mysqli_query($link, $sql);
                         <img src="<?php echo $imageSrc; ?>" class="card-img-top" alt="<?php echo $row['Pro_Nombre']; ?>">
                         <div class="overlay position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
                             <?php if ($row['Pro_Cantidad'] > 0) { ?>
-                                <a href="#" class="btn btn-primary btn-lg agregarAlCarritoBtn" data-id="<?php echo $row['Identificador']; ?>" data-name="<?php echo $row['Pro_Nombre']; ?>" data-price="<?php echo $row['Pro_PrecioVenta']; ?>"><i class="fas fa-cart-plus"></i></a>
-                            <?php } else { ?>
-                                <button class="btn btn-primary btn-lg agregarAlCarritoBtn" disabled><i class="fas fa-cart-plus"></i></button>
                             <?php } ?>
                             <a href="#" class="btn btn-secondary btn-lg mx-2 detallesBtn" data-toggle="modal" data-target="#detalleProductoModal" data-id="<?php echo $row['Identificador']; ?>" data-name="<?php echo $row['Pro_Nombre']; ?>" data-description="<?php echo $row['Pro_Descripcion']; ?>" data-price="<?php echo $row['Pro_PrecioVenta']; ?>"><i class="fas fa-search"></i></a>
                         </div>
@@ -300,56 +296,42 @@ $result = mysqli_query($link, $sql);
             </div>
             </div>
 
-        <!-- Footer Start -->
-        <div class="container-fluid bg-primary text-white mt-5 pt-5 px-sm-3 px-md-5">
-        <div class="row pt-5">
-            <div class="col-lg-3 col-md-6 mb-5">
-                <a href=""><h1 class="text-secondary mb-3"><span class="text-white">MUNDO</span>3D</h1></a>
-                <p>¡Adéntrate en un mundo tridimensional como nunca antes! ¡Bienvenid@ nuestra página 3D, donde tus sueños cobran vida!</p>
-                <div class="d-flex justify-content-start mt-4">
-                    <a class="btn btn-outline-light rounded-circle text-center mr-2 px-0" style="width: 38px; height: 38px;" href="#"><i class="fas fa-times"></i></a>
-                    <a class="btn btn-outline-light rounded-circle text-center mr-2 px-0" style="width: 38px; height: 38px;" href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a class="btn btn-outline-light rounded-circle text-center mr-2 px-0" style="width: 38px; height: 38px;" href="#"><i class="fab fa-linkedin-in"></i></a>
-                    <a class="btn btn-outline-light rounded-circle text-center mr-2 px-0" style="width: 38px; height: 38px;" href="#"><i class="fab fa-instagram"></i></a>
-                </div>
+<!-- Footer Start -->
+<div class="container-fluid bg-primary text-white mt-5 pt-5 px-sm-3 px-md-5">
+    <div class="row pt-5">
+        <div class="col-lg-4 col-md-6 mb-5">
+            <a href=""><h1 class="text-secondary mb-3"><span class="text-white">MUNDO</span>3D</h1></a>
+            <p>¡Adéntrate en un mundo tridimensional como nunca antes! ¡Bienvenid@ nuestra página 3D, donde tus sueños cobran vida!</p>
+            <div class="d-flex justify-content-start mt-4">
+                <a class="btn btn-outline-light rounded-circle text-center mr-2 px-0" style="width: 38px; height: 38px;" href="#"><i class="fas fa-times"></i></a>
+                <a class="btn btn-outline-light rounded-circle text-center mr-2 px-0" style="width: 38px; height: 38px;" href="#"><i class="fab fa-facebook-f"></i></a>
+                <a class="btn btn-outline-light rounded-circle text-center mr-2 px-0" style="width: 38px; height: 38px;" href="#"><i class="fab fa-linkedin-in"></i></a>
+                <a class="btn btn-outline-light rounded-circle text-center mr-2 px-0" style="width: 38px; height: 38px;" href="#"><i class="fab fa-instagram"></i></a>
             </div>
-            <div class="col-lg-3 col-md-6 mb-5">
-                <h4 class="text-white mb-4">Ponerse en contacto</h4>
-                <p>Contactanos para tener el gusto de atenderlos.</p>
-                <p><i class="fa fa-map-marker-alt mr-2"></i>Calle 15 #31-42 Bogotá, Colombia</p>
-                <p><i class="fab fa-whatsapp mr-2"></i>3124672836</p>
-                <p><i class="fa fa-envelope mr-2"></i>rdtrivino6@misena.edu.co</p>
-            </div>
-            <div class="col-lg-3 col-md-6 mb-5">
-                <h4 class="text-white mb-4">Enlaces Rápidos</h4>
-                <div class="d-flex flex-column justify-content-start">
-                    <a class="text-white mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>INICIO</a>
-                    <a class="text-white mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>CATALOGO</a>
-                    <a class="text-white mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>REPUESTOS</a>
-                    <a class="text-white mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>ARCHIVOS 3D</a>
-                    <a class="text-white" href="#"><i class="fa fa-angle-right mr-2"></i>SERVICIO DE IMPRESION</a>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 mb-5">
-                <h4 class="text-white mb-4">Recibe nuevas noticias</h4>
-                <form action="">
-                    <div class="form-group">
-                        <input type="text" class="form-control border-0" placeholder="Nombre" required="required" />
-                    </div>
-                    <div class="form-group">
-                        <input type="email" class="form-control border-0" placeholder="Email" required="required" />
-                    </div>
-                    <div>
-                        <button class="btn btn-lg btn-secondary btn-block border-0" type="submit">ENVIAR</button>
-                    </div>
-                </form>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-5">
+            <h4 class="text-white mb-4">Ponerse en contacto</h4>
+            <p>Contactanos para tener el gusto de atenderlos.</p>
+            <p><i class="fa fa-map-marker-alt mr-2"></i>Calle 15 #31-42 Bogotá, Colombia</p>
+            <p><i class="fab fa-whatsapp mr-2"></i>3124672836</p>
+            <p><i class="fa fa-envelope mr-2"></i>rdtrivino6@misena.edu.co</p>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-5">
+            <h4 class="text-white mb-4">Enlaces Rápidos</h4>
+            <div class="d-flex flex-column justify-content-start">
+                <a class="text-white mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>INICIO</a>
+                <a class="text-white mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>CATALOGO</a>
+                <a class="text-white mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>REPUESTOS</a>
+                <a class="text-white mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>ARCHIVOS 3D</a>
+                <a class="text-white" href="#"><i class="fa fa-angle-right mr-2"></i>SERVICIO DE IMPRESION</a>
             </div>
         </div>
     </div>
+</div>
     <div class="container-fluid bg-dark text-white py-4 px-sm-3 px-md-5">
-        <p class="m-0 text-center text-white">
-            &copy; <a class="text-white font-weight-medium" href="#">MUNDO 3D</a>. Todos los derechos reservados 2024
-        </p>
+    <p class="m-0 text-center text-white">
+        &copy; <a class="text-white font-weight-medium" href="#">MUNDO 3D</a>. Todos los derechos reservados <?php echo date('Y'); ?>
+    </p>
     </div>
     <!-- Footer End -->
 
