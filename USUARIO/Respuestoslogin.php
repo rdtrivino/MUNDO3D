@@ -84,7 +84,12 @@ $result = mysqli_query($link, $sql);
             $precio = $producto['precio'];
 
             // Insertar el producto en la base de datos con el ID del usuario
-            $sql = "INSERT INTO carrito (Pe_Cliente, nombre, precio, cantidad) VALUES ('$usuario_id', '$nombre', $precio, $cantidad)";
+            $sql = "INSERT INTO carrito (Pe_Cliente, nombre, precio, cantidad, id_producto) 
+            SELECT '$usuario_id', p.Pro_Nombre, p.Pro_PrecioVenta, $cantidad, p.Identificador
+            FROM productos p
+            WHERE p.Pro_Nombre = '$nombre'";
+
+            // Ejecutar la consulta
             mysqli_query($link, $sql);
 
             // Simular una respuesta exitosa
@@ -156,23 +161,135 @@ $result = mysqli_query($link, $sql);
                 </script>
             </div>
         </div>
-        <div class="col-md-6 text-center text-lg-right">
-            <div class="d-inline-flex align-items-center">
-                <!-- Icono de salir -->
-                <div id="logout">
-                    <i id="logout-button" class="fas fa-sign-out-alt fa-lg text-white"></i>
-                </div>
-                <script>
-                var logoutButton = document.getElementById("logout-button");
+        <style>
+        /* Estilo para el contenedor que envuelve al botón de cerrar sesión */
+        .align-items-center {
+            display: flex;
+            align-items: center;
+        }
 
-                logoutButton.addEventListener("click", function(e) {
-                    e.stopPropagation(); // Evitar que el clic llegue a la ventana principal
-                    var confirmLogout = confirm("¿Estás seguro de que deseas cerrar sesión?");
-                    if (confirmLogout) {
-                        window.location.href = "../Programas/logout.php"; // Redirige al script de cierre de sesión
+        /* Estilo para el recuadro del ícono de cerrar sesión */
+        #logout {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 20px; /* Aumenta el padding para hacer el recuadro más grande */
+            border: 1px solid #ffffff;
+            border-radius: 10px; /* Aumenta el radio de borde para hacer el recuadro más redondeado */
+            cursor: pointer;
+            color: white;
+        }
+
+        /* Estilo para el icono de discapacitado */
+        #disabled-icon {
+            margin-right: 10px;
+        }
+
+        /* Estilo para el texto "Cerrar sesión" */
+        #logout-text {
+            white-space: nowrap;
+            margin-right: 10px;
+        }
+
+        /* Estilo para el texto dentro del botón de hamburguesa */
+        #menu-toggle span {
+            color: white;
+            text-decoration: none;
+        }
+
+        /* Estilo para los elementos del menú desplegable */
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            background-color: #333;
+            padding: 20px; /* Aumenta el padding para hacer el recuadro más grande */
+            border-radius: 10px; /* Aumenta el radio de borde para hacer el recuadro más redondeado */
+            z-index: 1000; /* Ajusta el z-index para que esté por encima */
+        }
+
+        /* Estilo para cada opción del menú desplegable */
+        .dropdown-menu-item {
+            color: white;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ffffff;
+            border-radius: 5px;
+        }
+
+        .dropdown-menu-item:hover {
+            color: #ffffff; /* Cambia el color del texto al pasar el mouse */
+            text-decoration: none !important; /* Quita el subrayado al pasar el ratón */
+        }
+
+        /* Estilo para el botón de cerrar sesión al pasar el ratón */
+        #logout-button:hover {
+            cursor: pointer;
+        }
+
+        /* Estilo para alinear a la derecha */
+        .align-right {
+            margin-left: auto;
+        }
+    </style>
+</head>
+<body>
+<div class="col-md-6 text-center text-lg-right">
+    <div class="align-items-center">
+        <!-- Botón de hamburguesa para desplegar opciones -->
+        <div class="col-md-6 text-center text-lg-right align-right">
+            <div class="d-inline-flex align-items-center">
+                        <!-- Icono de discapacitado -->
+                <div id="disabled-icon">
+                    <i class="fas fa-wheelchair fa-lg text-white"></i>
+                </div>
+                <!-- Menú desplegable -->
+                <div id="dropdown-menu" class="dropdown-menu">
+                    <a href="../Programas\confi.php" class="dropdown-menu-item">
+                        <i class="fas fa-cogs"></i> <!-- Icono de configuración -->
+                        Configurar mi cuenta
+                    </a>
+                    <a href="mis-pedidos.php" class="dropdown-menu-item bm-2">
+                        <i class="fas fa-list"></i> <!-- Icono de lista -->
+                        Mis pedidos
+                    </a>
+                </div>
+
+                <!-- Icono de barras -->
+                <button class="btn btn-link" type="button" id="menu-toggle">
+                    <i class="fas fa-bars fa-lg text-white"></i>
+                    <span>Mi menú</span> <!-- Cambia el texto del botón de hamburguesa -->
+                </button>
+            </div>
+
+            <script>
+                document.getElementById("menu-toggle").addEventListener("click", function() {
+                    var menu = document.getElementById("dropdown-menu");
+                    if (menu.style.display === "block") {
+                        menu.style.display = "none";
+                    } else {
+                        menu.style.display = "block";
                     }
                 });
-                </script>
+            </script>
+
+            <!-- Icono de salir con recuadro y texto -->
+            <div id="logout" class="ml-2" onclick="confirmLogout()">
+                <span id="logout-text">Cerrar Sesión</span>
+                <i id="logout-button" class="fas fa-sign-out-alt fa-lg text-white"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function confirmLogout() {
+        var confirmLogout = confirm("¿Estás seguro de que deseas cerrar sesión?");
+        if (confirmLogout) {
+            window.location.href = "../Programas/logout.php"; // Redirige al script de cierre de sesión
+        }
+    }
+</script>
                 <style>
                     #logout-button:hover {
                         cursor: pointer;
@@ -454,7 +571,6 @@ $result = mysqli_query($link, $sql);
 <!-- Catalog Start -->
 <div class="container-fluid pt-5">
     <div class="container">
-        <h6 class="text-secondary text-uppercase text-center font-weight-medium mb-3">NUESTROS PRODUCTOS</h6>
         <h1 class="display-4 text-center mb-5">Explora nuestros Repuestos</h1>
         <div class="row row-cols-lg-4 row-cols-md-3 justify-content-center">
             <?php
@@ -584,57 +700,45 @@ $result = mysqli_query($link, $sql);
             </div>
             </div>
 
-        <!-- Footer Start -->
-        <div class="container-fluid bg-primary text-white mt-5 pt-5 px-sm-3 px-md-5">
-        <div class="row pt-5">
-            <div class="col-lg-3 col-md-6 mb-5">
-                <a href=""><h1 class="text-secondary mb-3"><span class="text-white">MUNDO</span>3D</h1></a>
-                <p>¡Adéntrate en un mundo tridimensional como nunca antes! ¡Bienvenid@ nuestra página 3D, donde tus sueños cobran vida!</p>
-                <div class="d-flex justify-content-start mt-4">
-                    <a class="btn btn-outline-light rounded-circle text-center mr-2 px-0" style="width: 38px; height: 38px;" href="#"><i class="fas fa-times"></i></a>
-                    <a class="btn btn-outline-light rounded-circle text-center mr-2 px-0" style="width: 38px; height: 38px;" href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a class="btn btn-outline-light rounded-circle text-center mr-2 px-0" style="width: 38px; height: 38px;" href="#"><i class="fab fa-linkedin-in"></i></a>
-                    <a class="btn btn-outline-light rounded-circle text-center mr-2 px-0" style="width: 38px; height: 38px;" href="#"><i class="fab fa-instagram"></i></a>
-                </div>
+<!-- Footer Start -->
+<div class="container-fluid bg-primary text-white mt-5 pt-5 px-sm-3 px-md-5">
+    <div class="row pt-5">
+        <div class="col-lg-4 col-md-6 mb-5">
+            <a href=""><h1 class="text-secondary mb-3"><span class="text-white">MUNDO</span>3D</h1></a>
+            <p>¡Adéntrate en un mundo tridimensional como nunca antes! ¡Bienvenid@ nuestra página 3D, donde tus sueños cobran vida!</p>
+            <div class="d-flex justify-content-start mt-4">
+                <a class="btn btn-outline-light rounded-circle text-center mr-2 px-0" style="width: 38px; height: 38px;" href="#"><i class="fas fa-times"></i></a>
+                <a class="btn btn-outline-light rounded-circle text-center mr-2 px-0" style="width: 38px; height: 38px;" href="#"><i class="fab fa-facebook-f"></i></a>
+                <a class="btn btn-outline-light rounded-circle text-center mr-2 px-0" style="width: 38px; height: 38px;" href="#"><i class="fab fa-linkedin-in"></i></a>
+                <a class="btn btn-outline-light rounded-circle text-center mr-2 px-0" style="width: 38px; height: 38px;" href="#"><i class="fab fa-instagram"></i></a>
             </div>
-            <div class="col-lg-3 col-md-6 mb-5">
-                <h4 class="text-white mb-4">Ponerse en contacto</h4>
-                <p>Contactanos para tener el gusto de atenderlos.</p>
-                <p><i class="fa fa-map-marker-alt mr-2"></i>Calle 15 #31-42 Bogotá, Colombia</p>
-                <p><i class="fab fa-whatsapp mr-2"></i>3124672836</p>
-                <p><i class="fa fa-envelope mr-2"></i>rdtrivino6@misena.edu.co</p>
-            </div>
-            <div class="col-lg-3 col-md-6 mb-5">
-                <h4 class="text-white mb-4">Enlaces Rápidos</h4>
-                <div class="d-flex flex-column justify-content-start">
-                    <a class="text-white mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>INICIO</a>
-                    <a class="text-white mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>CATALOGO</a>
-                    <a class="text-white mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>REPUESTOS</a>
-                    <a class="text-white mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>ARCHIVOS 3D</a>
-                    <a class="text-white" href="#"><i class="fa fa-angle-right mr-2"></i>SERVICIO DE IMPRESION</a>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 mb-5">
-                <h4 class="text-white mb-4">Recibe nuevas noticias</h4>
-                <form action="">
-                    <div class="form-group">
-                        <input type="text" class="form-control border-0" placeholder="Nombre" required="required" />
-                    </div>
-                    <div class="form-group">
-                        <input type="email" class="form-control border-0" placeholder="Email" required="required" />
-                    </div>
-                    <div>
-                        <button class="btn btn-lg btn-secondary btn-block border-0" type="submit">ENVIAR</button>
-                    </div>
-                </form>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-5">
+            <h4 class="text-white mb-4">Ponerse en contacto</h4>
+            <p>Contactanos para tener el gusto de atenderlos.</p>
+            <p><i class="fa fa-map-marker-alt mr-2"></i>Calle 15 #31-42 Bogotá, Colombia</p>
+            <p><i class="fab fa-whatsapp mr-2"></i>3124672836</p>
+            <p><i class="fa fa-envelope mr-2"></i>rdtrivino6@misena.edu.co</p>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-5">
+            <h4 class="text-white mb-4">Enlaces Rápidos</h4>
+            <div class="d-flex flex-column justify-content-start">
+                <a class="text-white mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>INICIO</a>
+                <a class="text-white mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>CATALOGO</a>
+                <a class="text-white mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>REPUESTOS</a>
+                <a class="text-white mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>ARCHIVOS 3D</a>
+                <a class="text-white" href="#"><i class="fa fa-angle-right mr-2"></i>SERVICIO DE IMPRESION</a>
             </div>
         </div>
     </div>
+</div>
+
     <div class="container-fluid bg-dark text-white py-4 px-sm-3 px-md-5">
-        <p class="m-0 text-center text-white">
-            &copy; <a class="text-white font-weight-medium" href="#">MUNDO 3D</a>. Todos los derechos reservados 2024
-        </p>
+    <p class="m-0 text-center text-white">
+        &copy; <a class="text-white font-weight-medium" href="#">MUNDO 3D</a>. Todos los derechos reservados <?php echo date('Y'); ?>
+    </p>
     </div>
+
     <!-- Footer End -->
 
 

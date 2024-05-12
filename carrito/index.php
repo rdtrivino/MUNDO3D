@@ -258,39 +258,42 @@ if (isset($_SESSION['user_id'])) {
             <div class="col-md-6">
                 <div class="cuadro-pago">
                     <h2 class="titulo">Resumen y Pago</h2>
-                    <!-- Subtotal -->
-                    <div class="subtotal">
-                        Total a pagar: <span id="total">$<?php echo number_format($total_a_pagar, 2); ?></span>
-                    </div>
+                    <?php if ($total_a_pagar > 0) { ?>
+                        <!-- Subtotal -->
+                        <div class="subtotal">
+                            Total a pagar: <span id="total">$<?php echo number_format($total_a_pagar, 2); ?></span>
+                        </div>
 
-                    <!-- Otro contenido para métodos de pago -->
-                    <div class="checkoutpro">
-                        <label>Selecciona tu método de pago:</label><br>
-                        <!-- Botón de Stripe -->
-                        <form id="payment-form" action="procesar_pago.php" method="POST">
-                            <!-- Campo oculto para enviar el monto -->
-                            <input type="hidden" name="monto" id="monto" value="<?php echo $total_a_pagar * 100; ?>"> <!-- Convertir a centavos -->
-            
-                            <script
-                                src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-                                data-key="pk_test_51PCx2gRxUN5OHb78Un4Cxh9oWW7Xnk9nzmWDzPqyrjFbfDQP187to1ujx3eAsRByEIU8hHhMwxvgj2FiVq0rGRJ600hiaE79NV"
-                                data-amount="<?php echo $total_a_pagar * 100; ?>" <!-- Convertir a centavos -->
-                                data-name="MUNDO 3D" <!-- Cambiar el nombre de tu tienda -->
-                                data-description="MUNDO 3D" <!-- Cambiar la descripción del pedido -->
-                                data-image="RUTA_DE_LA_IMAGEN_DEL_PRODUCTO" <!-- Cambiar la ruta de la imagen del producto -->
-                                data-locale="auto"
-                                data-currency="USD">
-                            </script>
-                        </form>
-                    </div>
-
-                    <!-- Mostrar los métodos de pago que acepta Stripe -->
+                        <!-- Otro contenido para métodos de pago -->
+                        <div class="checkoutpro">
+                            <label>Selecciona tu método de pago:</label><br>
+                            <!-- Botón de Stripe -->
+                            <form id="payment-form" action="procesar_pago.php" method="POST">
+                                <!-- Campo oculto para enviar el monto -->
+                                <input type="hidden" name="monto" id="monto" value="<?php echo $total_a_pagar * 100; ?>"> <!-- Convertir a centavos -->
+                
+                                <script
+                                    src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                                    data-key="pk_test_51PCx2gRxUN5OHb78Un4Cxh9oWW7Xnk9nzmWDzPqyrjFbfDQP187to1ujx3eAsRByEIU8hHhMwxvgj2FiVq0rGRJ600hiaE79NV"
+                                    data-amount="<?php echo $total_a_pagar * 100; ?>" <!-- Convertir a centavos -->
+                                    data-name="MUNDO 3D" <!-- Cambiar el nombre de tu tienda -->
+                                    data-description="MUNDO 3D" <!-- Cambiar la descripción del pedido -->
+                                    data-image="RUTA_DE_LA_IMAGEN_DEL_PRODUCTO" <!-- Cambiar la ruta de la imagen del producto -->
+                                    data-locale="auto"
+                                    data-currency="USD">
+                                </script>
+                            </form>
+                        </div>
+                        
+                    <?php } else { ?>
+                        <p>No hay productos en el carrito. Por favor, agrega productos para continuar con el pago.</p>
+                    <?php } ?>
                     <br>
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Visa.svg/1200px-Visa.svg.png" alt="Visa" style="width: 50px;">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/MasterCard_Logo.svg/1200px-MasterCard_Logo.svg.png" alt="Mastercard" style="width: 50px;">
-                    <!-- Puedes añadir más imágenes según los métodos de pago que aceptes -->
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Visa.svg/1200px-Visa.svg.png" alt="Visa" style="width: 50px;">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/MasterCard_Logo.svg/1200px-MasterCard_Logo.svg.png" alt="Mastercard" style="width: 50px;">
                 </div>
             </div>
+
         </div>
     </div>
 </div>

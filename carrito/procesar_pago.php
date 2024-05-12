@@ -58,25 +58,26 @@ if (isset($_POST['monto']) && isset($_POST['stripeToken'])) {
             
             // Ejecutar la consulta SQL para actualizar el estado de pago
             if (mysqli_query($link, $sql_update)) {
-                // Transferir los productos del carrito a la tabla de pedidos
-                $sql_transfer = "INSERT INTO pedidos (Pe_Cliente, Pe_Estado, Pe_Producto, Pe_Cantidad, Pe_Fechapedido)
-                SELECT '$Pe_Cliente', 1, productos.Identificador, carrito.cantidad, NOW()
+// Transferir los productos del carrito a la tabla de pedidos cuando el pago sea exitoso
+$sql_transfer = "INSERT INTO pedidos (Pe_Cliente, Pe_Estado, Pe_Producto, Pe_Cantidad, Pe_Fechapedido)
+                SELECT carrito.Pe_Cliente, 1, productos.Identificador, carrito.cantidad, NOW()
                 FROM carrito
                 INNER JOIN productos ON carrito.id_producto = productos.Identificador
                 WHERE carrito.estado_pago = 'pagado' AND carrito.Pe_Cliente = '$Pe_Cliente'";
 
-                
-                // Ejecutar la consulta SQL para transferir productos a la tabla de pedidos
-                if (mysqli_query($link, $sql_transfer)) {
-                    echo "Productos transferidos a la tabla de pedidos con éxito.";
-                } else {
-                    echo "Error al transferir productos a la tabla de pedidos: " . mysqli_error($link);
-                }
-            } else {
-                echo "Error al actualizar el estado de pago en la tabla de carrito: " . mysqli_error($link);
-            }
-        }
+// Ejecutar la consulta de transferencia
+if (mysqli_query($link, $sql_transfer)) {
+    // Si la transferencia es exitosa, puedes realizar otras acciones aquí, como vaciar el carrito
+    $sql_vaciar = "DELETE FROM carrito WHERE estado_pago = 'pagado' AND Pe_Cliente = '$Pe_Cliente'";
+    if (mysqli_query($link, $sql_vaciar)) {
+    } else {
+        echo "Error al vaciar el carrito: " . mysqli_error($link);
+    }
+} else {
+    echo "Error al realizar el pedido: " . mysqli_error($link);
+}
 
+            }}
     } catch (\Stripe\Exception\CardException $e) {
         // El pago fue rechazado
         echo 'Error al procesar el pago: ' . $e->getError()->message;
