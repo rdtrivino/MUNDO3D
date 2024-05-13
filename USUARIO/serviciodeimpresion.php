@@ -251,10 +251,58 @@ mysqli_close($link);
         <!-- Botón de hamburguesa para desplegar opciones -->
         <div class="col-md-6 text-center text-lg-right align-right">
             <div class="d-inline-flex align-items-center">
-                        <!-- Icono de discapacitado -->
-                <div id="disabled-icon">
-                    <i class="fas fa-wheelchair fa-lg text-white"></i>
-                </div>
+<!-- Contenedor principal -->
+<div id="buttons-container" style="display: flex; justify-content: space-between; align-items: center;">
+       <button onclick="disminuirTamano()">-</button>
+        <button onclick="aumentarTamano()">+</button>
+
+    <!-- Icono de silla de ruedas -->
+    <div id="disabled-icon">
+        <i class="fas fa-wheelchair fa-lg text-white" onclick="aumentarTamano()" onmouseover="cambiarCursor(event)" onmouseout="restaurarCursor()"></i>
+    </div>
+</div>
+
+
+<script>
+function aumentarTamano() {
+    // Aumentar el tamaño de fuente de todo el documento
+    var elementos = document.getElementsByTagName("*");
+    for (var i = 0; i < elementos.length; i++) {
+        var elemento = elementos[i];
+        var estilo = window.getComputedStyle(elemento);
+        var fontSize = parseInt(estilo.fontSize);
+        elemento.style.fontSize = (fontSize + 2) + "px"; // Incrementa el tamaño de la fuente en 2px
+    }
+}
+
+function disminuirTamano() {
+    // Disminuir el tamaño de fuente de todo el documento
+    var elementos = document.getElementsByTagName("*");
+    for (var i = 0; i < elementos.length; i++) {
+        var elemento = elementos[i];
+        var estilo = window.getComputedStyle(elemento);
+        var fontSize = parseInt(estilo.fontSize);
+        elemento.style.fontSize = (fontSize - 2) + "px"; // Disminuye el tamaño de la fuente en 2px
+    }
+}
+
+function cambiarCursor(event) {
+    event.target.style.cursor = "pointer"; // Cambiar el cursor a una mano cuando pasa sobre el icono de la silla de ruedas
+}
+
+function restaurarCursor() {
+    document.getElementById("disabled-icon").style.cursor = "auto"; // Restaurar el cursor al valor predeterminado cuando se aleja del icono de la silla de ruedas
+}
+
+// Cambiar el color del icono de la silla de ruedas a blanco
+document.querySelector("#disabled-icon .fa-wheelchair").style.color = "#fff";
+// Obtener los botones y establecer el color de fondo como transparente y el color del texto como blanco
+document.querySelectorAll("#buttons-container button").forEach(function(button) {
+    button.style.backgroundColor = "transparent";
+    button.style.color = "#fff"; // Color blanco
+});
+
+</script>
                 <!-- Menú desplegable -->
                 <div id="dropdown-menu" class="dropdown-menu">
                     <a href="../Programas\confi.php" class="dropdown-menu-item">

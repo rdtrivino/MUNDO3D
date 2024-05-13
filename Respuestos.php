@@ -35,38 +35,312 @@ $result = mysqli_query($link, $sql);
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css" rel="stylesheet">
     <link href="USUARIO/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
     <link href="USUARIO/css/style.css" rel="stylesheet">
+    <link rel="shortcut icon" href="./images/Logo Mundo 3d.png" type="image/x-icon">
+    <link rel="stylesheet" href="./css/normalize.css">
 </head>
 
 <body>
-<!-- Topbar Start -->
-<div class="container-fluid bg-primary py-3">
+<<div class="container-fluid bg-primary py-3">
     <div class="row">
         <div class="col-md-6 text-center text-lg-left mb-2 mb-lg-0">
-            </div>
+        <div id="buttons-container" style="display: flex; justify-content: flex-start; align-items: center;">
+
+<!-- Icono de silla de ruedas -->
+<div id="disabled-icon">
+    <i class="fas fa-wheelchair fa-lg text-white" onclick="aumentarTamano()" onmouseover="cambiarCursor(event)" onmouseout="restaurarCursor()"></i>
+</div>
+
+<!-- Botón para disminuir el tamaño de fuente -->
+<button onclick="disminuirTamano()" style="margin-left: 10px;">-</button>
+
+<!-- Botón para aumentar el tamaño de fuente -->
+<button onclick="aumentarTamano()" style="margin-left: 10px;">+</button>
+
+</div>
+
+
+
+
+
+<script>
+function aumentarTamano() {
+// Aumentar el tamaño de fuente de todo el documento
+var elementos = document.getElementsByTagName("*");
+for (var i = 0; i < elementos.length; i++) {
+    var elemento = elementos[i];
+    var estilo = window.getComputedStyle(elemento);
+    var fontSize = parseInt(estilo.fontSize);
+    elemento.style.fontSize = (fontSize + 2) + "px"; // Incrementa el tamaño de la fuente en 2px
+}
+}
+
+function disminuirTamano() {
+// Disminuir el tamaño de fuente de todo el documento
+var elementos = document.getElementsByTagName("*");
+for (var i = 0; i < elementos.length; i++) {
+    var elemento = elementos[i];
+    var estilo = window.getComputedStyle(elemento);
+    var fontSize = parseInt(estilo.fontSize);
+    elemento.style.fontSize = (fontSize - 2) + "px"; // Disminuye el tamaño de la fuente en 2px
+}
+}
+
+function cambiarCursor(event) {
+event.target.style.cursor = "pointer"; // Cambiar el cursor a una mano cuando pasa sobre el icono de la silla de ruedas
+}
+
+function restaurarCursor() {
+document.getElementById("disabled-icon").style.cursor = "auto"; // Restaurar el cursor al valor predeterminado cuando se aleja del icono de la silla de ruedas
+}
+
+// Cambiar el color del icono de la silla de ruedas a blanco
+document.querySelector("#disabled-icon .fa-wheelchair").style.color = "#fff";
+// Obtener los botones y establecer el color de fondo como transparente y el color del texto como blanco
+document.querySelectorAll("#buttons-container button").forEach(function(button) {
+button.style.backgroundColor = "transparent";
+button.style.color = "#fff"; // Color blanco
+});
+
+</script>
         </div>
         <div class="col-md-6 text-center text-lg-right">
-            <div class="d-inline-flex align-items-center">
-                <!-- Icono de salir -->
-                <script>
-                var logoutButton = document.getElementById("logout-button");
+        <div class="d-inline-flex align-items-center" style="margin-top: -10%;"> <!-- Ajusta el margen superior según sea necesario -->
+            <img src="images/bxs-user-circle.svg" alt="inicio" id="btnModal" class="hamburguer">
+        <section class="hero__container container">
+            <div id="myModal" class="modalContainer">
+                <form action="Programas/login.php" method="POST">
+                <div class="modal-content">
+                    <span class="close">×</span>
+                    <h2>BIENVENIDOS</h2>
+                    <p><span></span></p><br>
+                    <p><span></span></p><br>
+                    <form onsubmit="return validateForm()">
+                      <div class="form-group">
+                        <label for="username">Correo Electrónico:</label>
+                        <input type="text" id="username" name="username" placeholder="Ingrese su usuario"required>
+                      </div>
+                      <div class="form-group">
+                        <label for="password">Contraseña:</label>
+                        <div class="password-input-container">
+                            <input type="password" id="password" name="password" placeholder="Ingrese su contraseña" required>
+                            <span class="password-toggle-icon" onclick="togglePasswordVisibility()">
+                                <img src="../MUNDO 3D/images/bxs-show.svg" alt="Mostrar contraseña" class="show-password-icon">
+                                <img src="../MUNDO 3D/images/bxs-low-vision.svg" alt="Ocultar contraseña" class="hide-password-icon" style="display: none;">
+                            </span>
+                        </div>
+                    <script>
+                        function togglePasswordVisibility() {
+                            var passwordInput = document.getElementById('password');
+                            var showIcon = document.querySelector('.show-password-icon');
+                            var hideIcon = document.querySelector('.hide-password-icon');
+                    
+                            // Cambiar el tipo de input para mostrar/ocultar la contraseña
+                            passwordInput.type = (passwordInput.type === 'password') ? 'text' : 'password';
+                    
+                            // Mostrar/ocultar los íconos en función del estado actual de la contraseña
+                            showIcon.style.display = (passwordInput.type === 'password') ? 'block' : 'none';
+                            hideIcon.style.display = (passwordInput.type === 'password') ? 'none' : 'block';
+                        }
+                        document.addEventListener('DOMContentLoaded', function() {
+                        // Obtener el enlace y el modal
+                        var btnModal = document.getElementById('btnModal');
+                        var modal = document.getElementById('myModal');
 
-                logoutButton.addEventListener("click", function(e) {
-                    e.stopPropagation(); // Evitar que el clic llegue a la ventana principal
-                    var confirmLogout = confirm("¿Estás seguro de que deseas cerrar sesión?");
-                    if (confirmLogout) {
-                        window.location.href = "../Programas/logout.php"; // Redirige al script de cierre de sesión
-                    }
-                });
-                </script>
-                <style>
-                    #logout-button:hover {
-                        cursor: pointer;
-                    }
-                </style>
+                        // Obtener el botón de cerrar dentro del modal
+                        var closeBtn = modal.querySelector('.close');
+
+                        // Mostrar el modal cuando se hace clic en el enlace
+                        btnModal.addEventListener('click', function() {
+                            modal.style.display = 'block';
+                        });
+
+                        // Ocultar el modal cuando se hace clic en el botón de cerrar
+                        closeBtn.addEventListener('click', function() {
+                            modal.style.display = 'none';
+                        });
+
+                        // Ocultar el modal cuando se hace clic fuera de él
+                        window.addEventListener('click', function(event) {
+                            if (event.target === modal) {
+                                modal.style.display = 'none';
+                            }
+                        });
+                    });
+
+                    </script>
+                                                                 
+                        <style>
+                            .password-input-container {
+                                position: relative;
+                            }
+
+                            .password-toggle-icon {
+                                position: absolute;
+                                top: 49%;
+                                right: 20px; /* Ajusta el valor según sea necesario */
+                                transform: translateY(-50%);
+                                cursor: pointer;
+                                width: 20px; /* Ajusta el ancho según sea necesario */
+                                height: 20px; /* Ajusta la altura según sea necesario */
+                                background: url('images/eye-icon.svg') center center no-repeat; /* Ajusta la ruta según sea necesario */
+                            }
+                            .hamburguer {
+                                /* Estilos del botón hamburguesa */
+                                position: absolute;
+                                top: 5%;
+                                right: 30px;
+                                background: #2433bd;
+                                width: 35px;
+                                height: 35px;
+                                cursor: pointer;
+                                border-radius: 40px;
+                                box-shadow: 0 0 6px rgb(230, 230, 236);
+                            }
+                            .modalContainer {
+                                display: none; 
+                                position: fixed; 
+                                z-index: 9999; 
+                                padding-top: 100px;
+                                left: 0;
+                                top: 0;
+                                width: 100%;
+                                height: 100%; 
+                                overflow: auto; 
+                                background-color: rgba(85, 83, 83, 0.534);
+                                background-color: rgba(88, 87, 87, 0.658);
+                                
+                            }
+
+                            .modalContainer .modal-content {
+                                background-color: #6d6d7e;
+                                margin: auto;
+                                padding: 10px;
+                                border: 1px solid rgb(80, 9, 211);
+                                border-top: 15px solid #5869b7;
+                                width: 25%;
+                                border-radius: 30px;
+                                text-align: center;
+                            }
+
+                            .modalContainer .close {
+                                color: #0921aa;
+                                position: absolute;
+                                top: 10px; /* Ajusta la posición vertical según sea necesario */
+                                right: 10px; /* Ajusta la posición horizontal según sea necesario */
+                                font-size: 28px;
+                                font-weight: bold;
+                            }
+
+                            .modalContainer .close:hover,
+                            .modalContainer .close:focus {
+                                color: #000;
+                                text-decoration: none;
+                                cursor: pointer;
+                            }
+
+                            .spread{
+                                transform: translate(0);
+                            }
+
+                            .form-group {
+                                margin-bottom: 20px;
+                            }
+                            .form-group label {
+                                display: block;
+                                margin-bottom: 5px;
+                                font-weight: bold;
+                                color: #001A49;
+                            }
+                            .form-group input {
+                                width: 97%;
+                                padding: 8px;
+                                border-radius: 30px;
+                                border: 1px solid #130a0a;
+                            }
+                            .form-group .password-toggle {
+                                margin-top: 5px;
+                            }
+                            .form-group .password-toggle input {
+                                width: auto;
+                                display: inline-block;
+                                margin-left: 5px;
+                            }
+                            .form-group .password-toggle label {
+                                display: inline;
+                            }
+                            .form-group .forgot-password {
+                                margin-top: 5px;
+                                text-align: left;
+                            }
+                            .form-group .forgot-password a {
+                                color: #0c0808;
+                                text-decoration: none;
+                            }
+                            .forgot-password-link{
+                                color: #1d1313;
+                            }
+                            .button{
+                                border-radius: 30px;
+                                padding: 15px;
+                                background: #2433bd;
+                                font-family: 'Roboto', sans-serif;
+                                cursor: pointer;
+                                font-weight: bold;
+                                color: #eee7e7;
+                            }
+                            .password-toggle-icon {
+                                position: absolute;
+                                top: 50%;
+                                right: 10px;
+                                transform: translateY(-50%);
+                                cursor: pointer;
+                                color: #ffffff;
+                            }
+                            .registro{
+                                border-radius: 30px;
+                                padding: 15px;
+                                background: #2433bd;
+                                font-family: 'Roboto', sans-serif;
+                                cursor: pointer;
+                                font-weight: bold;
+                                color: #ffffff !important;
+                            }
+                            .button, .registro {
+                                width: calc(50% - 20px); /* Ancho de los botones, restando el margen */
+                                margin: 0% auto; /* Margen entre los botones */
+                                border-radius: 30px;
+                                padding: 15px;
+                                background: #2433bd;
+                                font-family: 'Roboto', sans-serif;
+                                cursor: pointer;
+                                font-weight: bold;
+                                color: #eee7e7;
+                            }
+
+
+                        </style>                                            
+                </form>
+                      </div>
+                      <div class="form-group forgot-password">
+                        <a href="../MUNDO 3D/recovery.html" class="forgot-password-link">¿Olvidó su contraseña?</a>
+                      </div>
+                      <button type="submit" class="button">Iniciar sesión</button>
+                      <div class="form-group forgot-password">
+                        <p><span></span></p><br>
+                        <hr size="3px" color="black" />
+                        <p><span></span></p><br>
+                        <a class="forgot-password-link">¿Aún no tienes cuenta?</a>
+                    </div>
+                        <button type="button" class="registro" onclick="window.location.href='registro.html'">Registrate</button>
+                      <div class="form-group forgot-password"></div>
+                    </form>
+                  </div>
+             </div> 
             </div>
         </div>
     </div>
 </div>
+
     <!-- Navbar Start -->
     <div class="container-fluid position-relative nav-bar p-0">
         <div class="container-lg position-relative p-0 px-lg-3" style="z-index: 9;">

@@ -84,31 +84,8 @@ mysqli_close($link);
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-9p0s5vZJMaCC6Tj41/l5pD5Khv2n/bqm5iWVX7fI7YdZCtazjfw7szNTL8l+ZYMlUE/GlbVfLqFsIcunPsfaUg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="shortcut icon" href="../images/Logo Mundo 3d.png" type="image/x-icon">
     <style>
-        /* Estilo para el fondo 3D con figuras geométricas y fondo de imagen */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1; /* Coloca el fondo detrás de otros elementos */
-            background: linear-gradient(to bottom right, red, blue, red, blue);
-            clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 80%);
-        }
-
-        body::after {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background: url('path/to/your-image.png') repeat; /* Puedes reemplazar esto con una imagen de fondo */
-            clip-path: polygon(0 0, 100% 0, 100% 80%, 0% 100%);
-        }
 
         .container {
             position: relative;
@@ -121,6 +98,7 @@ mysqli_close($link);
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
             margin-top: 20px;
             text-align: left;
+            color: #000;
         }
 
         h2 {
@@ -139,31 +117,6 @@ mysqli_close($link);
             float: right; /* Coloca el botón Cancelar en la esquina derecha */
         }
 
-        /* Agrega formas geométricas en 3D */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background: linear-gradient(to bottom right, red, blue, red, blue);
-            clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 80%);
-        }
-
-        body::after {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background: url('path/to/your-image.png') repeat;
-            clip-path: polygon(0 0, 100% 0, 100% 80%, 0% 100%);
-        }
-
         /* Estilo para la clase de campo bloqueado */
         .blocked-field input {
             background-color: #ccc;
@@ -177,7 +130,8 @@ mysqli_close($link);
         }
     </style>
 </head>
-<body>
+<body style="background: linear-gradient(135deg, #2980b9, #2c3e50); color: white;">
+
 
 <div class="container mt-5">
     <h2 class="mb-4">Editar Usuario</h2>
