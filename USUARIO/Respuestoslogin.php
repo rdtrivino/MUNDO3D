@@ -297,7 +297,7 @@ document.querySelectorAll("#buttons-container button").forEach(function(button) 
                         <i class="fas fa-cogs"></i> <!-- Icono de configuración -->
                         Configurar mi cuenta
                     </a>
-                    <a href="mis-pedidos.php" class="dropdown-menu-item bm-2">
+                    <a href="pedidos.php" class="dropdown-menu-item bm-2">
                         <i class="fas fa-list"></i> <!-- Icono de lista -->
                         Mis pedidos
                     </a>

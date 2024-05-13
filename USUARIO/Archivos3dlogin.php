@@ -253,11 +253,11 @@ document.querySelectorAll("#buttons-container button").forEach(function(button) 
 </script>
                 <!-- Menú desplegable -->
                 <div id="dropdown-menu" class="dropdown-menu">
-                    <a href="../Programas\confi.php" class="dropdown-menu-item">
+                    <a href="confi.php" class="dropdown-menu-item">
                         <i class="fas fa-cogs"></i> <!-- Icono de configuración -->
                         Configurar mi cuenta
                     </a>
-                    <a href="mis-pedidos.php" class="dropdown-menu-item bm-2">
+                    <a href="pedidos.php" class="dropdown-menu-item bm-2">
                         <i class="fas fa-list"></i> <!-- Icono de lista -->
                         Mis pedidos
                     </a>
