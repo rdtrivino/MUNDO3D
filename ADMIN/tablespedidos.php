@@ -87,12 +87,8 @@
     <body class="sb-nav-fixed">
     <?php include 'funcionestabladepedidos.php'; ?>
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-            <!-- Navbar Brand-->
+        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
             <a class="navbar-brand ps-3" href="index.php">ADMINISTRADOR</a>
-            <!-- Sidebar Toggle-->
-            <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
-            <!-- Navbar Search-->
-            <!-- Navbar-->
             <ul class="navbar-nav ms-auto me-0 me-md-3 my-2 my-md-0">
                 <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><?php echo $nombreCompleto; ?><i class="fas fa-user fa-fw"></i></a>
@@ -412,7 +408,7 @@
 
 <!-- Modal de Edición -->
 <div class="modal fade" id="editarModal<?php echo $row['Identificador']; ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog" data-backdrop="static">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Editar Pedido</h5>
@@ -478,7 +474,49 @@
         </div>
     </div>
 </div>
+<script>
+    // Función para abrir el modal de edición
+    function abrirModalEditar(identificador) {
+        $("#editarModal" + identificador).modal("show");
+    }
 
+    // Función para enviar los datos del formulario de edición al servidor y guardar los cambios
+    function guardarCambios(identificador) {
+        var formData = $("#formularioEditar" + identificador).serializeArray();
+
+        // Filtrar campos vacíos
+        formData = formData.filter(function(field) {
+            return field.value.trim() !== '';
+        });
+
+        // Convertir formData de nuevo a formato de objeto
+        var filteredData = {};
+        $(formData).each(function(index, obj){
+            filteredData[obj.name] = obj.value;
+        });
+
+        // Envía solo los campos que tienen contenido
+        $.ajax({
+            type: "POST",
+            url: "guardar_cambios.php", // Reemplaza esto con la ruta correcta a tu archivo PHP para guardar cambios
+            data: filteredData,
+            dataType: "json",
+            success: function(response) {
+                // Manejar la respuesta del servidor
+                if (response.success) {
+                    alert("Cambios guardados correctamente.");
+                    $("#editarModal" + identificador).modal("hide");
+                } else {
+                    alert("Error al guardar los cambios: " + response.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr.responseText);
+                alert("Error al procesar la solicitud. Por favor, inténtalo de nuevo más tarde.");
+            }
+        });
+    }
+</script>
 <script>
     // Función para abrir el modal de edición
     function abrirModalEditar(identificador) {

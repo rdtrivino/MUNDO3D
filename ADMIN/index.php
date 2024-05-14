@@ -220,8 +220,8 @@ if ($resultado_pedidos_por_mes && mysqli_num_rows($resultado_pedidos_por_mes) > 
     <body style="background: linear-gradient(135deg, #2980b9, #2c3e50); color: white;">
     <body class="sb-nav-fixed">
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>        
             <a class="navbar-brand ps-3" href="index.php">ADMINISTRADOR</a>
-            <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>        
             <ul class="navbar-nav ms-auto ms-auto me-0 me-md-3 my-2 my-md-0">
                 <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><?php echo $nombreCompleto; ?><i class="fas fa-user fa-fw"></i></a>
