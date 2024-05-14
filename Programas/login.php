@@ -27,23 +27,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                     $_SESSION["user_id"] = $user_data["Usu_Identificacion"];
                     $_SESSION["username"] = $user_data["Usu_Nombre_completo"];
+                    $_SESSION["user_rol"] = $user_data["Usu_Rol"]; // Añadir el rol del usuario a la sesión
 
                     $_SESSION['confirmado'] = true;
 
-                    switch ($user_data["Usu_Rol"]) {
-                        case "1":
-                            header("Location: ../ADMIN/index.php");
-                            exit();
-                        case "2":
-                            header("Location: ../COLABORADOR/index.php");
-                            exit();
-                        case "3":
-                            header("Location: ../USUARIO/Catalogologin.php");
-                            exit();
-                        default:
-                            echo "Rol no válido.";
-                            break;
-                    }
+                    // Redirigir a redireccionar.php después de verificar las credenciales
+                    header("Location: ../redireccionar.php");
+                    exit();
                 } else {
                     echo "<script>alert('Credenciales incorrectas.'); window.location.href = '../Index.html';</script>";
                 }
