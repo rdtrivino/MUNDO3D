@@ -142,7 +142,7 @@ if (mysqli_query($link, $sql_transfer)) {
         setTimeout(function() {
             document.getElementById('modal-exito').style.display = 'none';
             // Redirige a la página del carrito después de cerrar el modal
-            window.location.href = '/../Catalogologin.php';
+            window.location.href = '/../USUARIO/Catalogologin.php';
         }, 3000);
     } else {
         // Muestra el modal de rechazo si el pago fue rechazado

@@ -421,79 +421,92 @@ document.querySelectorAll("#buttons-container button").forEach(function(button) 
                             }
                             </style>
 
-                            <div class="modal fade" id="carritoModal" tabindex="-1" role="dialog" aria-labelledby="carritoModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="carritoModalLabel">Contenido del Carrito</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <!-- Contenedor para mostrar los productos agregados al carrito -->
-                                            <div id="carritoContenido">
-                                            <?php
-                                                $totalPrecioProductos = 0; // Declarar la variable fuera del bloque condicional y asignarle un valor predeterminado
-
-                                                if (isset($_SESSION["user_id"])) {
-                                                    // Obtener el ID del usuario de la sesión
-                                                    $cliente = $_SESSION["user_id"];
-
-                                                    // Consulta para seleccionar los productos del cliente logueado en estado "pendiente"
-                                                    $sql = "SELECT * FROM carrito WHERE Pe_Cliente = '$cliente' AND estado_pago = 'pendiente'";
-                                                    $result = mysqli_query($link, $sql);
-
-                                                    // Contador de productos
-                                                    $contadorProductos = mysqli_num_rows($result);
-
-                                                    // Inicializar el total acumulado del precio de los productos en el carrito
-                                                    $totalPrecioProductos = 0;
-
-                                                    // Verificar si se encontraron productos pendientes
-                                                    if ($contadorProductos > 0) {
-                                                        echo '<div id="productosEnCarrito">';
-                                                        // Iterar sobre los resultados y mostrar cada producto en el modal del carrito
-                                                        while ($row = mysqli_fetch_assoc($result)) {
-                                                            echo '<p>' . $row['nombre'] . ' - Precio: $' . $row['precio'] . '</p>';
-                                                            // Sumar el precio del producto al total acumulado
-                                                            $totalPrecioProductos += $row['precio'];
-                                                            // Puedes mostrar más detalles del producto si lo deseas
-                                                        }
-                                                        echo '</div>';
-                                                    } else {
-                                                        echo "No hay productos pendientes en el carrito.";
-                                                    }
-                                                } else {
-                                                    echo "El usuario no está logueado.";
-                                                }
-                                                ?>
+                                <!-- Modal del carrito -->
+                                <div class="modal fade" id="carritoModal" tabindex="-1" role="dialog" aria-labelledby="carritoModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="carritoModalLabel">Contenido del Carrito</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
                                             </div>
-                                            <!-- Mostrar el total acumulado del precio de todos los productos -->
-                                            <div id="totalProductos"><?php echo "Total a pagar: $" . $totalPrecioProductos; ?></div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                                            <button type="button" class="btn btn-primary" id="irAPagarBtn">Ir a pagar</button>
-                                            <script>
-                                                document.addEventListener("DOMContentLoaded", function() {
-                                                    // Obtener referencia al botón "Ir a pagar"
-                                                    var irAPagarBtn = document.getElementById('irAPagarBtn');
-                                                    
-                                                    // Agregar un evento clic al botón
-                                                    irAPagarBtn.addEventListener('click', function(event) {
-                                                        // Aquí puedes agregar la lógica para redirigir al usuario a la página de pago
-                                                        // Utiliza una ruta absoluta y barras inclinadas hacia adelante
-                                                        window.location.href = '../carrito';
-                                                    });
-                                                });
-                                            </script>
+                                            <div class="modal-body">
+                                                <!-- Contenedor para mostrar los productos agregados al carrito -->
+                                                <div id="carritoContenido">
+                                                    <?php
+                                                    $totalPrecioProductos = 0; // Declarar la variable fuera del bloque condicional y asignarle un valor predeterminado
+
+                                                    if (isset($_SESSION["user_id"])) {
+                                                        // Obtener el ID del usuario de la sesión
+                                                        $cliente = $_SESSION["user_id"];
+
+                                                        // Consulta para seleccionar los productos del cliente logueado en estado "pendiente"
+                                                        $sql = "SELECT * FROM carrito WHERE Pe_Cliente = '$cliente' AND estado_pago = 'pendiente'";
+                                                        $result = mysqli_query($link, $sql);
+
+                                                        // Contador de productos
+                                                        $contadorProductos = mysqli_num_rows($result);
+
+                                                        // Inicializar el total acumulado del precio de los productos en el carrito
+                                                        $totalPrecioProductos = 0;
+
+                                                        // Verificar si se encontraron productos pendientes
+                                                        if ($contadorProductos > 0) {
+                                                            echo '<table class="table table-bordered">';
+                                                            echo '<thead style="background-color: #f2f2f2;">'; // Cambia el color de fondo de la fila de encabezado
+                                                            echo '<tr>';
+                                                            echo '<th style="text-align: center; color: #333;">Nombre del Producto</th>'; // Cambia el color del texto y alinea al centro en la primera columna
+                                                            echo '<th style="text-align: center; color: #333;">Precio</th>'; // Cambia el color del texto y alinea al centro en la segunda columna
+                                                            echo '</tr>';
+                                                            echo '</thead>';
+                                                            echo '<tbody>';
+                                                            // Iterar sobre los resultados y mostrar cada producto en el modal del carrito
+                                                            while ($row = mysqli_fetch_assoc($result)) {
+                                                                echo '<tr>';
+                                                                echo '<td style="text-align: left;">' . $row['nombre'] . '</td>'; // Alinea el texto a la izquierda en la primera columna
+                                                                echo '<td style="text-align: right;">$' . $row['precio'] . '</td>'; // Alinea el texto a la derecha en la segunda columna
+                                                                echo '</tr>';
+                                                                // Sumar el precio del producto al total acumulado
+                                                                $totalPrecioProductos += $row['precio'];
+                                                            }
+                                                            echo '</tbody>';
+                                                            echo '</table>';
+                                                        } else {
+                                                            echo "No hay productos pendientes en el carrito.";
+                                                        }
+                                                    } else {
+                                                        echo "El usuario no está logueado.";
+                                                    }
+                                                    ?>
+                                                </div>
+                                                <!-- Mostrar el total acumulado del precio de todos los productos -->
+                                                <div id="totalProductos" style="text-align: right; font-weight: bold; color: blue;"><?php echo "Total a pagar: $" . $totalPrecioProductos; ?></div> <!-- Cambia el color del texto, lo alinea a la derecha y lo hace negrita -->
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                                <button type="button" class="btn btn-primary" id="irAPagarBtn">Ir a pagar</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <script>
+
+                                <script>
+                                    document.addEventListener("DOMContentLoaded", function() {
+                                        // Obtener referencia al botón "Ir a pagar"
+                                        var irAPagarBtn = document.getElementById('irAPagarBtn');
+                                        
+                                        // Agregar un evento clic al botón
+                                        irAPagarBtn.addEventListener('click', function(event) {
+                                            // Aquí puedes agregar la lógica para redirigir al usuario a la página de pago
+                                            // Utiliza una ruta absoluta y barras inclinadas hacia adelante
+                                            window.location.href = 'redireccionar.php';
+                                        });
+                                    });
+                                </script>
+                                <script>
+
                                 // Variable para almacenar los productos en el carrito
                                 var carritoProductos = [];
 
@@ -616,109 +629,158 @@ document.querySelectorAll("#buttons-container button").forEach(function(button) 
                 });
             }
         </script>
-<!-- Catalog Start -->
-<div class="container-fluid pt-5">
-    <div class="container">
-        <h1 class="display-4 text-center mb-5">Explora nuestros Repuestos</h1>
-        <div class="row row-cols-lg-4 row-cols-md-3 justify-content-center">
-            <?php
-            // Consulta a la base de datos para obtener productos de la categoría 5
-            $sql = "SELECT * FROM productos WHERE Pro_Categoria = 2";
-            $result = mysqli_query($link, $sql);
-
-            // Verificar si se encontraron productos en la categoría 1b
-            if (mysqli_num_rows($result) > 0) {
-                // Iterar sobre los resultados y mostrar cada producto
-                while ($row = mysqli_fetch_assoc($result)) {
-            ?>
-                <div class="col mb-4">
-                    <div class="card h-100 position-relative">
+            <div class="container-fluid pt-5">
+                <div class="container">
+                    <h1 class="display-4 text-center mb-5">Explora nuestro catálogo</h1>
+                    <div class="row row-cols-lg-4 row-cols-md-3 justify-content-center">
                         <?php
-                        // Convertir la imagen binaria a una URL de imagen
-                        $imageData = base64_encode($row['imagen_principal']);
-                        $imageSrc = 'data:image/jpeg;base64,' . $imageData;
+                        // Consulta a la base de datos para obtener productos de la categoría 5
+                        $sql = "SELECT * FROM productos WHERE Pro_Categoria = 2";
+                        $result = mysqli_query($link, $sql);
+
+                        // Verificar si se encontraron productos en la categoría 1b
+                        if (mysqli_num_rows($result) > 0) {
+                            // Iterar sobre los resultados y mostrar cada producto
+                            while ($row = mysqli_fetch_assoc($result)) {
                         ?>
-                        <img src="<?php echo $imageSrc; ?>" class="card-img-top" alt="<?php echo $row['Pro_Nombre']; ?>">
-                        <div class="overlay position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
-                            <?php if ($row['Pro_Cantidad'] > 0) { ?>
-                                <a href="#" class="btn btn-primary btn-lg agregarAlCarritoBtn" data-id="<?php echo $row['Identificador']; ?>" data-name="<?php echo $row['Pro_Nombre']; ?>" data-price="<?php echo $row['Pro_PrecioVenta']; ?>"><i class="fas fa-cart-plus"></i></a>
-                            <?php } else { ?>
-                                <button class="btn btn-primary btn-lg agregarAlCarritoBtn" disabled><i class="fas fa-cart-plus"></i></button>
-                            <?php } ?>
-                            <a href="#" class="btn btn-secondary btn-lg mx-2 detallesBtn" data-toggle="modal" data-target="#detalleProductoModal" data-id="<?php echo $row['Identificador']; ?>" data-name="<?php echo $row['Pro_Nombre']; ?>" data-description="<?php echo $row['Pro_Descripcion']; ?>" data-price="<?php echo $row['Pro_PrecioVenta']; ?>" style="background-color: #E42E24;"><i class="fas fa-search"></i></a>
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title"><?php echo $row['Pro_Nombre']; ?></h5>
-                            <p class="card-text"><?php echo $row['Pro_Descripcion']; ?></p>
-                            <?php if ($row['Pro_Cantidad'] == 0) { ?>
-                                <p class="text-danger lead">Agotado</p>
-                            <?php } else { ?>
-                                <div class="price-box">
-                                    <p class="price"><?php echo $row['Pro_PrecioVenta']; ?></p>
+                                <div class="col mb-4">
+                                    <div class="card h-100 position-relative">
+                                        <?php
+                                        // Convertir la imagen binaria a una URL de imagen
+                                        $imageData = base64_encode($row['imagen_principal']);
+                                        $imageSrc = 'data:image/jpeg;base64,' . $imageData;
+                                        ?>
+                                        <img src="<?php echo $imageSrc; ?>" class="card-img-top" style="height: 200px; object-fit: cover;" alt="<?php echo $row['Pro_Nombre']; ?>">
+                                        <div class="overlay position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
+                                            <?php if ($row['Pro_Cantidad'] > 0) { ?>
+                                                <a href="#" class="btn btn-primary btn-lg agregarAlCarritoBtn" data-id="<?php echo $row['Identificador']; ?>" data-name="<?php echo $row['Pro_Nombre']; ?>" data-price="<?php echo $row['Pro_PrecioVenta']; ?>"><i class="fas fa-cart-plus"></i></a>
+                                            <?php } else { ?>
+                                                <button class="btn btn-primary btn-lg agregarAlCarritoBtn" disabled><i class="fas fa-cart-plus"></i></button>
+                                            <?php } ?>
+                                            <a href="#" class="btn btn-secondary btn-lg mx-2 detallesBtn" data-toggle="modal" data-target="#detalleProductoModal" data-id="<?php echo $row['Identificador']; ?>" data-name="<?php echo $row['Pro_Nombre']; ?>" data-description="<?php echo $row['Pro_Descripcion']; ?>" data-price="<?php echo $row['Pro_PrecioVenta']; ?>" style="background-color: #E42E24;"><i class="fas fa-search"></i></a>
+                                        </div>
+                                        <div class="card-body">
+                                            <h5 class="card-title mb-2" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"><?php echo $row['Pro_Nombre']; ?></h5>
+                                            <?php if ($row['Pro_Cantidad'] == 0) { ?>
+                                                <div class="price-box text-center" style="position: absolute; bottom: 0; left: 0; right: 0;"> <!-- Centra el cuadro del precio -->
+                                                    <div style="display: inline-block; padding: 5px; border-radius: 5px;"> <!-- Cuadro rojo -->
+                                                        <span style="color: red; font-weight: bold; font-size: 20px;">Agotado</span> <!-- Establece el color del texto "Agotado" en rojo y aumenta el tamaño de la fuente -->
+                                                    </div>
+                                                </div>
+                                            <?php } else { ?>
+                                                <div class="price-box text-center" style="position: absolute; bottom: 0; left: 0; right: 0;"> <!-- Centra el cuadro del precio -->
+                                                    <div style="display: inline-block; padding: 5px; border-radius: 5px;"> <!-- Cuadro rojo -->
+                                                        <p class="price mb-0" style="color: black;">USD-<?php echo $row['Pro_PrecioVenta']; ?></p> <!-- Establece el color del precio en negro -->
+                                                    </div>
+                                                </div>
+                                            <?php } ?>
+                                        </div>
+                                    </div>
                                 </div>
-                            <?php } ?>
+                        <?php
+                            }
+                        } else {
+                            echo "No se encontraron productos en la categoría 1b.";
+                        }
+                        ?>
+                    </div>
+                </div>
+            </div>
+            <style>
+                .card.h-100 {
+                    height: 300px !important; /* Ajusta esta altura según tus necesidades */
+                }
+            </style>
+
+
+                <!-- Modal de detalles del producto -->
+                <div class="modal fade" id="detalleProductoModal" tabindex="-1" role="dialog" aria-labelledby="detalleProductoModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="detalleProductoModalLabel">Detalles del Producto</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row align-items-center">
+                                    <div class="col-md-6 text-center">
+                                        <!-- Imagen del producto -->
+                                        <img src="" id="productoImagen" class="img-fluid img-thumbnail mb-3" alt="Producto">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <!-- Descripción y precio del producto -->
+                                        <h4 id="productoNombre"></h4>
+                                        <p><strong>Descripción:</strong> <span id="productoDescripcion"></span></p>
+                                        <p><strong>Precio:</strong> <span id="productoPrecio" class="text-danger"></span></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal" style="background-color: #E42E24;">Cerrar</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            <?php
+
+                <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    var detallesBtns = document.querySelectorAll('.detallesBtn');
+
+                    detallesBtns.forEach(function(btn) {
+                        btn.addEventListener('click', function(event) {
+                            event.preventDefault();
+                            var productName = this.getAttribute('data-name');
+                            var productDescription = this.getAttribute('data-description');
+                            var productPrice = this.getAttribute('data-price');
+                            var productImage = this.closest('.card').querySelector('.card-img-top').getAttribute('src');
+
+                            cargarDetallesProducto(productName, productDescription, productPrice, productImage);
+                        });
+                    });
+                });
+
+                function cargarDetallesProducto(productName, productDescription, productPrice, productImage) {
+                    var modalImagen = document.getElementById('productoImagen');
+                    var modalNombre = document.getElementById('productoNombre');
+                    var modalDescripcion = document.getElementById('productoDescripcion');
+                    var modalPrecio = document.getElementById('productoPrecio');
+
+                    modalImagen.src = productImage;
+                    modalNombre.textContent = productName;
+                    modalDescripcion.textContent = productDescription;
+                    modalPrecio.textContent = "$" + productPrice;
+
+                    $('#detalleProductoModal').modal('show');
                 }
-            } else {
-                echo "No se encontraron productos en la categoría 1b.";
-            }
-            ?>
-        </div>
-    </div>
-</div>
-
-<!-- Modal de detalles del producto -->
-<div class="modal fade" id="detalleProductoModal" tabindex="-1" role="dialog" aria-labelledby="detalleProductoModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="detalleProductoModalLabel">Detalles del Producto</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body" id="detalleProductoBody">
-                <!-- Aquí se cargarán los detalles del producto -->
-            </div>
-            <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal" style="background-color: #E42E24;">Cerrar</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        var detallesBtns = document.querySelectorAll('.detallesBtn');
-
-        detallesBtns.forEach(function(btn) {
-            btn.addEventListener('click', function(event) {
-                event.preventDefault();
-                var productId = this.getAttribute('data-id');
-                var productName = this.getAttribute('data-name');
-                var productDescription = this.getAttribute('data-description');
-                var productPrice = this.getAttribute('data-price');
-                var productImage = this.closest('.card').querySelector('.card-img-top').getAttribute('src');
-
-                cargarDetallesProducto(productName, productDescription, productPrice, productImage);
-            });
-        });
-    });
-
-    function cargarDetallesProducto(productName, productDescription, productPrice, productImage) {
-        var modalBody = document.getElementById('detalleProductoBody');
-        modalBody.innerHTML = `
-            <img src="${productImage}" class="img-fluid mb-3" alt="${productName}">
-            <h4>${productName}</h4>
-            <p><strong>Descripción:</strong> ${productDescription}</p>
-            <p><strong>Precio:</strong> $${productPrice}</p>`;
-        $('#detalleProductoModal').modal('show');
-    }
-</script>
+            </script>
             <style>
+                /* Estilo para el modal */
+                .modal-content {
+                    width: 80%; /* Ancho del modal */
+                    max-width: 100%; /* Ancho máximo */
+                }
+
+                /* Estilo para el contenedor de la imagen */
+                .img-container {
+                    height: 400px; /* Altura del contenedor de la imagen */
+                    overflow: hidden; /* Ocultar el desbordamiento */
+                }
+
+                /* Estilo para la imagen del producto */
+                #productoImagen {
+                    width: 100%; /* Ancho del 100% del contenedor */
+                    height: auto; /* Altura automática para mantener la proporción */
+                    transition: transform 0.3s ease; /* Transición suave de 0.3 segundos */
+                }
+
+                /* Estilo para el precio del producto */
+                #productoPrecio {
+                    color: #dc3545; /* Color rojo para el precio */
+                    font-weight: bold; /* Texto en negrita */
+                }
+                        
                 /* Estilo para la superposición */
             .overlay {
                 background-color: rgba(0, 0, 0, 0.5);
@@ -753,7 +815,7 @@ document.querySelectorAll("#buttons-container button").forEach(function(button) 
     <div class="row pt-5">
         <div class="col-lg-4 col-md-6 mb-5">
             <a href=""><h1 class="text-secondary mb-3"><span class="text-white">MUNDO</span>3D</h1></a>
-            <p>¡Adéntrate en un mundo tridimensional como nunca antes! ¡Bienvenid@ nuestra página 3D, donde tus sueños cobran vida!</p>
+            <p>¡Adéntrate en un mundo tridimensional como nunca antes! ¡Bienvenid@ a nuestra página 3D, donde tus sueños cobran vida!</p>
             <div class="d-flex justify-content-start mt-4">
                 <a class="btn btn-outline-light rounded-circle text-center mr-2 px-0" style="width: 38px; height: 38px;" href="#"><i class="fas fa-times"></i></a>
                 <a class="btn btn-outline-light rounded-circle text-center mr-2 px-0" style="width: 38px; height: 38px;" href="#"><i class="fab fa-facebook-f"></i></a>
@@ -771,11 +833,10 @@ document.querySelectorAll("#buttons-container button").forEach(function(button) 
         <div class="col-lg-4 col-md-6 mb-5">
             <h4 class="text-white mb-4">Enlaces Rápidos</h4>
             <div class="d-flex flex-column justify-content-start">
-                <a class="text-white mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>INICIO</a>
-                <a class="text-white mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>CATALOGO</a>
-                <a class="text-white mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>REPUESTOS</a>
-                <a class="text-white mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>ARCHIVOS 3D</a>
-                <a class="text-white" href="#"><i class="fa fa-angle-right mr-2"></i>SERVICIO DE IMPRESION</a>
+                <a class="text-white mb-2" href="Catalogologin.php"><i class="fa fa-angle-right mr-2"></i>CATALOGO</a>
+                <a class="text-white mb-2" href="Repuestoslogin.php"><i class="fa fa-angle-right mr-2"></i>REPUESTOS</a>
+                <a class="text-white mb-2" href="Archivos3dlogin.php"><i class="fa fa-angle-right mr-2"></i>ARCHIVOS 3D</a>
+                <a class="text-white" href="serviciodeimpresion.php"><i class="fa fa-angle-right mr-2"></i>SERVICIO DE IMPRESION</a>
             </div>
         </div>
     </div>

@@ -387,17 +387,17 @@ document.querySelectorAll("#buttons-container button").forEach(function(button) 
                 while ($row = mysqli_fetch_assoc($result)) {
             ?>
                     <div class="col-lg-3 col-md-6 product">
-                        <div class="card mb-5 h-100">
-                            <img src="data:image/jpeg;base64,<?php echo base64_encode($row['imagen_principal']); ?>" class="card-img-top" alt="<?php echo $row["Pro_Nombre"]; ?>">
+                        <div class="card mb-5" style="height: 250px;"> <!-- Reduciendo la altura a 300px -->
+                            <img src="data:image/jpeg;base64,<?php echo base64_encode($row['imagen_principal']); ?>" class="card-img-top" style="height: 150px; object-fit: cover;" alt="<?php echo $row["Pro_Nombre"]; ?>"> <!-- También ajusta la altura de la imagen -->
                             <div class="card-body">
-                                <h5 class="card-title"><?php echo $row["Pro_Nombre"]; ?></h5>
-                                <p class="card-text"><?php echo $row["Pro_Descripcion"]; ?></p>
-                                <a href="#" class="btn btn-secondary" data-toggle="modal" data-target="#modal_<?php echo $row["Identificador"]; ?>">Ver Detalles</a>
-                                <a href="#" class="btn btn-success" onclick="downloadImage('<?php echo base64_encode($row['imagen_principal']); ?>', '<?php echo $row["Pro_Nombre"]; ?>.jpg')">Descargar</a>
+                                <h5 class="card-title" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><?php echo $row["Pro_Nombre"]; ?></h5>
+                                <div class="d-flex justify-content-between">
+                                    <a href="#" class="btn btn-primary mr-2" data-toggle="modal" data-target="#modal_<?php echo $row["Identificador"]; ?>">Detalles</a>
+                                    <a href="#" class="btn btn-danger" onclick="downloadImage('<?php echo base64_encode($row['imagen_principal']); ?>', '<?php echo $row["Pro_Nombre"]; ?>.jpg')">Descargar</a>
+                                </div>
                             </div>
                         </div>
                     </div>
-
                     <!-- Modal -->
                     <div class="modal fade" id="modal_<?php echo $row["Identificador"]; ?>" tabindex="-1" role="dialog" aria-labelledby="modalTitle_<?php echo $row["Identificador"]; ?>" aria-hidden="true">
                         <div class="modal-dialog modal-lg" role="document">
@@ -466,11 +466,10 @@ function downloadImage(imageData, imageName) {
         <div class="col-lg-4 col-md-6 mb-5">
             <h4 class="text-white mb-4">Enlaces Rápidos</h4>
             <div class="d-flex flex-column justify-content-start">
-                <a class="text-white mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>INICIO</a>
-                <a class="text-white mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>CATALOGO</a>
-                <a class="text-white mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>REPUESTOS</a>
-                <a class="text-white mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>ARCHIVOS 3D</a>
-                <a class="text-white" href="#"><i class="fa fa-angle-right mr-2"></i>SERVICIO DE IMPRESION</a>
+                <a class="text-white mb-2" href="Catalogologin.php"><i class="fa fa-angle-right mr-2"></i>CATALOGO</a>
+                <a class="text-white mb-2" href="Respuestoslogin.php"><i class="fa fa-angle-right mr-2"></i>REPUESTOS</a>
+                <a class="text-white mb-2" href="Archivos3dlogin.php"><i class="fa fa-angle-right mr-2"></i>ARCHIVOS 3D</a>
+                <a class="text-white" href="serviciodeimpresion.php"><i class="fa fa-angle-right mr-2"></i>SERVICIO DE IMPRESION</a>
             </div>
         </div>
     </div>

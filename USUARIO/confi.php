@@ -128,17 +128,32 @@ mysqli_close($link);
             color: #28a745; /* Color verde para el ícono de editar */
             margin-left: 5px;
         }
+        .home-icon {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      cursor: pointer;
+      z-index: 999;
+    }
+
+    .home-icon img {
+      width: 50px; 
+      height: 50px;
+      background-color: white; 
+      padding: 5px; 
+      border-radius: 50%; 
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+    }
     </style>
 </head>
 <body style="background: linear-gradient(135deg, #2980b9, #2c3e50); color: white;">
-
-
+<a href="Catalogologin.php" class="home-icon">
+  <img src="/../MUNDO 3D/images/bx-home-alt-2.svg" alt="Ir a Inicio">
+</a>
 <div class="container mt-5">
     <h2 class="mb-4">Editar Usuario</h2>
 
-    <!-- Formulario para editar datos del usuario -->
     <form id="editForm" method="POST" action="confi.php">
-        <!-- Agrega tus campos de formulario aquí -->
         <div class="mb-3 blocked-field">
             <label for="edit-identificacion" class="form-label">Identificación:</label>
             <input type="text" class="form-control" name="Usu_Identificacion" id="edit-identificacion" value="<?php echo $identificacion; ?>" readonly>
@@ -181,15 +196,10 @@ mysqli_close($link);
     </form>
 </div>
 
-<!-- Bootstrap JS (opcional, pero necesario para algunas funcionalidades de Bootstrap) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<!-- FontAwesome JS (opcional, pero necesario para los íconos) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" integrity="sha512-ZvXQm6N5NnTEUKtT+5K/l5qZsHH1Tl0Qy0PvjBq0MBa6dHAsz5Ri9sn4yBYpq7i6miEjzCLODjKue6Gv1OMJLQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
     function guardarCambios() {
-        // Aquí puedes agregar el código para enviar los datos del formulario al servidor mediante AJAX
-        // Puedes usar la librería jQuery para simplificar la solicitud AJAX
-        // Ejemplo básico con jQuery:
             $.post($("#editForm").attr("action"), $("#editForm").serialize(), function(response) {
                 console.log(response);
                 window.location.href = 'Catalogologin.php';
@@ -197,10 +207,6 @@ mysqli_close($link);
 
     }
 </script>
-
-</body>
-</html>
-
 
 </body>
 </html>
