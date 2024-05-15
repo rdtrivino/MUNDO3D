@@ -123,7 +123,7 @@
     <script>
         setTimeout(function() {
             window.location.href = '../carrito'; // Reemplaza '../carrito' con la URL a la que deseas redireccionar
-        }, 5000); // Cambia 5000 a la cantidad de tiempo en milisegundos que deseas esperar antes de redireccionar (en este caso, 5 segundos)
+        }, 3000); // Cambia 5000 a la cantidad de tiempo en milisegundos que deseas esperar antes de redireccionar (en este caso, 5 segundos)
     </script>
 </head>
 <body>
