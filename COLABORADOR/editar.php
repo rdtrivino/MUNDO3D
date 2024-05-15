@@ -178,7 +178,7 @@
 
                         <div class="form-group">
                             <label for="imagen">Imagen Actual</label>
-                            <img src="../images/imagenes_pedidos/' . $fila['nombre_imagen'] . '" alt="" style="width: 200px; height: 200px;">
+                            <img src=' . $fila['nombre_imagen'] . ' alt="" style="width: 200px; height: 200px;">
                             <label for="imagen">Nueva Imagen
                                 <input type="file" class="form-control-file" id="imagen" name="imagen" accept="image/*">
                             </label>
@@ -251,7 +251,7 @@
 
                         <div class="form-group">
                             <label for="imagen">Imagen Actual</label>
-                            <img src="../images/imagenes_catalogo/' . $fila['nombre_imagen'] . '" alt="" style="width: 200px; height: 200px;">
+                            <img src=' . $fila['nombre_imagen'] . ' alt="" style="width: 200px; height: 200px;">
                             <label for="imagen">Nueva Imagen
                             <input type="file" class="form-control-file" id="imagen" name="imagen" accept="image/*">
                             </label>
