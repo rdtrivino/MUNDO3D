@@ -6100,6 +6100,7 @@ button.bg-primary:focus {
 /* barra de navegacion azul */
 .bg-secondary {
   background-color: #0047AB !important;
+  
 }
 
 a.bg-secondary:hover, a.bg-secondary:focus,

@@ -46,64 +46,34 @@ $result = mysqli_query($link, $sql);
     <div class="row">
         <div class="col-md-6 text-center text-lg-left mb-2 mb-lg-0">
 <div id="buttons-container" style="display: flex; justify-content: flex-start; align-items: center;">
-
-    <!-- Icono de silla de ruedas -->
-    <div id="disabled-icon">
-        <i class="fas fa-wheelchair fa-lg text-white" onclick="aumentarTamano()" onmouseover="cambiarCursor(event)" onmouseout="restaurarCursor()"></i>
+<div class="container">
+    <div id="disabled-icon" class="mb-3">
+        <i class="fas fa-wheelchair fa-lg text-white"></i>
     </div>
-
-    <!-- Botón para disminuir el tamaño de fuente -->
-    <button onclick="disminuirTamano()" style="margin-left: 10px;">-</button>
-
-    <!-- Botón para aumentar el tamaño de fuente -->
-    <button onclick="aumentarTamano()" style="margin-left: 10px;">+</button>
-
+    <a href="#" class="font-small text-white font-weight-bold mr-3">A</a>
+    <a href="#" class="font-medium text-white font-weight-bold mr-3">A</a>
+    <a href="#" class="font-large text-white font-weight-bold">A</a>
 </div>
-
-
-
-
-
-<script>
-function aumentarTamano() {
-    // Aumentar el tamaño de fuente de todo el documento
-    var elementos = document.getElementsByTagName("*");
-    for (var i = 0; i < elementos.length; i++) {
-        var elemento = elementos[i];
-        var estilo = window.getComputedStyle(elemento);
-        var fontSize = parseInt(estilo.fontSize);
-        elemento.style.fontSize = (fontSize + 2) + "px"; // Incrementa el tamaño de la fuente en 2px
-    }
+</div>
+<style>.font-small {
+    font-size: 14px;
 }
 
-function disminuirTamano() {
-    // Disminuir el tamaño de fuente de todo el documento
-    var elementos = document.getElementsByTagName("*");
-    for (var i = 0; i < elementos.length; i++) {
-        var elemento = elementos[i];
-        var estilo = window.getComputedStyle(elemento);
-        var fontSize = parseInt(estilo.fontSize);
-        elemento.style.fontSize = (fontSize - 2) + "px"; // Disminuye el tamaño de la fuente en 2px
-    }
+.font-medium {
+    font-size: 16px;
 }
 
-function cambiarCursor(event) {
-    event.target.style.cursor = "pointer"; // Cambiar el cursor a una mano cuando pasa sobre el icono de la silla de ruedas
+.font-large {
+    font-size: 20px;
 }
 
-function restaurarCursor() {
-    document.getElementById("disabled-icon").style.cursor = "auto"; // Restaurar el cursor al valor predeterminado cuando se aleja del icono de la silla de ruedas
+#disabled-icon {
+    display: inline-block; /* Para alinear verticalmente con los enlaces */
 }
 
-// Cambiar el color del icono de la silla de ruedas a blanco
-document.querySelector("#disabled-icon .fa-wheelchair").style.color = "#fff";
-// Obtener los botones y establecer el color de fondo como transparente y el color del texto como blanco
-document.querySelectorAll("#buttons-container button").forEach(function(button) {
-    button.style.backgroundColor = "transparent";
-    button.style.color = "#fff"; // Color blanco
-});
-
-</script>
+a {
+    text-decoration: none; /* Eliminar subrayado de los enlaces */
+}</style>
 
         </div>
         <div class="col-md-6 text-center text-lg-right">
@@ -398,29 +368,23 @@ document.querySelectorAll("#buttons-container button").forEach(function(button) 
         </div>
     </div>
     <!-- Navbar End -->
-    <div class="page-header container-fluid bg-secondary pt-2 pt-lg-5 pb-2 mb-5">
-    <div class="container py-5">
-        <div class="row align-items-center py-4">
-            <div class="col-md-6 text-center text-md-left">
-                <h1 class="mb-4 mb-md-0 text-white">CATÁLOGO</h1>
+    <div class="page-header container-fluid pt-2 pt-lg-5 pb-2 mb-5">
+            <div class="container py-5">
+            <div class="row align-items-center py-4">
             </div>
-            <div class="col-md-6 text-center text-md-right">
-                <div class="d-inline-flex align-items-center">
-                    <form class="form-inline mr-3">
-                        <input class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Buscar" oninput="searchProducts(this.value)">
-                        <!-- Cambiar el evento a "input" para que se ejecute cada vez que se ingresa una letra -->
-                        <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Buscar</button>
-                    </form>
-                    
-                        </div>
-                        
-                    </div>
-                    
-                </div>
-                
-            </div>
-            
         </div>
+    </div>
+        <style>
+        .page-header {
+            position: relative;
+            background-color: black; /* Un tono de gris oscuro */
+            color: white; /* Texto blanco */
+            clip-path: polygon(0 0, 100% 0, 100% 50%, 50% 75%, 0 50%);
+            border-top: 5px solid white; /* Línea blanca en la parte superior */
+            z-index: -1;
+        }
+
+    </style>
         
         <script>
             function searchProducts(searchTerm) {
@@ -449,105 +413,126 @@ document.querySelectorAll("#buttons-container button").forEach(function(button) 
                 });
             }
         </script>
-<!-- Catalog Start -->
-<div class="container-fluid pt-5">
-    <div class="container">
-        <h1 class="display-4 text-center mb-5">Explora nuestro catálogo</h1>
-        <div class="row row-cols-lg-4 row-cols-md-3 justify-content-center">
-            <?php
-            // Consulta a la base de datos para obtener productos de la categoría 5
-            $sql = "SELECT * FROM productos WHERE Pro_Categoria = 1";
-            $result = mysqli_query($link, $sql);
-
-            // Verificar si se encontraron productos en la categoría 1b
-            if (mysqli_num_rows($result) > 0) {
-                // Iterar sobre los resultados y mostrar cada producto
-                while ($row = mysqli_fetch_assoc($result)) {
-            ?>
-                <div class="col mb-4">
-                    <div class="card h-100 position-relative">
+            <div class="container-fluid pt-5">
+                <div class="container">
+                    <h1 class="display-4 text-center mb-5">Explora nuestro catálogo</h1>
+                    <div class="row row-cols-lg-4 row-cols-md-3 justify-content-center">
                         <?php
-                        // Convertir la imagen binaria a una URL de imagen
-                        $imageData = base64_encode($row['imagen_principal']);
-                        $imageSrc = 'data:image/jpeg;base64,' . $imageData;
+                        // Consulta a la base de datos para obtener productos de la categoría 5
+                        $sql = "SELECT * FROM productos WHERE Pro_Categoria = 1";
+                        $result = mysqli_query($link, $sql);
+
+                        // Verificar si se encontraron productos en la categoría 1b
+                        if (mysqli_num_rows($result) > 0) {
+                            // Iterar sobre los resultados y mostrar cada producto
+                            while ($row = mysqli_fetch_assoc($result)) {
                         ?>
-                        <img src="<?php echo $imageSrc; ?>" class="card-img-top" alt="<?php echo $row['Pro_Nombre']; ?>">
-                        <div class="overlay position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
-                            <?php if ($row['Pro_Cantidad'] > 0) { ?>
-                            <?php } ?>
-                            <a href="#" class="btn btn-secondary btn-lg mx-2 detallesBtn" data-toggle="modal" data-target="#detalleProductoModal" data-id="<?php echo $row['Identificador']; ?>" data-name="<?php echo $row['Pro_Nombre']; ?>" data-description="<?php echo $row['Pro_Descripcion']; ?>" data-price="<?php echo $row['Pro_PrecioVenta']; ?>" style="background-color: #E42E24;"><i class="fas fa-search"></i></a>
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title"><?php echo $row['Pro_Nombre']; ?></h5>
-                            <p class="card-text"><?php echo $row['Pro_Descripcion']; ?></p>
-                            <?php if ($row['Pro_Cantidad'] == 0) { ?>
-                                <p class="text-danger lead">Agotado</p>
-                            <?php } else { ?>
-                                <div class="price-box">
-                                    <p class="price"><?php echo $row['Pro_PrecioVenta']; ?></p>
+                                <div class="col mb-4">
+                                    <div class="card h-100 position-relative">
+                                        <?php
+                                        // Convertir la imagen binaria a una URL de imagen
+                                        $imageData = base64_encode($row['imagen_principal']);
+                                        $imageSrc = 'data:image/jpeg;base64,' . $imageData;
+                                        ?>
+                                        <img src="<?php echo $imageSrc; ?>" class="card-img-top" style="height: 200px; object-fit: cover;" alt="<?php echo $row['Pro_Nombre']; ?>">
+                                        <div class="overlay position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
+                                            <a href="#" class="btn btn-secondary btn-lg mx-2 detallesBtn" data-toggle="modal" data-target="#detalleProductoModal" data-id="<?php echo $row['Identificador']; ?>" data-name="<?php echo $row['Pro_Nombre']; ?>" data-description="<?php echo $row['Pro_Descripcion']; ?>" data-price="<?php echo $row['Pro_PrecioVenta']; ?>" style="background-color: #E42E24;"><i class="fas fa-search"></i></a>
+                                        </div>
+                                        <div class="card-body">
+                                            <h5 class="card-title mb-2" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"><?php echo $row['Pro_Nombre']; ?></h5>
+                                            <?php if ($row['Pro_Cantidad'] == 0) { ?>
+                                                <div class="price-box text-center" style="position: absolute; bottom: 0; left: 0; right: 0;"> <!-- Centra el cuadro del precio -->
+                                                    <div style="display: inline-block;padding: 5px; border-radius: 5px;"> <!-- Cuadro rojo -->
+                                                        <span style="color: red; font-weight: bold; font-size: 20px;">Agotado</span> <!-- Establece el color del texto "Agotado" en rojo y aumenta el tamaño de la fuente -->
+                                                    </div>
+                                                </div>
+                                            <?php } else { ?>
+                                                <div class="price-box text-center" style="position: absolute; bottom: 0; left: 0; right: 0;"> <!-- Centra el cuadro del precio -->
+                                                    <div style="display: inline-block; padding: 5px; border-radius: 5px;"> <!-- Cuadro rojo -->
+                                                        <p class="price mb-0" style="color: black;">USD-<?php echo $row['Pro_PrecioVenta']; ?></p> <!-- Establece el color del precio en negro -->
+                                                    </div>
+                                                </div>
+                                            <?php } ?>
+                                        </div>
+                                    </div>
                                 </div>
-                            <?php } ?>
+                        <?php
+                            }
+                        } else {
+                            echo "No se encontraron productos en la categoría 1b.";
+                        }
+                        ?>
+                    </div>
+                </div>
+            </div>
+            <style>
+                .card.h-100 {
+                    height: 300px !important; /* Ajusta esta altura según tus necesidades */
+                }
+            </style>
+
+ <!-- Modal de detalles del producto -->
+ <div class="modal fade" id="detalleProductoModal" tabindex="-1" role="dialog" aria-labelledby="detalleProductoModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="detalleProductoModalLabel">Detalles del Producto</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row align-items-center">
+                                    <div class="col-md-6 text-center">
+                                        <!-- Imagen del producto -->
+                                        <img src="" id="productoImagen" class="img-fluid img-thumbnail mb-3" alt="Producto">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <!-- Descripción y precio del producto -->
+                                        <h4 id="productoNombre"></h4>
+                                        <p><strong>Descripción:</strong> <span id="productoDescripcion"></span></p>
+                                        <p><strong>Precio:</strong> <span id="productoPrecio" class="text-danger"></span></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal" style="background-color: #E42E24;">Cerrar</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            <?php
+
+                <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    var detallesBtns = document.querySelectorAll('.detallesBtn');
+
+                    detallesBtns.forEach(function(btn) {
+                        btn.addEventListener('click', function(event) {
+                            event.preventDefault();
+                            var productName = this.getAttribute('data-name');
+                            var productDescription = this.getAttribute('data-description');
+                            var productPrice = this.getAttribute('data-price');
+                            var productImage = this.closest('.card').querySelector('.card-img-top').getAttribute('src');
+
+                            cargarDetallesProducto(productName, productDescription, productPrice, productImage);
+                        });
+                    });
+                });
+
+                function cargarDetallesProducto(productName, productDescription, productPrice, productImage) {
+                    var modalImagen = document.getElementById('productoImagen');
+                    var modalNombre = document.getElementById('productoNombre');
+                    var modalDescripcion = document.getElementById('productoDescripcion');
+                    var modalPrecio = document.getElementById('productoPrecio');
+
+                    modalImagen.src = productImage;
+                    modalNombre.textContent = productName;
+                    modalDescripcion.textContent = productDescription;
+                    modalPrecio.textContent = "$" + productPrice;
+
+                    $('#detalleProductoModal').modal('show');
                 }
-            } else {
-                echo "No se encontraron productos en la categoría 1b.";
-            }
-            ?>
-        </div>
-    </div>
-</div>
-
-<!-- Modal de detalles del producto -->
-<div class="modal fade" id="detalleProductoModal" tabindex="-1" role="dialog" aria-labelledby="detalleProductoModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="detalleProductoModalLabel">Detalles del Producto</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body" id="detalleProductoBody">
-                <!-- Aquí se cargarán los detalles del producto -->
-            </div>
-            <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal" style="background-color: #E42E24;">Cerrar</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        var detallesBtns = document.querySelectorAll('.detallesBtn');
-
-        detallesBtns.forEach(function(btn) {
-            btn.addEventListener('click', function(event) {
-                event.preventDefault();
-                var productId = this.getAttribute('data-id');
-                var productName = this.getAttribute('data-name');
-                var productDescription = this.getAttribute('data-description');
-                var productPrice = this.getAttribute('data-price');
-                var productImage = this.closest('.card').querySelector('.card-img-top').getAttribute('src');
-
-                cargarDetallesProducto(productName, productDescription, productPrice, productImage);
-            });
-        });
-    });
-
-    function cargarDetallesProducto(productName, productDescription, productPrice, productImage) {
-        var modalBody = document.getElementById('detalleProductoBody');
-        modalBody.innerHTML = `
-            <img src="${productImage}" class="img-fluid mb-3" alt="${productName}">
-            <h4>${productName}</h4>
-            <p><strong>Descripción:</strong> ${productDescription}</p>
-            <p><strong>Precio:</strong> $${productPrice}</p>`;
-        $('#detalleProductoModal').modal('show');
-    }
-</script>
+            </script>
             <style>
                 /* Estilo para la superposición */
             .overlay {
