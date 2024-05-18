@@ -149,6 +149,7 @@ eventClick:function(event){
     $('input[name=evento').val(event.title);
     $('input[name=fecha_inicio').val(event.start.format('DD-MM-YYYY'));
     $('input[name=fecha_fin').val(event.end.format("DD-MM-YYYY"));
+    $('input[name=observaciones').val(event.observaciones);
 
     $("#modalUpdateEvento").modal();
   },
@@ -167,10 +168,6 @@ eventClick:function(event){
 
 </script>
 
-
-<!--------- WEB DEVELOPER ------>
-<!--------- URIAN VIERA   ----------->
-<!--------- PORTAFOLIO:  https://blogangular-c7858.web.app  -------->
 
 </body>
 </html>

@@ -17,13 +17,16 @@ $seteando_f_final  = date('Y-m-d', strtotime($f_fin));
 $fecha_fin1        = strtotime($seteando_f_final."+ 1 days");
 $fecha_fin         = date('Y-m-d', ($fecha_fin1));  
 $color_evento      = $_REQUEST['color_evento'];
+$observaciones     = $_REQUEST['observaciones'];
 
 $UpdateProd = ("UPDATE calendario 
     SET evento ='$evento',
         fecha_inicio ='$fecha_inicio',
         fecha_fin ='$fecha_fin',
         color_evento ='$color_evento',
+        observaciones ='$observaciones',
         usuario ='$usuario_id'
+        
     WHERE identificador='".$idEvento."' ");
 $result = mysqli_query($link, $UpdateProd);
 

@@ -11,19 +11,28 @@
 		<div class="form-group">
 			<label for="evento" class="col-sm-12 control-label">Nombre del Evento</label>
 			<div class="col-sm-10">
-				<input type="text" class="form-control" name="evento" id="evento" placeholder="Nombre del Evento" required/>
+				<input type="text" class="form-control" name="evento" id="evento" placeholder="Máximo 25 carácteres" maxlength="25" required/>
 			</div>
 		</div>
+
     <div class="form-group">
       <label for="fecha_inicio" class="col-sm-12 control-label">Fecha Inicio</label>
       <div class="col-sm-10">
         <input type="text" class="form-control" name="fecha_inicio" id="fecha_inicio" placeholder="Fecha Inicio">
       </div>
     </div>
+
     <div class="form-group">
       <label for="fecha_fin" class="col-sm-12 control-label">Fecha Final</label>
       <div class="col-sm-10">
         <input type="text" class="form-control" name="fecha_fin" id="fecha_fin" placeholder="Fecha Final">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="observaciones" class="col-sm-12 control-label">Observaciones</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" name="observaciones" id="observaciones" placeholder="Máximo 50 carácteres" maxlength="50">
       </div>
     </div>
 

@@ -2,7 +2,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Actualizar mi Eventox</h5>
+        <h5 class="modal-title">Actualizar mi Evento</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -21,10 +21,18 @@
         <input type="text" class="form-control" name="fecha_inicio" id="fecha_inicio" placeholder="Fecha Inicio">
       </div>
     </div>
+
     <div class="form-group">
       <label for="fecha_fin" class="col-sm-12 control-label">Fecha Final</label>
       <div class="col-sm-10">
         <input type="text" class="form-control" name="fecha_fin" id="fecha_fin" placeholder="Fecha Final">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="observaciones" class="col-sm-12 control-label">Observaciones</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" name="observaciones" id="observaciones" placeholder="Máximo 50 carácteres">
       </div>
     </div>
 
