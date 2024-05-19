@@ -85,6 +85,7 @@ mysqli_close($link);
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="shortcut icon" href="../images/Logo Mundo 3d.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
 
         .container {
@@ -144,58 +145,140 @@ mysqli_close($link);
       border-radius: 50%; 
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
     }
+    .blocked-field input[readonly] {
+        cursor: not-allowed;
+    }
+    .text-white { color: white; }
+        .font-weight-bold { font-weight: bold; }
+        .mr-3 { margin-right: 1rem; }
+        .font-small { font-size: 14px; }
+        .font-medium { font-size: 16px; }
+        .font-large { font-size: 20px; }
+        #buttons-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
     </style>
 </head>
 <body style="background: linear-gradient(135deg, #2980b9, #2c3e50); color: white;">
 <a href="Catalogologin.php" class="home-icon">
   <img src="/../MUNDO 3D/images/bx-home-alt-2.svg" alt="Ir a Inicio">
 </a>
+
+<div id="buttons-container" style="display: flex; justify-content: flex-end; align-items: center;">
+        <a href="#" class="font-small text-white font-weight-bold mr-3" onclick="adjustFontSize('small')">A</a>
+        <a href="#" class="font-medium text-white font-weight-bold mr-3" onclick="adjustFontSize('medium')">A</a>
+        <a href="#" class="font-large text-white font-weight-bold mr-3" onclick="adjustFontSize('large')">A</a>
+        <div id="disabled-icon">
+            <i class="fas fa-wheelchair fa-lg text-white" onclick="aumentarTamano()" onmouseover="cambiarCursor(event)" onmouseout="restaurarCursor()"></i>
+        </div>
+    </div>
 <div class="container mt-5">
     <h2 class="mb-4">Editar Usuario</h2>
 
-    <form id="editForm" method="POST" action="confi.php">
+    <form id="editForm" method="POST" action="confi.php" class="row">
+        <div class="col-md-6 col-sm-12">
         <div class="mb-3 blocked-field">
-            <label for="edit-identificacion" class="form-label">Identificación:</label>
-            <input type="text" class="form-control" name="Usu_Identificacion" id="edit-identificacion" value="<?php echo $identificacion; ?>" readonly>
-            <i class="fas fa-edit edit-icon"></i>
+                <label for="edit-identificacion" class="form-label">Identificación:</label>
+                <input type="text" class="form-control" name="Usu_Identificacion" id="edit-identificacion" value="<?php echo $identificacion; ?>" readonly title="Este campo no se puede editar">
+            </div>
+            <div class="mb-3 blocked-field">
+                <label for="edit-nombre" class="form-label">Nombre Completo:</label>
+                <input type="text" class="form-control" name="Usu_Nombre_completo" id="edit-nombre" value="<?php echo $nombre; ?>" readonly title="Este campo no se puede editar">
+            </div>
+            <div class="mb-3">
+                <label for="edit-telefono" class="form-label">Teléfono:</label>
+                <input type="text" class="form-control" name="Usu_Telefono" id="edit-telefono" value="<?php echo $telefono; ?>">
+            </div>
+            <div class="mb-3">
+                <label for="edit-email" class="form-label">Email:</label>
+                <input type="text" class="form-control" name="Usu_Email" id="edit-email" value="<?php echo $email; ?>">
+            </div>
         </div>
-        <div class="mb-3 blocked-field">
-            <label for="edit-nombre" class="form-label">Nombre Completo:</label>
-            <input type="text" class="form-control" name="Usu_Nombre_completo" id="edit-nombre" value="<?php echo $nombre; ?>" readonly>
-            <i class="fas fa-edit edit-icon"></i>
-        </div>
-        <div class="mb-3">
-            <label for="edit-telefono" class="form-label">Teléfono:</label>
-            <input type="text" class="form-control" name="Usu_Telefono" id="edit-telefono" value="<?php echo $telefono; ?>">
-            <i class="fas fa-edit edit-icon"></i>
-        </div>
-        <div class="mb-3">
-            <label for="edit-email" class="form-label">Email:</label>
-            <input type="text" class="form-control" name="Usu_Email" id="edit-email" value="<?php echo $email; ?>">
-            <i class="fas fa-edit edit-icon"></i>
-        </div>
-        <div class="mb-3">
-            <label for="edit-ciudad" class="form-label">Ciudad:</label>
-            <input type="text" class="form-control" name="Usu_Ciudad" id="edit-ciudad" value="<?php echo $ciudad; ?>">
-            <i class="fas fa-edit edit-icon"></i>
-        </div>
-        <div class="mb-3">
-            <label for="edit-direccion" class="form-label">Dirección:</label>
-            <input type="text" class="form-control" name="Usu_Direccion" id="edit-direccion" value="<?php echo $direccion; ?>">
-            <i class="fas fa-edit edit-icon"></i>
-        </div>
-        <div class="mb-3">
-            <label for="edit-nueva-contrasena" class="form-label">Nueva Contraseña:</label>
-            <input type="password" class="form-control" name="Nueva_Contrasena" id="edit-nueva-contrasena">
-            <i class="fas fa-edit edit-icon"></i>
+        <div class="col-md-6 col-sm-12">
+            <div class="mb-3">
+                <label for="edit-ciudad" class="form-label">Ciudad:</label>
+                <input type="text" class="form-control" name="Usu_Ciudad" id="edit-ciudad" value="<?php echo $ciudad; ?>">
+            </div>
+            <div class="mb-3">
+                <label for="edit-direccion" class="form-label">Dirección:</label>
+                <input type="text" class="form-control" name="Usu_Direccion" id="edit-direccion" value="<?php echo $direccion; ?>">
+            </div>
+            <div class="mb-3">
+                <label for="edit-contrasena" class="form-label">Nueva Contraseña:</label>
+                <input type="password" class="form-control" name="Nueva_Contrasena" id="edit-contrasena">
+            </div>
+            <div class="mb-3">
+                <label for="edit-confirm-contrasena" class="form-label">Confirmar Contraseña:</label>
+                <input type="password" class="form-control" name="Nueva_Contrasena" id="edit-confirm-contrasena" onkeyup="checkPasswordMatch();">
+                <div class="invalid-feedback" id="password-error" style="display: none;">Las contraseñas no coinciden.</div>
+            </div>
         </div>
 
-
-        <button type="button" class="btn btn-danger cancel-btn" onclick="window.location.href='Catalogologin.php'">Cancelar</button>
-        <button type="button" class="btn btn-primary" onclick="guardarCambios()">Guardar Cambios</button>
+        <div class="col-12">
+            <button type="button" class="btn btn-danger cancel-btn" onclick="window.location.href='Catalogologin.php'">Cancelar</button>
+            <button type="button" class="btn btn-primary" onclick="guardarCambios()">Guardar Cambios</button>
+        </div>
     </form>
 </div>
 
+
+<script>
+    function checkPasswordMatch() {
+        var password = document.getElementById("edit-contrasena").value;
+        var confirmPassword = document.getElementById("edit-confirm-contrasena").value;
+        var error = document.getElementById("password-error");
+
+        if (password !== confirmPassword) {
+            error.style.display = "block";
+        } else {
+            error.style.display = "none";
+        }
+    }
+        function adjustFontSize(size) {
+            const body = document.body;
+            body.classList.remove('font-small', 'font-medium', 'font-large');
+
+            switch(size) {
+                case 'small':
+                    body.classList.add('font-small');
+                    break;
+                case 'medium':
+                    body.classList.add('font-medium');
+                    break;
+                case 'large':
+                    body.classList.add('font-large');
+                    break;
+            }
+        }
+
+        function aumentarTamano() {
+            // Funcionalidad específica para el icono de silla de ruedas
+        }
+
+        function cambiarCursor(event) {
+            event.target.style.cursor = 'pointer';
+        }
+
+        function restaurarCursor(event) {
+            event.target.style.cursor = 'default';
+        }
+
+        function checkPasswordMatch() {
+            const password = document.getElementById('edit-contrasena').value;
+            const confirmPassword = document.getElementById('edit-confirm-contrasena').value;
+            const passwordError = document.getElementById('password-error');
+
+            if (password !== confirmPassword) {
+                passwordError.style.display = 'block';
+            } else {
+                passwordError.style.display = 'none';
+            }
+        }
+
+        document.querySelector("#disabled-icon .fa-wheelchair").style.color = "#fff";
+</script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" integrity="sha512-ZvXQm6N5NnTEUKtT+5K/l5qZsHH1Tl0Qy0PvjBq0MBa6dHAsz5Ri9sn4yBYpq7i6miEjzCLODjKue6Gv1OMJLQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>

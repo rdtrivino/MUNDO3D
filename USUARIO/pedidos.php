@@ -96,6 +96,7 @@ function obtenerNombreEstado($IdentificadorEstado, $conexion) {
   <link rel="shortcut icon" href="../images/Logo Mundo 3d.png" type="image/x-icon">
   <!-- Bootstrap CSS -->
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <style>
     /* Estilos adicionales personalizados */
     .table-responsive {
@@ -132,13 +133,31 @@ function obtenerNombreEstado($IdentificadorEstado, $conexion) {
       border-radius: 50%; 
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
     }
-
+    .text-white { color: white; }
+        .font-weight-bold { font-weight: bold; }
+        .mr-3 { margin-right: 1rem; }
+        .font-small { font-size: 14px; }
+        .font-medium { font-size: 16px; }
+        .font-large { font-size: 20px; }
+        #buttons-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
   </style>
 </head>
 <body style="background: linear-gradient(135deg, #2980b9, #2c3e50); color: white;">
 <a href="Catalogologin.php" class="home-icon">
   <img src="/../MUNDO 3D/images/bx-home-alt-2.svg" alt="Ir a Inicio">
 </a>
+<div id="buttons-container" style="display: flex; justify-content: flex-end; align-items: center;">
+        <a href="#" class="font-small text-white font-weight-bold mr-3" onclick="adjustFontSize('small')">A</a>
+        <a href="#" class="font-medium text-white font-weight-bold mr-3" onclick="adjustFontSize('medium')">A</a>
+        <a href="#" class="font-large text-white font-weight-bold mr-3" onclick="adjustFontSize('large')">A</a>
+        <div id="disabled-icon">
+            <i class="fas fa-wheelchair fa-lg text-white" onclick="aumentarTamano()" onmouseover="cambiarCursor(event)" onmouseout="restaurarCursor()"></i>
+        </div>
+    </div>
 <div class="container-fluid mt-4">
   <h2 class="text-center mb-4">Mis Pedidos</h2>
   <div class="table-responsive">
@@ -188,5 +207,49 @@ function obtenerNombreEstado($IdentificadorEstado, $conexion) {
     </table>
   </div>
 </div>
+<Script>
+  function adjustFontSize(size) {
+            const body = document.body;
+            body.classList.remove('font-small', 'font-medium', 'font-large');
+
+            switch(size) {
+                case 'small':
+                    body.classList.add('font-small');
+                    break;
+                case 'medium':
+                    body.classList.add('font-medium');
+                    break;
+                case 'large':
+                    body.classList.add('font-large');
+                    break;
+            }
+        }
+
+        function aumentarTamano() {
+            // Funcionalidad específica para el icono de silla de ruedas
+        }
+
+        function cambiarCursor(event) {
+            event.target.style.cursor = 'pointer';
+        }
+
+        function restaurarCursor(event) {
+            event.target.style.cursor = 'default';
+        }
+
+        function checkPasswordMatch() {
+            const password = document.getElementById('edit-contrasena').value;
+            const confirmPassword = document.getElementById('edit-confirm-contrasena').value;
+            const passwordError = document.getElementById('password-error');
+
+            if (password !== confirmPassword) {
+                passwordError.style.display = 'block';
+            } else {
+                passwordError.style.display = 'none';
+            }
+        }
+
+        document.querySelector("#disabled-icon .fa-wheelchair").style.color = "#fff";
+</Script>
 </body>
 </html>

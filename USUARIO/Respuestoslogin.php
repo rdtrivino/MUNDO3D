@@ -122,6 +122,7 @@ $result = mysqli_query($link, $sql);
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css" rel="stylesheet">
     <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
+    <link href="css\misestilos.css" rel="stylesheet">
 </head>
 
 <body>
@@ -161,77 +162,7 @@ $result = mysqli_query($link, $sql);
                 </script>
             </div>
         </div>
-        <style>
-        /* Estilo para el contenedor que envuelve al botón de cerrar sesión */
-        .align-items-center {
-            display: flex;
-            align-items: center;
-        }
-
-        /* Estilo para el recuadro del ícono de cerrar sesión */
-        #logout {
-            display: inline-flex;
-            align-items: center;
-            padding: 10px 20px; /* Aumenta el padding para hacer el recuadro más grande */
-            border: 1px solid #ffffff;
-            border-radius: 10px; /* Aumenta el radio de borde para hacer el recuadro más redondeado */
-            cursor: pointer;
-            color: white;
-        }
-
-        /* Estilo para el icono de discapacitado */
-        #disabled-icon {
-            margin-right: 10px;
-        }
-
-        /* Estilo para el texto "Cerrar sesión" */
-        #logout-text {
-            white-space: nowrap;
-            margin-right: 10px;
-        }
-
-        /* Estilo para el texto dentro del botón de hamburguesa */
-        #menu-toggle span {
-            color: white;
-            text-decoration: none;
-        }
-
-        /* Estilo para los elementos del menú desplegable */
-        .dropdown-menu {
-            display: none;
-            position: absolute;
-            background-color: #333;
-            padding: 20px; /* Aumenta el padding para hacer el recuadro más grande */
-            border-radius: 10px; /* Aumenta el radio de borde para hacer el recuadro más redondeado */
-            z-index: 1000; /* Ajusta el z-index para que esté por encima */
-        }
-
-        /* Estilo para cada opción del menú desplegable */
-        .dropdown-menu-item {
-            color: white;
-            text-decoration: none;
-            display: block;
-            margin-bottom: 10px;
-            padding: 10px;
-            border: 1px solid #ffffff;
-            border-radius: 5px;
-        }
-
-        .dropdown-menu-item:hover {
-            color: #ffffff; /* Cambia el color del texto al pasar el mouse */
-            text-decoration: none !important; /* Quita el subrayado al pasar el ratón */
-        }
-
-        /* Estilo para el botón de cerrar sesión al pasar el ratón */
-        #logout-button:hover {
-            cursor: pointer;
-        }
-
-        /* Estilo para alinear a la derecha */
-        .align-right {
-            margin-left: auto;
-        }
-    </style>
+        
 </head>
 <body>
 <div class="col-md-6 text-center text-lg-right">
@@ -239,110 +170,93 @@ $result = mysqli_query($link, $sql);
         <!-- Botón de hamburguesa para desplegar opciones -->
         <div class="col-md-6 text-center text-lg-right align-right">
             <div class="d-inline-flex align-items-center">
-<!-- Contenedor principal -->
-<div id="buttons-container" style="display: flex; justify-content: space-between; align-items: center;">
-       <button onclick="disminuirTamano()">-</button>
-        <button onclick="aumentarTamano()">+</button>
+                        <!-- Icono de discapacitado -->
+                        <div id="buttons-container" style="display: flex; justify-content: space-between; align-items: center;">
+                            <a href="#" class="font-small text-white font-weight-bold mr-3" onclick="adjustFontSize('small')">A</a>
+                            <a href="#" class="font-medium text-white font-weight-bold mr-3" onclick="adjustFontSize('medium')">A</a>
+                            <a href="#" class="font-large text-white font-weight-bold mr-3" onclick="adjustFontSize('large')">A</a>
 
-    <!-- Icono de silla de ruedas -->
-    <div id="disabled-icon">
-        <i class="fas fa-wheelchair fa-lg text-white" onclick="aumentarTamano()" onmouseover="cambiarCursor(event)" onmouseout="restaurarCursor()"></i>
-    </div>
-</div>
+                            <div id="disabled-icon">
+                                <i class="fas fa-wheelchair fa-lg text-white" onclick="aumentarTamano()" onmouseover="cambiarCursor(event)" onmouseout="restaurarCursor()"></i>
+                            </div>
+                        </div>
+                        <script>
+                            function adjustFontSize(size) {
+                                const body = document.body;
+                                body.classList.remove('font-small', 'font-medium', 'font-large');
 
+                                switch(size) {
+                                    case 'small':
+                                        body.classList.add('font-small');
+                                        break;
+                                    case 'medium':
+                                        body.classList.add('font-medium');
+                                        break;
+                                    case 'large':
+                                        body.classList.add('font-large');
+                                        break;
+                                }
+                            }
 
-<script>
-function aumentarTamano() {
-    // Aumentar el tamaño de fuente de todo el documento
-    var elementos = document.getElementsByTagName("*");
-    for (var i = 0; i < elementos.length; i++) {
-        var elemento = elementos[i];
-        var estilo = window.getComputedStyle(elemento);
-        var fontSize = parseInt(estilo.fontSize);
-        elemento.style.fontSize = (fontSize + 2) + "px"; // Incrementa el tamaño de la fuente en 2px
-    }
-}
+                            function aumentarTamano() {
+                                // Funcionalidad específica para el icono de silla de ruedas
+                            }
 
-function disminuirTamano() {
-    // Disminuir el tamaño de fuente de todo el documento
-    var elementos = document.getElementsByTagName("*");
-    for (var i = 0; i < elementos.length; i++) {
-        var elemento = elementos[i];
-        var estilo = window.getComputedStyle(elemento);
-        var fontSize = parseInt(estilo.fontSize);
-        elemento.style.fontSize = (fontSize - 2) + "px"; // Disminuye el tamaño de la fuente en 2px
-    }
-}
+                            function cambiarCursor(event) {
+                                event.target.style.cursor = 'pointer';
+                            }
 
-function cambiarCursor(event) {
-    event.target.style.cursor = "pointer"; // Cambiar el cursor a una mano cuando pasa sobre el icono de la silla de ruedas
-}
-
-function restaurarCursor() {
-    document.getElementById("disabled-icon").style.cursor = "auto"; // Restaurar el cursor al valor predeterminado cuando se aleja del icono de la silla de ruedas
-}
-
-// Cambiar el color del icono de la silla de ruedas a blanco
-document.querySelector("#disabled-icon .fa-wheelchair").style.color = "#fff";
-// Obtener los botones y establecer el color de fondo como transparente y el color del texto como blanco
-document.querySelectorAll("#buttons-container button").forEach(function(button) {
-    button.style.backgroundColor = "transparent";
-    button.style.color = "#fff"; // Color blanco
-});
-
-</script>
+                            function restaurarCursor(event) {
+                                event.target.style.cursor = 'default';
+                            }
+                        </script>
                 <!-- Menú desplegable -->
-                <div id="dropdown-menu" class="dropdown-menu">
-                    <a href="confi.php" class="dropdown-menu-item">
-                        <i class="fas fa-cogs"></i> <!-- Icono de configuración -->
-                        Configurar mi cuenta
-                    </a>
-                    <a href="pedidos.php" class="dropdown-menu-item bm-2">
-                        <i class="fas fa-list"></i> <!-- Icono de lista -->
-                        Mis pedidos
-                    </a>
+                <div class="dropdown" style="position: relative; white-space: nowrap;">
+                            <div id="dropdown-menu" class="dropdown-menu dropdown-menu-right" aria-labelledby="menu-toggle" style="background-color: black;">                                <a href="confi.php" class="dropdown-menu-item">
+                                    <i class="fas fa-cogs"></i> <!-- Icono de configuración -->
+                                        Configurar mi cuenta
+                                </a>
+                                <a href="pedidos.php" class="dropdown-menu-item bm-2">
+                                    <i class="fas fa-list"></i> <!-- Icono de lista -->
+                                        Mis pedidos
+                                </a>
+                                <a href="#" class="dropdown-menu-item" onclick="confirmLogout()">
+                                    <i class="fas fa-sign-out-alt fa-lg text-white"></i> <!-- Icono de cerrar sesión -->
+                                        Cerrar Sesión
+                                </a>
+                            </div>
+                            <!-- Icono de barras -->
+                            <button class="btn btn-link" type="button" id="menu-toggle">
+                                <i class="fas fa-bars fa-lg text-white"></i>
+                                <span>Mi menú</span> <!-- Cambia el texto del botón de hamburguesa -->
+                            </button>
+                        </div>
+
+                        <script>
+                            document.getElementById("menu-toggle").addEventListener("click", function(event) {
+                                var menu = document.getElementById("dropdown-menu");
+                                menu.style.display = (menu.style.display === "block") ? "none" : "block";
+                                event.stopPropagation(); // Evita que el clic en el botón se propague al documento
+                            });
+
+                            // Event listener para cerrar el menú desplegable cuando se hace clic fuera de él
+                            document.addEventListener("click", function(event) {
+                                var menu = document.getElementById("dropdown-menu");
+                                var menuToggle = document.getElementById("menu-toggle");
+                                if (!menu.contains(event.target) && event.target !== menuToggle) {
+                                    menu.style.display = "none";
+                                }
+                            });
+
+                            function confirmLogout() {
+                                var confirmLogout = confirm("¿Estás seguro de que deseas cerrar sesión?");
+                                if (confirmLogout) {
+                                    window.location.href = "../Programas/logout.php"; // Redirige al script de cierre de sesión
+                                }
+                            }
+                        </script>
+                    </div>
                 </div>
-
-                <!-- Icono de barras -->
-                <button class="btn btn-link" type="button" id="menu-toggle">
-                    <i class="fas fa-bars fa-lg text-white"></i>
-                    <span>Mi menú</span> <!-- Cambia el texto del botón de hamburguesa -->
-                </button>
-            </div>
-
-            <script>
-                document.getElementById("menu-toggle").addEventListener("click", function() {
-                    var menu = document.getElementById("dropdown-menu");
-                    if (menu.style.display === "block") {
-                        menu.style.display = "none";
-                    } else {
-                        menu.style.display = "block";
-                    }
-                });
-            </script>
-
-            <!-- Icono de salir con recuadro y texto -->
-            <div id="logout" class="ml-2" onclick="confirmLogout()">
-                <span id="logout-text">Cerrar Sesión</span>
-                <i id="logout-button" class="fas fa-sign-out-alt fa-lg text-white"></i>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    function confirmLogout() {
-        var confirmLogout = confirm("¿Estás seguro de que deseas cerrar sesión?");
-        if (confirmLogout) {
-            window.location.href = "../Programas/logout.php"; // Redirige al script de cierre de sesión
-        }
-    }
-</script>
-                <style>
-                    #logout-button:hover {
-                        cursor: pointer;
-                    }
-                </style>
             </div>
         </div>
     </div>
@@ -415,11 +329,6 @@ document.querySelectorAll("#buttons-container button").forEach(function(button) 
                                     ?>
                                 </span>
                             </a>
-                            <style>
-                                .contador-rojo {
-                                color: red;
-                            }
-                            </style>
 
                                 <!-- Modal del carrito -->
                                 <div class="modal fade" id="carritoModal" tabindex="-1" role="dialog" aria-labelledby="carritoModalLabel" aria-hidden="true">
@@ -686,13 +595,6 @@ document.querySelectorAll("#buttons-container button").forEach(function(button) 
                     </div>
                 </div>
             </div>
-            <style>
-                .card.h-100 {
-                    height: 300px !important; /* Ajusta esta altura según tus necesidades */
-                }
-            </style>
-
-
                 <!-- Modal de detalles del producto -->
                 <div class="modal fade" id="detalleProductoModal" tabindex="-1" role="dialog" aria-labelledby="detalleProductoModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg" role="document">
@@ -755,58 +657,6 @@ document.querySelectorAll("#buttons-container button").forEach(function(button) 
                     $('#detalleProductoModal').modal('show');
                 }
             </script>
-            <style>
-                /* Estilo para el modal */
-                .modal-content {
-                    width: 80%; /* Ancho del modal */
-                    max-width: 100%; /* Ancho máximo */
-                }
-
-                /* Estilo para el contenedor de la imagen */
-                .img-container {
-                    height: 400px; /* Altura del contenedor de la imagen */
-                    overflow: hidden; /* Ocultar el desbordamiento */
-                }
-
-                /* Estilo para la imagen del producto */
-                #productoImagen {
-                    width: 100%; /* Ancho del 100% del contenedor */
-                    height: auto; /* Altura automática para mantener la proporción */
-                    transition: transform 0.3s ease; /* Transición suave de 0.3 segundos */
-                }
-
-                /* Estilo para el precio del producto */
-                #productoPrecio {
-                    color: #dc3545; /* Color rojo para el precio */
-                    font-weight: bold; /* Texto en negrita */
-                }
-                        
-                /* Estilo para la superposición */
-            .overlay {
-                background-color: rgba(0, 0, 0, 0.5);
-                opacity: 0;
-                transition: opacity 0.3s;
-            }
-
-            /* Estilo para mostrar la superposición al pasar el mouse */
-            .card:hover .overlay {
-                opacity: 1;
-            }
-            .price-box {
-                background-color: #f8d7da; /* Color de fondo */
-                padding: 5px 10px; /* Espaciado interno */
-                border-radius: 5px; /* Bordes redondeados */
-                display: inline-block; /* Mostrar en línea */
-            }
-
-            .price {
-                margin: 0; /* Eliminar el margen interior */
-                color: #721c24; /* Color del texto */
-                font-weight: bold; /* Texto en negrita */
-            }
-
-
-            </style>
             </div>
             </div>
 

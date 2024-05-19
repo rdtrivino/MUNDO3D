@@ -84,31 +84,8 @@ mysqli_close($link);
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-9p0s5vZJMaCC6Tj41/l5pD5Khv2n/bqm5iWVX7fI7YdZCtazjfw7szNTL8l+ZYMlUE/GlbVfLqFsIcunPsfaUg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="shortcut icon" href="../images/Logo Mundo 3d.png" type="image/x-icon">
     <style>
-        /* Estilo para el fondo 3D con figuras geométricas y fondo de imagen */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1; /* Coloca el fondo detrás de otros elementos */
-            background: linear-gradient(to bottom right, red, blue, red, blue);
-            clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 80%);
-        }
-
-        body::after {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background: url('path/to/your-image.png') repeat; /* Puedes reemplazar esto con una imagen de fondo */
-            clip-path: polygon(0 0, 100% 0, 100% 80%, 0% 100%);
-        }
 
         .container {
             position: relative;
@@ -121,6 +98,7 @@ mysqli_close($link);
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
             margin-top: 20px;
             text-align: left;
+            color: #000;
         }
 
         h2 {
@@ -139,31 +117,6 @@ mysqli_close($link);
             float: right; /* Coloca el botón Cancelar en la esquina derecha */
         }
 
-        /* Agrega formas geométricas en 3D */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background: linear-gradient(to bottom right, red, blue, red, blue);
-            clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 80%);
-        }
-
-        body::after {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background: url('path/to/your-image.png') repeat;
-            clip-path: polygon(0 0, 100% 0, 100% 80%, 0% 100%);
-        }
-
         /* Estilo para la clase de campo bloqueado */
         .blocked-field input {
             background-color: #ccc;
@@ -175,57 +128,103 @@ mysqli_close($link);
             color: #28a745; /* Color verde para el ícono de editar */
             margin-left: 5px;
         }
+        .home-icon {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      cursor: pointer;
+      z-index: 999;
+    }
+
+    .home-icon img {
+      width: 50px; 
+      height: 50px;
+      background-color: white; 
+      padding: 5px; 
+      border-radius: 50%; 
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+    }
+    .blocked-field input[readonly] {
+        cursor: not-allowed;
+    }
     </style>
 </head>
-<body>
-
+<body style="background: linear-gradient(135deg, #2980b9, #2c3e50); color: white;">
+<a href="index.php" class="home-icon">
+  <img src="/../MUNDO 3D/images/bx-home-alt-2.svg" alt="Ir a Inicio">
+</a>
 <div class="container mt-5">
     <h2 class="mb-4">Editar Usuario</h2>
 
-    <!-- Formulario para editar datos del usuario -->
-    <form id="editForm" method="POST" action="confi.php">
-        <!-- Agrega tus campos de formulario aquí -->
+    <form id="editForm" method="POST" action="confi.php" class="row">
+        <div class="col-md-6 col-sm-12">
         <div class="mb-3 blocked-field">
-            <label for="edit-identificacion" class="form-label">Identificación:</label>
-            <input type="text" class="form-control" name="Usu_Identificacion" id="edit-identificacion" value="<?php echo $identificacion; ?>" readonly>
-            <i class="fas fa-edit edit-icon"></i>
+                <label for="edit-identificacion" class="form-label">Identificación:</label>
+                <input type="text" class="form-control" name="Usu_Identificacion" id="edit-identificacion" value="<?php echo $identificacion; ?>" readonly title="Este campo no se puede editar">
+                <i class="fas fa-edit edit-icon"></i>
+            </div>
+            <div class="mb-3 blocked-field">
+                <label for="edit-nombre" class="form-label">Nombre Completo:</label>
+                <input type="text" class="form-control" name="Usu_Nombre_completo" id="edit-nombre" value="<?php echo $nombre; ?>" readonly title="Este campo no se puede editar">
+                <i class="fas fa-edit edit-icon"></i>
+            </div>
+            <div class="mb-3">
+                <label for="edit-telefono" class="form-label">Teléfono:</label>
+                <input type="text" class="form-control" name="Usu_Telefono" id="edit-telefono" value="<?php echo $telefono; ?>">
+                <i class="fas fa-edit edit-icon"></i>
+            </div>
+            <div class="mb-3">
+                <label for="edit-email" class="form-label">Email:</label>
+                <input type="text" class="form-control" name="Usu_Email" id="edit-email" value="<?php echo $email; ?>">
+                <i class="fas fa-edit edit-icon"></i>
+            </div>
         </div>
-        <div class="mb-3 blocked-field">
-            <label for="edit-nombre" class="form-label">Nombre Completo:</label>
-            <input type="text" class="form-control" name="Usu_Nombre_completo" id="edit-nombre" value="<?php echo $nombre; ?>" readonly>
-            <i class="fas fa-edit edit-icon"></i>
-        </div>
-        <div class="mb-3">
-            <label for="edit-telefono" class="form-label">Teléfono:</label>
-            <input type="text" class="form-control" name="Usu_Telefono" id="edit-telefono" value="<?php echo $telefono; ?>">
-            <i class="fas fa-edit edit-icon"></i>
-        </div>
-        <div class="mb-3">
-            <label for="edit-email" class="form-label">Email:</label>
-            <input type="text" class="form-control" name="Usu_Email" id="edit-email" value="<?php echo $email; ?>">
-            <i class="fas fa-edit edit-icon"></i>
-        </div>
-        <div class="mb-3">
-            <label for="edit-ciudad" class="form-label">Ciudad:</label>
-            <input type="text" class="form-control" name="Usu_Ciudad" id="edit-ciudad" value="<?php echo $ciudad; ?>">
-            <i class="fas fa-edit edit-icon"></i>
-        </div>
-        <div class="mb-3">
-            <label for="edit-direccion" class="form-label">Dirección:</label>
-            <input type="text" class="form-control" name="Usu_Direccion" id="edit-direccion" value="<?php echo $direccion; ?>">
-            <i class="fas fa-edit edit-icon"></i>
-        </div>
-        <div class="mb-3">
-            <label for="edit-nueva-contrasena" class="form-label">Nueva Contraseña:</label>
-            <input type="password" class="form-control" name="Nueva_Contrasena" id="edit-nueva-contrasena">
-            <i class="fas fa-edit edit-icon"></i>
+        <div class="col-md-6 col-sm-12">
+            <div class="mb-3">
+                <label for="edit-ciudad" class="form-label">Ciudad:</label>
+                <input type="text" class="form-control" name="Usu_Ciudad" id="edit-ciudad" value="<?php echo $ciudad; ?>">
+                <i class="fas fa-edit edit-icon"></i>
+            </div>
+            <div class="mb-3">
+                <label for="edit-direccion" class="form-label">Dirección:</label>
+                <input type="text" class="form-control" name="Usu_Direccion" id="edit-direccion" value="<?php echo $direccion; ?>">
+                <i class="fas fa-edit edit-icon"></i>
+            </div>
+            <div class="mb-3">
+                <label for="edit-contrasena" class="form-label">Nueva Contraseña:</label>
+                <input type="password" class="form-control" name="Nueva_Contrasena" id="edit-contrasena">
+                <i class="fas fa-edit edit-icon"></i>
+            </div>
+            <div class="mb-3">
+                <label for="edit-confirm-contrasena" class="form-label">Confirmar Contraseña:</label>
+                <input type="password" class="form-control" name="Nueva_Contrasena" id="edit-confirm-contrasena" onkeyup="checkPasswordMatch();">
+                <i class="fas fa-edit edit-icon"></i>
+                <div class="invalid-feedback" id="password-error" style="display: none;">Las contraseñas no coinciden.</div>
+            </div>
         </div>
 
-
-        <button type="button" class="btn btn-danger cancel-btn" onclick="window.location.href='index.php'">Cancelar</button>
-        <button type="button" class="btn btn-primary" onclick="guardarCambios()">Guardar Cambios</button>
+        <div class="col-12">
+            <button type="button" class="btn btn-danger cancel-btn" onclick="window.location.href='index.php'">Cancelar</button>
+            <button type="button" class="btn btn-primary" onclick="guardarCambios()">Guardar Cambios</button>
+        </div>
     </form>
 </div>
+
+
+<script>
+    function checkPasswordMatch() {
+        var password = document.getElementById("edit-contrasena").value;
+        var confirmPassword = document.getElementById("edit-confirm-contrasena").value;
+        var error = document.getElementById("password-error");
+
+        if (password !== confirmPassword) {
+            error.style.display = "block";
+        } else {
+            error.style.display = "none";
+        }
+    }
+</script>
+
 
 <!-- Bootstrap JS (opcional, pero necesario para algunas funcionalidades de Bootstrap) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

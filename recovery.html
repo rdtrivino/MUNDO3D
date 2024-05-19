@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Olvidó su Contraseña</title>
     <link rel="shortcut icon" href="./images/Logo Mundo 3d.png" type="image/x-icon">
-    <link rel="stylesheet" href="./css/estilosrecovery.css" />
+    <link rel="stylesheet" href="./css/estilosrecovery.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
     <style>
         .modal {
             display: none;
@@ -63,13 +65,31 @@
             border-radius: 50%; 
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
         }
-
+        .text-white { color: white; }
+        .font-weight-bold { font-weight: bold; }
+        .mr-3 { margin-right: 1rem; }
+        .font-small { font-size: 14px; }
+        .font-medium { font-size: 16px; }
+        .font-large { font-size: 20px; }
+        #buttons-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
     </style>
 </head>
-<body>
+<body style="background: linear-gradient(135deg, #2980b9, #2c3e50); color: white;">
     <a href="index.html" class="home-icon">
         <img src="../MUNDO 3D/images/bx-home-alt-2.svg" alt="Ir a Inicio">
     </a>
+    <div id="buttons-container" style="display: flex; justify-content: flex-end; align-items: center;">
+        <a href="#" class="font-small text-white font-weight-bold mr-3" onclick="adjustFontSize('small')">A</a>
+        <a href="#" class="font-medium text-white font-weight-bold mr-3" onclick="adjustFontSize('medium')">A</a>
+        <a href="#" class="font-large text-white font-weight-bold mr-3" onclick="adjustFontSize('large')">A</a>
+        <div id="disabled-icon">
+            <i class="fas fa-wheelchair fa-lg text-white" onclick="aumentarTamano()" onmouseover="cambiarCursor(event)" onmouseout="restaurarCursor()"></i>
+        </div>
+    </div>
     <div class="container">
         <img src="images/Logo Mundo 3d.png" alt="logo mundo 3D">
         <h2>Olvidó su Contraseña</h2>
@@ -141,6 +161,48 @@
                     closeModalBtn.style.backgroundColor = ''; // Restaura el color por defecto al cerrar el modal
                 });
             });
+            function adjustFontSize(size) {
+            const body = document.body;
+            body.classList.remove('font-small', 'font-medium', 'font-large');
+
+            switch(size) {
+                case 'small':
+                    body.classList.add('font-small');
+                    break;
+                case 'medium':
+                    body.classList.add('font-medium');
+                    break;
+                case 'large':
+                    body.classList.add('font-large');
+                    break;
+            }
+        }
+
+        function aumentarTamano() {
+            // Funcionalidad específica para el icono de silla de ruedas
+        }
+
+        function cambiarCursor(event) {
+            event.target.style.cursor = 'pointer';
+        }
+
+        function restaurarCursor(event) {
+            event.target.style.cursor = 'default';
+        }
+
+        function checkPasswordMatch() {
+            const password = document.getElementById('edit-contrasena').value;
+            const confirmPassword = document.getElementById('edit-confirm-contrasena').value;
+            const passwordError = document.getElementById('password-error');
+
+            if (password !== confirmPassword) {
+                passwordError.style.display = 'block';
+            } else {
+                passwordError.style.display = 'none';
+            }
+        }
+
+        document.querySelector("#disabled-icon .fa-wheelchair").style.color = "#fff";
 
     </script>
 </body>

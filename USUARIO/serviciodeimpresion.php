@@ -243,6 +243,26 @@ mysqli_close($link);
         .align-right {
             margin-left: auto;
         }
+                /* ETILOS DE ACCESIBILIDAD*/
+                .font-small {
+            font-size: 14px;
+        }
+
+        .font-medium {
+            font-size: 16px;
+        }
+
+        .font-large {
+            font-size: 20px;
+        }
+
+        #disabled-icon {
+            display: inline-block; /* Para alinear verticalmente con los enlaces */
+        }
+
+        a {
+            text-decoration: none; /* Eliminar subrayado de los enlaces */
+        }
     </style>
 </head>
 <body>
@@ -251,114 +271,102 @@ mysqli_close($link);
         <!-- Botón de hamburguesa para desplegar opciones -->
         <div class="col-md-6 text-center text-lg-right align-right">
             <div class="d-inline-flex align-items-center">
-<!-- Contenedor principal -->
-<div id="buttons-container" style="display: flex; justify-content: space-between; align-items: center;">
-       <button onclick="disminuirTamano()">-</button>
-        <button onclick="aumentarTamano()">+</button>
+                        <!-- Icono de discapacitado -->
+                        <div id="buttons-container" style="display: flex; justify-content: space-between; align-items: center;">
+                            <a href="#" class="font-small text-white font-weight-bold mr-3" onclick="adjustFontSize('small')">A</a>
+                            <a href="#" class="font-medium text-white font-weight-bold mr-3" onclick="adjustFontSize('medium')">A</a>
+                            <a href="#" class="font-large text-white font-weight-bold mr-3" onclick="adjustFontSize('large')">A</a>
 
-    <!-- Icono de silla de ruedas -->
-    <div id="disabled-icon">
-        <i class="fas fa-wheelchair fa-lg text-white" onclick="aumentarTamano()" onmouseover="cambiarCursor(event)" onmouseout="restaurarCursor()"></i>
-    </div>
-</div>
+                            <div id="disabled-icon">
+                                <i class="fas fa-wheelchair fa-lg text-white" onclick="aumentarTamano()" onmouseover="cambiarCursor(event)" onmouseout="restaurarCursor()"></i>
+                            </div>
+                        </div>
+                        <script>
+                            function adjustFontSize(size) {
+                                const body = document.body;
+                                body.classList.remove('font-small', 'font-medium', 'font-large');
 
+                                switch(size) {
+                                    case 'small':
+                                        body.classList.add('font-small');
+                                        break;
+                                    case 'medium':
+                                        body.classList.add('font-medium');
+                                        break;
+                                    case 'large':
+                                        body.classList.add('font-large');
+                                        break;
+                                }
+                            }
 
-<script>
-function aumentarTamano() {
-    // Aumentar el tamaño de fuente de todo el documento
-    var elementos = document.getElementsByTagName("*");
-    for (var i = 0; i < elementos.length; i++) {
-        var elemento = elementos[i];
-        var estilo = window.getComputedStyle(elemento);
-        var fontSize = parseInt(estilo.fontSize);
-        elemento.style.fontSize = (fontSize + 2) + "px"; // Incrementa el tamaño de la fuente en 2px
-    }
-}
+                            function aumentarTamano() {
+                                // Funcionalidad específica para el icono de silla de ruedas
+                            }
 
-function disminuirTamano() {
-    // Disminuir el tamaño de fuente de todo el documento
-    var elementos = document.getElementsByTagName("*");
-    for (var i = 0; i < elementos.length; i++) {
-        var elemento = elementos[i];
-        var estilo = window.getComputedStyle(elemento);
-        var fontSize = parseInt(estilo.fontSize);
-        elemento.style.fontSize = (fontSize - 2) + "px"; // Disminuye el tamaño de la fuente en 2px
-    }
-}
+                            function cambiarCursor(event) {
+                                event.target.style.cursor = 'pointer';
+                            }
 
-function cambiarCursor(event) {
-    event.target.style.cursor = "pointer"; // Cambiar el cursor a una mano cuando pasa sobre el icono de la silla de ruedas
-}
-
-function restaurarCursor() {
-    document.getElementById("disabled-icon").style.cursor = "auto"; // Restaurar el cursor al valor predeterminado cuando se aleja del icono de la silla de ruedas
-}
-
-// Cambiar el color del icono de la silla de ruedas a blanco
-document.querySelector("#disabled-icon .fa-wheelchair").style.color = "#fff";
-// Obtener los botones y establecer el color de fondo como transparente y el color del texto como blanco
-document.querySelectorAll("#buttons-container button").forEach(function(button) {
-    button.style.backgroundColor = "transparent";
-    button.style.color = "#fff"; // Color blanco
-});
-
-</script>
+                            function restaurarCursor(event) {
+                                event.target.style.cursor = 'default';
+                            }
+                        </script>
                 <!-- Menú desplegable -->
-                <div id="dropdown-menu" class="dropdown-menu">
-                    <a href="confi.php" class="dropdown-menu-item">
-                        <i class="fas fa-cogs"></i> <!-- Icono de configuración -->
-                        Configurar mi cuenta
-                    </a>
-                    <a href="pedidos.php" class="dropdown-menu-item bm-2">
-                        <i class="fas fa-list"></i> <!-- Icono de lista -->
-                        Mis pedidos
-                    </a>
+                <div class="dropdown" style="position: relative; white-space: nowrap;">
+                            <div id="dropdown-menu" class="dropdown-menu dropdown-menu-right" aria-labelledby="menu-toggle" style="background-color: black;">                                <a href="confi.php" class="dropdown-menu-item">
+                                    <i class="fas fa-cogs"></i> <!-- Icono de configuración -->
+                                        Configurar mi cuenta
+                                </a>
+                                <a href="pedidos.php" class="dropdown-menu-item bm-2">
+                                    <i class="fas fa-list"></i> <!-- Icono de lista -->
+                                        Mis pedidos
+                                </a>
+                                <a href="#" class="dropdown-menu-item" onclick="confirmLogout()">
+                                    <i class="fas fa-sign-out-alt fa-lg text-white"></i> <!-- Icono de cerrar sesión -->
+                                        Cerrar Sesión
+                                </a>
+                            </div>
+                            <!-- Icono de barras -->
+                            <button class="btn btn-link" type="button" id="menu-toggle">
+                                <i class="fas fa-bars fa-lg text-white"></i>
+                                <span>Mi menú</span> <!-- Cambia el texto del botón de hamburguesa -->
+                            </button>
+                        </div>
+
+                        <script>
+                            document.getElementById("menu-toggle").addEventListener("click", function(event) {
+                                var menu = document.getElementById("dropdown-menu");
+                                menu.style.display = (menu.style.display === "block") ? "none" : "block";
+                                event.stopPropagation(); // Evita que el clic en el botón se propague al documento
+                            });
+
+                            // Event listener para cerrar el menú desplegable cuando se hace clic fuera de él
+                            document.addEventListener("click", function(event) {
+                                var menu = document.getElementById("dropdown-menu");
+                                var menuToggle = document.getElementById("menu-toggle");
+                                if (!menu.contains(event.target) && event.target !== menuToggle) {
+                                    menu.style.display = "none";
+                                }
+                            });
+
+                            function confirmLogout() {
+                                var confirmLogout = confirm("¿Estás seguro de que deseas cerrar sesión?");
+                                if (confirmLogout) {
+                                    window.location.href = "../Programas/logout.php"; // Redirige al script de cierre de sesión
+                                }
+                            }
+                        </script>
+                    </div>
                 </div>
-
-                <!-- Icono de barras -->
-                <button class="btn btn-link" type="button" id="menu-toggle">
-                    <i class="fas fa-bars fa-lg text-white"></i>
-                    <span>Mi menú</span> <!-- Cambia el texto del botón de hamburguesa -->
-                </button>
-            </div>
-
-            <script>
-                document.getElementById("menu-toggle").addEventListener("click", function() {
-                    var menu = document.getElementById("dropdown-menu");
-                    if (menu.style.display === "block") {
-                        menu.style.display = "none";
-                    } else {
-                        menu.style.display = "block";
-                    }
-                });
-            </script>
-
-            <!-- Icono de salir con recuadro y texto -->
-            <div id="logout" class="ml-2" onclick="confirmLogout()">
-                <span id="logout-text">Cerrar Sesión</span>
-                <i id="logout-button" class="fas fa-sign-out-alt fa-lg text-white"></i>
             </div>
         </div>
     </div>
 </div>
-
-<script>
-    function confirmLogout() {
-        var confirmLogout = confirm("¿Estás seguro de que deseas cerrar sesión?");
-        if (confirmLogout) {
-            window.location.href = "../Programas/logout.php"; // Redirige al script de cierre de sesión
-        }
+<style>
+    #logout-button:hover {
+        cursor: pointer;
     }
-</script>
-                <style>
-                    #logout-button:hover {
-                        cursor: pointer;
-                    }
-                </style>
-            </div>
-        </div>
-    </div>
-</div>
+</style>
     <!-- Navbar Start -->
     <div class="container-fluid position-relative nav-bar p-0">
         <div class="container-lg position-relative p-0 px-lg-3" style="z-index: 9;">

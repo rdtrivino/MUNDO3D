@@ -58,6 +58,11 @@
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
     <link href="css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <!-- Flatpickr CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+<!-- Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     
 
 
@@ -400,178 +405,180 @@
                                                                 
                                                             <div class="btn-group" role="group" aria-label="Acciones">
                                                             
-
 <!-- Botón Editar en cada fila de la tabla -->
 <button type="button" class="btn btn-primary" onclick="abrirModalEditar(<?php echo $row['Identificador']; ?>)" data-toggle="tooltip" data-placement="top" title="Editar Pedido">
     <i class="fas fa-edit"></i>
 </button>
 
 <!-- Modal de Edición -->
-<div class="modal fade" id="editarModal<?php echo $row['Identificador']; ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" data-backdrop="static">
+<div class="modal fade" id="editarModal<?php echo $row['Identificador']; ?>" tabindex="-1" aria-labelledby="editarModalLabel<?php echo $row['Identificador']; ?>" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Editar Pedido</h5>
-                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title" id="editarModalLabel<?php echo $row['Identificador']; ?>">Editar Pedido</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <!-- Formulario de edición de pedido -->
+                <!-- Formulario para editar el pedido -->
                 <form id="formularioEditar<?php echo $row['Identificador']; ?>">
-                    <div class="mb-3">
-                        <label for="pe_cliente" class="form-label">Cliente</label>
-                        <input type="text" class="form-control" id="pe_cliente" name="pe_cliente" value="<?php echo $row['Pe_Cliente']; ?>">
+                    <div class="row">
+                        <!-- Primera columna -->
+                        <div class="col-md-6">
+                            <!-- Campo Cliente -->
+                            <div class="mb-3">
+                                <label for="pe_cliente_<?php echo $row['Identificador']; ?>" class="form-label">Cliente</label>
+                                <input type="text" class="form-control disabled-input" id="pe_cliente_<?php echo $row['Identificador']; ?>" name="pe_cliente" value="<?php echo $row['Pe_Cliente']; ?>" readonly title="No se puede editar este campo">
+                            </div>
+                            <!-- Campo Estado -->
+                            <div class="mb-3">
+                                <label for="pe_estado_<?php echo $row['Identificador']; ?>" class="form-label">Estado</label>
+                                <select class="form-select" id="pe_estado_<?php echo $row['Identificador']; ?>" name="pe_estado">
+                                    <?php
+                                    $estados = obtenerEstadosPedidos($link);
+                                    foreach ($estados as $estado) {
+                                        $selected = ($row['Pe_Estado'] == $estado['Es_Codigo']) ? 'selected' : '';
+                                        echo "<option value=\"{$estado['Es_Codigo']}\" $selected>{$estado['Es_Nombre']}</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                            <!-- Campo Producto -->
+                            <div class="mb-3">
+                                <label for="pe_producto_<?php echo $row['Identificador']; ?>" class="form-label">Producto</label>
+                                <select class="form-select" id="pe_producto_<?php echo $row['Identificador']; ?>" name="pe_producto">
+                                    <?php
+                                    $productos = obtenerProductos($link);
+                                    foreach ($productos as $producto) {
+                                        $selected = ($row['Pe_Producto'] == $producto['Identificador']) ? 'selected' : '';
+                                        echo "<option value=\"{$producto['Identificador']}\" $selected>{$producto['Pro_Nombre']}</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                            <!-- Campo Cantidad -->
+                            <div class="mb-3">
+                                <label for="pe_cantidad_<?php echo $row['Identificador']; ?>" class="form-label">Cantidad</label>
+                                <input type="text" class="form-control" id="pe_cantidad_<?php echo $row['Identificador']; ?>" name="pe_cantidad" value="<?php echo (!empty($row['Pe_Cantidad'])) ? $row['Pe_Cantidad'] : 'No aplica'; ?>">
+                            </div>
+                            <!-- Campo Observaciones -->
+                            <div class="mb-3">
+                                <label for="pe_observaciones_<?php echo $row['Identificador']; ?>" class="form-label">Observaciones</label>
+                                <textarea class="form-control" id="pe_observaciones_<?php echo $row['Identificador']; ?>" name="pe_observaciones" rows="3"><?php echo (!empty($row['Pe_Observacion'])) ? $row['Pe_Observacion'] : 'No aplica'; ?></textarea>
+                            </div>
+                        </div>
+                        <!-- Segunda columna -->
+                        <div class="col-md-6">
+                        <div class="mb-3">
+                                <label for="pe_fechapedido_<?php echo $row['Identificador']; ?>" class="form-label">Fecha de Pedido</label>
+                                <input type="text" class="form-control datepicker" id="pe_fechapedido_<?php echo $row['Identificador']; ?>" name="pe_fechapedido" value="<?php echo (!empty($row['pe_fechapedido'])) ? $row['pe_fechapedido'] : 'No aplica'; ?>">
+                            </div>
+                            <!-- Campo Fecha de Entrega -->
+                            <div class="mb-3">
+                                <label for="pe_fechaentrega_<?php echo $row['Identificador']; ?>" class="form-label">Fecha de Entrega</label>
+                                <input type="text" class="form-control datepicker" id="pe_fechaentrega_<?php echo $row['Identificador']; ?>" name="pe_fechaentrega" value="<?php echo (!empty($row['Pe_Fechaentrega'])) ? $row['Pe_Fechaentrega'] : 'No aplica'; ?>">
+                            </div>
+                            <!-- Campo Color -->
+                            <div class="mb-3">
+                                <label for="pe_color_<?php echo $row['Identificador']; ?>" class="form-label">Color</label>
+                                <input type="text" class="form-control" id="pe_color_<?php echo $row['Identificador']; ?>" name="pe_color" value="<?php echo (!empty($row['pe_color'])) ? $row['pe_color'] : 'No aplica'; ?>">
+                            </div>
+                            <!-- Campo Imagen -->
+                            <div class="mb-3">
+                                <label for="imagen_<?php echo $row['Identificador']; ?>" class="form-label">Imagen</label>
+                                <?php if (!empty($row['pe_imagen_pedido'])) : ?>
+                                    <img src="<?php echo $row['pe_imagen_pedido']; ?>" alt="Imagen actual" style="width: 100px; height: 100px;">
+                                <?php else : ?>
+                                    <p>No hay imagen actual.</p>
+                                <?php endif; ?>
+                                <input type="file" class="form-control" id="imagen_<?php echo $row['Identificador']; ?>" name="imagen" accept="image/*">
+                            </div>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="pe_tipo_impresion" class="form-label">Tipo de Impresión</label>
-                        <input type="text" class="form-control" id="pe_tipo_impresion" name="pe_tipo_impresion" value="<?php echo $row['pe_tipo_impresion']; ?>">
-                    </div>
-                    <div class="mb-3">
-                        <label for="pe_estado" class="form-label">Estado</label>
-                        <input type="text" class="form-control" id="pe_estado" name="pe_estado" value="<?php echo $row['Pe_Estado']; ?>">
-                    </div>
-                    <div class="mb-3">
-                        <label for="pe_producto" class="form-label">Producto</label>
-                        <input type="text" class="form-control" id="pe_producto" name="pe_producto" value="<?php echo $row['Pe_Producto']; ?>">
-                    </div>
-                    <div class="mb-3">
-                        <label for="pe_cantidad" class="form-label">Cantidad</label>
-                        <input type="text" class="form-control" id="pe_cantidad" name="pe_cantidad" value="<?php echo $row['Pe_Cantidad']; ?>">
-                    </div>
-                    <div class="mb-3">
-                        <label for="pe_fechapedido" class="form-label">Fecha de Pedido</label>
-                        <input type="text" class="form-control" id="pe_fechapedido" name="pe_fechapedido" value="<?php echo $row['Pe_Fechapedido']; ?>">
-                    </div>
-                    <div class="mb-3">
-                        <label for="pe_fechaentrega" class="form-label">Fecha de Entrega</label>
-                        <input type="text" class="form-control" id="pe_fechaentrega" name="pe_fechaentrega" value="<?php echo $row['Pe_Fechaentrega']; ?>">
-                    </div>
-                    <div class="mb-3">
-                        <label for="pe_color" class="form-label">Color</label>
-                        <input type="text" class="form-control" id="pe_color" name="pe_color" value="<?php echo $row['pe_color']; ?>">
-                    </div>
-                    <div class="mb-3">
-    <label for="pe_i<div class="mb-3">
-    <label for="imagen" class="form-label">Imagen</label>
-    <?php if (!empty($row['pe_imagen_pedido	'])) : ?>
-        <!-- Muestra la imagen actual si existe -->
-        <img src="<?php echo $row['pe_imagen_pedido	']; ?>" alt="Imagen actual" style="width: 100px; height: 100px;">
-    <?php else : ?>
-        <!-- Muestra un mensaje si no hay imagen actual -->
-        <p>No hay imagen actual.</p>
-    <?php endif; ?>
-    <!-- Input para seleccionar una nueva imagen -->
-    <input type="file" class="form-control" id="imagen-<?php echo $row['Identificador']; ?>" name="imagen" accept="image/*">
-</div>
-
-
-         <!-- Otros campos del formulario de edición -->
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                 <button type="button" class="btn btn-primary" onclick="guardarCambios(<?php echo $row['Identificador']; ?>)">Guardar Cambios</button>
             </div>
         </div>
     </div>
 </div>
+
 <script>
     // Función para abrir el modal de edición
     function abrirModalEditar(identificador) {
         $("#editarModal" + identificador).modal("show");
     }
 
-    // Función para enviar los datos del formulario de edición al servidor y guardar los cambios
-    function guardarCambios(identificador) {
-        var formData = $("#formularioEditar" + identificador).serializeArray();
+    // Función para cerrar el modal de edición
+    function cerrarModalEditar(identificador) {
+        $("#editarModal" + identificador).modal("hide");
+    }
 
-        // Filtrar campos vacíos
-        formData = formData.filter(function(field) {
-            return field.value.trim() !== '';
-        });
+// Función para guardar cambios
+function guardarCambios(identificador) {
+    // Obtener los valores del formulario
+    var cliente = document.getElementById('pe_cliente_' + identificador).value;
+    var estado = document.getElementById('pe_estado_' + identificador).value;
+    var producto = document.getElementById('pe_producto_' + identificador).value;
+    var cantidad = document.getElementById('pe_cantidad_' + identificador).value;
+    var fechaPedido = document.getElementById('pe_fechapedido_' + identificador).value; // <--- Corregido aquí
+    var fechaEntrega = document.getElementById('pe_fechaentrega_' + identificador).value;
+    var color = document.getElementById('pe_color_' + identificador).value;
+    var observaciones = document.getElementById('pe_observaciones_' + identificador).value;
+    var imagen = document.getElementById('imagen_' + identificador).files[0];
 
-        // Convertir formData de nuevo a formato de objeto
-        var filteredData = {};
-        $(formData).each(function(index, obj){
-            filteredData[obj.name] = obj.value;
-        });
+    // Crear un objeto FormData para enviar los datos del formulario
+    var formData = new FormData();
+    formData.append('guardar_cambios', true);
+    formData.append('Identificador', identificador);
+    formData.append('Pe_Cliente', cliente);
+    formData.append('Pe_Estado', estado);
+    formData.append('Pe_Producto', producto);
+    formData.append('Pe_Cantidad', cantidad);
+    formData.append('Pe_Fechapedido', fechaPedido);
+    formData.append('Pe_Fechaentrega', fechaEntrega);
+    formData.append('pe_color', color);
+    formData.append('Pe_Observacion', observaciones);
+    formData.append('imagen', imagen);
 
-        // Envía solo los campos que tienen contenido
-        $.ajax({
-            type: "POST",
-            url: "guardar_cambios.php", // Reemplaza esto con la ruta correcta a tu archivo PHP para guardar cambios
-            data: filteredData,
-            dataType: "json",
-            success: function(response) {
-                // Manejar la respuesta del servidor
-                if (response.success) {
-                    alert("Cambios guardados correctamente.");
-                    $("#editarModal" + identificador).modal("hide");
-                } else {
-                    alert("Error al guardar los cambios: " + response.message);
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error(xhr.responseText);
-                alert("Error al procesar la solicitud. Por favor, inténtalo de nuevo más tarde.");
+    // Realizar la solicitud AJAX
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "funcionestabladepedidos.php", true);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                // Mostrar un mensaje de éxito
+                alert("Los cambios se han realizado con éxito.");
+                // Cerrar el modal
+                cerrarModalEditar(identificador);
+                // Recargar la página después de 1 segundo
+                setTimeout(function() {
+                    location.reload();
+                }, 1000);
+            } else {
+                // Mostrar un mensaje de error
+                alert("Ha ocurrido un error al realizar los cambios.");
             }
-        });
-    }
-</script>
-<script>
-    // Función para abrir el modal de edición
-    function abrirModalEditar(identificador) {
-        $("#editarModal" + identificador).modal("show");
-    }
-
-    // Función para enviar los datos del formulario de edición al servidor y guardar los cambios
-    function guardarCambios(identificador) {
-        // Obtener los datos del formulario
-        var formData = $("#formularioEditar" + identificador).serialize();
-
-        // Enviar los datos al servidor mediante AJAX
-        $.ajax({
-            type: "POST",
-            url: "actualizar_pedido.php", // Reemplaza esto con la ruta correcta a tu archivo PHP para actualizar el pedido
-            data: formData,
-            dataType: "json",
-            success: function(response) {
-                // Manejar la respuesta del servidor
-                if (response.success) {
-                    alert("Pedido actualizado correctamente.");
-                    $("#editarModal" + identificador).modal("hide");
-                    // Puedes agregar aquí cualquier otra acción que desees después de guardar los cambios
-                } else {
-                    alert("Error al actualizar el pedido: " + response.message);
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error(xhr.responseText);
-                alert("Error al procesar la solicitud. Por favor, inténtalo de nuevo más tarde.");
-            }
-        });
-    }
-</script>
-
-<?php
-// Manejar el envío del formulario de edición aquí mismo
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Recibir los datos del formulario
-    $nombre = $_POST['nombre'];
-    $apellido = $_POST['apellido'];
-
-    // Aquí puedes agregar la lógica para actualizar los datos en la base de datos
-    // Por ejemplo, puedes usar una consulta SQL para actualizar los datos en la tabla correspondiente
-    // Luego, puedes mostrar una alerta o redireccionar al usuario según sea necesario
-
-    // Ejemplo:
-    // $sql = "UPDATE tu_tabla SET nombre = '$nombre', apellido = '$apellido' WHERE id = $id";
-    // if (mysqli_query($conexion, $sql)) {
-    //     echo '<script>alert("Cambios guardados correctamente");</script>';
-    // } else {
-    //     echo '<script>alert("Error al guardar cambios");</script>';
-    // }
+        }
+    };
+    xhr.send(formData);
 }
-?>
+    // Inicializar Flatpickr para las casillas de fecha
+    flatpickr('#pe_fechapedido', {
+        dateFormat: 'Y-m-d',
+        allowInput: true
+    });
+
+    flatpickr('#pe_fechaentrega', {
+        dateFormat: 'Y-m-d',
+        allowInput: true
+    });
+</script>
+
+
+
+
 
                                                                 <button type="button" class="btn btn-danger" onclick="eliminarPedido(<?php echo $row['Identificador']; ?>)" data-toggle="tooltip" data-placement="top" title="Eliminar">
                                                                     <i class="fas fa-trash"></i>

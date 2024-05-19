@@ -13,6 +13,8 @@ if (isset($_SESSION['user_id'])) {
 }
 
 require_once('vendor/autoload.php');
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 \Stripe\Stripe::setApiKey('sk_test_51PCx2gRxUN5OHb784L4vrVA5ta8V9wpXoHXThlHuiDh0cBAQs2VCdCEiAma1CtUJDz5QzBgBElhyB3fu3fDNg8JO008Tfah9xf');
 
@@ -58,26 +60,30 @@ if (isset($_POST['monto']) && isset($_POST['stripeToken'])) {
             
             // Ejecutar la consulta SQL para actualizar el estado de pago
             if (mysqli_query($link, $sql_update)) {
-// Transferir los productos del carrito a la tabla de pedidos cuando el pago sea exitoso
-$sql_transfer = "INSERT INTO pedidos (Pe_Cliente, Pe_Estado, Pe_Producto, Pe_Cantidad, Pe_Fechapedido)
-                SELECT carrito.Pe_Cliente, 1, productos.Identificador, carrito.cantidad, NOW()
-                FROM carrito
-                INNER JOIN productos ON carrito.id_producto = productos.Identificador
-                WHERE carrito.estado_pago = 'pagado' AND carrito.Pe_Cliente = '$Pe_Cliente'";
+                // Transferir los productos del carrito a la tabla de pedidos cuando el pago sea exitoso
+                $sql_transfer = "INSERT INTO pedidos (Pe_Cliente, Pe_Estado, Pe_Producto, Pe_Cantidad, Pe_Fechapedido)
+                                SELECT carrito.Pe_Cliente, 1, productos.Identificador, carrito.cantidad, NOW()
+                                FROM carrito
+                                INNER JOIN productos ON carrito.id_producto = productos.Identificador
+                                WHERE carrito.estado_pago = 'pagado' AND carrito.Pe_Cliente = '$Pe_Cliente'";
 
-// Ejecutar la consulta de transferencia
-if (mysqli_query($link, $sql_transfer)) {
-    // Si la transferencia es exitosa, puedes realizar otras acciones aquí, como vaciar el carrito
-    $sql_vaciar = "DELETE FROM carrito WHERE estado_pago = 'pagado' AND Pe_Cliente = '$Pe_Cliente'";
-    if (mysqli_query($link, $sql_vaciar)) {
-    } else {
-        echo "Error al vaciar el carrito: " . mysqli_error($link);
-    }
-} else {
-    echo "Error al realizar el pedido: " . mysqli_error($link);
-}
-
-            }}
+                // Ejecutar la consulta de transferencia
+                if (mysqli_query($link, $sql_transfer)) {
+                    // Si la transferencia es exitosa, puedes realizar otras acciones aquí, como vaciar el carrito
+                    $sql_vaciar = "DELETE FROM carrito WHERE estado_pago = 'pagado' AND Pe_Cliente = '$Pe_Cliente'";
+                    if (mysqli_query($link, $sql_vaciar)) {
+                        // Obtener el correo electrónico del usuario
+                        $email = obtenerEmailUsuario($Pe_Cliente);
+                        // Enviar la factura por correo electrónico al usuario
+                        enviarFacturaPorCorreo($email);
+                    } else {
+                        echo "Error al vaciar el carrito: " . mysqli_error($link);
+                    }
+                } else {
+                    echo "Error al realizar el pedido: " . mysqli_error($link);
+                }
+            }
+        }
     } catch (\Stripe\Exception\CardException $e) {
         // El pago fue rechazado
         echo 'Error al procesar el pago: ' . $e->getError()->message;
@@ -86,6 +92,74 @@ if (mysqli_query($link, $sql_transfer)) {
         echo 'Error al procesar el pago: ' . $e->getMessage();
     }
 }
+// Función para obtener el correo electrónico del usuario
+function obtenerEmailUsuario($Pe_Cliente) {
+    global $link;
+
+    // Consulta SQL para obtener el correo electrónico del usuario
+    $sql = "SELECT Usu_Email FROM usuario WHERE id = $Pe_Cliente";
+
+    // Ejecutar la consulta
+    $result = mysqli_query($link, $sql);
+
+    // Verificar si se encontró el usuario y obtener su correo electrónico
+    if ($result && mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
+        return $row['Usu_Email']; // Corregido para que coincida con el nombre de la columna en la consulta SQL
+    } else {
+        // Si no se encontró el usuario o hubo un error en la consulta, retornar un valor por defecto o lanzar una excepción
+        return null; // O podrías lanzar una excepción o retornar un correo electrónico por defecto
+    }
+}
+
+// Función para enviar la factura por correo electrónico
+function enviarFacturaPorCorreo($email) {
+    global $link;
+
+    require_once('../conexion.php');
+    require '../Programas/phpmailer/Exception.php';
+    require '../Programas/phpmailer/PHPMailer.php';
+    require '../Programas/phpmailer/SMTP.php';
+
+    $mail = new PHPMailer(true);
+
+    try {
+        // Configuración del servidor de correo
+        $mail->isSMTP();
+        $mail->Host = 'smtp.office365.com';
+        $mail->SMTPAuth = true;
+        $mail->Username = 'Mundo3D.RYSJ@outlook.com'; // Correo electrónico del remitente
+        $mail->Password = 'Mundo3D123'; // Contraseña del remitente
+        $mail->SMTPSecure = 'tls';
+        $mail->Port = 587;
+
+        // Configuración del correo electrónico
+        $mail->setFrom('Mundo3D.RYSJ@outlook.com', 'MUNDO 3D'); // Correo electrónico y nombre del remitente
+        $mail->addAddress($email); // Correo electrónico del destinatario
+        $mail->Subject = 'Factura'; // Asunto del correo
+        $mail->Body = "Adjunto encontrarás la factura solicitada."; // Cuerpo del correo
+        $mail->isHTML(true); // Establecer el formato del correo como HTML
+        
+        // Obtener la ruta del archivo PDF de la factura
+        $pdf_file = generarFactura($datos_factura); // Asegúrate de tener $datos_factura definido
+
+        // Adjuntar el archivo PDF de la factura
+        $mail->addAttachment($pdf_file, 'Factura.pdf');
+
+        // Envío del correo electrónico
+        $mail->send();
+
+        // Eliminar el archivo PDF después de enviar el correo electrónico
+        unlink($pdf_file);
+
+        return true;
+    } catch (Exception $e) {
+        // Manejar cualquier error y registrar en el archivo de registro
+        error_log("Error al enviar el correo: {$mail->ErrorInfo}");
+        return false;
+    }
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">

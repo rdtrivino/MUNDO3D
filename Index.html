@@ -10,22 +10,110 @@
     <link rel="stylesheet" href="./css/normalize.css">
     <link rel="stylesheet" href="./css/index.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-dTZE7k4oZl5WueNpEyRaqm87kpKGyqkl3KQa4U2jz/AHJl5OzFUsY+lykmr5LQm1kiRts6AF5RnmnH8+1TcOVg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- CSS de Bootstrap -->
 
 <body>
     <header class="hero">
+        <div class="top-bar"></div> <!-- Franja negra -->
         <div class="nav__logo">
-            <img src="images/Logo Mundo 3d.png" alt="Logo de la empresa" class="logo">
+            <img src="images/Logo Mundo 3d.png" alt="Logo de la empresa" class="logo" style="margin-top: 0.5%;margin-left: 3%;">
+        </div>        
+        <div id="buttons-container" style="display: flex; justify-content: flex-end; align-items: center;">
+            <a href="#" class="font-small text-white font-weight-bold mr-3" onclick="adjustFontSize('small')">A</a>
+            <a href="#" class="font-medium text-white font-weight-bold mr-3" onclick="adjustFontSize('medium')">A</a>
+            <a href="#" class="font-large text-white font-weight-bold mr-3" onclick="adjustFontSize('large')">A</a>
+            <div id="disabled-icon">
+                <i class="fas fa-wheelchair fa-lg text-white" onclick="aumentarTamano()" onmouseover="cambiarCursor(event)" onmouseout="restaurarCursor()"></i>
+            </div>
         </div>
+        <style>
+        .text-white { color: white; }
+        .font-weight-bold { font-weight: bold; }
+        .mr-3 { margin-right: 1rem; }
+        .font-small { font-size: 14px; }
+        .font-medium { font-size: 16px; }
+        .font-large { font-size: 20px; }
+        #buttons-container {
+        top: 10px; /* Ajustar la ubicación vertical */
+        left: 50%; /* Centrar horizontalmente */
+        transform: translateX(-50%); /* Centrar horizontalmente */
+
+        }
+        .nav__link--menu {
+    display: flex;
+    justify-content: flex-start; /* Centra los botones a la izquierda */
+    align-items: center; /* Centra verticalmente los botones */
+    margin-left: 2%; /* Ajusta el margen izquierdo */
+    padding-left: 0; /* Elimina el relleno izquierdo predeterminado */
+}
+
+.nav__items {
+    margin-top: 5%; /* Agrega espacio entre los botones */
+}
+
+.nav__button {
+    width: 250px; /* Ancho deseado para los botones */
+    text-align: center; /* Alinea el texto al centro dentro de los botones */
+    margin-right: 30px;
+}
+
+
+        </style>
+        <script>
+                        function adjustFontSize(size) {
+            const body = document.body;
+            body.classList.remove('font-small', 'font-medium', 'font-large');
+
+            switch(size) {
+                case 'small':
+                    body.classList.add('font-small');
+                    break;
+                case 'medium':
+                    body.classList.add('font-medium');
+                    break;
+                case 'large':
+                    body.classList.add('font-large');
+                    break;
+            }
+        }
+
+        function aumentarTamano() {
+            // Funcionalidad específica para el icono de silla de ruedas
+        }
+
+        function cambiarCursor(event) {
+            event.target.style.cursor = 'pointer';
+        }
+
+        function restaurarCursor(event) {
+            event.target.style.cursor = 'default';
+        }
+
+        function checkPasswordMatch() {
+            const password = document.getElementById('edit-contrasena').value;
+            const confirmPassword = document.getElementById('edit-confirm-contrasena').value;
+            const passwordError = document.getElementById('password-error');
+
+            if (password !== confirmPassword) {
+                passwordError.style.display = 'block';
+            } else {
+                passwordError.style.display = 'none';
+            }
+        }
+
+        document.querySelector("#disabled-icon .fa-wheelchair").style.color = "#fff";
+        </script>
         <nav class="nav container">
-            <ul class="nav__link nav__link--menu">
+            <ul class="nav__link nav__link--menu nav justify-content-between">
                 <li class="nav__items">
-                    <a href="Catalogo.php" class="nav__links nav__button">Catalogo</a>
+                    <a href="Catalogo.php" class="nav__links nav__button btn btn-primary">Catálogo</a>
                 </li>
                 <li class="nav__items">
-                    <a href="Respuestos.php" class="nav__links nav__button">Repuestos</a>
+                    <a href="Respuestos.php" class="nav__links nav__button btn btn-primary">Repuestos</a>
                 </li>
                 <li class="nav__items">
-                    <a href="#" class="nav__links nav__button" id="archivos-3d-link">Archivos 3D</a>
+                    <a href="#" class="nav__links nav__button btn btn-primary" id="archivos-3d-link">Archivos 3D</a>
                 </li>
                 <script>
                 function mostrarAviso() {
@@ -42,27 +130,20 @@
                     mostrarAviso();
                 });</script>
                 <li class="nav__items">
-                    <a href="#" class="nav__links nav__button" id="Servicio-de-impresión-link">Servicio de impresión</a>
+                    <a href="#" class="nav__links nav__button btn btn-primary" id="Servicio-de-impresión-link">Servicio de impresión</a>
                 </li>
                 <script>
-                function mostrarAviso() {
-                    var confirmacion = confirm("Para acceder a esta sesión, debes registrarte o iniciar sesión. ¿Deseas hacerlo ahora?");
-                    
-                    if (confirmacion) {
-                        window.location.href = "registro.html";
-                    }
-                }
-
                 var servicioImpresionLink = document.getElementById("Servicio-de-impresión-link");
                 servicioImpresionLink.addEventListener("click", function (event) {
                     event.preventDefault();
                     mostrarAviso();
                 });
                 </script>
-
-                
+            </ul>
         </nav>
-        <img src="images/bxs-user-circle.svg" alt="inicio" id="btnModal" class="hamburguer"> 
+             
+        </nav>
+        <img src="images/bxs-user-circle.svg" alt="inicio" id="btnModal" class="hamburguer"style="margin-top: 0.5%;margin-right: 5%;"> 
         <section class="hero__container container">
             <div id="myModal" class="modalContainer">
                 <form action="Programas/login.php" method="POST">
@@ -134,9 +215,9 @@
                     </form>
                   </div>
              </div> 
-            <h1 class="hero__title">Transformando ideas en realidad tridimensional</h1>
-            <p class="hero__paragraph">¡Adéntrate en un mundo tridimensional como nunca antes! ¡Bienvenid@ nuestra página 3D, donde tus sueños cobran vida!</p><br><br><br><br>
-        </section>
+             <h1 class="hero__title" style="margin-top: 5%;">Transformando ideas en realidad tridimensional</h1>
+             <p class="hero__paragraph" style="margin-bottom: 10%;">¡Adéntrate en un mundo tridimensional como nunca antes! ¡Bienvenid@ nuestra página 3D, donde tus sueños cobran vida!</p>
+                     </section>
     </header>
 
     <main>

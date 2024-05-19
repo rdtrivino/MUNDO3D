@@ -9,6 +9,7 @@
     <link rel="shortcut icon" href="./images/Logo Mundo 3d.png" type="image/x-icon">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="./css/estilosregistro.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <title>Página de registro</title>
     <style>
         .modal {
@@ -55,32 +56,76 @@
         #closeModal:hover {
             background-color: #45a049;
         }
+        .home-icon {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            cursor: pointer;
+            z-index: 999;
+        }
+
+        .home-icon img {
+            width: 50px; 
+            height: 50px;
+            background-color: white; 
+            padding: 5px; 
+            border-radius: 50%; 
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+        }
+        .text-white { color: white; }
+        .font-weight-bold { font-weight: bold; }
+        .mr-3 { margin-right: 1rem; }
+        .font-small { font-size: 14px; }
+        .font-medium { font-size: 16px; }
+        .font-large { font-size: 20px; }
+        #buttons-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
     </style>
 </head>
-<body>
+<body style="background: linear-gradient(135deg, #2980b9, #2c3e50); color: white;">
+    <a href="index.html" class="home-icon">
+        <img src="../MUNDO 3D/images/bx-home-alt-2.svg" alt="Ir a Inicio">
+    </a>
+    <div id="buttons-container" style="display: flex; justify-content: flex-end; align-items: center;">
+        <a href="#" class="font-small text-white font-weight-bold mr-3" onclick="adjustFontSize('small')">A</a>
+        <a href="#" class="font-medium text-white font-weight-bold mr-3" onclick="adjustFontSize('medium')">A</a>
+        <a href="#" class="font-large text-white font-weight-bold mr-3" onclick="adjustFontSize('large')">A</a>
+        <div id="disabled-icon">
+            <i class="fas fa-wheelchair fa-lg text-white" onclick="aumentarTamano()" onmouseover="cambiarCursor(event)" onmouseout="restaurarCursor()"></i>
+        </div>
+    </div>
     <div class="container-form">
-        <div class="information">
+        <div class="information" style="background: linear-gradient(135deg, #bfa1f7, #2c3e50); display: flex; justify-content: center; align-items: center;">
             <img src="images/Logo Mundo 3d.png" alt="Bienvenido">
             <div class="info-childs">
-                <h2>BIENVENIDO</h2>
-                <h1>Regístrate para que puedas disfrutar de nuestras opciones como:</h1>
-                <ul>
-                    <li>Descargar archivos 3D y realizar tus propias impresiones.</li>
-                    <li>Mantenimientos a tus impresoras.</li>
-                    <li>Imprimir la pieza o figuras que quieras.</li>
+                <h2 style="margin-top: 60%;">BIENVENIDO</h2>
+                <div style="margin-bottom: 10%;"></div>
+                <h1 style="font-size: 24px;">Regístrate para que puedas disfrutar de nuestros Productos</h1>  
+                <div style="margin-bottom: 20%;"></div>   
+                <ul style="list-style-type: none; padding-left: 0; text-align: left;">
+                    <li style="margin-bottom: 10px; padding-left: 20px; position: relative;">
+                        <span style="display: inline-block; width: 10px; height: 10px; background-color: #ec0c2a; border-radius: 50%; position: absolute; left: -20px; top: 5px;"></span>
+                        Descargar archivos 3D y realizar tus propias impresiones.
+                    </li>
+                    <li style="margin-bottom: 10px; padding-left: 20px; position: relative;">
+                        <span style="display: inline-block; width: 10px; height: 10px; background-color: #ec0c2a; border-radius: 50%; position: absolute; left: -20px; top: 5px;"></span>
+                        Mantenimientos a tus impresoras.
+                    </li>
+                    <li style="margin-bottom: 10px; padding-left: 20px; position: relative;">
+                        <span style="display: inline-block; width: 10px; height: 10px; background-color: #ec0c2a; border-radius: 50%; position: absolute; left: -20px; top: 5px;"></span>
+                        Imprimir la pieza o figuras que quieras.
+                    </li>
                 </ul>
+                
             </div>
         </div>
         <div class="form-information">
             <div class="form-information-childs">
                 <h2>CREAR UNA CUENTA</h2>
-                <div class="icons">
-                    <img src="images/bxl-gmail.svg" alt="">
-                    <img src="images/bxl-facebook-circle.svg" alt="">
-                    <img src="images/bxl-twitter.svg" alt="">
-                    <img src="images/bxl-instagram.svg" alt="">
-                </div>
-                <p>o usa una cuenta para registrarte.</p>
+                <div style="margin-bottom: 20%;"></div>   
                 <form class="form" id="registroForm" action="Programas/registro.php" method="POST">
                     <label>
                         <img src="images/bx-id-card.svg" alt="">
@@ -183,7 +228,48 @@ document.addEventListener('DOMContentLoaded', function () {
         modal.style.display = 'none';
     });
 });
+function adjustFontSize(size) {
+            const body = document.body;
+            body.classList.remove('font-small', 'font-medium', 'font-large');
 
+            switch(size) {
+                case 'small':
+                    body.classList.add('font-small');
+                    break;
+                case 'medium':
+                    body.classList.add('font-medium');
+                    break;
+                case 'large':
+                    body.classList.add('font-large');
+                    break;
+            }
+        }
+
+        function aumentarTamano() {
+            // Funcionalidad específica para el icono de silla de ruedas
+        }
+
+        function cambiarCursor(event) {
+            event.target.style.cursor = 'pointer';
+        }
+
+        function restaurarCursor(event) {
+            event.target.style.cursor = 'default';
+        }
+
+        function checkPasswordMatch() {
+            const password = document.getElementById('edit-contrasena').value;
+            const confirmPassword = document.getElementById('edit-confirm-contrasena').value;
+            const passwordError = document.getElementById('password-error');
+
+            if (password !== confirmPassword) {
+                passwordError.style.display = 'block';
+            } else {
+                passwordError.style.display = 'none';
+            }
+        }
+
+        document.querySelector("#disabled-icon .fa-wheelchair").style.color = "#fff";
     </script>
 </body>
 </html>

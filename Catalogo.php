@@ -16,7 +16,7 @@ if (!mysqli_select_db($link, $dbname)) {
 
 
 // Consulta a la base de datos para obtener productos de la categoría 5
-$sql = "SELECT * FROM productos WHERE Pro_Categoria = 1";
+$sql = "SELECT * FROM productos WHERE Pro_Categoria = 2";
 $result = mysqli_query($link, $sql);
 
 ?>
@@ -37,44 +37,71 @@ $result = mysqli_query($link, $sql);
     <link href="USUARIO/css/style.css" rel="stylesheet">
     <link rel="shortcut icon" href="./images/Logo Mundo 3d.png" type="image/x-icon">
     <link rel="stylesheet" href="./css/normalize.css">
-
 </head>
 
 <body>
-<!-- Topbar Start -->
 <div class="container-fluid bg-primary py-3">
     <div class="row">
         <div class="col-md-6 text-center text-lg-left mb-2 mb-lg-0">
-<div id="buttons-container" style="display: flex; justify-content: flex-start; align-items: center;">
-<div class="container">
-    <div id="disabled-icon" class="mb-3">
-        <i class="fas fa-wheelchair fa-lg text-white"></i>
-    </div>
-    <a href="#" class="font-small text-white font-weight-bold mr-3">A</a>
-    <a href="#" class="font-medium text-white font-weight-bold mr-3">A</a>
-    <a href="#" class="font-large text-white font-weight-bold">A</a>
+        <div id="buttons-container" style="display: flex; justify-content: flex-start; align-items: center;">
+
+<!-- Icono de silla de ruedas -->
+<div id="disabled-icon">
+    <i class="fas fa-wheelchair fa-lg text-white" onclick="aumentarTamano()" onmouseover="cambiarCursor(event)" onmouseout="restaurarCursor()"></i>
 </div>
+
+<!-- Botón para disminuir el tamaño de fuente -->
+<button onclick="disminuirTamano()" style="margin-left: 10px;">-</button>
+
+<!-- Botón para aumentar el tamaño de fuente -->
+<button onclick="aumentarTamano()" style="margin-left: 10px;">+</button>
+
 </div>
-<style>.font-small {
-    font-size: 14px;
+
+
+
+
+
+<script>
+function aumentarTamano() {
+// Aumentar el tamaño de fuente de todo el documento
+var elementos = document.getElementsByTagName("*");
+for (var i = 0; i < elementos.length; i++) {
+    var elemento = elementos[i];
+    var estilo = window.getComputedStyle(elemento);
+    var fontSize = parseInt(estilo.fontSize);
+    elemento.style.fontSize = (fontSize + 2) + "px"; // Incrementa el tamaño de la fuente en 2px
+}
 }
 
-.font-medium {
-    font-size: 16px;
+function disminuirTamano() {
+// Disminuir el tamaño de fuente de todo el documento
+var elementos = document.getElementsByTagName("*");
+for (var i = 0; i < elementos.length; i++) {
+    var elemento = elementos[i];
+    var estilo = window.getComputedStyle(elemento);
+    var fontSize = parseInt(estilo.fontSize);
+    elemento.style.fontSize = (fontSize - 2) + "px"; // Disminuye el tamaño de la fuente en 2px
+}
 }
 
-.font-large {
-    font-size: 20px;
+function cambiarCursor(event) {
+event.target.style.cursor = "pointer"; // Cambiar el cursor a una mano cuando pasa sobre el icono de la silla de ruedas
 }
 
-#disabled-icon {
-    display: inline-block; /* Para alinear verticalmente con los enlaces */
+function restaurarCursor() {
+document.getElementById("disabled-icon").style.cursor = "auto"; // Restaurar el cursor al valor predeterminado cuando se aleja del icono de la silla de ruedas
 }
 
-a {
-    text-decoration: none; /* Eliminar subrayado de los enlaces */
-}</style>
+// Cambiar el color del icono de la silla de ruedas a blanco
+document.querySelector("#disabled-icon .fa-wheelchair").style.color = "#fff";
+// Obtener los botones y establecer el color de fondo como transparente y el color del texto como blanco
+document.querySelectorAll("#buttons-container button").forEach(function(button) {
+button.style.backgroundColor = "transparent";
+button.style.color = "#fff"; // Color blanco
+});
 
+</script>
         </div>
         <div class="col-md-6 text-center text-lg-right">
         <div class="d-inline-flex align-items-center" style="margin-top: -10%;"> <!-- Ajusta el margen superior según sea necesario -->
@@ -318,7 +345,6 @@ a {
     <div class="container-fluid position-relative nav-bar p-0">
         <div class="container-lg position-relative p-0 px-lg-3" style="z-index: 9;">
             <nav class="navbar navbar-expand-lg bg-white navbar-light py-3 py-lg-0 pl-3 pl-lg-5">
-                
                 <a href="" class="navbar-brand">
                     <h1 class="m-0 text-secondary"><span class="text-primary">MUNDO</span>3D</h1>
                 </a>
@@ -346,7 +372,7 @@ a {
                     event.preventDefault();
                     mostrarAviso();
                 });</script>
-                
+
                 <script>
                 function mostrarAviso() {
                     var confirmacion = confirm("Para acceder a esta sesión, debes registrarte o iniciar sesión. ¿Deseas hacerlo ahora?");
@@ -368,24 +394,24 @@ a {
         </div>
     </div>
     <!-- Navbar End -->
-    <div class="page-header container-fluid pt-2 pt-lg-5 pb-2 mb-5">
-            <div class="container py-5">
-            <div class="row align-items-center py-4">
+    <div class="page-header container-fluid bg-secondary pt-2 pt-lg-5 pb-2 mb-5">
+    <div class="container py-5">
+        <div class="row align-items-center py-4">
+            <div class="col-md-6 text-center text-md-left">
+                <h1 class="mb-4 mb-md-0 text-white">CATALOGO</h1>
+            </div>
+            <div class="col-md-6 text-center text-md-right">
+                <div class="d-inline-flex align-items-center">
+                    <form class="form-inline mr-3">
+                        <input class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Buscar" oninput="searchProducts(this.value)">
+                        <!-- Cambiar el evento a "input" para que se ejecute cada vez que se ingresa una letra -->
+                        <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Buscar</button>
+                    </form>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-        <style>
-        .page-header {
-            position: relative;
-            background-color: black; /* Un tono de gris oscuro */
-            color: white; /* Texto blanco */
-            clip-path: polygon(0 0, 100% 0, 100% 50%, 50% 75%, 0 50%);
-            border-top: 5px solid white; /* Línea blanca en la parte superior */
-            z-index: -1;
-        }
-
-    </style>
-        
         <script>
             function searchProducts(searchTerm) {
                 // Obtener todos los elementos de productos
@@ -413,7 +439,7 @@ a {
                 });
             }
         </script>
-            <div class="container-fluid pt-5">
+  <div class="container-fluid pt-5">
                 <div class="container">
                     <h1 class="display-4 text-center mb-5">Explora nuestro catálogo</h1>
                     <div class="row row-cols-lg-4 row-cols-md-3 justify-content-center">
@@ -436,6 +462,8 @@ a {
                                         ?>
                                         <img src="<?php echo $imageSrc; ?>" class="card-img-top" style="height: 200px; object-fit: cover;" alt="<?php echo $row['Pro_Nombre']; ?>">
                                         <div class="overlay position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
+                                            <?php if ($row['Pro_Cantidad'] > 0) { ?>
+                                            <?php } ?>
                                             <a href="#" class="btn btn-secondary btn-lg mx-2 detallesBtn" data-toggle="modal" data-target="#detalleProductoModal" data-id="<?php echo $row['Identificador']; ?>" data-name="<?php echo $row['Pro_Nombre']; ?>" data-description="<?php echo $row['Pro_Descripcion']; ?>" data-price="<?php echo $row['Pro_PrecioVenta']; ?>" style="background-color: #E42E24;"><i class="fas fa-search"></i></a>
                                         </div>
                                         <div class="card-body">
@@ -470,9 +498,8 @@ a {
                     height: 300px !important; /* Ajusta esta altura según tus necesidades */
                 }
             </style>
-
- <!-- Modal de detalles del producto -->
- <div class="modal fade" id="detalleProductoModal" tabindex="-1" role="dialog" aria-labelledby="detalleProductoModalLabel" aria-hidden="true">
+                <!-- Modal de detalles del producto -->
+                <div class="modal fade" id="detalleProductoModal" tabindex="-1" role="dialog" aria-labelledby="detalleProductoModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -502,7 +529,7 @@ a {
                     </div>
                 </div>
 
-                <script>
+            <script>
                 document.addEventListener("DOMContentLoaded", function() {
                     var detallesBtns = document.querySelectorAll('.detallesBtn');
 
@@ -534,6 +561,31 @@ a {
                 }
             </script>
             <style>
+                /* Estilo para el modal */
+                .modal-content {
+                    width: 80%; /* Ancho del modal */
+                    max-width: 100%; /* Ancho máximo */
+                }
+
+                /* Estilo para el contenedor de la imagen */
+                .img-container {
+                    height: 400px; /* Altura del contenedor de la imagen */
+                    overflow: hidden; /* Ocultar el desbordamiento */
+                }
+
+                /* Estilo para la imagen del producto */
+                #productoImagen {
+                    width: 100%; /* Ancho del 100% del contenedor */
+                    height: auto; /* Altura automática para mantener la proporción */
+                    transition: transform 0.3s ease; /* Transición suave de 0.3 segundos */
+                }
+
+                /* Estilo para el precio del producto */
+                #productoPrecio {
+                    color: #dc3545; /* Color rojo para el precio */
+                    font-weight: bold; /* Texto en negrita */
+                }
+                        
                 /* Estilo para la superposición */
             .overlay {
                 background-color: rgba(0, 0, 0, 0.5);
@@ -562,6 +614,7 @@ a {
             </style>
             </div>
             </div>
+
 
 <!-- Footer Start -->
 <div class="container-fluid bg-primary text-white mt-5 pt-5 px-sm-3 px-md-5">
@@ -595,7 +648,7 @@ a {
         </div>
     </div>
 </div>
-<div class="container-fluid bg-dark text-white py-4 px-sm-3 px-md-5">
+    <div class="container-fluid bg-dark text-white py-4 px-sm-3 px-md-5">
     <p class="m-0 text-center text-white">
         &copy; <a class="text-white font-weight-medium" href="#">MUNDO 3D</a>. Todos los derechos reservados <?php echo date('Y'); ?>
     </p>
