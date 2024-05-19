@@ -334,8 +334,8 @@
                                                 <th>Cantidad</th>
                                                 <th>Costo</th>
                                                 <th>Imágenes</th>
-                                                <th>Estado</th>
                                                 <th>Acciones</th>
+                                                <th>Estado</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -349,190 +349,142 @@
                                                     <td><?php echo $row['Pro_Cantidad']; ?></td>
                                                     <td><?php echo $row['Pro_Costo']; ?></td>
                                                     <td><img src="data:image/png;base64,<?php echo base64_encode($row['imagen_principal']); ?>" alt="Imagen del producto" style="width: 200px; height: 200px;"></td>
-                                                    <td><?php echo $row['Pro_Estado']; ?></td>
                                                     <td>
                                                     <div class="btn-group" role="group" aria-label="Acciones">
                                                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editarModal<?php echo $row['Identificador']; ?>" data-toggle="tooltip" data-placement="top" title="Editar">
                                                             <i class="fas fa-edit"></i>
                                                         </button>
-                                            <!-- Modal de edición -->
-                                            <div class="modal fade" id="editarModal<?php echo $row['Identificador']; ?>" tabindex="-1" aria-labelledby="editarModalLabel<?php echo $row['Identificador']; ?>" aria-hidden="true">
-                                                <div class="modal-dialog modal-lg">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="editarModalLabel<?php echo $row['Identificador']; ?>">Editar Producto</h5>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <!-- Formulario para editar el producto -->
-                                                            <form id="formulario-edicion-<?php echo $row['Identificador']; ?>">
-                                                                <div class="mb-3">
-                                                                    <label for="nombre" class="form-label">Nombre</label>
-                                                                    <input type="text" class="form-control" id="nombre-<?php echo $row['Identificador']; ?>" name="nombre" value="<?php echo $row['Pro_Nombre']; ?>" required>
+                                                    <!-- Modal de edición -->
+                                                    <div class="modal fade" id="editarModal<?php echo $row['Identificador']; ?>" tabindex="-1" aria-labelledby="editarModalLabel<?php echo $row['Identificador']; ?>" aria-hidden="true">
+                                                        <div class="modal-dialog modal-lg">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="editarModalLabel<?php echo $row['Identificador']; ?>">Editar Producto</h5>
+                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                                 </div>
-                                                                <div class="mb-3">
-                                                                    <label for="descripcion" class="form-label">Descripción</label>
-                                                                    <textarea class="form-control" id="descripcion-<?php echo $row['Identificador']; ?>" name="descripcion" rows="3" required><?php echo $row['Pro_Descripcion']; ?></textarea>
+                                                                <div class="modal-body">
+                                                                    <!-- Formulario para editar el producto -->
+                                                                    <form id="formulario-edicion-<?php echo $row['Identificador']; ?>" class="row g-3">
+                                                                        <div class="col-md-6">
+                                                                            <label for="nombre" class="form-label">Nombre</label>
+                                                                            <input type="text" class="form-control" id="nombre-<?php echo $row['Identificador']; ?>" name="nombre" value="<?php echo $row['Pro_Nombre']; ?>" required>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <label for="precio" class="form-label">Precio de Venta</label>
+                                                                            <input type="number" class="form-control" id="precio-<?php echo $row['Identificador']; ?>" name="precio" step="0.01" value="<?php echo $row['Pro_PrecioVenta']; ?>" required>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <label for="descripcion" class="form-label">Descripción</label>
+                                                                            <textarea class="form-control" id="descripcion-<?php echo $row['Identificador']; ?>" name="descripcion" rows="3" required><?php echo $row['Pro_Descripcion']; ?></textarea>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <label for="categoria" class="form-label">Categoría</label>
+                                                                            <select class="form-select" id="categoria-<?php echo $row['Identificador']; ?>" name="categoria" required>
+                                                                                <?php
+                                                                                // Verificar si $categorias está definido y no está vacío
+                                                                                if (isset($categorias) && !empty($categorias)) {
+                                                                                    foreach ($categorias as $categoria) {
+                                                                                        // Verificar si la categoría actual coincide con la categoría del producto
+                                                                                        $selected = ($categoria['Cgo_Codigo'] == $row['Pro_Categoria']) ? 'selected' : '';
+                                                                                        echo "<option value=\"{$categoria['Cgo_Codigo']}\" $selected>{$categoria['Cgo_Nombre']}</option>";
+                                                                                    }
+                                                                                } else {
+                                                                                    echo "<option value=\"\">No hay categorías disponibles</option>";
+                                                                                }
+                                                                                ?>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <label for="cantidad" class="form-label">Cantidad</label>
+                                                                            <input type="number" class="form-control" id="cantidad-<?php echo $row['Identificador']; ?>" name="cantidad" value="<?php echo isset($row['Pro_Cantidad']) ? $row['Pro_Cantidad'] : ''; ?>" required>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <label for="costo" class="form-label">Costo</label>
+                                                                            <input type="number" class="form-control" id="costo-<?php echo $row['Identificador']; ?>" name="costo" step="0.01" value="<?php echo isset($row['Pro_Costo']) ? $row['Pro_Costo'] : ''; ?>" required>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <label for="estado" class="form-label">Estado</label>
+                                                                            <select class="form-select" id="estado-<?php echo $row['Identificador']; ?>" name="estado" required>
+                                                                                <option value="activo" <?php echo ($row['Pro_Estado'] == 'activo') ? 'selected' : ''; ?>>Activo</option>
+                                                                                <option value="inactivo" <?php echo ($row['Pro_Estado'] == 'inactivo') ? 'selected' : ''; ?>>Inactivo</option>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="col-12">
+                                                                            <label for="imagen" class="form-label">Imagen Principal</label>
+                                                                            <!-- Muestra la imagen actual del producto -->
+                                                                            <?php if (!empty($row['imagen_principal'])) : ?>
+                                                                                <!-- Muestra la imagen actual si existe -->
+                                                                                <img src="data:image/png;base64,<?php echo base64_encode($row['imagen_principal']); ?>" alt="Imagen actual" style="width: 100px; height: 100px;">
+                                                                            <?php else : ?>
+                                                                                <!-- Muestra un mensaje si no hay imagen actual -->
+                                                                                <p>No hay imagen actual.</p>
+                                                                            <?php endif; ?>
+                                                                            <!-- Input para seleccionar una nueva imagen -->
+                                                                            <input type="file" class="form-control" id="imagen-<?php echo $row['Identificador']; ?>" name="imagen" accept="image/*">
+                                                                        </div>
+                                                                    </form>
                                                                 </div>
-                                                                <div class="mb-3">
-                                                                    <label for="precio" class="form-label">Precio de Venta</label>
-                                                                    <input type="number" class="form-control" id="precio-<?php echo $row['Identificador']; ?>" name="precio" step="0.01" value="<?php echo $row['Pro_PrecioVenta']; ?>" required>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                                    <button type="button" class="btn btn-primary" onclick="guardar_cambios(<?php echo $row['Identificador']; ?>)">Guardar Cambios</button>
                                                                 </div>
-                                                                <div class="mb-3">
-                                                                <label for="categoria" class="form-label">Categoría</label>
-                                                                    <select class="form-select" id="categoria-<?php echo $row['Identificador']; ?>" name="categoria" required>
-                                                                        <?php
-                                                                        // Verificar si $categorias está definido y no está vacío
-                                                                        if (isset($categorias) && !empty($categorias)) {
-                                                                            foreach ($categorias as $categoria) {
-                                                                                // Verificar si la categoría actual coincide con la categoría del producto
-                                                                                $selected = ($categoria['Cgo_Codigo'] == $row['Pro_Categoria']) ? 'selected' : '';
-                                                                                echo "<option value=\"{$categoria['Cgo_Codigo']}\" $selected>{$categoria['Cgo_Nombre']}</option>";
-                                                                            }
-                                                                        } else {
-                                                                            echo "<option value=\"\">No hay categorías disponibles</option>";
-                                                                        }
-                                                                        ?>
-                                                                    </select>
-
-                                                                </div>
-
-                                                                <div class="mb-3">
-                                                                    <label for="cantidad" class="form-label">Cantidad</label>
-                                                                    <input type="number" class="form-control" id="cantidad-<?php echo $row['Identificador']; ?>" name="cantidad" value="<?php echo isset($row['Pro_Cantidad']) ? $row['Pro_Cantidad'] : ''; ?>" required>
-                                                                </div>
-                                                                <div class="mb-3">
-                                                                    <label for="costo" class="form-label">Costo</label>
-                                                                    <input type="number" class="form-control" id="costo-<?php echo $row['Identificador']; ?>" name="costo" step="0.01" value="<?php echo isset($row['Pro_Costo']) ? $row['Pro_Costo'] : ''; ?>" required>
-                                                                </div>
-                                                                <!-- Campo oculto para el estado del producto (por defecto activo) -->
-                                                                <input type="hidden" name="estado" value="activo">
-                                                                <!-- Muestra la imagen actual del producto -->
-                                                                <div class="mb-3">
-                                                                    <label for="imagen" class="form-label">Imagen Principal</label>
-                                                                    <?php if (!empty($row['imagen_principal'])) : ?>
-                                                                        <!-- Muestra la imagen actual si existe -->
-                                                                        <img src="data:image/png;base64,<?php echo base64_encode($row['imagen_principal']); ?>" alt="Imagen actual" style="width: 100px; height: 100px;">
-                                                                    <?php else : ?>
-                                                                        <!-- Muestra un mensaje si no hay imagen actual -->
-                                                                        <p>No hay imagen actual.</p>
-                                                                    <?php endif; ?>
-                                                                    <!-- Input para seleccionar una nueva imagen -->
-                                                                    <input type="file" class="form-control" id="imagen-<?php echo $row['Identificador']; ?>" name="imagen" accept="image/*">
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                                            <button type="button" class="btn btn-primary" onclick="guardar_cambios(<?php echo $row['Identificador']; ?>)">Guardar Cambios</button>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </div>
-
-
+                                                    <td>
+                                                        <div class="badge <?php echo ($row['Pro_Estado'] == 'activo') ? 'bg-success' : 'bg-danger'; ?>">
+                                                            <?php echo ucfirst($row['Pro_Estado']); ?>
+                                                        </div>
+                                                    </td>
                                             <script>
                                             function guardar_cambios(codigo) {
-                                                // Obtener los valores del formulario
-                                                var nombre = document.getElementById('nombre-' + codigo).value;
-                                                var descripcion = document.getElementById('descripcion-' + codigo).value;
-                                                var precio = document.getElementById('precio-' + codigo).value;
-                                                var categoria = document.getElementById('categoria-' + codigo).value;
-                                                var cantidad = document.getElementById('cantidad-' + codigo).value;
-                                                var costo = document.getElementById('costo-' + codigo).value;
-                                                var imagen = document.getElementById('imagen-' + codigo).files[0];
+                                            // Obtener los valores del formulario
+                                            var nombre = document.getElementById('nombre-' + codigo).value;
+                                            var descripcion = document.getElementById('descripcion-' + codigo).value;
+                                            var precio = document.getElementById('precio-' + codigo).value;
+                                            var categoria = document.getElementById('categoria-' + codigo).value;
+                                            var cantidad = document.getElementById('cantidad-' + codigo).value;
+                                            var costo = document.getElementById('costo-' + codigo).value;
+                                            var estado = document.getElementById('estado-' + codigo).value; // Obtener el estado
+                                            var imagen = document.getElementById('imagen-' + codigo).files[0];
 
-                                                // Crear un objeto FormData para enviar los datos
-                                                var formData = new FormData();
-                                                formData.append('guardar_cambios', true);
-                                                formData.append('Identificador', codigo);
-                                                formData.append('nombre', nombre);
-                                                formData.append('descripcion', descripcion);
-                                                formData.append('precio', precio);
-                                                formData.append('categoria', categoria);
-                                                formData.append('cantidad', cantidad);
-                                                formData.append('costo', costo);
-                                                formData.append('imagen', imagen);
+                                            // Crear un objeto FormData para enviar los datos
+                                            var formData = new FormData();
+                                            formData.append('guardar_cambios', true);
+                                            formData.append('Identificador', codigo);
+                                            formData.append('nombre', nombre);
+                                            formData.append('descripcion', descripcion);
+                                            formData.append('precio', precio);
+                                            formData.append('categoria', categoria);
+                                            formData.append('cantidad', cantidad);
+                                            formData.append('costo', costo);
+                                            formData.append('estado', estado); // Añadir el estado al FormData
+                                            formData.append('imagen', imagen);
 
-                                                // Realizar la solicitud AJAX
-                                                var xhr = new XMLHttpRequest();
-                                                xhr.open("POST", "funcionestabladeproductos.php", true);
-                                                xhr.onreadystatechange = function () {
-                                                    if (xhr.readyState === 4) {
-                                                        if (xhr.status === 200) {
-                                                            // Mostrar un mensaje de éxito
-                                                            alert("Los cambios se han realizado con éxito.");
-                                                            // Cerrar el modal
-                                                            $('#editarModal' + codigo).modal('hide');
-                                                            // Recargar la página después de 1 segundo
-                                                            setTimeout(function() {
-                                                                location.reload();
-                                                            }, 1000);
-                                                        } else {
-                                                            // Mostrar un mensaje de error
-                                                            alert("Ha ocurrido un error al realizar los cambios.");
-                                                        }
-                                                    }
-                                                };
-                                                xhr.send(formData);
-                                            }
-                                            </script>
-                                            <!-- Botón de eliminar -->
-                                            <button type="button" class="btn btn-danger" onclick="mostrarModalConfirmacion(<?php echo $row['Identificador']; ?>)" data-toggle="tooltip" data-placement="top" title="Eliminar">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-
-                                            <!-- Modal de confirmación -->
-                                            <div class="modal fade" id="modalConfirmacion_<?php echo $row['Identificador']; ?>" tabindex="-1" aria-labelledby="modalConfirmacionLabel" aria-hidden="true">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="modalConfirmacionLabel">Confirmar acción</h5>
-                                                            <button type="button" class="btn-close" aria-label="Close" onclick="cerrarModalConfirmacion(<?php echo $row['Identificador']; ?>)"></button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            ¿Estás seguro de que deseas eliminar el producto?
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" onclick="cerrarModalConfirmacion(<?php echo $row['Identificador']; ?>)">Cancelar</button>
-                                                            <button type="button" class="btn btn-danger" onclick="confirmarCambioEstado(<?php echo $row['Identificador']; ?>)">Aceptar</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <script>
-                                                function mostrarModalConfirmacion(codigoProducto) {
-                                                    // Muestra el modal de confirmación correspondiente al producto
-                                                    $('#modalConfirmacion_' + codigoProducto).modal('show');
-                                                }
-
-                                                function cerrarModalConfirmacion(codigoProducto) {
-                                                    // Cierra el modal de confirmación correspondiente al producto
-                                                    $('#modalConfirmacion_' + codigoProducto).modal('hide');
-                                                }
-
-                                                function confirmarCambioEstado(codigoProducto) {
-                                                    // Realiza la solicitud AJAX para cambiar el estado del producto
-                                                    $.ajax({
-                                                        type: 'POST',
-                                                        url: 'funcionestabladeproductos.php', // Cambia la URL según la ubicación de tu archivo PHP
-                                                        data: { codigo: codigoProducto },
-                                                        success: function(response) {
-                                                            // Muestra el mensaje de éxito
-                                                            alert(response);
-                                                            // Cierra el modal de confirmación
-                                                            cerrarModalConfirmacion(codigoProducto);
-                                                            // Actualiza la tabla de productos
+                                            // Realizar la solicitud AJAX
+                                            var xhr = new XMLHttpRequest();
+                                            xhr.open("POST", "funcionestabladeproductos.php", true);
+                                            xhr.onreadystatechange = function () {
+                                                if (xhr.readyState === 4) {
+                                                    if (xhr.status === 200) {
+                                                        // Mostrar un mensaje de éxito
+                                                        alert("Los cambios se han realizado con éxito.");
+                                                        // Cerrar el modal
+                                                        $('#editarModal' + codigo).modal('hide');
+                                                        // Recargar la página después de 1 segundo
+                                                        setTimeout(function() {
                                                             location.reload();
-                                                        },
-                                                        error: function(xhr, status, error) {
-                                                            console.error('Error al cambiar el estado del producto:', error);
-                                                        }
-                                                    });
+                                                        }, 1000);
+                                                    } else {
+                                                        // Mostrar un mensaje de error
+                                                        alert("Ha ocurrido un error al realizar los cambios.");
+                                                    }
                                                 }
-                                            </script>
-                                        </div>
+                                            };
+                                            xhr.send(formData);
+                                        }
+                                        </script>
+
                                         <?php }
                                         ?>
                                 </tbody>

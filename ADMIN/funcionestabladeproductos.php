@@ -47,6 +47,7 @@ if (isset($_POST['guardar_cambios'])) {
         $categoria = $_POST['categoria'];
         $cantidad = $_POST['cantidad'];
         $costo = $_POST['costo'];
+        $estado = $_POST['estado']; // Obtener el estado
 
         // Procesar la imagen (si se ha subido una nueva)
         $imagen_contenido = null;
@@ -56,7 +57,7 @@ if (isset($_POST['guardar_cambios'])) {
         }
 
         // Consulta para obtener los datos actuales del producto
-        $consulta_actualizar = "SELECT Pro_Nombre, Pro_Descripcion, Pro_PrecioVenta, Pro_Categoria, Pro_Cantidad, Pro_Costo, imagen_principal FROM productos WHERE Identificador=?";
+        $consulta_actualizar = "SELECT Pro_Nombre, Pro_Descripcion, Pro_PrecioVenta, Pro_Categoria, Pro_Cantidad, Pro_Costo, Pro_Estado, imagen_principal FROM productos WHERE Identificador=?";
         $stmt_actualizar = mysqli_prepare($link, $consulta_actualizar);
         mysqli_stmt_bind_param($stmt_actualizar, "i", $identificador);
         mysqli_stmt_execute($stmt_actualizar);
@@ -64,7 +65,7 @@ if (isset($_POST['guardar_cambios'])) {
 
         // Si el producto existe, se procede a actualizar
         if (mysqli_stmt_num_rows($stmt_actualizar) > 0) {
-            mysqli_stmt_bind_result($stmt_actualizar, $nombre_actual, $descripcion_actual, $precio_actual, $categoria_actual, $cantidad_actual, $costo_actual, $imagen_actual);
+            mysqli_stmt_bind_result($stmt_actualizar, $nombre_actual, $descripcion_actual, $precio_actual, $categoria_actual, $cantidad_actual, $costo_actual, $estado_actual, $imagen_actual);
             mysqli_stmt_fetch($stmt_actualizar);
 
             // Verificar y asignar los valores que se mantienen iguales si no se han modificado
@@ -74,13 +75,14 @@ if (isset($_POST['guardar_cambios'])) {
             $categoria = empty($categoria) ? $categoria_actual : $categoria;
             $cantidad = empty($cantidad) ? $cantidad_actual : $cantidad;
             $costo = empty($costo) ? $costo_actual : $costo;
+            $estado = empty($estado) ? $estado_actual : $estado;
             $imagen_contenido = empty($imagen_contenido) ? $imagen_actual : $imagen_contenido;
 
             // Actualizar los datos en la base de datos
-            $consulta = "UPDATE productos SET Pro_Nombre=?, Pro_Descripcion=?, Pro_PrecioVenta=?, Pro_Categoria=?, Pro_Cantidad=?, Pro_Costo=?, imagen_principal=? WHERE Identificador=?";
+            $consulta = "UPDATE productos SET Pro_Nombre=?, Pro_Descripcion=?, Pro_PrecioVenta=?, Pro_Categoria=?, Pro_Cantidad=?, Pro_Costo=?, Pro_Estado=?, imagen_principal=? WHERE Identificador=?";
             $stmt = mysqli_prepare($link, $consulta);
             if ($stmt) {
-                mysqli_stmt_bind_param($stmt, "ssdsddsi", $nombre, $descripcion, $precio, $categoria, $cantidad, $costo, $imagen_contenido, $identificador);
+                mysqli_stmt_bind_param($stmt, "ssdsdsssi", $nombre, $descripcion, $precio, $categoria, $cantidad, $costo, $estado, $imagen_contenido, $identificador);
                 if (mysqli_stmt_execute($stmt)) {
                     // Si la consulta se ejecutó con éxito, devuelve un mensaje de éxito
                     echo "success";
@@ -108,26 +110,6 @@ if (isset($_POST['guardar_cambios'])) {
 }
 
 
-// Verificar si se recibió una solicitud para eliminar un producto
-if (isset($_POST['codigo'])) {
-    // Sanitiza y obtén el código del producto
-    $codigoProducto = mysqli_real_escape_string($link, $_POST['codigo']);
-
-    // Consulta para cambiar el estado del producto en la base de datos
-    $sql = "UPDATE productos SET Pro_Estado = IF(Pro_Estado = 'activo', 'inactivo', 'activo') WHERE Identificador = '$codigoProducto'";
-
-    // Ejecuta la consulta
-    if (mysqli_query($link, $sql)) {
-        // Si la consulta se ejecuta con éxito, devuelve un mensaje de éxito
-        echo "El producto se ha eliminado correctamente.";
-    } else {
-        // Si hay algún error en la consulta, devuelve un mensaje de error
-        echo "Error al eliminar el producto: " . mysqli_error($link);
-    }
-
-    // Cierra la conexión a la base de datos
-    mysqli_close($link);
-}
 
 // Verificar si se recibió una solicitud para agregar un nuevo producto
 if (isset($_POST['nombre']) && isset($_POST['descripcion']) && isset($_POST['precio']) && isset($_POST['categoria']) && isset($_POST['cantidad']) && isset($_POST['costo'])) {
