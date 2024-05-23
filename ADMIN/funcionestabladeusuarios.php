@@ -1,5 +1,5 @@
 <?php
-session_start();
+
 require '../conexion.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
@@ -13,7 +13,7 @@ if (!isset($_SESSION['username'])) {
 $nombreCompleto = $_SESSION['username'];
 $usuario_id = $_SESSION['user_id']; 
 
-$sql = "SELECT  Usu_Identificacion, Usu_Nombre_completo, Usu_Telefono, Usu_Email, Usu_Ciudad, Usu_Direccion, Usu_Rol, Usu_Pedidos, Usu_Estado FROM usuario";
+$sql = "SELECT  Usu_Identificacion, Usu_Nombre_completo, Usu_Telefono, Usu_Email, Usu_Ciudad, Usu_Direccion, Usu_Rol, Usu_Estado FROM usuario";
 $resultado = mysqli_query($link, $sql);
 
 if (!$resultado) {
