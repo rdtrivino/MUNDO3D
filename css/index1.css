@@ -7,93 +7,6 @@
 body {
     font-family: 'Poppins', sans-serif;
 }
-.user-controls {
-    display: flex;
-    justify-content: flex-end; /* Alinea a la derecha */
-    align-items: center;
-}
-.user-info {
-    margin-right: 20px;
-    margin-top: 20px;
-}
-#user-button {
-    font-size: 16px;
-    padding: 10px 20px;
-    position: relative;
-    z-index: 1;
-    background: transparent;
-    color: #ffffff;
-    cursor: pointer;
-    border-radius: 40px;
-    font-weight: bold;
-    font-family: Arial, Helvetica, sans-serif, sans-serif;
-
-}
-
-.user-menu {
-    display: none;
-    right: 0;
-    top: 100%;
-    z-index: 2;
-    font-size: 16px;
-    position: absolute;
-    margin-top: -520px;
-    margin-right: 160px;
-    padding: auto;
-}
-
-.user-menu ul{
-    list-style-type: none;
-}
-.user-menu li {
-    margin: 0;
-    padding: 0;
-    margin-bottom: 5px;
-}
-.user-menu a {
-    text-decoration: none;
-    color: #ffffff;
-    border-radius: 34px;
-    z-index: 1;
-    background-size: cover;
-    display: block;
-    padding: 10px 20px; /* Ajusta el relleno según sea necesario */
-    border: 1px solid #ffffff; /* Agrega un borde blanco alrededor de cada opción */
-    background-color: #202122;
-
-}
-
-.user-menu.show {
-    display: block;
-    list-style-type: none; /* Elimina los puntos de las opciones del menú */
-}
-
-
-/* Estilos adicionales según sea necesario */
-
-.logout-icon img {
-    width: 40px; /* Ajusta el tamaño del icono de cerrar sesión */
-    cursor: pointer;
-    margin-top: 20px;
-    border-radius: 10px;
-    background: #797676;
-    box-shadow: 0 0 6px rgb(241, 241, 243);
-}
-/* Estilo inicial para ocultar el menú desplegable */
-
-/* Agrega estilos adicionales según sea necesario */
-
-
-.hero::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-size: cover;
-    z-index: -1;
-}
 
 .container {
     width: 90%;
@@ -127,6 +40,7 @@ body {
     z-index: -1;
 }
 .logo {
+    /* Estilos del logo */
     position: absolute;
     height: 170px;
     width: 170px;
@@ -135,12 +49,132 @@ body {
     z-index: 1;
     background-size: cover;
 }
+
+.hamburguer {
+    /* Estilos del botón hamburguesa */
+    position: absolute;
+    top: 95px;
+    right: 30px;
+    background: #2433bd;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    border-radius: 40px;
+    box-shadow: 0 0 6px rgb(230, 230, 236);
+}
+.modalContainer {
+    display: none; 
+    position: fixed; 
+    z-index: 1;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgba(85, 83, 83, 0.534);
+    background-color: rgba(88, 87, 87, 0.658);
+    
+}
+
+.modalContainer .modal-content {
+    background-color: #6d6d7e;
+    margin: auto;
+    padding: 10px;
+    border: 1px solid rgb(80, 9, 211);
+    border-top: 15px solid #5869b7;
+    width: 25%;
+    border-radius: 30px;
+    text-align: center;
+}
+
+.modalContainer .close {
+    color: #0921aa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    
+}
+
+.modalContainer .close:hover,
+.modalContainer .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.spread{
+    transform: translate(0);
+}
+
+.form-group {
+    margin-bottom: 20px;
+  }
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #001A49;
+  }
+  .form-group input {
+    width: 97%;
+    padding: 8px;
+    border-radius: 30px;
+    border: 1px solid #130a0a;
+  }
+  .form-group .password-toggle {
+    margin-top: 5px;
+  }
+  .form-group .password-toggle input {
+    width: auto;
+    display: inline-block;
+    margin-left: 5px;
+  }
+  .form-group .password-toggle label {
+    display: inline;
+  }
+  .form-group .forgot-password {
+    margin-top: 5px;
+    text-align: left;
+  }
+  .form-group .forgot-password a {
+    color: #0c0808;
+    text-decoration: none;
+  }
+  .forgot-password-link{
+    color: #1d1313;
+  }
+  .button{
+    border-radius: 30px;
+    padding: 15px;
+    background: #2433bd;
+    font-family: 'Roboto', sans-serif;
+    cursor: pointer;
+    font-weight: bold;
+    color: #eee7e7;
+  }
+  .password-toggle-icon {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #ffffff;
+  }
+  .registro{
+    border-radius: 30px;
+    padding: 15px;
+    background: #2433bd;
+    font-family: 'Roboto', sans-serif;
+    cursor: pointer;
+    font-weight: bold;
+    color: #ffffff !important;
+}
 /* Nav */
 .nav {
-    height: 5px;
+    height: 5px; /* Cambia la altura a "auto" para que se ajuste automáticamente al contenido */
     display: flex;
     align-items: center;
-    margin-top: -20px;
 }
 
 .nav__title {
@@ -150,6 +184,7 @@ body {
 
 .nav__link {
     display: flex;
+    position: absolute;
     top: 50px;
     height: 100px;
     align-items: center;
@@ -179,8 +214,8 @@ body {
     border-radius: 34px;
     z-index: 1;
     background-size: cover;
-    min-width: 200px;
-    transition: background-color 0.3s;
+    min-width: 170px;
+    transition: background-color 0.3s; /* Transición suave */
 }
 
 /* Cambio de color cuando se pasa el mouse sobre los botones */
@@ -218,21 +253,12 @@ body {
 
 .hero__title {
     font-size: 3rem;
-    text-align: center;
-    margin-left: auto;
-    margin-right: auto;
-    word-wrap: break-word;
-
 }
 
 .hero__paragraph {
     margin-bottom: 20px;
     font-size: 1.5rem;
-    text-align: center;
-    margin-left: auto;
-    margin-right: auto;
-    word-wrap: break-word;
-    width: 800px;   
+    
 }
 
 
@@ -258,7 +284,7 @@ body {
     background-image: radial-gradient(#e8e9f0 0.5px, transparent 0.5px), radial-gradient(#eaeaec 0.5px, #e5e5f7 0.5px);
     background-size: 20px 20px;
     background-position: 0 0, 10px 10px;
-    overflow: hidden;
+    overflow: hidden
 }
 
 .knowledge__container{
@@ -699,10 +725,115 @@ body {
      width: 80%; /* Ajusta el ancho del modal según sea necesario */
         }
         
-
-        /* 
-        margin:0;
-        width: 100%;
-        */
     }
+}
+.text-white { color: white; }
+.font-weight-bold { font-weight: bold; }
+.mr-3 { margin-right: 1rem; }
+.font-small { font-size: 14px; }
+.font-medium { font-size: 16px; }
+.font-large { font-size: 20px; }
+#buttons-container {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+.nav__link--menu {
+display: flex;
+justify-content: flex-start; /* Centra los botones a la izquierda */
+align-items: center; /* Centra verticalmente los botones */
+margin-left: 2%; /* Ajusta el margen izquierdo */
+padding-left: 0; /* Elimina el relleno izquierdo predeterminado */
+}
+
+.nav__items {
+margin-top: 5%; /* Agrega espacio entre los botones */
+}
+
+.nav__button {
+width: 250px; /* Ancho deseado para los botones */
+text-align: center; /* Alinea el texto al centro dentro de los botones */
+margin-right: 30px;
+}
+.password-input-container {
+    position: relative;
+}
+
+.password-toggle-icon {
+    position: absolute;
+    top: 49%;
+    right: 20px; /* Ajusta el valor según sea necesario */
+    transform: translateY(-50%);
+    cursor: pointer;
+    width: 20px; /* Ajusta el ancho según sea necesario */
+    height: 20px; /* Ajusta la altura según sea necesario */
+    background: url('images/eye-icon.svg') center center no-repeat; /* Ajusta la ruta según sea necesario */
+}
+.parent {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.child {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform-style: preserve-3d;
+    transition: all 1.6s ease-in-out;
+    border-radius: 100%;
+    margin: 0 5px;
+    position: relative; /* Agregado para posicionar correctamente el texto */
+}
+
+.child:hover {
+    background-color: black;
+    background-position: -100px 100px, -100px 100px;
+    transform: rotate3d(0.5, 1, 0, 30deg);
+    transform: perspective(180px) rotateX(60deg) translateY(2px);
+    box-shadow: 0px 10px 10px rgb(1, 49, 182);
+}
+
+#button1{
+    border: none;
+    background-color: white;
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+    border-radius: 50%;
+}
+
+#button1:hover {
+    width: inherit;
+    height: inherit;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: translate3d(0px, 0px, 15px) perspective(180px) rotateX(-35deg) translateY(2px);
+    border-radius: 100%;
+    background-color: white;
+}
+
+/* Estilos para el texto */
+.child::before {
+    content: attr(data-title); /* Obtener el texto del atributo data-title */
+    position: absolute;
+    top: -30px; /* Posición del texto arriba del botón */
+    color: white; /* Color del texto */
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 13px;
+    white-space: nowrap; /* Evita que el texto se divida en múltiples líneas */
+    left: 50%; /* Centra horizontalmente */
+    transform: translateX(-50%);
+    opacity: 0; /* Oculta inicialmente el texto */
+    transition: opacity 0.9s ease; /* Transición de la opacidad */
+}
+
+.child:hover::before {
+    opacity: 1; /* Muestra el texto al pasar el mouse sobre el botón */
 }
