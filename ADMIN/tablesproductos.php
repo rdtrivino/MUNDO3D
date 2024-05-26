@@ -348,7 +348,7 @@
                                                     <td><?php echo $row['Cgo_Nombre']; ?></td>
                                                     <td><?php echo $row['Pro_Cantidad']; ?></td>
                                                     <td><?php echo $row['Pro_Costo']; ?></td>
-                                                    <td><img src="data:image/png;base64,<?php echo base64_encode($row['imagen_principal']); ?>" alt="Imagen del producto" style="width: 200px; height: 200px;"></td>
+                                                    <td><img src="<?php echo $row['nombre_imagen']; ?>" height="150px"></td>
                                                     <td>
                                                     <div class="btn-group" role="group" aria-label="Acciones">
                                                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editarModal<?php echo $row['Identificador']; ?>" data-toggle="tooltip" data-placement="top" title="Editar">
@@ -412,9 +412,9 @@
                                                                         <div class="col-12">
                                                                             <label for="imagen" class="form-label">Imagen Principal</label>
                                                                             <!-- Muestra la imagen actual del producto -->
-                                                                            <?php if (!empty($row['imagen_principal'])) : ?>
+                                                                            <?php if (!empty($row['nombre_imagen'])) : ?>
                                                                                 <!-- Muestra la imagen actual si existe -->
-                                                                                <img src="data:image/png;base64,<?php echo base64_encode($row['imagen_principal']); ?>" alt="Imagen actual" style="width: 100px; height: 100px;">
+                                                                                <img src="<?php echo $row['nombre_imagen']; ?>" alt="Imagen actual" style="width: 100px; height: 100px;">
                                                                             <?php else : ?>
                                                                                 <!-- Muestra un mensaje si no hay imagen actual -->
                                                                                 <p>No hay imagen actual.</p>

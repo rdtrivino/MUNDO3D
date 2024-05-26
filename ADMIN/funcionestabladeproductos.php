@@ -10,7 +10,7 @@ if (!isset($_SESSION['username'])) {
 $nombreCompleto = $_SESSION['username'];
 $usuario_id = $_SESSION['user_id'];
 
-$sql = "SELECT p.Pro_Nombre, p.Identificador, p.Pro_Descripcion, p.Pro_PrecioVenta, c.Cgo_Nombre, p.Pro_Cantidad, p.Pro_Costo, p.imagen_principal, p.Pro_Estado
+$sql = "SELECT p.Pro_Nombre, p.Identificador, p.Pro_Descripcion, p.Pro_PrecioVenta, c.Cgo_Nombre, p.Pro_Cantidad, p.Pro_Costo, p.Pro_Estado, p.nombre_imagen
         FROM productos p
         INNER JOIN categoria c ON p.Pro_Categoria = c.Cgo_Codigo";
 
@@ -51,13 +51,33 @@ if (isset($_POST['guardar_cambios'])) {
 
         // Procesar la imagen (si se ha subido una nueva)
         $imagen_contenido = null;
-        if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
-            $imagen_temporal = $_FILES['imagen']['tmp_name'];
-            $imagen_contenido = file_get_contents($imagen_temporal);
-        }
+        // Establecer parametros para almacenar imagen 
+        // Obtener la extensión del archivo
+        if(isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK){
+            // Obtener la extensión del archivo
+            $extension = strtolower(pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION));
+            $ruta_destino = "../images/imagenes_catalogo/"; // Ruta donde quieres guardar la imagen
+            $nombre_imagen = "catalogo-" . $identificador . ".$extension"; // Nombre que deseas para la imagen
+            
+            // Combinar la ruta de destino con el nombre de la imagen
+            $imagen_contenido = $ruta_destino . $nombre_imagen;
+            
+            // Mover la imagen cargada a la ruta específica
+            if(move_uploaded_file($_FILES['imagen']['tmp_name'], $imagen_contenido)){
+                //echo "La imagen se ha guardado correctamente en: " . $ruta_completa;
+            } else {
+                echo "Error al guardar la imagen.";
+            } 
+            } else {
+                // Si no se ha cargado ninguna imagen nueva, obtener el nombre de imagen existente de la base de datos
+                $query = "SELECT nombre_imagen FROM pedidos WHERE Identificador = $identificador";
+                $result = mysqli_query($link, $query);
+                $row = mysqli_fetch_assoc($result);
+                $imagen_contenido = $row['nombre_imagen'];
+            }
 
         // Consulta para obtener los datos actuales del producto
-        $consulta_actualizar = "SELECT Pro_Nombre, Pro_Descripcion, Pro_PrecioVenta, Pro_Categoria, Pro_Cantidad, Pro_Costo, Pro_Estado, imagen_principal FROM productos WHERE Identificador=?";
+        $consulta_actualizar = "SELECT Pro_Nombre, Pro_Descripcion, Pro_PrecioVenta, Pro_Categoria, Pro_Cantidad, Pro_Costo, Pro_Estado, nombre_imagen FROM productos WHERE Identificador=?";
         $stmt_actualizar = mysqli_prepare($link, $consulta_actualizar);
         mysqli_stmt_bind_param($stmt_actualizar, "i", $identificador);
         mysqli_stmt_execute($stmt_actualizar);
@@ -79,7 +99,7 @@ if (isset($_POST['guardar_cambios'])) {
             $imagen_contenido = empty($imagen_contenido) ? $imagen_actual : $imagen_contenido;
 
             // Actualizar los datos en la base de datos
-            $consulta = "UPDATE productos SET Pro_Nombre=?, Pro_Descripcion=?, Pro_PrecioVenta=?, Pro_Categoria=?, Pro_Cantidad=?, Pro_Costo=?, Pro_Estado=?, imagen_principal=? WHERE Identificador=?";
+            $consulta = "UPDATE productos SET Pro_Nombre=?, Pro_Descripcion=?, Pro_PrecioVenta=?, Pro_Categoria=?, Pro_Cantidad=?, Pro_Costo=?, Pro_Estado=?, nombre_imagen=? WHERE Identificador=?";
             $stmt = mysqli_prepare($link, $consulta);
             if ($stmt) {
                 mysqli_stmt_bind_param($stmt, "ssdsdsssi", $nombre, $descripcion, $precio, $categoria, $cantidad, $costo, $estado, $imagen_contenido, $identificador);
@@ -110,7 +130,6 @@ if (isset($_POST['guardar_cambios'])) {
 }
 
 
-
 // Verificar si se recibió una solicitud para agregar un nuevo producto
 if (isset($_POST['nombre']) && isset($_POST['descripcion']) && isset($_POST['precio']) && isset($_POST['categoria']) && isset($_POST['cantidad']) && isset($_POST['costo'])) {
     // Obtener los datos del formulario
@@ -126,10 +145,24 @@ if (isset($_POST['nombre']) && isset($_POST['descripcion']) && isset($_POST['pre
 
     // Procesar la imagen (si se ha subido una nueva)
     $imagen_contenido = null;
-    if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
-        $imagen_temporal = $_FILES['imagen']['tmp_name'];
-        $imagen_contenido = file_get_contents($imagen_temporal);
-    }
+    // Establecer parametros para almacenar imagen 
+        // Obtener la extensión del archivo
+        if(isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK){
+            // Obtener la extensión del archivo
+            $extension = strtolower(pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION));
+            $ruta_destino = "../images/imagenes_catalogo/"; // Ruta donde quieres guardar la imagen
+            $nombre_imagen = "catalogo-" . $identificador . ".$extension"; // Nombre que deseas para la imagen
+            
+            // Combinar la ruta de destino con el nombre de la imagen
+            $imagen_contenido = $ruta_destino . $nombre_imagen;
+            
+            // Mover la imagen cargada a la ruta específica
+            if(move_uploaded_file($_FILES['imagen']['tmp_name'], $imagen_contenido)){
+                //echo "La imagen se ha guardado correctamente en: " . $ruta_completa;
+            } else {
+                echo "Error al guardar la imagen.";
+            } 
+        }
 
     // Obtener el último código de producto
     $ultimoCodigoConsulta = mysqli_query($link, "SELECT MAX(Identificador) AS ultimo_codigo FROM productos");
@@ -138,7 +171,7 @@ if (isset($_POST['nombre']) && isset($_POST['descripcion']) && isset($_POST['pre
     $nuevoCodigo = $ultimoCodigo + 1;
 
     // Insertar los datos en la base de datos
-    $consulta = "INSERT INTO productos (Identificador, Pro_Nombre, Pro_Descripcion, Pro_PrecioVenta, Pro_Categoria, Pro_Cantidad, Pro_Costo, Pro_Estado, imagen_principal) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $consulta = "INSERT INTO productos (Identificador, Pro_Nombre, Pro_Descripcion, Pro_PrecioVenta, Pro_Categoria, Pro_Cantidad, Pro_Costo, Pro_Estado, nombre_imagen) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = mysqli_prepare($link, $consulta);
     mysqli_stmt_bind_param($stmt, "dssdsdsss", $nuevoCodigo, $nombre, $descripcion, $precio, $categoria, $cantidad, $costo, $estado, $imagen_contenido);
 

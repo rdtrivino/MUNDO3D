@@ -39,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['tabla'])) {
                 $query = "SELECT nombre_imagen FROM pedidos WHERE Identificador = $id";
                 $result = mysqli_query($link, $query);
                 $row = mysqli_fetch_assoc($result);
-                $nombre_imagen = $row['nombre_imagen'];
+                $ruta_completa = $row['nombre_imagen'];
             }
         
         // Preparar la consulta
@@ -82,7 +82,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['tabla'])) {
                 $query = "SELECT nombre_imagen FROM productos WHERE Identificador = $id";
                 $result = mysqli_query($link, $query);
                 $row = mysqli_fetch_assoc($result);
-                $nombre_imagen = $row['nombre_imagen'];
+                $ruta_completa = $row['nombre_imagen'];
             }
         
         // Preparar la consulta
