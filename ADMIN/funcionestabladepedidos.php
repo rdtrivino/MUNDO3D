@@ -1,4 +1,5 @@
 <?php
+session_start();
 require '../conexion.php';
 
 $nombreCompleto = $_SESSION['username'];
@@ -75,8 +76,6 @@ function obtenerProductos($link) {
 }
 // Verificar si se recibió una solicitud para agregar un nuevo pedido
 if (isset($_POST['cliente'], $_POST['producto'], $_POST['cantidad'], $_POST['fechaPedido'], $_POST['fechaEntrega'], $_POST['observacion'])) {
-    // Incluir la conexión a la base de datos
-    include 'conexion.php';
 
     // Obtener los datos del formulario
     $cliente = $_POST['cliente'];
