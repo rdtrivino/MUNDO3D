@@ -1,11 +1,5 @@
 <?php
-session_start();
 require '../conexion.php';
-
-if (!isset($_SESSION['username'])) {
-    header("location: index.php");
-    exit();
-}
 
 $nombreCompleto = $_SESSION['username'];
 $usuario_id = $_SESSION['user_id'];
@@ -70,7 +64,7 @@ if (isset($_POST['guardar_cambios'])) {
             } 
             } else {
                 // Si no se ha cargado ninguna imagen nueva, obtener el nombre de imagen existente de la base de datos
-                $query = "SELECT nombre_imagen FROM pedidos WHERE Identificador = $identificador";
+                $query = "SELECT nombre_imagen FROM productos WHERE Identificador = $identificador";
                 $result = mysqli_query($link, $query);
                 $row = mysqli_fetch_assoc($result);
                 $imagen_contenido = $row['nombre_imagen'];

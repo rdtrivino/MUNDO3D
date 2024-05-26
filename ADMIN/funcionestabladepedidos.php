@@ -1,12 +1,6 @@
 <?php
-session_start();
 require '../conexion.php';
 
-// Verificar si el usuario está autenticado
-if (!isset($_SESSION['username'])) {
-    header("location: index.php");
-    exit(); 
-}
 $nombreCompleto = $_SESSION['username'];
 $usuario_id = $_SESSION['user_id'];
 
@@ -161,24 +155,36 @@ if (isset($_POST['guardar_cambios'])) {
     $fechaEntrega = $_POST['Pe_Fechaentrega'];
     $color = $_POST['pe_color'];
     $observaciones = $_POST['Pe_Observacion'];
-    $imagen = $_FILES['imagen'];
+    $imagen = null;
 
-    // Manejar la subida de la imagen si existe
-    if ($imagen['size'] > 0) {
-        $target_dir = "uploads/";
-        $target_file = $target_dir . basename($imagen["name"]);
-        move_uploaded_file($imagen["tmp_name"], $target_file);
+        // Obtener la extensión del archivo
+        if(isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK){
+            // Obtener la extensión del archivo
+            $extension = strtolower(pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION));
+            $ruta_destino = "../images/imagenes_pedidos/"; // Ruta donde quieres guardar la imagen
+            $nombre_imagen = "pedido-" . $identificador . ".$extension"; // Nombre que deseas para la imagen
+            
+            // Combinar la ruta de destino con el nombre de la imagen
+            $imagen = $ruta_destino . $nombre_imagen;
+            
+            // Mover la imagen cargada a la ruta específica
+            if(move_uploaded_file($_FILES['imagen']['tmp_name'], $imagen)){
+                //echo "La imagen se ha guardado correctamente en: " . $ruta_completa;
+            } else {
+                echo "Error al guardar la imagen.";
+            } 
+            } else {
+                // Si no se ha cargado ninguna imagen nueva, obtener el nombre de imagen existente de la base de datos
+                $query = "SELECT nombre_imagen FROM pedidos WHERE Identificador = $identificador";
+                $result = mysqli_query($link, $query);
+                $row = mysqli_fetch_assoc($result);
+                $imagen = $row['nombre_imagen'];
+            }
 
-        // Guardar la ruta de la imagen en la base de datos
-        $sql = "UPDATE pedidos SET Pe_Cliente=?, Pe_Estado=?, Pe_Producto=?, Pe_Cantidad=?, Pe_Fechapedido=?, Pe_Fechaentrega=?, pe_color=?, Pe_Observacion=?, pe_imagen_pedido=? WHERE Identificador=?";
+        // Guardar los registros en la base de datos
+        $sql = "UPDATE pedidos SET Pe_Cliente=?, Pe_Estado=?, Pe_Producto=?, Pe_Cantidad=?, Pe_Fechapedido=?, Pe_Fechaentrega=?, pe_color=?, Pe_Observacion=?, nombre_imagen=? WHERE Identificador=?";
         $stmt = $link->prepare($sql);
-        $stmt->bind_param('sisiissssi', $cliente, $estado, $producto, $cantidad, $fechaPedido, $fechaEntrega, $color, $observaciones, $target_file, $identificador);
-    } else {
-        // Si no se sube una nueva imagen
-        $sql = "UPDATE pedidos SET Pe_Cliente=?, Pe_Estado=?, Pe_Producto=?, Pe_Cantidad=?, Pe_Fechapedido=?, Pe_Fechaentrega=?, pe_color=?, Pe_Observacion=? WHERE Identificador=?";
-        $stmt = $link->prepare($sql);
-        $stmt->bind_param('sisiisssi', $cliente, $estado, $producto, $cantidad, $fechaPedido, $fechaEntrega, $color, $observaciones, $identificador);
-    }
+        $stmt->bind_param('sisiissssi', $cliente, $estado, $producto, $cantidad, $fechaPedido, $fechaEntrega, $color, $observaciones, $imagen, $identificador);
 
     if ($stmt->execute()) {
         echo "success";

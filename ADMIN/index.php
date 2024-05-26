@@ -2,7 +2,6 @@
 <html lang="es">
 <!-- http://localhost/MUNDO 3D/ADMIN/index.php -->
 <?php
-    session_start();
     include __DIR__ . '/../conexion.php';
     include("Programas/controlsesion.php");
     include("Programas/graficos.php");
