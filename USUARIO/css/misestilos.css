@@ -146,4 +146,15 @@
                         color: #721c24; /* Color del texto */
                         font-weight: bold; /* Texto en negrita */
                     }
-        
+                    .font-small {
+                        font-size: 12px; /* Tamaño pequeño */
+                    }
+                    
+                    .font-medium {
+                        font-size: 16px; /* Tamaño mediano */
+                    }
+                    
+                    .font-large {
+                        font-size: 20px; /* Tamaño grande */
+                    }
+                    

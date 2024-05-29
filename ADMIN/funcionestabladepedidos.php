@@ -152,10 +152,12 @@ if (isset($_POST['guardar_cambios'])) {
     }
 
     $fechaEntrega = $_POST['Pe_Fechaentrega'];
+    $fechaPedido = isset($_POST['Pe_Fechapedido']) ? $_POST['Pe_Fechapedido'] : null;
     $color = $_POST['pe_color'];
     $observaciones = $_POST['Pe_Observacion'];
     $imagen = null;
-
+    
+    $fechaPedido = date('Y-m-d', strtotime($fechaPedido));
         // Obtener la extensión del archivo
         if(isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK){
             // Obtener la extensión del archivo

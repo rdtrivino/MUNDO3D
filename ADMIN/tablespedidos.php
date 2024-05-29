@@ -390,7 +390,7 @@
                             <!-- Campo Estado -->
                             <div class="mb-3">
                                 <label for="pe_estado_<?php echo $row['Identificador']; ?>" class="form-label">Estado</label>
-                                <select class="form-select" id="pe_estado_<?php echo $row['Identificador']; ?>" name="pe_estado">
+                                <select class="form-select" id="pe_estado_<?php echo $row['Identificador']; ?>" name="pe_estado" onchange="comprobarEstado('<?php echo $row['Identificador']; ?>')">
                                     <?php
                                     $estados = obtenerEstadosPedidos($link);
                                     foreach ($estados as $estado) {
@@ -427,45 +427,48 @@
                         <!-- Segunda columna -->
                         <div class="col-md-6">
                         <div class="mb-3">
-                                <label for="pe_fechapedido_<?php echo $row['Identificador']; ?>" class="form-label">Fecha de Pedido</label>
-                                <input type="text" class="form-control datepicker" id="pe_fechapedido_<?php echo $row['Identificador']; ?>" name="pe_fechapedido" value="<?php echo (!empty($row['pe_fechapedido'])) ? $row['pe_fechapedido'] : 'No aplica'; ?>">
-                            </div>
-                            <!-- Campo Fecha de Entrega -->
+    <label for="pe_fechapedido_<?php echo $row['Identificador']; ?>" class="form-label">Fecha de Pedido</label>
+    <input type="text" class="form-control datepicker" id="pe_fechapedido_<?php echo $row['Identificador']; ?>" name="pe_fechapedido" value="<?php echo (!empty($row['Pe_Fechapedido'])) ? date('Y-m-d', strtotime($row['Pe_Fechapedido'])) : ''; ?>">
+</div>
+
                             <div class="mb-3">
                                 <label for="pe_fechaentrega_<?php echo $row['Identificador']; ?>" class="form-label">Fecha de Entrega</label>
-                                <input type="text" class="form-control datepicker" id="pe_fechaentrega_<?php echo $row['Identificador']; ?>" name="pe_fechaentrega" value="<?php echo (!empty($row['Pe_Fechaentrega'])) ? $row['Pe_Fechaentrega'] : 'No aplica'; ?>">
+                                <input type="text" class="form-control datepicker" id="pe_fechaentrega_<?php echo $row['Identificador']; ?>" name="pe_fechaentrega" value="<?php echo (!empty($row['Pe_Fechaentrega'])) ? $row['Pe_Fechaentrega'] : ''; ?>">
                             </div>
-                            <!-- Campo Color -->
                             <div class="mb-3">
                                 <label for="pe_color_<?php echo $row['Identificador']; ?>" class="form-label">Color</label>
-                                <input type="text" class="form-control" id="pe_color_<?php echo $row['Identificador']; ?>" name="pe_color" value="<?php echo (!empty($row['pe_color'])) ? $row['pe_color'] : 'No aplica'; ?>">
+                                <input type="text" class="form-control" id="pe_color_<?php echo $row['Identificador']; ?>" name="pe_color" value="<?php echo (!empty($row['pe_color'])) ? $row['pe_color'] : ''; ?>">
                             </div>
-                            <!-- Campo Imagen -->
                             <div class="mb-3">
                                 <label for="imagen_<?php echo $row['Identificador']; ?>" class="form-label">Imagen</label>
-                                <?php if (!empty($row['nombre_imagen'])) : ?>
-                                    <img src="<?php echo $row['nombre_imagen']; ?>" alt="Imagen actual" style="width: 100px; height: 100px;">
-                                <?php else : ?>
-                                    <p>No hay imagen actual.</p>
-                                <?php endif; ?>
-                                <input type="file" class="form-control" id="imagen_<?php echo $row['Identificador']; ?>" name="imagen" accept="image/*">
+                                <input type="file" class="form-control" id="imagen_<?php echo $row['Identificador']; ?>" name="imagen">
                             </div>
                         </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary" onclick="guardarCambios(<?php echo $row['Identificador']; ?>)">Guardar Cambios</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" onclick="guardarCambios('<?php echo $row['Identificador']; ?>')">Guardar cambios</button>
             </div>
         </div>
     </div>
 </div>
 
+
+<style>
+    .disabled-input {
+        background-color: #dcdcdc !important; /* Gris oscuro */
+        color: #333 !important; /* Texto en gris oscuro */
+        pointer-events: none; /* Para deshabilitar cualquier intento de interactuar con el campo */
+    }
+</style>
+
 <script>
     // Función para abrir el modal de edición
     function abrirModalEditar(identificador) {
         $("#editarModal" + identificador).modal("show");
+        comprobarEstado(identificador);
     }
 
     // Función para cerrar el modal de edición
@@ -473,66 +476,88 @@
         $("#editarModal" + identificador).modal("hide");
     }
 
-// Función para guardar cambios
-function guardarCambios(identificador) {
-    // Obtener los valores del formulario
-    var cliente = document.getElementById('pe_cliente_' + identificador).value;
-    var estado = document.getElementById('pe_estado_' + identificador).value;
-    var producto = document.getElementById('pe_producto_' + identificador).value;
-    var cantidad = document.getElementById('pe_cantidad_' + identificador).value;
-    var fechaPedido = document.getElementById('pe_fechapedido_' + identificador).value; // <--- Corregido aquí
-    var fechaEntrega = document.getElementById('pe_fechaentrega_' + identificador).value;
-    var color = document.getElementById('pe_color_' + identificador).value;
-    var observaciones = document.getElementById('pe_observaciones_' + identificador).value;
-    var imagen = document.getElementById('imagen_' + identificador).files[0];
+    // Función para guardar cambios
+    function guardarCambios(identificador) {
+        // Obtener los valores del formulario
+        var cliente = document.getElementById('pe_cliente_' + identificador).value;
+        var estado = document.getElementById('pe_estado_' + identificador).value;
+        var producto = document.getElementById('pe_producto_' + identificador).value;
+        var cantidad = document.getElementById('pe_cantidad_' + identificador).value;
+        var fechaPedido = document.getElementById('pe_fechapedido_' + identificador).value;
+        var fechaEntrega = document.getElementById('pe_fechaentrega_' + identificador).value;
+        var color = document.getElementById('pe_color_' + identificador).value;
+        var observaciones = document.getElementById('pe_observaciones_' + identificador).value;
+        var imagen = document.getElementById('imagen_' + identificador).files[0];
 
-    // Crear un objeto FormData para enviar los datos del formulario
-    var formData = new FormData();
-    formData.append('guardar_cambios', true);
-    formData.append('Identificador', identificador);
-    formData.append('Pe_Cliente', cliente);
-    formData.append('Pe_Estado', estado);
-    formData.append('Pe_Producto', producto);
-    formData.append('Pe_Cantidad', cantidad);
-    formData.append('Pe_Fechapedido', fechaPedido);
-    formData.append('Pe_Fechaentrega', fechaEntrega);
-    formData.append('pe_color', color);
-    formData.append('Pe_Observacion', observaciones);
-    formData.append('imagen', imagen);
+        // Crear un objeto FormData para enviar los datos del formulario
+        var formData = new FormData();
+        formData.append('guardar_cambios', true);
+        formData.append('Identificador', identificador);
+        formData.append('Pe_Cliente', cliente);
+        formData.append('Pe_Estado', estado);
+        formData.append('Pe_Producto', producto);
+        formData.append('Pe_Cantidad', cantidad);
+        formData.append('Pe_Fechapedido', fechaPedido);
+        formData.append('Pe_Fechaentrega', fechaEntrega);
+        formData.append('pe_color', color);
+        formData.append('Pe_Observacion', observaciones);
+        formData.append('imagen', imagen);
 
-    // Realizar la solicitud AJAX
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", "funcionestabladepedidos.php", true);
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4) {
-            if (xhr.status === 200) {
-                // Mostrar un mensaje de éxito
-                alert("Los cambios se han realizado con éxito.");
-                // Cerrar el modal
-                cerrarModalEditar(identificador);
-                // Recargar la página después de 1 segundo
-                setTimeout(function() {
-                    location.reload();
-                }, 1000);
-            } else {
-                // Mostrar un mensaje de error
-                alert("Ha ocurrido un error al realizar los cambios.");
+        // Realizar la solicitud AJAX
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "funcionestabladepedidos.php", true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    // Mostrar un mensaje de éxito
+                    alert("Los cambios se han realizado con éxito.");
+                    // Cerrar el modal
+                    cerrarModalEditar(identificador);
+                    // Recargar la página después de 1 segundo
+                    setTimeout(function() {
+                        location.reload();
+                    }, 1000);
+                } else {
+                    // Mostrar un mensaje de error
+                    alert("Ha ocurrido un error al realizar los cambios.");
+                }
             }
-        }
-    };
-    xhr.send(formData);
-}
-    // Inicializar Flatpickr para las casillas de fecha
-    flatpickr('#pe_fechapedido', {
-        dateFormat: 'Y-m-d',
-        allowInput: true
-    });
+        };
+        xhr.send(formData);
+    }
 
-    flatpickr('#pe_fechaentrega', {
-        dateFormat: 'Y-m-d',
-        allowInput: true
+    // Función para comprobar el estado y deshabilitar campos si es "Entregado"
+    function comprobarEstado(identificador) {
+        var estado = document.getElementById('pe_estado_' + identificador).value;
+        var esEditable = (estado !== '5'); // Supongamos que 'ENT' es el valor para el estado "Entregado"
+
+        // Deshabilitar/enable todos los campos
+        document.querySelectorAll(`#formularioEditar${identificador} input, #formularioEditar${identificador} select, #formularioEditar${identificador} textarea`).forEach(function (element) {
+            element.disabled = !esEditable;
+            if (!esEditable) {
+                element.classList.add('disabled-input');
+            } else {
+                element.classList.remove('disabled-input');
+            }
+        });
+
+        // Deshabilitar el campo de estado si no es editable
+        document.getElementById(`pe_estado_${identificador}`).disabled = !esEditable;
+    }
+
+    // Inicializar Flatpickr para las casillas de fecha
+    document.querySelectorAll('.datepicker').forEach(function(el) {
+    flatpickr(el, {
+        dateFormat: 'Y-m-d', // Formato de fecha esperado: Año-Mes-Día
+        allowInput: true,
+        minDate: '2000-01-01', // Fecha mínima permitida: 1 de enero de 2000
     });
+});
 </script>
+
+
+
+
 
 
 

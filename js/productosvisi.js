@@ -149,3 +149,31 @@ function cargarDetallesProducto(productName, productDescription, productPrice, p
 
     $('#detalleProductoModal').modal('show');
 }
+                            function adjustFontSize(size) {
+                                const body = document.body;
+                                body.classList.remove('font-small', 'font-medium', 'font-large');
+
+                                switch(size) {
+                                    case 'small':
+                                        body.classList.add('font-small');
+                                        break;
+                                    case 'medium':
+                                        body.classList.add('font-medium');
+                                        break;
+                                    case 'large':
+                                        body.classList.add('font-large');
+                                        break;
+                                }
+                            }
+
+                            function aumentarTamano() {
+                                // Funcionalidad específica para el icono de silla de ruedas
+                            }
+
+                            function cambiarCursor(event) {
+                                event.target.style.cursor = 'pointer';
+                            }
+
+                            function restaurarCursor(event) {
+                                event.target.style.cursor = 'default';
+                            }

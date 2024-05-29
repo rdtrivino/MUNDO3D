@@ -23,14 +23,71 @@
 <div class="container-fluid bg-primary py-3">
     <div class="row">
         <div class="col-md-6 text-center text-lg-left mb-2 mb-lg-0">
-        <div id="buttons-container" style="display: flex; justify-content: flex-start; align-items: center;">
-            <div id="disabled-icon">
-                <i class="fas fa-wheelchair fa-lg text-white" onclick="aumentarTamano()" onmouseover="cambiarCursor(event)" onmouseout="restaurarCursor()"></i>
+            <div id="buttons-container" style="display: flex; justify-content: flex-start; align-items: center;">
+                <div id="disabled-icon">
+                    <i class="fas fa-wheelchair fa-lg text-white" onclick="aumentarTamano()" onmouseover="cambiarCursor(event)" onmouseout="restaurarCursor()"></i>
+                </div>
+                <button class="font-small" onclick="disminuirTamano()" style="margin-left: 10px;">A</button>
+                <button class="font-medium" onclick="ajustarTamano('medium')" style="margin-left: 10px;">A</button>
+                <button class="font-large" onclick="aumentarTamano()" style="margin-left: 10px;">A</button>
             </div>
-            <button onclick="disminuirTamano()" style="margin-left: 10px;">-</button>
-            <button onclick="aumentarTamano()" style="margin-left: 10px;">+</button>
         </div>
-        </div>
+        <style>
+            .font-small {
+    font-size: 12px; /* Tamaño pequeño */
+}
+
+.font-medium {
+    font-size: 16px; /* Tamaño mediano */
+}
+
+.font-large {
+    font-size: 20px; /* Tamaño grande */
+}
+.font-small, .font-medium, .font-large {
+    background-color: transparent; /* Quitar el fondo */
+    color: white; /* Color de texto blanco */
+    font-weight: bold; /* Negrita */
+}
+        </style>
+        <script>
+            function ajustarTamano(size) {
+    const body = document.body;
+    body.classList.remove('font-small', 'font-medium', 'font-large');
+
+    switch(size) {
+        case 'small':
+            body.classList.add('font-small');
+            break;
+        case 'medium':
+            body.classList.add('font-medium');
+            break;
+        case 'large':
+            body.classList.add('font-large');
+            break;
+    }
+}
+
+function disminuirTamano() {
+    ajustarTamano('small'); // Ajusta el tamaño a pequeño
+}
+
+function aumentarTamano() {
+    const body = document.body;
+    body.classList.remove('font-small', 'font-medium');
+    body.classList.add('font-large'); // Ajusta el tamaño a grande
+}
+
+
+function cambiarCursor(event) {
+    event.target.style.cursor = 'pointer';
+}
+
+function restaurarCursor(event) {
+    event.target.style.cursor = 'default';
+}
+
+        </script>
         <div class="col-md-6 text-center text-lg-right">
         <div class="d-inline-flex align-items-center" style="margin-top: -10%;">
             <img src="images/bxs-user-circle.svg" alt="inicio" id="btnModal" class="hamburguer">
@@ -100,79 +157,65 @@
             </nav>
         </div>
     </div>
-    <!-- Navbar End -->
-    <div class="page-header container-fluid bg-secondary pt-2 pt-lg-5 pb-2 mb-5">
-    <div class="container py-5">
-        <div class="row align-items-center py-4">
-            <div class="col-md-6 text-center text-md-left">
-                <h1 class="mb-4 mb-md-0 text-white">CATALOGO</h1>
+    <div class="page-header container-fluid bg-secondary pt-0 pt-lg-1 pb-1 mb-4">
+                <div class="row align-items-center py-4">
+                    <div class="col-md-6 offset-md-6 text-center text-md-right">
+                        <form class="form-inline">
+                            <input class="form-control mr-sm-2 ml-auto" type="search" placeholder="Buscar" aria-label="Buscar" oninput="searchProducts(this.value)">
+                            <button class="btn btn-outline-dark my-2 my-sm-0" type="submit">Buscar</button>
+                        </form>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-6 text-center text-md-right">
-                <div class="d-inline-flex align-items-center">
-                    <form class="form-inline mr-3">
-                        <input class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Buscar" oninput="searchProducts(this.value)">
-                        <!-- Cambiar el evento a "input" para que se ejecute cada vez que se ingresa una letra -->
-                        <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Buscar</button>
-                    </form>
+                <div class="container-fluid" style="background-color: #D3D3D3; margin-top: -50px;">
+                    <div class="container">
+                            <h1 class="display-4 text-center mb-5">Explora nuestro Catalogo</h1>
+                            <div class="row row-cols-lg-4 row-cols-md-3 justify-content-center">
+                                <?php
+                                $sql = "SELECT * FROM productos WHERE Pro_Categoria = 1";
+                                $result = mysqli_query($link, $sql);
+                                if (mysqli_num_rows($result) > 0) {
+                                    while ($row = mysqli_fetch_assoc($result)) {
+                                ?>
+                                        <div class="col mb-4">
+                                            <div class="card h-100 position-relative">
+                                                <?php
+                                                $imageData = base64_encode($row['imagen_principal']);
+                                                $imageSrc = 'data:image/jpeg;base64,' . $imageData;
+                                                ?>
+                                                <img src="<?php echo $imageSrc; ?>" class="card-img-top" style="height: 200px; object-fit: cover;" alt="<?php echo $row['Pro_Nombre']; ?>">
+                                                <div class="overlay position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
+                                                    <?php if ($row['Pro_Cantidad'] > 0) { ?>
+                                                    <?php } ?>
+                                                    <a href="#" class="btn btn-secondary btn-lg mx-2 detallesBtn" data-toggle="modal" data-target="#detalleProductoModal" data-id="<?php echo $row['Identificador']; ?>" data-name="<?php echo $row['Pro_Nombre']; ?>" data-description="<?php echo $row['Pro_Descripcion']; ?>" data-price="<?php echo $row['Pro_PrecioVenta']; ?>" style="background-color: #E42E24;"><i class="fas fa-search"></i></a>
+                                                </div>
+                                                <div class="card-body">
+                                                    <h5 class="card-title mb-2" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"><?php echo $row['Pro_Nombre']; ?></h5>
+                                                    <?php if ($row['Pro_Cantidad'] == 0) { ?>
+                                                        <div class="price-box text-center" style="position: absolute; bottom: 0; left: 0; right: 0;"> <!-- Centra el cuadro del precio -->
+                                                            <div style="display: inline-block;padding: 5px; border-radius: 5px;"> <!-- Cuadro rojo -->
+                                                                <span style="color: red; font-weight: bold; font-size: 20px;">Agotado</span> <!-- Establece el color del texto "Agotado" en rojo y aumenta el tamaño de la fuente -->
+                                                            </div>
+                                                        </div>
+                                                    <?php } else { ?>
+                                                        <div class="price-box text-center" style="position: absolute; bottom: 0; left: 0; right: 0;"> <!-- Centra el cuadro del precio -->
+                                                            <div style="display: inline-block; padding: 5px; border-radius: 5px;"> <!-- Cuadro rojo -->
+                                                                <p class="price mb-0" style="color: black;">USD-<?php echo $row['Pro_PrecioVenta']; ?></p> <!-- Establece el color del precio en negro -->
+                                                            </div>
+                                                        </div>
+                                                    <?php } ?>
+                                                </div>
+                                            </div>
+                                        </div>
+                                <?php
+                                    }
+                                } else {
+                                    echo "No se encontraron productos en la categoría 1b.";
+                                }
+                                ?>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-            <div class="container-fluid pt-5">
-                <div class="container">
-                    <h1 class="display-4 text-center mb-5">Explora nuestro catálogo</h1>
-                    <div class="row row-cols-lg-4 row-cols-md-3 justify-content-center">
-                        <?php
-                        // Consulta a la base de datos para obtener productos de la categoría 5
-                        $sql = "SELECT * FROM productos WHERE Pro_Categoria = 1";
-                        $result = mysqli_query($link, $sql);
-
-                        // Verificar si se encontraron productos en la categoría 1b
-                        if (mysqli_num_rows($result) > 0) {
-                            // Iterar sobre los resultados y mostrar cada producto
-                            while ($row = mysqli_fetch_assoc($result)) {
-                        ?>
-                                <div class="col mb-4">
-                                    <div class="card h-100 position-relative">
-                                        <?php
-                                        // Convertir la imagen binaria a una URL de imagen
-                                        $imageData = base64_encode($row['imagen_principal']);
-                                        $imageSrc = 'data:image/jpeg;base64,' . $imageData;
-                                        ?>
-                                        <img src="<?php echo $imageSrc; ?>" class="card-img-top" style="height: 200px; object-fit: cover;" alt="<?php echo $row['Pro_Nombre']; ?>">
-                                        <div class="overlay position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
-                                            <?php if ($row['Pro_Cantidad'] > 0) { ?>
-                                            <?php } ?>
-                                            <a href="#" class="btn btn-secondary btn-lg mx-2 detallesBtn" data-toggle="modal" data-target="#detalleProductoModal" data-id="<?php echo $row['Identificador']; ?>" data-name="<?php echo $row['Pro_Nombre']; ?>" data-description="<?php echo $row['Pro_Descripcion']; ?>" data-price="<?php echo $row['Pro_PrecioVenta']; ?>" style="background-color: #E42E24;"><i class="fas fa-search"></i></a>
-                                        </div>
-                                        <div class="card-body">
-                                            <h5 class="card-title mb-2" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"><?php echo $row['Pro_Nombre']; ?></h5>
-                                            <?php if ($row['Pro_Cantidad'] == 0) { ?>
-                                                <div class="price-box text-center" style="position: absolute; bottom: 0; left: 0; right: 0;"> <!-- Centra el cuadro del precio -->
-                                                    <div style="display: inline-block;padding: 5px; border-radius: 5px;"> <!-- Cuadro rojo -->
-                                                        <span style="color: red; font-weight: bold; font-size: 20px;">Agotado</span> <!-- Establece el color del texto "Agotado" en rojo y aumenta el tamaño de la fuente -->
-                                                    </div>
-                                                </div>
-                                            <?php } else { ?>
-                                                <div class="price-box text-center" style="position: absolute; bottom: 0; left: 0; right: 0;"> <!-- Centra el cuadro del precio -->
-                                                    <div style="display: inline-block; padding: 5px; border-radius: 5px;"> <!-- Cuadro rojo -->
-                                                        <p class="price mb-0" style="color: black;">USD-<?php echo $row['Pro_PrecioVenta']; ?></p> <!-- Establece el color del precio en negro -->
-                                                    </div>
-                                                </div>
-                                            <?php } ?>
-                                        </div>
-                                    </div>
-                                </div>
-                        <?php
-                            }
-                        } else {
-                            echo "No se encontraron productos en la categoría 1b.";
-                        }
-                        ?>
-                    </div>
-                </div>
-            </div>
                 <!-- Modal de detalles del producto -->
                 <div class="modal fade" id="detalleProductoModal" tabindex="-1" role="dialog" aria-labelledby="detalleProductoModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg" role="document">
@@ -206,7 +249,7 @@
             </div>
             </div>
         <!-- Footer Start -->
-        <div class="container-fluid bg-primary text-white mt-5 pt-5 px-sm-3 px-md-5">
+        <div class="container-fluid bg-primary text-white px-sm-3 px-md-5" style="margin-top: auto; margin-bottom: 0;">
             <div class="row pt-5">
                 <div class="col-lg-4 col-md-6 mb-5">
                     <a href=""><h1 class="text-secondary mb-3"><span class="text-white">MUNDO</span>3D</h1></a>

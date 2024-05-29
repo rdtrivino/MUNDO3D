@@ -20,17 +20,74 @@
 
 <body>
 <?php include './Programas/starsesion.php'; ?>
-<<div class="container-fluid bg-primary py-3">
+<div class="container-fluid bg-primary py-3">
     <div class="row">
         <div class="col-md-6 text-center text-lg-left mb-2 mb-lg-0">
-        <div id="buttons-container" style="display: flex; justify-content: flex-start; align-items: center;">
-        <div id="disabled-icon">
-            <i class="fas fa-wheelchair fa-lg text-white" onclick="aumentarTamano()" onmouseover="cambiarCursor(event)" onmouseout="restaurarCursor()"></i>
+            <div id="buttons-container" style="display: flex; justify-content: flex-start; align-items: center;">
+                <div id="disabled-icon">
+                    <i class="fas fa-wheelchair fa-lg text-white" onclick="aumentarTamano()" onmouseover="cambiarCursor(event)" onmouseout="restaurarCursor()"></i>
+                </div>
+                <button class="font-small" onclick="disminuirTamano()" style="margin-left: 10px;">A</button>
+                <button class="font-medium" onclick="ajustarTamano('medium')" style="margin-left: 10px;">A</button>
+                <button class="font-large" onclick="aumentarTamano()" style="margin-left: 10px;">A</button>
+            </div>
         </div>
-        <button onclick="disminuirTamano()" style="margin-left: 10px;">-</button>
-        <button onclick="aumentarTamano()" style="margin-left: 10px;">+</button>
-    </div>
-        </div>
+        <style>
+            .font-small {
+    font-size: 12px; /* Tamaño pequeño */
+}
+
+.font-medium {
+    font-size: 16px; /* Tamaño mediano */
+}
+
+.font-large {
+    font-size: 20px; /* Tamaño grande */
+}
+.font-small, .font-medium, .font-large {
+    background-color: transparent; /* Quitar el fondo */
+    color: white; /* Color de texto blanco */
+    font-weight: bold; /* Negrita */
+}
+        </style>
+        <script>
+            function ajustarTamano(size) {
+    const body = document.body;
+    body.classList.remove('font-small', 'font-medium', 'font-large');
+
+    switch(size) {
+        case 'small':
+            body.classList.add('font-small');
+            break;
+        case 'medium':
+            body.classList.add('font-medium');
+            break;
+        case 'large':
+            body.classList.add('font-large');
+            break;
+    }
+}
+
+function disminuirTamano() {
+    ajustarTamano('small'); // Ajusta el tamaño a pequeño
+}
+
+function aumentarTamano() {
+    const body = document.body;
+    body.classList.remove('font-small', 'font-medium');
+    body.classList.add('font-large'); // Ajusta el tamaño a grande
+}
+
+
+function cambiarCursor(event) {
+    event.target.style.cursor = 'pointer';
+}
+
+function restaurarCursor(event) {
+    event.target.style.cursor = 'default';
+}
+
+        </script>
         <div class="col-md-6 text-center text-lg-right">
         <div class="d-inline-flex align-items-center" style="margin-top: -10%;">
             <img src="images/bxs-user-circle.svg" alt="inicio" id="btnModal" class="hamburguer">
@@ -99,26 +156,18 @@
                     </nav>
                 </div>
             </div>
-            <!-- barra de busqueda -->
-            <div class="page-header container-fluid bg-secondary pt-2 pt-lg-5 pb-2 mb-5">
-            <div class="container py-5">
+            <div class="page-header container-fluid bg-secondary pt-0 pt-lg-1 pb-1 mb-4">
                 <div class="row align-items-center py-4">
-                    <div class="col-md-6 text-center text-md-left">
-                        <h1 class="mb-4 mb-md-0 text-white">REPUESTOS</h1>
-                    </div>
-                    <div class="col-md-6 text-center text-md-right">
-                        <div class="d-inline-flex align-items-center">
-                            <form class="form-inline mr-3">
-                                <input class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Buscar" oninput="searchProducts(this.value)">
-                                <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Buscar</button>
-                            </form>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="col-md-6 offset-md-6 text-center text-md-right">
+                        <form class="form-inline">
+                            <input class="form-control mr-sm-2 ml-auto" type="search" placeholder="Buscar" aria-label="Buscar" oninput="searchProducts(this.value)">
+                            <button class="btn btn-outline-dark my-2 my-sm-0" type="submit">Buscar</button>
+                        </form>
                     </div>
                 </div>
-                    <div class="container-fluid pt-5">
-                        <div class="container">
+            </div>
+                <div class="container-fluid" style="background-color: #D3D3D3; margin-top: -50px;">
+                    <div class="container">
                             <h1 class="display-4 text-center mb-5">Explora nuestros Repuestos</h1>
                             <div class="row row-cols-lg-4 row-cols-md-3 justify-content-center">
                                 <?php
@@ -197,7 +246,7 @@
             </div>
             </div>
             <!-- Footer -->
-            <div class="container-fluid bg-primary text-white mt-5 pt-5 px-sm-3 px-md-5">
+            <div class="container-fluid bg-primary text-white px-sm-3 px-md-5" style="margin-top: auto; margin-bottom: 0;">
                 <div class="row pt-5">
                     <div class="col-lg-4 col-md-6 mb-5">
                         <a href=""><h1 class="text-secondary mb-3"><span class="text-white">MUNDO</span>3D</h1></a>
