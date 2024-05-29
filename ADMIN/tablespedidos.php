@@ -423,13 +423,13 @@
                                 <label for="pe_observaciones_<?php echo $row['Identificador']; ?>" class="form-label">Observaciones</label>
                                 <textarea class="form-control" id="pe_observaciones_<?php echo $row['Identificador']; ?>" name="pe_observaciones" rows="3"><?php echo (!empty($row['Pe_Observacion'])) ? $row['Pe_Observacion'] : 'No aplica'; ?></textarea>
                             </div>
-                        </div>
-                        <!-- Segunda columna -->
-                        <div class="col-md-6">
-                        <div class="mb-3">
-    <label for="pe_fechapedido_<?php echo $row['Identificador']; ?>" class="form-label">Fecha de Pedido</label>
-    <input type="text" class="form-control datepicker" id="pe_fechapedido_<?php echo $row['Identificador']; ?>" name="pe_fechapedido" value="<?php echo (!empty($row['Pe_Fechapedido'])) ? date('Y-m-d', strtotime($row['Pe_Fechapedido'])) : ''; ?>">
-</div>
+                            </div>
+                            <!-- Segunda columna -->
+                            <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="pe_fechapedido_<?php echo $row['Identificador']; ?>" class="form-label">Fecha de Pedido</label>
+                                <input type="text" class="form-control datepicker" id="pe_fechapedido_<?php echo $row['Identificador']; ?>" name="pe_fechapedido" value="<?php echo (!empty($row['Pe_Fechapedido'])) ? $row['Pe_Fechapedido'] : ''; ?>">
+                            </div>
 
                             <div class="mb-3">
                                 <label for="pe_fechaentrega_<?php echo $row['Identificador']; ?>" class="form-label">Fecha de Entrega</label>

@@ -143,21 +143,12 @@ if (isset($_POST['guardar_cambios'])) {
     $estado = $_POST['Pe_Estado'];
     $producto = $_POST['Pe_Producto'];
     $cantidad = $_POST['Pe_Cantidad'];
-    $fechaPedido = !empty($_POST['pe_fechapedido_' . $identificador]) ? $_POST['pe_fechapedido_' . $identificador] : '0000-00-00';
-    
-    // Verificar el formato de la fecha actual
-    if (!strtotime($fechaPedido)) {
-        echo "error: formato de fecha incorrecto";
-        exit; // Salir del script si el formato de fecha es incorrecto
-    }
-
     $fechaEntrega = $_POST['Pe_Fechaentrega'];
-    $fechaPedido = isset($_POST['Pe_Fechapedido']) ? $_POST['Pe_Fechapedido'] : null;
+    $fechaPedido = $_POST['Pe_Fechapedido'];
     $color = $_POST['pe_color'];
     $observaciones = $_POST['Pe_Observacion'];
     $imagen = null;
     
-    $fechaPedido = date('Y-m-d', strtotime($fechaPedido));
         // Obtener la extensión del archivo
         if(isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK){
             // Obtener la extensión del archivo
@@ -185,7 +176,7 @@ if (isset($_POST['guardar_cambios'])) {
         // Guardar los registros en la base de datos
         $sql = "UPDATE pedidos SET Pe_Cliente=?, Pe_Estado=?, Pe_Producto=?, Pe_Cantidad=?, Pe_Fechapedido=?, Pe_Fechaentrega=?, pe_color=?, Pe_Observacion=?, nombre_imagen=? WHERE Identificador=?";
         $stmt = $link->prepare($sql);
-        $stmt->bind_param('sisiissssi', $cliente, $estado, $producto, $cantidad, $fechaPedido, $fechaEntrega, $color, $observaciones, $imagen, $identificador);
+        $stmt->bind_param('sisisssssi', $cliente, $estado, $producto, $cantidad, $fechaPedido, $fechaEntrega, $color, $observaciones, $imagen, $identificador);
 
     if ($stmt->execute()) {
         echo "success";
