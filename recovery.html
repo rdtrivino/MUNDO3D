@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -49,6 +50,7 @@
         #closeModal:hover {
             background-color: #45a049;
         }
+
         .home-icon {
             position: absolute;
             top: 20px;
@@ -58,19 +60,38 @@
         }
 
         .home-icon img {
-            width: 50px; 
+            width: 50px;
             height: 50px;
-            background-color: white; 
-            padding: 5px; 
-            border-radius: 50%; 
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+            background-color: white;
+            padding: 5px;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        .text-white { color: white; }
-        .font-weight-bold { font-weight: bold; }
-        .mr-3 { margin-right: 1rem; }
-        .font-small { font-size: 14px; }
-        .font-medium { font-size: 16px; }
-        .font-large { font-size: 20px; }
+
+        .text-white {
+            color: white;
+        }
+
+        .font-weight-bold {
+            font-weight: bold;
+        }
+
+        .mr-3 {
+            margin-right: 1rem;
+        }
+
+        .font-small {
+            font-size: 14px;
+        }
+
+        .font-medium {
+            font-size: 16px;
+        }
+
+        .font-large {
+            font-size: 20px;
+        }
+
         #buttons-container {
             position: absolute;
             top: 10px;
@@ -78,6 +99,7 @@
         }
     </style>
 </head>
+
 <body style="background: linear-gradient(135deg, #2980b9, #2c3e50); color: white;">
     <a href="index.html" class="home-icon">
         <img src="../MUNDO 3D/images/bx-home-alt-2.svg" alt="Ir a Inicio">
@@ -87,17 +109,18 @@
         <a href="#" class="font-medium text-white font-weight-bold mr-3" onclick="adjustFontSize('medium')">A</a>
         <a href="#" class="font-large text-white font-weight-bold mr-3" onclick="adjustFontSize('large')">A</a>
         <div id="disabled-icon">
-            <i class="fas fa-wheelchair fa-lg text-white" onclick="aumentarTamano()" onmouseover="cambiarCursor(event)" onmouseout="restaurarCursor()"></i>
+            <i class="fas fa-wheelchair fa-lg text-white" onclick="aumentarTamano()" onmouseover="cambiarCursor(event)"
+                onmouseout="restaurarCursor()"></i>
         </div>
     </div>
     <div class="container">
         <img src="images/Logo Mundo 3d.png" alt="logo mundo 3D">
         <h2>Olvidó su Contraseña</h2>
         <p>Por favor, ingrese su dirección de correo electrónico registrada para restablecer su contraseña.</p>
-        
-        <form class="form" id="olvidoForm" action="../MUNDO 3D/Programas/recovery.php" method="post">        
+
+        <form class="form" id="olvidoForm" action="../MUNDO 3D/Programas/recovery.php" method="post">
             <input type="email" id="email" name="email" required placeholder="Ingrese su correo electrónico">
-            <br/>            
+            <br />
             <input type="submit" value="Restablecer Contraseña">
         </form>
     </div>
@@ -108,21 +131,21 @@
         </div>
     </div>
     <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                const formulario = document.querySelector('#olvidoForm');
-                const modal = document.getElementById('myModal');
-                const closeModalBtn = document.getElementById('closeModal');
-                const modalMessage = document.getElementById('modalMessage');
+        document.addEventListener('DOMContentLoaded', function () {
+            const formulario = document.querySelector('#olvidoForm');
+            const modal = document.getElementById('myModal');
+            const closeModalBtn = document.getElementById('closeModal');
+            const modalMessage = document.getElementById('modalMessage');
 
-                formulario.addEventListener('submit', function (e) {
-                    e.preventDefault();
+            formulario.addEventListener('submit', function (e) {
+                e.preventDefault();
 
-                    const formData = new FormData(formulario);
+                const formData = new FormData(formulario);
 
-                    fetch('../MUNDO 3D/Programas/recovery.php', {
-                        method: 'POST',
-                        body: formData
-                    })
+                fetch('../MUNDO 3D/Programas/recovery.php', {
+                    method: 'POST',
+                    body: formData
+                })
                     .then(response => response.json())
                     .then(data => {
                         modalMessage.textContent = data.message;
@@ -154,18 +177,18 @@
                             closeModalBtn.style.backgroundColor = ''; // Restaura el color por defecto al cerrar el modal
                         }, 5000);
                     });
-                });
-
-                closeModalBtn.addEventListener('click', function () {
-                    modal.style.display = 'none';
-                    closeModalBtn.style.backgroundColor = ''; // Restaura el color por defecto al cerrar el modal
-                });
             });
-            function adjustFontSize(size) {
+
+            closeModalBtn.addEventListener('click', function () {
+                modal.style.display = 'none';
+                closeModalBtn.style.backgroundColor = ''; // Restaura el color por defecto al cerrar el modal
+            });
+        });
+        function adjustFontSize(size) {
             const body = document.body;
             body.classList.remove('font-small', 'font-medium', 'font-large');
 
-            switch(size) {
+            switch (size) {
                 case 'small':
                     body.classList.add('font-small');
                     break;
@@ -206,4 +229,5 @@
 
     </script>
 </body>
+
 </html>

@@ -36,9 +36,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // El usuario no está registrado, insertar en la base de datos
         $tipo = 3; // Supongamos que el ID 1 corresponde al rol "usuario"
-        
+
         $sql = "INSERT INTO usuario (Usu_Identificacion, Usu_Nombre_completo, Usu_Telefono, Usu_Email, Usu_Ciudad, Usu_Direccion, Usu_Contraseña, Usu_Rol) VALUES ('$documento', '$nombres', '$telefono', '$correo', '$ciudad', '$direccion', '$hashed_password', $tipo)";
-        
+
         if (mysqli_query($link, $sql)) {
             $response = array("success" => true);
             echo json_encode($response);

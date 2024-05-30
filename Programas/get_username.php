@@ -5,7 +5,7 @@ session_start();
 if (isset($_SESSION["user_id"])) {
     // El usuario ha iniciado sesión, obtén su ID de usuario
     $usuario_id = $_SESSION["user_id"];
-    
+
     // Realiza una conexión a la base de datos y realiza la consulta SQL para obtener el nombre completo
     $host = "localhost";
     $user = "root";
@@ -25,7 +25,7 @@ if (isset($_SESSION["user_id"])) {
     if ($resultado) {
         $fila = mysqli_fetch_assoc($resultado);
         $nombreCompleto = $fila["Usu_nombre_completo"];
-        
+
         // Devuelve el nombre completo como respuesta JSON
         echo json_encode(array("nombreCompleto" => $nombreCompleto));
     } else {

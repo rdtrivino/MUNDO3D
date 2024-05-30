@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     // Función para hacer la solicitud AJA
-        function obtenerNombreDeUsuario() {
-            console.log("Solicitud AJAX en proceso...");
+    function obtenerNombreDeUsuario() {
+        console.log("Solicitud AJAX en proceso...");
         // Realiza una solicitud AJAX a tu script PHP
         var xhr = new XMLHttpRequest();
         xhr.open("GET", "../MUNDO 3D/Programas/get_username.php", true);// Reemplaza con la ruta correcta a tu script PHP
@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     document.getElementById("user-name").textContent = respuesta.nombreCompleto;
                 }
             }
-        };document.addEventListener("DOMContentLoaded", function () {
+        }; document.addEventListener("DOMContentLoaded", function () {
             // Función para hacer la solicitud AJAX
             function obtenerNombreDeUsuario() {
                 // Realiza una solicitud AJAX a tu script PHP
@@ -36,11 +36,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 };
                 xhr.send();
             }
-        
+
             // Llama a la función para obtener el nombre de usuario cuando la página se carga
             obtenerNombreDeUsuario();
         });
-        
+
         xhr.send();
     }
 

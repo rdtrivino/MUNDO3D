@@ -47,28 +47,28 @@ if (isset($_POST['guardar_cambios'])) {
         $imagen_contenido = null;
         // Establecer parametros para almacenar imagen 
         // Obtener la extensión del archivo
-        if(isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK){
+        if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
             // Obtener la extensión del archivo
             $extension = strtolower(pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION));
             $ruta_destino = "../images/imagenes_catalogo/"; // Ruta donde quieres guardar la imagen
             $nombre_imagen = "catalogo-" . $identificador . ".$extension"; // Nombre que deseas para la imagen
-            
+
             // Combinar la ruta de destino con el nombre de la imagen
             $imagen_contenido = $ruta_destino . $nombre_imagen;
-            
+
             // Mover la imagen cargada a la ruta específica
-            if(move_uploaded_file($_FILES['imagen']['tmp_name'], $imagen_contenido)){
+            if (move_uploaded_file($_FILES['imagen']['tmp_name'], $imagen_contenido)) {
                 //echo "La imagen se ha guardado correctamente en: " . $ruta_completa;
             } else {
                 echo "Error al guardar la imagen.";
-            } 
-            } else {
-                // Si no se ha cargado ninguna imagen nueva, obtener el nombre de imagen existente de la base de datos
-                $query = "SELECT nombre_imagen FROM productos WHERE Identificador = $identificador";
-                $result = mysqli_query($link, $query);
-                $row = mysqli_fetch_assoc($result);
-                $imagen_contenido = $row['nombre_imagen'];
             }
+        } else {
+            // Si no se ha cargado ninguna imagen nueva, obtener el nombre de imagen existente de la base de datos
+            $query = "SELECT nombre_imagen FROM productos WHERE Identificador = $identificador";
+            $result = mysqli_query($link, $query);
+            $row = mysqli_fetch_assoc($result);
+            $imagen_contenido = $row['nombre_imagen'];
+        }
 
         // Consulta para obtener los datos actuales del producto
         $consulta_actualizar = "SELECT Pro_Nombre, Pro_Descripcion, Pro_PrecioVenta, Pro_Categoria, Pro_Cantidad, Pro_Costo, Pro_Estado, nombre_imagen FROM productos WHERE Identificador=?";
@@ -140,23 +140,23 @@ if (isset($_POST['nombre']) && isset($_POST['descripcion']) && isset($_POST['pre
     // Procesar la imagen (si se ha subido una nueva)
     $imagen_contenido = null;
     // Establecer parametros para almacenar imagen 
+    // Obtener la extensión del archivo
+    if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
         // Obtener la extensión del archivo
-        if(isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK){
-            // Obtener la extensión del archivo
-            $extension = strtolower(pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION));
-            $ruta_destino = "../images/imagenes_catalogo/"; // Ruta donde quieres guardar la imagen
-            $nombre_imagen = "catalogo-" . $identificador . ".$extension"; // Nombre que deseas para la imagen
-            
-            // Combinar la ruta de destino con el nombre de la imagen
-            $imagen_contenido = $ruta_destino . $nombre_imagen;
-            
-            // Mover la imagen cargada a la ruta específica
-            if(move_uploaded_file($_FILES['imagen']['tmp_name'], $imagen_contenido)){
-                //echo "La imagen se ha guardado correctamente en: " . $ruta_completa;
-            } else {
-                echo "Error al guardar la imagen.";
-            } 
+        $extension = strtolower(pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION));
+        $ruta_destino = "../images/imagenes_catalogo/"; // Ruta donde quieres guardar la imagen
+        $nombre_imagen = "catalogo-" . $identificador . ".$extension"; // Nombre que deseas para la imagen
+
+        // Combinar la ruta de destino con el nombre de la imagen
+        $imagen_contenido = $ruta_destino . $nombre_imagen;
+
+        // Mover la imagen cargada a la ruta específica
+        if (move_uploaded_file($_FILES['imagen']['tmp_name'], $imagen_contenido)) {
+            //echo "La imagen se ha guardado correctamente en: " . $ruta_completa;
+        } else {
+            echo "Error al guardar la imagen.";
         }
+    }
 
     // Obtener el último código de producto
     $ultimoCodigoConsulta = mysqli_query($link, "SELECT MAX(Identificador) AS ultimo_codigo FROM productos");

@@ -56,25 +56,26 @@ if (isset($_SESSION['user_id'])) {
     while ($fila = mysqli_fetch_assoc($resultado)) {
         $total_a_pagar += $fila['precio'] * $fila['cantidad'];
     }
-        // Actualizar la cantidad del producto en la base de datos si se ha enviado un formulario para ello
-        if (isset($_POST['product_id']) && isset($_POST['quantity'])) {
-            $producto_id = $_POST['product_id'];
-            $cantidad = $_POST['quantity'];
-    
-            $sql_update = "UPDATE carrito SET cantidad = $cantidad WHERE Pe_Cliente = $usuario_id AND id = $producto_id";
-            if (mysqli_query($link, $sql_update)) {
-                echo "La cantidad del producto se ha actualizado correctamente en la base de datos.";
-            } else {
-                echo "Error al actualizar la cantidad del producto en la base de datos: " . mysqli_error($link);
-            }
+    // Actualizar la cantidad del producto en la base de datos si se ha enviado un formulario para ello
+    if (isset($_POST['product_id']) && isset($_POST['quantity'])) {
+        $producto_id = $_POST['product_id'];
+        $cantidad = $_POST['quantity'];
+
+        $sql_update = "UPDATE carrito SET cantidad = $cantidad WHERE Pe_Cliente = $usuario_id AND id = $producto_id";
+        if (mysqli_query($link, $sql_update)) {
+            echo "La cantidad del producto se ha actualizado correctamente en la base de datos.";
+        } else {
+            echo "Error al actualizar la cantidad del producto en la base de datos: " . mysqli_error($link);
         }
-    } else {
-        echo "Error: Falta información requerida para actualizar la cantidad del producto.";
     }
+} else {
+    echo "Error: Falta información requerida para actualizar la cantidad del producto.";
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -86,18 +87,23 @@ if (isset($_SESSION['user_id'])) {
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <style>
         body {
-            background-color: #f8f9fa; /* Color de fondo general */
+            background-color: #f8f9fa;
+            /* Color de fondo general */
         }
+
         .container {
             padding: 30px 0;
         }
+
         .cuadro-global {
-            background-color: #0077cc; /* Color de fondo del cuadro global */
+            background-color: #0077cc;
+            /* Color de fondo del cuadro global */
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
         }
+
         .titulo {
             font-size: 36px;
             font-weight: bold;
@@ -105,24 +111,31 @@ if (isset($_SESSION['user_id'])) {
             text-align: center;
             color: #333;
         }
+
         .cuadro-productos {
-            background-color: #e9ecef; /* Color claro para cuadro de productos */
+            background-color: #e9ecef;
+            /* Color claro para cuadro de productos */
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             padding: 30px;
             margin-bottom: 20px;
         }
+
         .cuadro-pago {
-            background-color: #dee2e6; /* Color claro para cuadro de pago */
+            background-color: #dee2e6;
+            /* Color claro para cuadro de pago */
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             padding: 30px;
             margin-bottom: 20px;
         }
+
         /* Estilo adicional para el cuadro de pago */
         .cuadro-pago {
-            background-color: #ced4da; /* Nuevo color de fondo */
+            background-color: #ced4da;
+            /* Nuevo color de fondo */
         }
+
         .card {
             background-color: #fff;
             border: none;
@@ -131,48 +144,59 @@ if (isset($_SESSION['user_id'])) {
             transition: transform 0.3s ease;
             margin-bottom: 20px;
         }
+
         .card:hover {
             transform: translateY(-5px);
         }
+
         .card img {
             border-top-left-radius: 10px;
             border-top-right-radius: 10px;
             height: 200px;
             object-fit: cover;
         }
+
         .card-body {
             padding: 20px;
         }
+
         .card-title {
             font-size: 24px;
             font-weight: bold;
             margin-bottom: 10px;
         }
+
         .card-text {
             font-size: 16px;
             margin-bottom: 15px;
         }
+
         .btn-vaciar-carrito,
         .btn-pagar {
             font-size: 18px;
             width: 150px;
             margin-top: 20px;
         }
+
         .subtotal {
             font-size: 24px;
             font-weight: bold;
             text-align: right;
             margin-top: 30px;
         }
+
         .cantidad-container {
             display: flex;
             align-items: center;
         }
+
         .selector-cantidad {
-            width: 50px; /* Ancho ajustado */
+            width: 50px;
+            /* Ancho ajustado */
             text-align: center;
             margin-right: 10px;
         }
+
         .btn-cantidad {
             width: 30px;
             padding: 0;
@@ -183,12 +207,12 @@ if (isset($_SESSION['user_id'])) {
 </head>
 <style>
     body {
-      background: linear-gradient(to bottom right, #6ca6cd, #ffb6c1);
+        background: linear-gradient(to bottom right, #6ca6cd, #ffb6c1);
     }
-  </style>
-      <a href="../USUARIO/Catalogologin.php" class="btn btn-link">
-        <i class="bi bi-house-door" style="color: black; font-size: 48px;"></i>
-    </a>
+</style>
+<a href="../USUARIO/Catalogologin.php" class="btn btn-link">
+    <i class="bi bi-house-door" style="color: black; font-size: 48px;"></i>
+</a>
 
 <div class="container">
     <div class="cuadro-global">
@@ -196,21 +220,21 @@ if (isset($_SESSION['user_id'])) {
             <!-- Icono del carrito junto al título -->
             <i class="bi bi-cart-fill"></i> Mi Carrito
         </h2>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="cuadro-productos">
-                        <h3 class="titulo">Productos en el Carrito</h3>
-                        <div class="text-right mb-3">
-                            <a href="index.php?vaciar=1" class="btn btn-danger btn-vaciar-carrito">
-                                <i class="bi bi-cart-fill"></i> Vaciar 
-                            </a>
-                        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="cuadro-productos">
+                    <h3 class="titulo">Productos en el Carrito</h3>
+                    <div class="text-right mb-3">
+                        <a href="index.php?vaciar=1" class="btn btn-danger btn-vaciar-carrito">
+                            <i class="bi bi-cart-fill"></i> Vaciar
+                        </a>
+                    </div>
                     <!-- Iterar sobre los resultados de la consulta -->
                     <?php
                     if (mysqli_num_rows($resultado) > 0) {
                         mysqli_data_seek($resultado, 0); // Reiniciar el puntero del resultado
                         while ($fila = mysqli_fetch_assoc($resultado)) {
-                    ?>
+                            ?>
                             <!-- Mostrar el producto en el carrito -->
                             <div class="card">
                                 <!-- Contenido de la tarjeta -->
@@ -222,28 +246,32 @@ if (isset($_SESSION['user_id'])) {
                                         <div class="card-body">
                                             <h5 class="card-title"><?php echo $fila['nombre']; ?></h5>
                                             <?php
-                                                // Verificar si la columna 'descripcion' está presente en $fila
-                                                if (isset($fila['descripcion'])) {
-                                            ?>
-                                                    <p class="card-text"><?php echo $fila['descripcion']; ?></p>
-                                            <?php
-                                                } else {
-                                                    // Si la columna 'descripcion' no está presente, puedes mostrar un mensaje alternativo o dejarlo en blanco
-                                                    echo "<p>No hay descripción disponible para este producto.</p>";
-                                                }
+                                            // Verificar si la columna 'descripcion' está presente en $fila
+                                            if (isset($fila['descripcion'])) {
+                                                ?>
+                                                <p class="card-text"><?php echo $fila['descripcion']; ?></p>
+                                                <?php
+                                            } else {
+                                                // Si la columna 'descripcion' no está presente, puedes mostrar un mensaje alternativo o dejarlo en blanco
+                                                echo "<p>No hay descripción disponible para este producto.</p>";
+                                            }
                                             ?>
                                             <p class="card-text precio-producto">$<?php echo $fila['precio']; ?></p>
                                             <div class="cantidad-container">
                                                 <!-- Botones para ajustar la cantidad -->
-                                                <button class="btn btn-outline-secondary btn-cantidad" onclick="restarCantidad(<?php echo $fila['id']; ?>)">-</button>
-                                                <input type="text" id="cantidad-<?php echo $fila['id']; ?>" class="form-control text-center selector-cantidad" value="<?php echo $fila['cantidad']; ?>" aria-label="Cantidad">
-                                                <button class="btn btn-outline-secondary btn-cantidad" onclick="sumarCantidad(<?php echo $fila['id']; ?>)">+</button>
+                                                <button class="btn btn-outline-secondary btn-cantidad"
+                                                    onclick="restarCantidad(<?php echo $fila['id']; ?>)">-</button>
+                                                <input type="text" id="cantidad-<?php echo $fila['id']; ?>"
+                                                    class="form-control text-center selector-cantidad"
+                                                    value="<?php echo $fila['cantidad']; ?>" aria-label="Cantidad">
+                                                <button class="btn btn-outline-secondary btn-cantidad"
+                                                    onclick="sumarCantidad(<?php echo $fila['id']; ?>)">+</button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                    <?php
+                            <?php
                         }
                     } else {
                         // Si no hay productos en el carrito, mostrar un mensaje indicando que está vacío
@@ -268,27 +296,29 @@ if (isset($_SESSION['user_id'])) {
                             <!-- Botón de Stripe -->
                             <form id="payment-form" action="procesar_pago.php" method="POST">
                                 <!-- Campo oculto para enviar el monto -->
-                                <input type="hidden" name="monto" id="monto" value="<?php echo $total_a_pagar * 100; ?>"> <!-- Convertir a centavos -->
-                
-                                <script
-                                    src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                                <input type="hidden" name="monto" id="monto" value="<?php echo $total_a_pagar * 100; ?>">
+                                <!-- Convertir a centavos -->
+
+                                <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
                                     data-key="pk_test_51PCx2gRxUN5OHb78Un4Cxh9oWW7Xnk9nzmWDzPqyrjFbfDQP187to1ujx3eAsRByEIU8hHhMwxvgj2FiVq0rGRJ600hiaE79NV"
                                     data-amount="<?php echo $total_a_pagar * 100; ?>" <!-- Convertir a centavos -->
-                                    data-name="MUNDO 3D" <!-- Cambiar el nombre de tu tienda -->
-                                    data-description="MUNDO 3D" <!-- Cambiar la descripción del pedido -->
-                                    data-image="RUTA_DE_LA_IMAGEN_DEL_PRODUCTO" <!-- Cambiar la ruta de la imagen del producto -->
-                                    data-locale="auto"
-                                    data-currency="USD">
-                                </script>
+                                        data - name="MUNDO 3D" <!-- Cambiar el nombre de tu tienda -->
+                                        data - description="MUNDO 3D" < !--Cambiar la descripción del pedido-- >
+                                            data - image="RUTA_DE_LA_IMAGEN_DEL_PRODUCTO" < !--Cambiar la ruta de la imagen del producto-- >
+                                                data - locale="auto"
+                                        data - currency="USD" >
+                                    </script>
                             </form>
                         </div>
-                        
+
                     <?php } else { ?>
                         <p>No hay productos en el carrito. Por favor, agrega productos para continuar con el pago.</p>
                     <?php } ?>
                     <br>
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Visa.svg/1200px-Visa.svg.png" alt="Visa" style="width: 50px;">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/MasterCard_Logo.svg/1200px-MasterCard_Logo.svg.png" alt="Mastercard" style="width: 50px;">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Visa.svg/1200px-Visa.svg.png"
+                        alt="Visa" style="width: 50px;">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/MasterCard_Logo.svg/1200px-MasterCard_Logo.svg.png"
+                        alt="Mastercard" style="width: 50px;">
                 </div>
             </div>
 
@@ -298,16 +328,16 @@ if (isset($_SESSION['user_id'])) {
 
 <!-- Scripts JavaScript -->
 <script>
-    $(document).ready(function() {
-        // Agregar event listener para el cambio en el selector de cantidad
-        $(".selector-cantidad").change(function() {
-            actualizarTotal();
-            actualizarCantidadEnBD($(this).data('product-id'), $(this).val());
-        });
+        $(document).ready(function () {
+            // Agregar event listener para el cambio en el selector de cantidad
+            $(".selector-cantidad").change(function () {
+                actualizarTotal();
+                actualizarCantidadEnBD($(this).data('product-id'), $(this).val());
+            });
 
-        // Calcular el total inicial al cargar la página
-        actualizarTotal();
-    });
+            // Calcular el total inicial al cargar la página
+            actualizarTotal();
+        });
 
     function restarCantidad(productId) {
         var cantidadInput = $("#cantidad-" + productId);
@@ -335,7 +365,7 @@ if (isset($_SESSION['user_id'])) {
             type: "POST",
             url: "index.php", // Cambiar por la URL correcta si es necesario
             data: { product_id: productId, quantity: cantidad }, // Pasar los parámetros
-            success: function(response) {
+            success: function (response) {
                 // Manejar la respuesta del servidor si es necesario
                 console.log(response);
             }
@@ -344,7 +374,7 @@ if (isset($_SESSION['user_id'])) {
 
     function actualizarTotal() {
         var precioTotal = 0;
-        $(".card").each(function() {
+        $(".card").each(function () {
             var precio = parseFloat($(this).find(".precio-producto").text().substring(1));
             var cantidad = parseInt($(this).find(".selector-cantidad").val());
             precioTotal += precio * cantidad;
@@ -354,4 +384,5 @@ if (isset($_SESSION['user_id'])) {
 </script>
 
 </body>
+
 </html>

@@ -5,7 +5,8 @@ require '../conexion.php';
 $nombreCompleto = $_SESSION['username'];
 $usuario_id = $_SESSION['user_id'];
 
-function obtenerNombreProducto($IdentificadorProducto, $conexion) {
+function obtenerNombreProducto($IdentificadorProducto, $conexion)
+{
     $sql = "SELECT pro_nombre FROM productos WHERE Identificador = ?";
     $stmt = mysqli_prepare($conexion, $sql);
     mysqli_stmt_bind_param($stmt, "i", $IdentificadorProducto);
@@ -17,7 +18,8 @@ function obtenerNombreProducto($IdentificadorProducto, $conexion) {
 }
 
 // Función para obtener el nombre del estado a partir del código
-function obtenerNombreEstado($IdentificadorEstado, $conexion) {
+function obtenerNombreEstado($IdentificadorEstado, $conexion)
+{
     $sql = "SELECT Es_Nombre FROM pedido_estado WHERE Es_Codigo = ?";
     $stmt = mysqli_prepare($conexion, $sql);
     mysqli_stmt_bind_param($stmt, "i", $IdentificadorEstado);
@@ -28,7 +30,8 @@ function obtenerNombreEstado($IdentificadorEstado, $conexion) {
     return $nombreEstado ? $nombreEstado : "Estado no encontrado";
 }
 // Esta función devuelve un array con los estados de la tabla pedido_estado
-function obtenerEstadosPedidos($link) {
+function obtenerEstadosPedidos($link)
+{
     // Array para almacenar los resultados
     $estados = array();
 
@@ -53,7 +56,8 @@ function obtenerEstadosPedidos($link) {
     return $estados;
 }
 // Función para obtener todos los productos disponibles desde la base de datos
-function obtenerProductos($link) {
+function obtenerProductos($link)
+{
     // Array para almacenar los productos
     $productos = array();
 
@@ -118,7 +122,7 @@ if (isset($_POST['cliente'], $_POST['producto'], $_POST['cantidad'], $_POST['fec
 if (isset($_POST['identificador'])) {
     // Obtener el identificador del pedido
     $identificador = $_POST['identificador'];
-    
+
     $consulta = "UPDATE pedidos SET Acciones = 'inactivo' WHERE identificador = ?";
     $stmt = mysqli_prepare($link, $consulta);
     mysqli_stmt_bind_param($stmt, "i", $identificador);
@@ -148,35 +152,35 @@ if (isset($_POST['guardar_cambios'])) {
     $color = $_POST['pe_color'];
     $observaciones = $_POST['Pe_Observacion'];
     $imagen = null;
-    
-        // Obtener la extensión del archivo
-        if(isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK){
-            // Obtener la extensión del archivo
-            $extension = strtolower(pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION));
-            $ruta_destino = "../images/imagenes_pedidos/"; // Ruta donde quieres guardar la imagen
-            $nombre_imagen = "pedido-" . $identificador . ".$extension"; // Nombre que deseas para la imagen
-            
-            // Combinar la ruta de destino con el nombre de la imagen
-            $imagen = $ruta_destino . $nombre_imagen;
-            
-            // Mover la imagen cargada a la ruta específica
-            if(move_uploaded_file($_FILES['imagen']['tmp_name'], $imagen)){
-                //echo "La imagen se ha guardado correctamente en: " . $ruta_completa;
-            } else {
-                echo "Error al guardar la imagen.";
-            } 
-            } else {
-                // Si no se ha cargado ninguna imagen nueva, obtener el nombre de imagen existente de la base de datos
-                $query = "SELECT nombre_imagen FROM pedidos WHERE Identificador = $identificador";
-                $result = mysqli_query($link, $query);
-                $row = mysqli_fetch_assoc($result);
-                $imagen = $row['nombre_imagen'];
-            }
 
-        // Guardar los registros en la base de datos
-        $sql = "UPDATE pedidos SET Pe_Cliente=?, Pe_Estado=?, Pe_Producto=?, Pe_Cantidad=?, Pe_Fechapedido=?, Pe_Fechaentrega=?, pe_color=?, Pe_Observacion=?, nombre_imagen=? WHERE Identificador=?";
-        $stmt = $link->prepare($sql);
-        $stmt->bind_param('sisisssssi', $cliente, $estado, $producto, $cantidad, $fechaPedido, $fechaEntrega, $color, $observaciones, $imagen, $identificador);
+    // Obtener la extensión del archivo
+    if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
+        // Obtener la extensión del archivo
+        $extension = strtolower(pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION));
+        $ruta_destino = "../images/imagenes_pedidos/"; // Ruta donde quieres guardar la imagen
+        $nombre_imagen = "pedido-" . $identificador . ".$extension"; // Nombre que deseas para la imagen
+
+        // Combinar la ruta de destino con el nombre de la imagen
+        $imagen = $ruta_destino . $nombre_imagen;
+
+        // Mover la imagen cargada a la ruta específica
+        if (move_uploaded_file($_FILES['imagen']['tmp_name'], $imagen)) {
+            //echo "La imagen se ha guardado correctamente en: " . $ruta_completa;
+        } else {
+            echo "Error al guardar la imagen.";
+        }
+    } else {
+        // Si no se ha cargado ninguna imagen nueva, obtener el nombre de imagen existente de la base de datos
+        $query = "SELECT nombre_imagen FROM pedidos WHERE Identificador = $identificador";
+        $result = mysqli_query($link, $query);
+        $row = mysqli_fetch_assoc($result);
+        $imagen = $row['nombre_imagen'];
+    }
+
+    // Guardar los registros en la base de datos
+    $sql = "UPDATE pedidos SET Pe_Cliente=?, Pe_Estado=?, Pe_Producto=?, Pe_Cantidad=?, Pe_Fechapedido=?, Pe_Fechaentrega=?, pe_color=?, Pe_Observacion=?, nombre_imagen=? WHERE Identificador=?";
+    $stmt = $link->prepare($sql);
+    $stmt->bind_param('sisisssssi', $cliente, $estado, $producto, $cantidad, $fechaPedido, $fechaEntrega, $color, $observaciones, $imagen, $identificador);
 
     if ($stmt->execute()) {
         echo "success";

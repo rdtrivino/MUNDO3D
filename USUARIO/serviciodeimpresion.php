@@ -388,25 +388,20 @@ mysqli_close($link);
             </nav>
         </div>
     </div>
-    <!-- Page Header Start -->
-    <div class="page-header container-fluid bg-secondary pt-2 pt-lg-5 pb-2 mb-5">
-        <div class="container py-5">
-            <div class="row align-items-center py-4">
-                <div class="col-md-6 text-center text-md-left">
-                    <h1 class="mb-4 mb-md-0 text-white">Impresion 3D</h1>
-                </div>
-                <div class="col-md-6 text-center text-md-right">
-                    <div class="d-inline-flex align-items-center">
-                        <a class="btn text-white" href="">INICIO</a>
-                        <i class="fas fa-angle-right text-white"></i>
-                        <a class="btn text-white disabled" href="">servicio de impresion</a>
+         <!-- Navbar End -->
+         <div class="page-header container-fluid bg-secondary pt-0 pt-lg-1 pb-1 mb-4">
+                <div class="row align-items-center py-4">
+                    <div class="col-md-6 offset-md-6 text-center text-md-right">
+                        <form class="form-inline">
+                            <input class="form-control mr-sm-2 ml-auto" type="search" placeholder="Buscar" aria-label="Buscar" oninput="searchProducts(this.value)">
+                            <button class="btn btn-outline-dark my-2 my-sm-0" type="submit">Buscar</button>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
             <!-- Formulario para Pedido -->
-            <div class="container-fluid pt-5">
+            <div class="container-fluid" style="background-color: #D3D3D3; margin-top: -50px;">
                 <div class="container">
                     <h1 class="display-4 text-center mb-5">Explore e imprima el que más le guste</h1>
                     <div class="row">
@@ -527,7 +522,7 @@ mysqli_close($link);
                                 <img src="#" alt="Imagen Previa" id="imagenPrevia" style="max-width: 80%; height: auto;">
                             </div>
                         </div>
-                        <div class="col-lg-12 mt-3">
+                        <div class="col-lg-12 mt-3 mb-5">
                             <div class="text-center">
                                 <button type="submit" class="btn btn-primary">Enviar Solicitud</button>
                             </div>
@@ -538,6 +533,18 @@ mysqli_close($link);
         </div>
     </div>
 </div>
+<style>
+    label,
+    input,
+    select,
+    textarea {
+        color: black !important;
+    }
+    .btn-primary {
+        color: white !important;
+    }
+</style>
+
 <!-- Agrega el modal de confirmación -->
 <div class="modal fade" id="confirmacionModal" tabindex="-1" aria-labelledby="confirmacionModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -605,7 +612,7 @@ endif;
 </script>
 
 <!-- Footer Start -->
-<div class="container-fluid bg-primary text-white mt-5 pt-5 px-sm-3 px-md-5">
+<div class="container-fluid bg-primary text-white px-sm-3 px-md-5" style="margin-top: auto; margin-bottom: 0;">
     <div class="row pt-5">
         <div class="col-lg-4 col-md-6 mb-5">
             <a href=""><h1 class="text-secondary mb-3"><span class="text-white">MUNDO</span>3D</h1></a>

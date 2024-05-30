@@ -10,15 +10,16 @@ if (!$conexion) {
     die("Error al conectarse a la Base de Datos: " . mysqli_connect_error());
 }
 
-require_once('../libs/fpdf.php');
+require_once ('../libs/fpdf.php');
 
-function generarReporteUsuarios($conexion) {
+function generarReporteUsuarios($conexion)
+{
     $pdf = new FPDF('L');
     $pdf->AddPage();
 
     $pdf->SetFont('Arial', '', 8);
 
-    $pdf->Image('../images/Logo Mundo 3d.png',10,5,20);
+    $pdf->Image('../images/Logo Mundo 3d.png', 10, 5, 20);
     $pdf->Ln(30);
 
     $pdf->SetFillColor(0, 102, 204);
@@ -48,7 +49,8 @@ function generarReporteUsuarios($conexion) {
     $pdf->Cell(20, 10, 'Rol', 1, 0, 'C', true);
     $pdf->Cell(30, 10, 'Estado', 1, 1, 'C', true);
 
-    function obtenerEtiquetaRol($rol) {
+    function obtenerEtiquetaRol($rol)
+    {
         switch ($rol) {
             case '1':
                 return 'ADMI';

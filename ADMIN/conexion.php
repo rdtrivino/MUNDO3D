@@ -7,7 +7,8 @@ $dbname = "mundo3d";
 
 $link = mysqli_connect($host, $user, $password);
 
-if (!$link) {   die("Error al conectarse al servidor: " . mysqli_connect_error());
+if (!$link) {
+    die("Error al conectarse al servidor: " . mysqli_connect_error());
 }
 
 if (!mysqli_select_db($link, $dbname)) {

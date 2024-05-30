@@ -12,7 +12,7 @@ if (isset($_SESSION['user_id'])) {
     exit(); // Finalizar el script para evitar ejecución adicional
 }
 
-require_once('vendor/autoload.php');
+require_once ('vendor/autoload.php');
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -57,7 +57,7 @@ if (isset($_POST['monto']) && isset($_POST['stripeToken'])) {
         if ($pagoExitoso) {
             // Realizar la consulta SQL para actualizar el estado de pago
             $sql_update = "UPDATE carrito SET estado_pago = 'pagado' WHERE estado_pago = 'pendiente' AND Pe_Cliente = '$Pe_Cliente'";
-            
+
             // Ejecutar la consulta SQL para actualizar el estado de pago
             if (mysqli_query($link, $sql_update)) {
                 // Transferir los productos del carrito a la tabla de pedidos cuando el pago sea exitoso
@@ -93,7 +93,8 @@ if (isset($_POST['monto']) && isset($_POST['stripeToken'])) {
     }
 }
 // Función para obtener el correo electrónico del usuario
-function obtenerEmailUsuario($Pe_Cliente) {
+function obtenerEmailUsuario($Pe_Cliente)
+{
     global $link;
 
     // Consulta SQL para obtener el correo electrónico del usuario
@@ -113,10 +114,11 @@ function obtenerEmailUsuario($Pe_Cliente) {
 }
 
 // Función para enviar la factura por correo electrónico
-function enviarFacturaPorCorreo($email) {
+function enviarFacturaPorCorreo($email)
+{
     global $link;
 
-    require_once('../conexion.php');
+    require_once ('../conexion.php');
     require '../Programas/phpmailer/Exception.php';
     require '../Programas/phpmailer/PHPMailer.php';
     require '../Programas/phpmailer/SMTP.php';
@@ -139,7 +141,7 @@ function enviarFacturaPorCorreo($email) {
         $mail->Subject = 'Factura'; // Asunto del correo
         $mail->Body = "Adjunto encontrarás la factura solicitada."; // Cuerpo del correo
         $mail->isHTML(true); // Establecer el formato del correo como HTML
-        
+
         // Obtener la ruta del archivo PDF de la factura
         $pdf_file = generarFactura($datos_factura); // Asegúrate de tener $datos_factura definido
 
@@ -163,6 +165,7 @@ function enviarFacturaPorCorreo($email) {
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -185,14 +188,17 @@ function enviarFacturaPorCorreo($email) {
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             z-index: 9999;
         }
+
         #modal-exito h2 {
             color: green;
         }
+
         #modal-rechazo h2 {
             color: red;
         }
     </style>
 </head>
+
 <body>
 
     <!-- Modal de éxito -->
@@ -208,27 +214,28 @@ function enviarFacturaPorCorreo($email) {
     </div>
 
     <script>
-    // Verifica si el pago fue exitoso y muestra el modal correspondiente
-    if (<?php echo $pagoExitoso ? 'true' : 'false'; ?>) {
+        // Verifica si el pago fue exitoso y muestra el modal correspondiente
+        if (<?php echo $pagoExitoso ? 'true' : 'false'; ?>) {
         // Muestra el modal de éxito
-        document.getElementById('modal-exito').style.display = 'block';
-        // Cierra el modal de éxito después de 10 segundos
-        setTimeout(function() {
-            document.getElementById('modal-exito').style.display = 'none';
-            // Redirige a la página del carrito después de cerrar el modal
-            window.location.href = '/../MUNDO 3D/USUARIO/Catalogologin.php';
-        }, 3000);
-    } else {
-        // Muestra el modal de rechazo si el pago fue rechazado
-        document.getElementById('modal-rechazo').style.display = 'block';
-        // Cierra el modal de rechazo después de 10 segundos
-        setTimeout(function() {
-            document.getElementById('modal-rechazo').style.display = 'none';
-            // Redirige a la página del carrito después de cerrar el modal
-            window.location.href = '/../MUNDO 3D/USUARIO/Catalogologin.php';
-        }, 3000);
-    }
-</script>
+            document.getElementById('modal-exito').style.display = 'block';
+            // Cierra el modal de éxito después de 10 segundos
+            setTimeout(function () {
+                document.getElementById('modal-exito').style.display = 'none';
+                // Redirige a la página del carrito después de cerrar el modal
+                window.location.href = '/../MUNDO 3D/USUARIO/Catalogologin.php';
+            }, 3000);
+        } else {
+            // Muestra el modal de rechazo si el pago fue rechazado
+            document.getElementById('modal-rechazo').style.display = 'block';
+            // Cierra el modal de rechazo después de 10 segundos
+            setTimeout(function () {
+                document.getElementById('modal-rechazo').style.display = 'none';
+                // Redirige a la página del carrito después de cerrar el modal
+                window.location.href = '/../MUNDO 3D/USUARIO/Catalogologin.php';
+            }, 3000);
+        }
+    </script>
 
 </body>
+
 </html>

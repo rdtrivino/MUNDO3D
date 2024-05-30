@@ -1,4 +1,48 @@
 <?php
+session_start();
+include __DIR__ . '/../conexion.php';
+
+// Confirmación de que el usuario ha realizado el proceso de autenticación
+if (!isset($_SESSION['confirmado']) || $_SESSION['confirmado'] == false) {
+    header("Location: ../Programas/autenticacion.php");
+    exit(); // Terminamos la ejecución del script después de redirigir
+}
+
+// Realizamos la consulta para obtener el rol del usuario
+$peticion = "SELECT Usu_rol FROM usuario WHERE Usu_Identificacion = '" . $_SESSION['user_id'] . "'";
+$result = mysqli_query($link, $peticion);
+
+// Verificamos si la consulta tuvo éxito
+if (!$result) {
+    // Manejo de errores de consulta
+    // Redirigir a la página de autenticación o mostrar un mensaje de error
+    header("Location: ../Programas/autenticacion.php");
+    exit(); // Terminamos la ejecución del script después de redirigir
+}
+
+// Verificamos si la consulta devolvió exactamente un resultado
+if (mysqli_num_rows($result) != 1) {
+    // Si la consulta no devuelve un solo resultado, puede ser un problema de base de datos
+    // Redirigir a la página de autenticación o mostrar un mensaje de error
+    header("Location: ../Programas/autenticacion.php");
+    exit(); // Terminamos la ejecución del script después de redirigir
+}
+
+// Obtenemos el rol del usuario
+$fila = mysqli_fetch_assoc($result);
+$rolUsuario = $fila['Usu_rol'];
+
+// Verificar si el rol del usuario es diferente de 1
+if ($rolUsuario != 1) {
+    // Si el rol no es 1, redirigir a la página de autenticación
+    header("Location: ../Programas/autenticacion.php");
+    exit(); // Terminamos la ejecución del script después de redirigir
+}
+
+// Si llegamos aquí, el usuario está autenticado y tiene el rol 1
+// Continuar con el resto del código
+$nombreCompleto = $_SESSION['username'];
+$usuario_id = $_SESSION['user_id'];
 
 require '../conexion.php';
 
@@ -7,11 +51,11 @@ use PHPMailer\PHPMailer\Exception;
 
 if (!isset($_SESSION['username'])) {
     header("location: index.php");
-    exit(); 
+    exit();
 }
 
 $nombreCompleto = $_SESSION['username'];
-$usuario_id = $_SESSION['user_id']; 
+$usuario_id = $_SESSION['user_id'];
 
 $sql = "SELECT  Usu_Identificacion, Usu_Nombre_completo, Usu_Telefono, Usu_Email, Usu_Ciudad, Usu_Direccion, Usu_Rol, Usu_Estado FROM usuario";
 $resultado = mysqli_query($link, $sql);
@@ -31,7 +75,7 @@ if (isset($_POST['id_usuario'])) {
     $ciudad = $_POST['ciudad'];
     $direccion = $_POST['direccion'];
     $rol = $_POST['rol'];
-    $estado = $_POST['estado']; 
+    $estado = $_POST['estado'];
 
     $sql_actualizar = "UPDATE usuario SET Usu_Nombre_completo=?, Usu_Telefono=?, Usu_Email=?, Usu_Ciudad=?, Usu_Direccion=?, Usu_Rol=?, Usu_Estado=? WHERE Usu_Identificacion=?";
     $stmt = mysqli_prepare($link, $sql_actualizar);
@@ -102,7 +146,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $mail->SMTPSecure = 'tls';
                 $mail->Port = 587;
                 $mail->CharSet = 'UTF-8';
-                $mail->Encoding = 'base64'; 
+                $mail->Encoding = 'base64';
                 $mail->setFrom('Mundo3D.RYSJ@outlook.com', 'MUNDO 3D');
                 $mail->addAddress($email, $nombre);
                 $mail->Subject = 'Datos de inicio de sesión';
@@ -144,7 +188,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 echo json_encode($response);
 
 // Función para generar una contraseña aleatoria
-function generarContraseña($longitud = 8) {
+function generarContraseña($longitud = 8)
+{
     $caracteres = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+';
     $contraseña = '';
     $maxCaracteres = strlen($caracteres) - 1;

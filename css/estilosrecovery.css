@@ -7,7 +7,8 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; /* Ajusta la altura para centrar verticalmente */
+    height: 100vh;
+    /* Ajusta la altura para centrar verticalmente */
 }
 
 .container {
@@ -26,7 +27,8 @@ body {
 .container img {
     width: 100px;
     height: 100px;
-    top: 0; /* Colocamos la imagen en la parte superior */
+    top: 0;
+    /* Colocamos la imagen en la parte superior */
     left: 50%;
     z-index: 1;
 }
@@ -44,6 +46,7 @@ p {
 form {
     margin-top: 20px;
 }
+
 form input[type="email"] {
     width: 60%;
     padding: 10px;

@@ -47,13 +47,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     echo json_encode($response);
 }
 
-function generarNuevaContrasena(): string {
+function generarNuevaContrasena(): string
+{
     $length = 10;
     $bytes = random_bytes($length);
     return substr(bin2hex($bytes), 0, $length);
 }
 
-function enviarCorreoRecuperacion($email, $nueva_contrasena) {
+function enviarCorreoRecuperacion($email, $nueva_contrasena)
+{
     $mail = new PHPMailer(true);
 
     try {
@@ -83,8 +85,8 @@ function enviarCorreoRecuperacion($email, $nueva_contrasena) {
                     <p>MUNDO 3D Transformando ideas en realidad tridimensional</p>
                 </div>
             ";
-            $mail->isHTML(true);
-            
+        $mail->isHTML(true);
+
         $mail->send();
 
         return true;

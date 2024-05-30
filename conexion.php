@@ -1,19 +1,20 @@
 <?php
 
-    $host = "localhost";
-    $user = "root";
-    $password = "";
-    $dbname = "mundo3d";
+$host = "localhost";
+$user = "root";
+$password = "";
+$dbname = "mundo3d";
 
-    $link = mysqli_connect($host, $user, $password);
+$link = mysqli_connect($host, $user, $password);
 
-    if (!$link) {   die("Error al conectarse al servidor: " . mysqli_connect_error());
-    }
+if (!$link) {
+    die("Error al conectarse al servidor: " . mysqli_connect_error());
+}
 
-    if (!mysqli_select_db($link, $dbname)) {
-        die("Error al conectarse a la Base de Datos: " . mysqli_error($link));
-    }
+if (!mysqli_select_db($link, $dbname)) {
+    die("Error al conectarse a la Base de Datos: " . mysqli_error($link));
+}
 
-    mysqli_set_charset($link, "utf8");
+mysqli_set_charset($link, "utf8");
 
 ?>
