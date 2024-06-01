@@ -48,9 +48,8 @@ if (!$resultado) {
                 <td style="border: 1px solid #dddddd; padding: 8px;"><?php echo $row['nombre_categoria']; ?></td>
                 <td style="border: 1px solid #dddddd; padding: 8px;"><?php echo $row['Pro_Cantidad']; ?></td>
                 <td style="border: 1px solid #dddddd; padding: 8px;"><?php echo $row['Pro_Costo']; ?></td>
-                <td style="border: 1px solid #dddddd; padding: 8px;"><img
-                        src="data:image/png;base64,<?php echo base64_encode($row['imagen_principal']); ?>"
-                        alt="Imagen del producto" style="max-width: 100px;"></td>
+                <td style="border: 1px solid #dddddd; padding: 8px;">
+                <td style="border: 1px solid #dddddd; padding: 8px;"><img src="<?php echo $row['nombre_imagen']; ?>" height="150px"></td>
             </tr>
         <?php endwhile; ?>
     </tbody>
