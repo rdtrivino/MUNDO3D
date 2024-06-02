@@ -195,13 +195,9 @@
                     while ($row = mysqli_fetch_assoc($result)) {
                         ?>
                         <div class="col mb-4">
-                            <div class="card h-100 position-relative">
-                                <?php
-                                $imageData = base64_encode($row['imagen_principal']);
-                                $imageSrc = 'data:image/jpeg;base64,' . $imageData;
-                                ?>
-                                <img src="<?php echo $imageSrc; ?>" class="card-img-top"
-                                    style="height: 200px; object-fit: cover;" alt="<?php echo $row['Pro_Nombre']; ?>">
+                        <div class="card h-100 position-relative">
+                                <img src="<?php echo $row['nombre_imagen']; ?>" class="card-img-top"
+                                    style="height: 200px; object-fit: contain;" alt="<?php echo $row['Pro_Nombre']; ?>">
                                 <div
                                     class="overlay position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
                                     <?php if ($row['Pro_Cantidad'] > 0) { ?>

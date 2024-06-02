@@ -8,124 +8,59 @@
   <link rel="shortcut icon" href="../images/Logo Mundo 3d.png" type="image/x-icon">
   <title>Redireccionando...</title>
   <style>
-    /* Estilos para centrar el contenedor */
-    body,
-    html {
-      height: 100%;
-      margin: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: #222;
-      /* Cambia el color de fondo según tus preferencias */
-    }
+.virtual-card,
+.physical-card,
+.tokenized-card {
+  margin: 0 50px;
+}
 
-    #container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      width: 300px;
-      /* Ajusta el ancho del contenedor según tu preferencia */
-      height: 300px;
-      /* Ajusta el alto del contenedor según tu preferencia */
-    }
+.plus {
+  animation: plus 2s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+}
 
-    #ring {
-      width: 90px;
-      /* Ajusta el ancho del anillo según tu preferencia */
-      height: 90px;
-      /* Ajusta el alto del anillo según tu preferencia */
-      border: 4px solid transparent;
-      border-radius: 50%;
-      position: absolute;
-    }
+.plus-one {
+  animation: plus 2.5s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+}
 
-    #page {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+.plus-two {
+  animation: plus 3s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+}
 
-    #container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-    }
+.plus-three {
+  animation: plus 3.5s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+}
 
-    #h3 {
-      color: white;
-    }
+.plus-four {
+  animation: plus 4s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+}
 
-    #ring {
-      width: 190px;
-      height: 190px;
-      border: 1px solid transparent;
-      border-radius: 50%;
-      position: absolute;
-    }
+.plus-five {
+  animation: plus 4.5s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+}
 
-    #ring:nth-child(1) {
-      border-bottom: 8px solid rgb(255, 141, 249);
-      animation: rotate1 2s linear infinite;
-    }
+@keyframes plus {
+  0% {
+    opacity: 1;
+  }
 
-    @keyframes rotate1 {
-      from {
-        transform: rotateX(50deg) rotateZ(110deg);
-      }
+  50% {
+    opacity: 0;
+  }
 
-      to {
-        transform: rotateX(50deg) rotateZ(470deg);
-      }
-    }
+  100% {
+    opacity: 1;
+  }
+}
+.virtual-card {
+            margin: 0 auto; /* Centrar horizontalmente */
+            width: 80%; /* Ancho del elemento */
+            max-width: 500px; /* Ancho máximo del elemento */
+        }
 
-    #ring:nth-child(2) {
-      border-bottom: 8px solid rgb(255, 65, 106);
-      animation: rotate2 2s linear infinite;
-    }
-
-    @keyframes rotate2 {
-      from {
-        transform: rotateX(20deg) rotateY(50deg) rotateZ(20deg);
-      }
-
-      to {
-        transform: rotateX(20deg) rotateY(50deg) rotateZ(380deg);
-      }
-    }
-
-    #ring:nth-child(3) {
-      border-bottom: 8px solid rgb(0, 255, 255);
-      animation: rotate3 2s linear infinite;
-    }
-
-    @keyframes rotate3 {
-      from {
-        transform: rotateX(40deg) rotateY(130deg) rotateZ(450deg);
-      }
-
-      to {
-        transform: rotateX(40deg) rotateY(130deg) rotateZ(90deg);
-      }
-    }
-
-    #ring:nth-child(4) {
-      border-bottom: 8px solid rgb(252, 183, 55);
-      animation: rotate4 2s linear infinite;
-    }
-
-    @keyframes rotate4 {
-      from {
-        transform: rotateX(70deg) rotateZ(270deg);
-      }
-
-      to {
-        transform: rotateX(70deg) rotateZ(630deg);
-      }
-    }
+        .virtual-card svg {
+            width: 100%; /* Ajustar el tamaño del SVG al contenedor */
+            height: auto; /* Mantener la proporción de aspecto */
+        }
   </style>
   <script>
     setTimeout(function () {
@@ -134,14 +69,74 @@
   </script>
 </head>
 
-<body>
-  <div id="container">
-    <div id="ring"></div>
-    <div id="ring"></div>
-    <div id="ring"></div>
-    <div id="ring"></div>
-    <div id="h3" style="color: white;">Redireccionando...</div>
-  </div>
+<body style="background-color: #D3D3D3;">
+<div class="virtual-card">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 111 84"
+    height="84"
+    width="111"
+  >
+    <rect
+      stroke-dasharray="4 4"
+      stroke-width="2"
+      stroke="black"
+      fill="white"
+      transform="matrix(-1.31134e-07 1 1 1.31134e-07 -1.31134e-07 40.7759)"
+      rx="3.40064"
+      height="65.6552"
+      width="41.2241"
+      y="1"
+      x="1"
+    ></rect>
+    <rect
+      fill="black"
+      transform="rotate(-180 65.7758 58.6293)"
+      height="10.3362"
+      width="63.8966"
+      y="58.6293"
+      x="65.7758"
+    ></rect>
+    <path
+      class="plus-one"
+      stroke-width="2"
+      stroke="black"
+      d="M70.8334 15L70.8334 19.6954M70.8334 19.6954H66.1379M70.8334 19.6954H75.5288M70.8334 19.6954V24.3909"
+    ></path>
+    <path
+      class="plus-two"
+      stroke-width="2"
+      stroke="black"
+      d="M93.955 39L93.955 45.8171M93.955 45.8171H87.1379M93.955 45.8171H100.772M93.955 45.8171V52.6341"
+    ></path>
+    <path
+      class="plus-three"
+      stroke-width="2"
+      stroke="black"
+      d="M99.9622 0L99.9622 10.8242M99.9622 10.8242H89.1379M99.9622 10.8242H110.786M99.9622 10.8242V21.6484"
+    ></path>
+    <path
+      class="plus-four"
+      stroke-width="2"
+      stroke="black"
+      d="M87.4913 22L87.4913 26.3535M87.4913 26.3535H83.1379M87.4913 26.3535H91.8448M87.4913 26.3535V30.7069"
+    ></path>
+    <path
+      class="plus-five"
+      stroke-width="2"
+      stroke="black"
+      d="M77.8447 1V3.70685M77.8447 3.70685H75.1379M77.8447 3.70685H80.5516M77.8447 3.70685V6.4137"
+    ></path>
+    <path
+      class="plus"
+      stroke-width="2"
+      stroke="black"
+      d="M76.8447 40V42.7068M76.8447 42.7068H74.1379M76.8447 42.7068H79.5516M76.8447 42.7068V45.4137"
+    ></path>
+  </svg>
+</div>
+
 </body>
 
 </html>

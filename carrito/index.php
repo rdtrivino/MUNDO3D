@@ -42,13 +42,12 @@ if (isset($_GET['vaciar']) && $_GET['vaciar'] == 1) {
         }
     }
 }
-
-// Consulta SQL para obtener los datos del carrito
 if (isset($_SESSION['user_id'])) {
     $usuario_id = $_SESSION['user_id'];
-    $sql = "SELECT id, nombre, precio, cantidad 
-        FROM carrito 
-        WHERE Pe_Cliente = $usuario_id AND estado_pago != 'pagado'";
+    $sql = "SELECT c.id, c.nombre, c.precio, c.cantidad, p.nombre_imagen, c.descripcion_producto
+            FROM carrito c
+            INNER JOIN productos p ON c.id_producto = p.Identificador
+            WHERE c.Pe_Cliente = $usuario_id AND c.estado_pago != 'pagado'";
     $resultado = mysqli_query($link, $sql);
 
     // Calcular el total a pagar
@@ -241,15 +240,20 @@ if (isset($_SESSION['user_id'])) {
                                 <div class="row no-gutters">
                                     <div class="col-md-4">
                                         <!-- Aquí puedes mostrar una imagen estática o cualquier otro contenido relacionado con el producto -->
+                                        <?php if (isset($fila['nombre_imagen']) && !empty($fila['nombre_imagen'])): ?>
+                                            <img src="<?php echo $fila['nombre_imagen']; ?>" class="card-img-top">
+                                        <?php else: ?>
+                                            <p>Imagen no disponible</p>
+                                        <?php endif; ?>
                                     </div>
                                     <div class="col-md-8">
                                         <div class="card-body">
                                             <h5 class="card-title"><?php echo $fila['nombre']; ?></h5>
                                             <?php
-                                            // Verificar si la columna 'descripcion' está presente en $fila
-                                            if (isset($fila['descripcion'])) {
+                                            if (isset($fila['descripcion_producto'])) {
                                                 ?>
-                                                <p class="card-text"><?php echo $fila['descripcion']; ?></p>
+                                                <p class="card-text"><?php echo $fila['descripcion_producto']; ?></p>
+
                                                 <?php
                                             } else {
                                                 // Si la columna 'descripcion' no está presente, puedes mostrar un mensaje alternativo o dejarlo en blanco

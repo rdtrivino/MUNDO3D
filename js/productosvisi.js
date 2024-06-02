@@ -120,35 +120,35 @@ function searchProducts(searchTerm) {
     });
 }
 // detalles del producto//
-document.addEventListener("DOMContentLoaded", function () {
-    var detallesBtns = document.querySelectorAll('.detallesBtn');
+        document.addEventListener("DOMContentLoaded", function () {
+            var detallesBtns = document.querySelectorAll('.detallesBtn');
 
-    detallesBtns.forEach(function (btn) {
-        btn.addEventListener('click', function (event) {
-            event.preventDefault();
-            var productName = this.getAttribute('data-name');
-            var productDescription = this.getAttribute('data-description');
-            var productPrice = this.getAttribute('data-price');
-            var productImage = this.closest('.card').querySelector('.card-img-top').getAttribute('src');
+            detallesBtns.forEach(function (btn) {
+                btn.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    var productName = this.getAttribute('data-name');
+                    var productDescription = this.getAttribute('data-description');
+                    var productPrice = this.getAttribute('data-price');
+                    var productImage = this.closest('.card').querySelector('.card-img-top').getAttribute('src');
 
-            cargarDetallesProducto(productName, productDescription, productPrice, productImage);
+                    cargarDetallesProducto(productName, productDescription, productPrice, productImage);
+                });
+            });
         });
-    });
-});
 
-function cargarDetallesProducto(productName, productDescription, productPrice, productImage) {
-    var modalImagen = document.getElementById('productoImagen');
-    var modalNombre = document.getElementById('productoNombre');
-    var modalDescripcion = document.getElementById('productoDescripcion');
-    var modalPrecio = document.getElementById('productoPrecio');
+        function cargarDetallesProducto(productName, productDescription, productPrice, productImage) {
+            var modalImagen = document.getElementById('productoImagen');
+            var modalNombre = document.getElementById('productoNombre');
+            var modalDescripcion = document.getElementById('productoDescripcion');
+            var modalPrecio = document.getElementById('productoPrecio');
 
-    modalImagen.src = productImage;
-    modalNombre.textContent = productName;
-    modalDescripcion.textContent = productDescription;
-    modalPrecio.textContent = "$" + productPrice;
+            modalImagen.src = productImage;
+            modalNombre.textContent = productName;
+            modalDescripcion.textContent = productDescription;
+            modalPrecio.textContent = "USD-" + productPrice;
 
-    $('#detalleProductoModal').modal('show');
-}
+            $('#detalleProductoModal').modal('show');
+        }
 function adjustFontSize(size) {
     const body = document.body;
     body.classList.remove('font-small', 'font-medium', 'font-large');

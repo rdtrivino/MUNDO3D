@@ -84,10 +84,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $precio = $producto['precio'];
 
             // Insertar el producto en la base de datos con el ID del usuario
-            $sql = "INSERT INTO carrito (Pe_Cliente, nombre, precio, cantidad, id_producto) 
-            SELECT '$usuario_id', p.Pro_Nombre, p.Pro_PrecioVenta, $cantidad, p.Identificador
-            FROM productos p
-            WHERE p.Pro_Nombre = '$nombre'";
+         // Insertar el producto en la base de datos con el ID del usuario
+         $sql = "INSERT INTO carrito (Pe_Cliente, nombre, precio, cantidad, id_producto, imagen_producto, descripcion_producto) 
+         SELECT '$usuario_id', p.Pro_Nombre, p.Pro_PrecioVenta, $cantidad, p.Identificador, p.nombre_imagen, p.Pro_Descripcion
+         FROM productos p
+         WHERE p.Pro_Nombre = '$nombre'";
 
             // Ejecutar la consulta
             mysqli_query($link, $sql);
@@ -294,13 +295,40 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <!-- Navbar End -->
     <div class="page-header container-fluid bg-secondary pt-0 pt-lg-1 pb-1 mb-4">
         <div class="row align-items-center py-4">
-            <div class="col-md-6 text-center text-md-left">
-                <form class="form-inline">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Buscar"
-                        oninput="searchProducts(this.value)">
-                    <button class="btn btn-outline-dark my-2 my-sm-0" type="submit">Buscar</button>
-                </form>
+            <div class="col-md-6 text-center text-md-left offset-md-0">
+                <div class="InputContainer">
+                    <input placeholder="Buscar un producto" id="input" class="input" name="text" type="text">
+
+                </div>
             </div>
+            <style>
+                .InputContainer {
+                    width: 210px;
+                    height: 50px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background: linear-gradient(to bottom, rgb(227, 213, 255), rgb(255, 231, 231));
+                    border-radius: 30px;
+                    overflow: hidden;
+                    cursor: pointer;
+                    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.075);
+                }
+
+                .input {
+                    width: 200px;
+                    height: 40px;
+                    border: none;
+                    outline: none;
+                    caret-color: rgb(255, 81, 0);
+                    background-color: rgb(255, 255, 255);
+                    border-radius: 30px;
+                    padding-left: 15px;
+                    letter-spacing: 0.8px;
+                    color: rgb(19, 19, 19);
+                    font-size: 13.4px;
+                }
+            </style>
             <div class="col-md-6 text-center text-md-right">
                 <a id="carritoBtn" class="btn btn-danger text-white font-weight-bold ml-3" href="#" data-toggle="modal"
                     data-target="#carritoModal">
@@ -612,17 +640,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     // Iterar sobre los resultados y mostrar cada producto
                     while ($row = mysqli_fetch_assoc($result)) {
                         ?>
-                        <div class="col mb-4">
-                            <div class="card h-100 position-relative">
-                                <?php
-                                // Convertir la imagen binaria a una URL de imagen
-                                $imageData = base64_encode($row['imagen_principal']);
-                                $imageSrc = 'data:image/jpeg;base64,' . $imageData;
-                                ?>
-                                <img src="<?php echo $imageSrc; ?>" class="card-img-top"
-                                    style="height: 200px; object-fit: cover;" alt="<?php echo $row['Pro_Nombre']; ?>">
-                                <div
-                                    class="overlay position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
+                    <div class="col mb-4">
+                        <div class="card h-100 position-relative">
+                            <img src="<?php echo $row['nombre_imagen']; ?>" class="card-img-top"
+                                style="height: 200px; object-fit: contain;" alt="<?php echo $row['Pro_Nombre']; ?>">
+                            <div class="overlay position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
                                     <?php if ($row['Pro_Cantidad'] > 0) { ?>
                                         <a href="#" class="btn btn-primary btn-lg agregarAlCarritoBtn"
                                             data-id="<?php echo $row['Identificador']; ?>"
@@ -677,70 +699,70 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
         </div>
     </div>
-    <!-- Modal de detalles del producto -->
-    <div class="modal fade" id="detalleProductoModal" tabindex="-1" role="dialog"
-        aria-labelledby="detalleProductoModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="detalleProductoModalLabel">Detalles del Producto</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row align-items-center">
-                        <div class="col-md-6 text-center">
-                            <!-- Imagen del producto -->
-                            <img src="" id="productoImagen" class="img-fluid img-thumbnail mb-3" alt="Producto">
-                        </div>
-                        <div class="col-md-6">
-                            <!-- Descripción y precio del producto -->
-                            <h4 id="productoNombre"></h4>
-                            <p><strong>Descripción:</strong> <span id="productoDescripcion"></span></p>
-                            <p><strong>Precio:</strong> <span id="productoPrecio" class="text-danger"></span></p>
-                        </div>
+   <!-- Modal de detalles del producto -->
+<div class="modal fade" id="detalleProductoModal" tabindex="-1" role="dialog"
+    aria-labelledby="detalleProductoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detalleProductoModalLabel">Detalles del Producto</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row align-items-center">
+                    <div class="col-md-6 text-center">
+                        <!-- Imagen del producto -->
+                        <img id="productoImagen" src="" height="150px" style="border: 1px solid #dddddd; padding: 8px;">
+                    </div>
+                    <div class="col-md-6">
+                        <!-- Descripción y precio del producto -->
+                        <h4 id="productoNombre"></h4>
+                        <p><strong>Descripción:</strong> <span id="productoDescripcion"></span></p>
+                        <p><strong>Precio:</strong> <span id="productoPrecio" class="text-danger"></span></p>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"
-                        style="background-color: #E42E24;">Cerrar</button>
-                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                    style="background-color: #E42E24;">Cerrar</button>
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var detallesBtns = document.querySelectorAll('.detallesBtn');
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var detallesBtns = document.querySelectorAll('.detallesBtn');
 
-            detallesBtns.forEach(function (btn) {
-                btn.addEventListener('click', function (event) {
-                    event.preventDefault();
-                    var productName = this.getAttribute('data-name');
-                    var productDescription = this.getAttribute('data-description');
-                    var productPrice = this.getAttribute('data-price');
-                    var productImage = this.closest('.card').querySelector('.card-img-top').getAttribute('src');
+        detallesBtns.forEach(function (btn) {
+            btn.addEventListener('click', function (event) {
+                event.preventDefault();
+                var productName = this.getAttribute('data-name');
+                var productDescription = this.getAttribute('data-description');
+                var productPrice = this.getAttribute('data-price');
+                var productImage = this.closest('.card').querySelector('.card-img-top').getAttribute('src');
 
-                    cargarDetallesProducto(productName, productDescription, productPrice, productImage);
-                });
+                cargarDetallesProducto(productName, productDescription, productPrice, productImage);
             });
         });
+    });
 
-        function cargarDetallesProducto(productName, productDescription, productPrice, productImage) {
-            var modalImagen = document.getElementById('productoImagen');
-            var modalNombre = document.getElementById('productoNombre');
-            var modalDescripcion = document.getElementById('productoDescripcion');
-            var modalPrecio = document.getElementById('productoPrecio');
+    function cargarDetallesProducto(productName, productDescription, productPrice, productImage) {
+        var modalImagen = document.getElementById('productoImagen');
+        var modalNombre = document.getElementById('productoNombre');
+        var modalDescripcion = document.getElementById('productoDescripcion');
+        var modalPrecio = document.getElementById('productoPrecio');
 
-            modalImagen.src = productImage;
-            modalNombre.textContent = productName;
-            modalDescripcion.textContent = productDescription;
-            modalPrecio.textContent = "$" + productPrice;
+        modalImagen.src = productImage;
+        modalNombre.textContent = productName;
+        modalDescripcion.textContent = productDescription;
+        modalPrecio.textContent = "USD-" + productPrice;
 
-            $('#detalleProductoModal').modal('show');
-        }
-    </script>
+        $('#detalleProductoModal').modal('show');
+    }
+</script>
     </div>
     </div>
 

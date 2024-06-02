@@ -39,6 +39,8 @@ if ($rolUsuario != 3) {
     exit(); // Terminamos la ejecución del script después de redirigir
 }
 
+// Si llegamos aquí, el usuario está autenticado y tiene el rol 3
+// Continuar con el resto del código
 $nombreCompleto = $_SESSION['username'];
 $usuario_id = $_SESSION['user_id'];
 ?>
@@ -58,20 +60,20 @@ if (!mysqli_select_db($link, $dbname)) {
     die("Error al conectarse a la Base de Datos: " . mysqli_error($link));
 }
 
+
+// Consulta a la base de datos para obtener productos de la categoría 5
+$sql = "SELECT * FROM productos WHERE Pro_Categoria = 2";
+$result = mysqli_query($link, $sql);
 // Manejar la solicitud AJAX en el mismo archivo PHP
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Verificar si se recibió el producto
     if (isset($_POST['producto'])) {
-        var_dump($_POST['producto']);
         // Obtener el ID del usuario de la sesión
         if (isset($_SESSION['user_id'])) {
             $usuario_id = $_SESSION['user_id'];
 
             // Convertir los datos del producto JSON en un array asociativo
             $producto = json_decode($_POST['producto'], true);
-
-            // Obtener el identificador del producto de la tabla "productos"
-            $id_producto = $producto['Identificador']; // Se mantiene como 'Identificador'
 
             // Definir la cantidad predeterminada (en este caso, 1)
             $cantidad = 1;
@@ -81,10 +83,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $nombre = $producto['nombre'];
             $precio = $producto['precio'];
 
-            $sql = "INSERT INTO carrito (Pe_Cliente, nombre, precio, cantidad, id_producto) 
-                        SELECT '$usuario_id', p.Pro_Nombre, p.Pro_PrecioVenta, $cantidad, p.Identificador
-                        FROM productos p
-                        WHERE p.Pro_Nombre = '$nombre'";
+            // Insertar el producto en la base de datos con el ID del usuario
+            $sql = "INSERT INTO carrito (Pe_Cliente, nombre, precio, cantidad, id_producto, imagen_producto, descripcion_producto) 
+            SELECT '$usuario_id', p.Pro_Nombre, p.Pro_PrecioVenta, $cantidad, p.Identificador, p.nombre_imagen, p.Pro_Descripcion
+            FROM productos p
+            WHERE p.Pro_Nombre = '$nombre'";
 
             // Ejecutar la consulta
             mysqli_query($link, $sql);
@@ -99,7 +102,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Si no se recibió el producto, mostrar un mensaje de error
         echo "No se recibieron datos del producto.";
     }
-
+    
     // Finalizar la ejecución del script para evitar la renderización adicional de HTML
     exit();
 }
@@ -159,6 +162,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </script>
                 </div>
             </div>
+
             </head>
 
             <body>
@@ -215,8 +219,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <!-- Menú desplegable -->
                                 <div class="dropdown" style="position: relative; white-space: nowrap;">
                                     <div id="dropdown-menu" class="dropdown-menu dropdown-menu-right"
-                                        aria-labelledby="menu-toggle" style="background-color: black;">
-                                        <a href="confi.php" class="dropdown-menu-item">
+                                        aria-labelledby="menu-toggle" style="background-color: black;"> <a
+                                            href="confi.php" class="dropdown-menu-item">
                                             <i class="fas fa-cogs"></i> <!-- Icono de configuración -->
                                             Configurar mi cuenta
                                         </a>
@@ -290,13 +294,40 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <!-- Navbar End -->
     <div class="page-header container-fluid bg-secondary pt-0 pt-lg-1 pb-1 mb-4">
         <div class="row align-items-center py-4">
-            <div class="col-md-6 text-center text-md-left">
-                <form class="form-inline">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Buscar" aria-label="Buscar"
-                        oninput="searchProducts(this.value)">
-                    <button class="btn btn-outline-dark my-2 my-sm-0" type="submit">Buscar</button>
-                </form>
+            <div class="col-md-6 text-center text-md-left offset-md-0">
+                <div class="InputContainer">
+                    <input placeholder="Buscar un producto" id="input" class="input" name="text" type="text">
+
+                </div>
             </div>
+            <style>
+                .InputContainer {
+                    width: 210px;
+                    height: 50px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background: linear-gradient(to bottom, rgb(227, 213, 255), rgb(255, 231, 231));
+                    border-radius: 30px;
+                    overflow: hidden;
+                    cursor: pointer;
+                    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.075);
+                }
+
+                .input {
+                    width: 200px;
+                    height: 40px;
+                    border: none;
+                    outline: none;
+                    caret-color: rgb(255, 81, 0);
+                    background-color: rgb(255, 255, 255);
+                    border-radius: 30px;
+                    padding-left: 15px;
+                    letter-spacing: 0.8px;
+                    color: rgb(19, 19, 19);
+                    font-size: 13.4px;
+                }
+            </style>
             <div class="col-md-6 text-center text-md-right">
                 <a id="carritoBtn" class="btn btn-danger text-white font-weight-bold ml-3" href="#" data-toggle="modal"
                     data-target="#carritoModal">
@@ -354,8 +385,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             color: red;
         }
     </style>
-    <!-- Modal del carrito -->
-    <div class="modal fade" id="carritoModal" tabindex="-1" role="dialog" aria-labelledby="carritoModalLabel"
+    <?php
+    if (isset($_SESSION["user_id"])) {
+        // Obtener el ID del usuario de la sesión
+        $cliente = $_SESSION["user_id"];
+
+        // Consultar el número de productos en el carrito para el cliente actual
+        $sql = "SELECT COUNT(*) AS total_productos FROM carrito WHERE Pe_Cliente = '$cliente' AND estado_pago = 'pendiente'";
+        $result = mysqli_query($link, $sql);
+
+        // Verificar si se ejecutó la consulta correctamente
+        if ($result) {
+            // Obtener el resultado de la consulta
+            $row = mysqli_fetch_assoc($result);
+            $totalProductos = $row['total_productos'];
+
+            // Mostrar el total de productos en el carrito
+            echo $totalProductos;
+        } else {
+            // Mostrar un mensaje de error si la consulta falla
+            echo "Error";
+        }
+    } else {
+        // Si el usuario no está logueado, mostrar 0 productos
+        echo "0";
+    }
+    ?>
+    </span>
+    </a>
+
+<!-- Modal del carrito -->
+<div class="modal fade" id="carritoModal" tabindex="-1" role="dialog" aria-labelledby="carritoModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
@@ -365,69 +425,104 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <!-- Contenedor para mostrar los productos agregados al carrito -->
-                    <div id="carritoContenido">
-                        <?php
-                        $totalPrecioProductos = 0; // Declarar la variable fuera del bloque condicional y asignarle un valor predeterminado
-                        
-                        if (isset($_SESSION["user_id"])) {
-                            // Obtener el ID del usuario de la sesión
-                            $cliente = $_SESSION["user_id"];
+            <div class="modal-body">
+                <!-- Contenedor para mostrar los productos agregados al carrito -->
+                <div id="carritoContenido">
+                    <?php
+                    $totalPrecioProductos = 0; // Declarar la variable fuera del bloque condicional y asignarle un valor predeterminado
+                    
+                    if (isset($_SESSION["user_id"])) {
+                        // Obtener el ID del usuario de la sesión
+                        $cliente = $_SESSION["user_id"];
 
-                            // Consulta para seleccionar los productos del cliente logueado en estado "pendiente"
-                            $sql = "SELECT * FROM carrito WHERE Pe_Cliente = '$cliente' AND estado_pago = 'pendiente'";
-                            $result = mysqli_query($link, $sql);
+                        // Consulta para seleccionar los productos del cliente logueado en estado "pendiente"
+                        $sql = "SELECT * FROM carrito WHERE Pe_Cliente = '$cliente' AND estado_pago = 'pendiente'";
+                        $result = mysqli_query($link, $sql);
 
-                            // Contador de productos
-                            $contadorProductos = mysqli_num_rows($result);
+                        // Contador de productos
+                        $contadorProductos = mysqli_num_rows($result);
 
-                            // Inicializar el total acumulado del precio de los productos en el carrito
-                            $totalPrecioProductos = 0;
+                        // Inicializar el total acumulado del precio de los productos en el carrito
+                        $totalPrecioProductos = 0;
 
-                            // Verificar si se encontraron productos pendientes
-                            if ($contadorProductos > 0) {
-                                echo '<table class="table table-bordered">';
-                                echo '<thead style="background-color: #f2f2f2;">'; // Cambia el color de fondo de la fila de encabezado
+                        // Verificar si se encontraron productos pendientes
+                        if ($contadorProductos > 0) {
+                            echo '<table class="table table-bordered">';
+                            echo '<thead style="background-color: #f2f2f2;">'; // Cambia el color de fondo de la fila de encabezado
+                            echo '<tr>';
+                            echo '<th style="text-align: center; color: #333;">Nombre del Producto</th>'; // Cambia el color del texto y alinea al centro en la primera columna
+                            echo '<th style="text-align: center; color: #333;">Precio</th>'; // Cambia el color del texto y alinea al centro en la segunda columna
+                            echo '<th style="text-align: center; color: #333;">Imagen</th>'; // Agrega una columna para la imagen
+                            echo '<th style="text-align: center; color: #333;">Cantidad</th>'; // Agrega una columna para la cantidad
+                            echo '<th style="text-align: center; color: #333;">Acciones</th>'; // Agrega una columna para las acciones
+                            echo '</tr>';
+                            echo '</thead>';
+                            echo '<tbody>';
+                            // Iterar sobre los resultados y mostrar cada producto en el modal del carrito
+                            while ($row = mysqli_fetch_assoc($result)) {
                                 echo '<tr>';
-                                echo '<th style="text-align: center; color: #333;">Nombre del Producto</th>'; // Cambia el color del texto y alinea al centro en la primera columna
-                                echo '<th style="text-align: center; color: #333;">Precio</th>'; // Cambia el color del texto y alinea al centro en la segunda columna
+                                echo '<td style="text-align: left;">' . $row['nombre'] . '</td>'; // Alinea el texto a la izquierda en la primera columna
+                                echo '<td style="text-align: right;">$' . $row['precio'] . '</td>'; // Alinea el texto a la derecha en la segunda columna
+                                echo '<td style="text-align: center;"><img src="' . $row['imagen_producto'] . '" style="height: 50px; width: auto;" alt="' . $row['nombre'] . '"></td>'; // Muestra la imagen en la cuarta columna
+                                echo '<td style="text-align: center; width: 150px;">
+                                <div class="input-group">
+                                    <button class="btn btn-outline-primary" type="button" data-id="' . $row['id'] . '" data-action="decrement"><i class="fas fa-minus"></i></button>
+                                    <input type="text" class="form-control text-center" value="' . $row['cantidad'] . '" aria-label="Example text with button addon" aria-describedby="button-addon1" disabled>
+                                    <button class="btn btn-outline-primary" type="button" data-id="' . $row['id'] . '" data-action="increment"><i class="fas fa-plus"></i></button>
+                                </div>
+                            </td>';
+                                                        // Muestra la cantidad en la tercera columna
+                                echo '<td style="text-align: center;">
+                                        <button type="button" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>
+                                    </td>'; // Agrega botones para eliminar productos
                                 echo '</tr>';
-                                echo '</thead>';
-                                echo '<tbody>';
-                                // Iterar sobre los resultados y mostrar cada producto en el modal del carrito
-                                while ($row = mysqli_fetch_assoc($result)) {
-                                    echo '<tr>';
-                                    echo '<td style="text-align: left;">' . $row['nombre'] . '</td>'; // Alinea el texto a la izquierda en la primera columna
-                                    echo '<td style="text-align: right;">$' . $row['precio'] . '</td>'; // Alinea el texto a la derecha en la segunda columna
-                                    echo '</tr>';
-                                    // Sumar el precio del producto al total acumulado
-                                    $totalPrecioProductos += $row['precio'];
-                                }
-                                echo '</tbody>';
-                                echo '</table>';
-                            } else {
-                                echo "No hay productos pendientes en el carrito.";
+                                // Sumar el precio del producto al total acumulado
+                                $totalPrecioProductos += $row['precio'];
                             }
+                            echo '</tbody>';
+                            echo '</table>';
                         } else {
-                            echo "El usuario no está logueado.";
+                            echo "No";
                         }
-                        ?>
-                    </div>
-                    <!-- Mostrar el total acumulado del precio de todos los productos -->
-                    <div id="totalProductos" style="text-align: right; font-weight: bold; color: blue;">
-                        <?php echo "Total a pagar: $" . $totalPrecioProductos; ?>
-                    </div>
-                    <!-- Cambia el color del texto, lo alinea a la derecha y lo hace negrita -->
+                    } else {
+                        echo "El usuario no está logueado.";
+                    }
+                    ?>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary" id="irAPagarBtn">Ir a pagar</button>
+                <!-- Mostrar el total acumulado del precio de todos los productos -->
+                <div id="totalProductos" style="text-align: right; font-weight: bold; color: blue;">
+                    <?php echo "Total a pagar: $" . $totalPrecioProductos; ?>
                 </div>
+                <!-- Cambia el color del texto, lo alinea a la derecha y lo hace negrita -->
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-primary" style="background-color: red; border-color: red;" onclick="vaciarCarrito()">Vaciar Carrito</button>            <button type="button" class="btn btn-primary" id="irAPagarBtn">Ir a pagar</button>
             </div>
         </div>
     </div>
+</div>
 
+<script>
+function vaciarCarrito() {
+    if (confirm("¿Estás seguro de que deseas vaciar el carrito?")) {
+        // Crear una solicitud XMLHttpRequest
+        var xhr = new XMLHttpRequest();
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        
+        // Manejar la respuesta del servidor
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                // Actualizar la interfaz de usuario según sea necesario
+                alert("El carrito ha sido vaciado.");
+                location.reload(); // Recargar la página para actualizar el carrito
+            }
+        };
+        
+        // Enviar la solicitud
+        xhr.send();
+    }
+}
+</script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -442,9 +537,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             });
         });
     </script>
-
-
     <script>
+
         // Variable para almacenar los productos en el carrito
         var carritoProductos = [];
 
@@ -567,9 +661,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             });
         }
     </script>
-    <div class="container-fluid" style="background-color: #D3D3D3; margin-top: -50px;">
+    <div class="container-fluid" style="background-color: #D3D3D3; margin-top: -70px;">
         <div class="container">
-            <h1 class="display-4 text-center mb-5">Explora nuestro catálogo</h1>
+            <h1 class="display-4 text-center mb-5">Explora nuestros Repuestos</h1>
             <div class="row row-cols-lg-4 row-cols-md-3 justify-content-center">
                 <?php
                 // Consulta a la base de datos para obtener productos de la categoría 5
@@ -583,13 +677,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         ?>
                         <div class="col mb-4">
                             <div class="card h-100 position-relative">
-                                <?php
-                                // Convertir la imagen binaria a una URL de imagen
-                                $imageData = base64_encode($row['imagen_principal']);
-                                $imageSrc = 'data:image/jpeg;base64,' . $imageData;
-                                ?>
-                                <img src="<?php echo $imageSrc; ?>" class="card-img-top"
-                                    style="height: 200px; object-fit: cover;" alt="<?php echo $row['Pro_Nombre']; ?>">
+                                <img src="<?php echo $row['nombre_imagen']; ?>" class="card-img-top"
+                                    style="height: 200px; object-fit: contain;" alt="<?php echo $row['Pro_Nombre']; ?>">
                                 <div
                                     class="overlay position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
                                     <?php if ($row['Pro_Cantidad'] > 0) { ?>
@@ -617,7 +706,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         <div class="price-box text-center"
                                             style="position: absolute; bottom: 0; left: 0; right: 0;">
                                             <!-- Centra el cuadro del precio -->
-                                            <div style="display: inline-block;padding: 5px; border-radius: 5px;">
+                                            <div style="display: inline-block; padding: 5px; border-radius: 5px;">
                                                 <!-- Cuadro rojo -->
                                                 <span style="color: red; font-weight: bold; font-size: 20px;">Agotado</span>
                                                 <!-- Establece el color del texto "Agotado" en rojo y aumenta el tamaño de la fuente -->
@@ -662,7 +751,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="row align-items-center">
                         <div class="col-md-6 text-center">
                             <!-- Imagen del producto -->
-                            <img src="" id="productoImagen" class="img-fluid img-thumbnail mb-3" alt="Producto">
+                            <img id="productoImagen" src="" height="150px"
+                                style="border: 1px solid #dddddd; padding: 8px;">
                         </div>
                         <div class="col-md-6">
                             <!-- Descripción y precio del producto -->
@@ -706,7 +796,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             modalImagen.src = productImage;
             modalNombre.textContent = productName;
             modalDescripcion.textContent = productDescription;
-            modalPrecio.textContent = "$" + productPrice;
+            modalPrecio.textContent = "USD-" + productPrice;
 
             $('#detalleProductoModal').modal('show');
         }
@@ -721,7 +811,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <a href="">
                     <h1 class="text-secondary mb-3"><span class="text-white">MUNDO</span>3D</h1>
                 </a>
-                <p>¡Adéntrate en un mundo tridimensional como nunca antes! ¡Bienvenid@ nuestra página 3D, donde tus
+                <p>¡Adéntrate en un mundo tridimensional como nunca antes! ¡Bienvenid@ a nuestra página 3D, donde tus
                     sueños cobran vida!</p>
                 <div class="d-flex justify-content-start mt-4">
                     <a class="btn btn-outline-light rounded-circle text-center mr-2 px-0"
@@ -746,7 +836,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="d-flex flex-column justify-content-start">
                     <a class="text-white mb-2" href="Catalogologin.php"><i
                             class="fa fa-angle-right mr-2"></i>CATALOGO</a>
-                    <a class="text-white mb-2" href="Respuestoslogin.php"><i
+                    <a class="text-white mb-2" href="Repuestoslogin.php"><i
                             class="fa fa-angle-right mr-2"></i>REPUESTOS</a>
                     <a class="text-white mb-2" href="Archivos3dlogin.php"><i class="fa fa-angle-right mr-2"></i>ARCHIVOS
                         3D</a>
@@ -763,29 +853,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <?php echo date('Y'); ?>
         </p>
     </div>
-
-    <!-- Footer End -->
-
-
     <!-- Back to Top -->
     <a href="#" class="btn btn-lg btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
-
-
-    <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="lib/easing/easing.min.js"></script>
     <script src="lib/waypoints/waypoints.min.js"></script>
     <script src="lib/counterup/counterup.min.js"></script>
     <script src="lib/owlcarousel/owl.carousel.min.js"></script>
-
-    <!-- Contact Javascript File -->
     <script src="mail/jqBootstrapValidation.min.js"></script>
     <script src="mail/contact.js"></script>
-
-    <!-- Template Javascript -->
     <script src="js/main.js"></script>
 </body>
-
 
 </html>
