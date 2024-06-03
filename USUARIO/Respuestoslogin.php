@@ -426,67 +426,82 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <!-- Contenedor para mostrar los productos agregados al carrito -->
-                    <div id="carritoContenido">
-                        <?php
-                        $totalPrecioProductos = 0; // Declarar la variable fuera del bloque condicional y asignarle un valor predeterminado
-                        
-                        if (isset($_SESSION["user_id"])) {
-                            // Obtener el ID del usuario de la sesión
-                            $cliente = $_SESSION["user_id"];
+            <div class="modal-body">
+                <!-- Contenedor para mostrar los productos agregados al carrito -->
+                <div id="carritoContenido">
+                    <?php
+                    $totalPrecioProductos = 0; // Declarar la variable fuera del bloque condicional y asignarle un valor predeterminado
+                    
+                    if (isset($_SESSION["user_id"])) {
+                        // Obtener el ID del usuario de la sesión
+                        $cliente = $_SESSION["user_id"];
 
-                            // Consulta para seleccionar los productos del cliente logueado en estado "pendiente"
-                            $sql = "SELECT * FROM carrito WHERE Pe_Cliente = '$cliente' AND estado_pago = 'pendiente'";
-                            $result = mysqli_query($link, $sql);
+                        // Consulta para seleccionar los productos del cliente logueado en estado "pendiente"
+                        $sql = "SELECT * FROM carrito WHERE Pe_Cliente = '$cliente' AND estado_pago = 'pendiente'";
+                        $result = mysqli_query($link, $sql);
 
-                            // Contador de productos
-                            $contadorProductos = mysqli_num_rows($result);
+                        // Contador de productos
+                        $contadorProductos = mysqli_num_rows($result);
 
-                            // Inicializar el total acumulado del precio de los productos en el carrito
-                            $totalPrecioProductos = 0;
+                        // Inicializar el total acumulado del precio de los productos en el carrito
+                        $totalPrecioProductos = 0;
 
-                            // Verificar si se encontraron productos pendientes
-                            if ($contadorProductos > 0) {
-                                echo '<table class="table table-bordered">';
-                                echo '<thead style="background-color: #f2f2f2;">'; // Cambia el color de fondo de la fila de encabezado
+                        // Verificar si se encontraron productos pendientes
+                        if ($contadorProductos > 0) {
+                            echo '<table class="table table-bordered">';
+                            echo '<thead style="background-color: #f2f2f2;">'; // Cambia el color de fondo de la fila de encabezado
+                            echo '<tr>';
+                            echo '<th style="text-align: center; color: #333;">Nombre del Producto</th>'; // Cambia el color del texto y alinea al centro en la primera columna
+                            echo '<th style="text-align: center; color: #333;">Precio</th>'; // Cambia el color del texto y alinea al centro en la segunda columna
+                            echo '<th style="text-align: center; color: #333;">Imagen</th>'; // Agrega una columna para la imagen
+                            echo '<th style="text-align: center; color: #333;">Cantidad</th>'; // Agrega una columna para la cantidad
+                            echo '<th style="text-align: center; color: #333;">Acciones</th>'; // Agrega una columna para las acciones
+                            echo '</tr>';
+                            echo '</thead>';
+                            echo '<tbody>';
+                            // Iterar sobre los resultados y mostrar cada producto en el modal del carrito
+                            while ($row = mysqli_fetch_assoc($result)) {
                                 echo '<tr>';
-                                echo '<th style="text-align: center; color: #333;">Nombre del Producto</th>'; // Cambia el color del texto y alinea al centro en la primera columna
-                                echo '<th style="text-align: center; color: #333;">Precio</th>'; // Cambia el color del texto y alinea al centro en la segunda columna
+                                echo '<td style="text-align: left;">' . $row['nombre'] . '</td>'; // Alinea el texto a la izquierda en la primera columna
+                                echo '<td style="text-align: right;">$' . $row['precio'] . '</td>'; // Alinea el texto a la derecha en la segunda columna
+                                echo '<td style="text-align: center;"><img src="' . $row['imagen_producto'] . '" style="height: 50px; width: auto;" alt="' . $row['nombre'] . '"></td>'; // Muestra la imagen en la cuarta columna
+                                echo '<td style="text-align: center; width: 150px;">
+                                <div class="input-group">
+                                    <button class="btn btn-outline-primary" type="button" data-id="' . $row['id'] . '" data-action="decrement"><i class="fas fa-minus"></i></button>
+                                    <input type="text" class="form-control text-center" value="' . $row['cantidad'] . '" aria-label="Example text with button addon" aria-describedby="button-addon1" disabled>
+                                    <button class="btn btn-outline-primary" type="button" data-id="' . $row['id'] . '" data-action="increment"><i class="fas fa-plus"></i></button>
+                                </div>
+                            </td>';
+                                                        // Muestra la cantidad en la tercera columna
+                                echo '<td style="text-align: center;">
+                                        <button type="button" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>
+                                    </td>'; // Agrega botones para eliminar productos
                                 echo '</tr>';
-                                echo '</thead>';
-                                echo '<tbody>';
-                                // Iterar sobre los resultados y mostrar cada producto en el modal del carrito
-                                while ($row = mysqli_fetch_assoc($result)) {
-                                    echo '<tr>';
-                                    echo '<td style="text-align: left;">' . $row['nombre'] . '</td>'; // Alinea el texto a la izquierda en la primera columna
-                                    echo '<td style="text-align: right;">$' . $row['precio'] . '</td>'; // Alinea el texto a la derecha en la segunda columna
-                                    echo '</tr>';
-                                    // Sumar el precio del producto al total acumulado
-                                    $totalPrecioProductos += $row['precio'];
-                                }
-                                echo '</tbody>';
-                                echo '</table>';
-                            } else {
-                                echo "No hay productos pendientes en el carrito.";
+                                // Sumar el precio del producto al total acumulado
+                                $totalPrecioProductos += $row['precio'];
                             }
+                            echo '</tbody>';
+                            echo '</table>';
                         } else {
-                            echo "El usuario no está logueado.";
+                            echo "No";
                         }
-                        ?>
-                    </div>
-                    <!-- Mostrar el total acumulado del precio de todos los productos -->
-                    <div id="totalProductos" style="text-align: right; font-weight: bold; color: blue;">
-                        <?php echo "Total a pagar: $" . $totalPrecioProductos; ?></div>
-                    <!-- Cambia el color del texto, lo alinea a la derecha y lo hace negrita -->
+                    } else {
+                        echo "El usuario no está logueado.";
+                    }
+                    ?>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary" id="irAPagarBtn">Ir a pagar</button>
+                <!-- Mostrar el total acumulado del precio de todos los productos -->
+                <div id="totalProductos" style="text-align: right; font-weight: bold; color: blue;">
+                    <?php echo "Total a pagar: $" . $totalPrecioProductos; ?>
                 </div>
+                <!-- Cambia el color del texto, lo alinea a la derecha y lo hace negrita -->
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-primary" style="background-color: red; border-color: red;" onclick="vaciarCarrito()">Vaciar Carrito</button>            <button type="button" class="btn btn-primary" id="irAPagarBtn">Ir a pagar</button>
             </div>
         </div>
     </div>
+</div>
 
 
     <script>

@@ -255,14 +255,40 @@ $result = mysqli_query($link, $sql);
     <!-- Navbar End -->
     <div class="page-header container-fluid bg-secondary pt-0 pt-lg-1 pb-1 mb-4">
         <div class="row align-items-center py-4">
-            <div class="col-md-6 offset-md-6 text-center text-md-right">
-                <form class="form-inline">
-                    <input class="form-control mr-sm-2 ml-auto" type="search" placeholder="Buscar" aria-label="Buscar"
-                        oninput="searchProducts(this.value)">
-                    <button class="btn btn-outline-dark my-2 my-sm-0" type="submit">Buscar</button>
-                </form>
+            <div class="col-md-6 text-center text-md-left offset-md-0">
+                <div class="InputContainer">
+                    <input placeholder="Buscar un producto" id="input" class="input" name="text" type="text">
+
+                </div>
             </div>
-        </div>
+            <style>
+                .InputContainer {
+                    width: 210px;
+                    height: 50px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background: linear-gradient(to bottom, rgb(227, 213, 255), rgb(255, 231, 231));
+                    border-radius: 30px;
+                    overflow: hidden;
+                    cursor: pointer;
+                    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.075);
+                }
+
+                .input {
+                    width: 200px;
+                    height: 40px;
+                    border: none;
+                    outline: none;
+                    caret-color: rgb(255, 81, 0);
+                    background-color: rgb(255, 255, 255);
+                    border-radius: 30px;
+                    padding-left: 15px;
+                    letter-spacing: 0.8px;
+                    color: rgb(19, 19, 19);
+                    font-size: 13.4px;
+                }
+            </style>
     </div>
     </div>
     <script>
@@ -302,24 +328,23 @@ $result = mysqli_query($link, $sql);
                     while ($row = mysqli_fetch_assoc($result)) {
                         ?>
                         <div class="col-lg-3 col-md-6 product">
-                            <div class="card mb-5" style="height: 250px;"> <!-- Reduciendo la altura a 300px -->
-                                <img src="data:image/jpeg;base64,<?php echo base64_encode($row['imagen_principal']); ?>"
-                                    class="card-img-top" style="height: 150px; object-fit: cover;"
-                                    alt="<?php echo $row["Pro_Nombre"]; ?>"> <!-- También ajusta la altura de la imagen -->
+                            <div class="card mb-5" style="height: 250px;">
+                            <img src="<?php echo $row['nombre_imagen']; ?>" class="card-img-top"
+                                    class="card-img-top" style="height: 200px; object-fit: cover;"
+                                    alt="<?php echo $row["Pro_Nombre"]; ?>">
                                 <div class="card-body">
                                     <h5 class="card-title"
                                         style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                         <?php echo $row["Pro_Nombre"]; ?>
                                     </h5>
-                                    <div class="d-flex justify-content-between">
-                                        <a href="#" class="btn btn-primary mr-2" data-toggle="modal"
-                                            data-target="#modal_<?php echo $row["Identificador"]; ?>">Detalles</a>
-                                        <a href="#" class="btn btn-danger"
-                                            onclick="downloadImage('<?php echo base64_encode($row['imagen_principal']); ?>', '<?php echo $row["Pro_Nombre"]; ?>.jpg')">Descargar</a>
-                                    </div>
+                                </div>
+                                <div class="hover-icons">
+                                    <a href="#" class="search-icon" data-toggle="modal" data-target="#modal_<?php echo $row["Identificador"]; ?>"><i class="fas fa-search"></i></a>
+                                    <a href="#" class="download-icon" onclick="downloadImage('<?php echo base64_encode($row['imagen_principal']); ?>', '<?php echo $row["Pro_Nombre"]; ?>.jpg')"><i class="fas fa-download"></i></a>
                                 </div>
                             </div>
                         </div>
+
                         <!-- Modal -->
                         <div class="modal fade" id="modal_<?php echo $row["Identificador"]; ?>" tabindex="-1" role="dialog"
                             aria-labelledby="modalTitle_<?php echo $row["Identificador"]; ?>" aria-hidden="true">
@@ -339,9 +364,9 @@ $result = mysqli_query($link, $sql);
                                         <p><?php echo $row["Pro_Descripcion"]; ?></p>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                                        <a href="#" class="btn btn-success"
-                                            onclick="downloadImage('<?php echo base64_encode($row['imagen_principal']); ?>', '<?php echo $row["Pro_Nombre"]; ?>.jpg')">Descargar</a>
+                                        <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+                                        <a href="#" class="btn btn-danger"
+                                        onclick="downloadImage('<?php echo base64_encode($row['imagen_principal']); ?>', '<?php echo $row["Pro_Nombre"]; ?>.jpg')">Descargar</a>
                                     </div>
                                 </div>
                             </div>
@@ -355,7 +380,41 @@ $result = mysqli_query($link, $sql);
             </div>
         </div>
     </div>
-
+    <style>
+        .card {
+            position: relative;
+            overflow: hidden;
+        }
+        .card .hover-icons {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .card:hover .hover-icons {
+            opacity: 1;
+        }
+        .hover-icons a {
+            color: white;
+            font-size: 1.5em;
+            margin: 0 10px;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .hover-icons a.search-icon {
+            background-color: blue;
+        }
+        .hover-icons a.download-icon {
+            background-color: red;
+        }
+    </style>
     <script>
         // Función para descargar la imagen
         function downloadImage(imageData, imageName) {

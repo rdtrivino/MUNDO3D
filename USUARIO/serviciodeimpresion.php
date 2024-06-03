@@ -392,16 +392,12 @@ mysqli_close($link);
          <div class="page-header container-fluid bg-secondary pt-0 pt-lg-1 pb-1 mb-4">
                 <div class="row align-items-center py-4">
                     <div class="col-md-6 offset-md-6 text-center text-md-right">
-                        <form class="form-inline">
-                            <input class="form-control mr-sm-2 ml-auto" type="search" placeholder="Buscar" aria-label="Buscar" oninput="searchProducts(this.value)">
-                            <button class="btn btn-outline-dark my-2 my-sm-0" type="submit">Buscar</button>
-                        </form>
                     </div>
                 </div>
             </div>
         </div>
             <!-- Formulario para Pedido -->
-            <div class="container-fluid" style="background-color: #D3D3D3; margin-top: -50px;">
+            <div class="container-fluid" style="background-color: #D3D3D3; margin-top: -30px;">
                 <div class="container">
                     <h1 class="display-4 text-center mb-5">Explore e imprima el que más le guste</h1>
                     <div class="row">
@@ -452,7 +448,7 @@ mysqli_close($link);
                                 </table>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
                             </div>
                         </div>
                     </div>

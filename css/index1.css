@@ -33,7 +33,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: linear-gradient(180deg, #0808088c 0%, #0c0c0c83 100%), url('../images/4.jpg');
+    background-image: linear-gradient(180deg, #0808088c 0%, #0c0c0c83 100%), url('../images/jj-ying-7JX0-bfiuxQ-unsplash.jpg');
     background-size: cover;
     clip-path: polygon(0 0, 100% 0, 100% 80%, 50% 95%, 0 80%);
     z-index: -1;
