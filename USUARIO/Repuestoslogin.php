@@ -284,7 +284,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="collapse navbar-collapse justify-content-between px-3" id="navbarCollapse">
                     <div class="navbar-nav ml-auto py-0">
                         <a href="Catalogologin.php" class="nav-item nav-link">CATALOGO</a>
-                        <a href="Respuestoslogin.php" class="nav-item nav-link">REPUESTOS</a>
+                        <a href="Repuestoslogin.php" class="nav-item nav-link">REPUESTOS</a>
                         <a href="Archivos3dlogin.php" class="nav-item nav-link">ARCHIVOS 3D</a>
                         <a href="serviciodeimpresion.php" class="nav-item nav-link">SERVICIO DE IMPRESION</a>
                     </div>
@@ -643,7 +643,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </script>
     <div class="container-fluid" style="background-color: #D3D3D3; margin-top: -70px;">
         <div class="container">
-            <h1 class="display-4 text-center mb-5">Explora nuestros Repuestos</h1>
+            <h1 class="display-4 text-center mb-5">Explora nuestros repuestos</h1>
             <div class="row row-cols-lg-4 row-cols-md-3 justify-content-center">
                 <?php
                 // Consulta a la base de datos para obtener productos de la categoría 5

@@ -40,31 +40,21 @@ if ($rolUsuario != 3) {
 }
 
 // Si llegamos aquí, el usuario está autenticado y tiene el rol 3
+
 // Continuar con el resto del código
 $nombreCompleto = $_SESSION['username'];
 $usuario_id = $_SESSION['user_id'];
 ?>
 <?php
-$host = "localhost";
-$user = "root";
-$password = "";
-$dbname = "mundo3d";
 
-$link = mysqli_connect($host, $user, $password);
-
-if (!$link) {
-    die("Error al conectarse al servidor: " . mysqli_connect_error());
-}
-
-if (!mysqli_select_db($link, $dbname)) {
-    die("Error al conectarse a la Base de Datos: " . mysqli_error($link));
-}
-
+include __DIR__ . '/../conexion.php';
 
 // Consulta a la base de datos para obtener productos de la categoría 5
 $sql = "SELECT * FROM productos WHERE Pro_Categoria = 2";
-$result = mysqli_query($link, $sql);
+$impresoras = mysqli_query($link, $sql);
+
 // Manejar la solicitud AJAX en el mismo archivo PHP
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Verificar si se recibió el producto
     if (isset($_POST['producto'])) {
@@ -79,15 +69,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $cantidad = 1;
 
             // Aquí puedes realizar el procesamiento adicional, como guardar el producto en la base de datos
-            // Por ejemplo:
-            $nombre = $producto['nombre'];
-            $precio = $producto['precio'];
+            $Identificador = $producto['Identificador'];
 
             // Insertar el producto en la base de datos con el ID del usuario
-            $sql = "INSERT INTO carrito (Pe_Cliente, nombre, precio, cantidad, id_producto, imagen_producto, descripcion_producto) 
-            SELECT '$usuario_id', p.Pro_Nombre, p.Pro_PrecioVenta, $cantidad, p.Identificador, p.nombre_imagen, p.Pro_Descripcion
+            $sql = "INSERT INTO carrito (Pe_Cliente, cantidad, id_producto) 
+            SELECT '$usuario_id', $cantidad, p.Identificador
             FROM productos p
-            WHERE p.Pro_Nombre = '$nombre'";
+            WHERE p.Identificador = '$Identificador'";
 
             // Ejecutar la consulta
             mysqli_query($link, $sql);
@@ -283,7 +271,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="collapse navbar-collapse justify-content-between px-3" id="navbarCollapse">
                     <div class="navbar-nav ml-auto py-0">
                         <a href="Catalogologin.php" class="nav-item nav-link">CATALOGO</a>
-                        <a href="Respuestoslogin.php" class="nav-item nav-link">REPUESTOS</a>
+                        <a href="Repuestoslogin.php" class="nav-item nav-link">REPUESTOS</a>
                         <a href="Archivos3dlogin.php" class="nav-item nav-link">ARCHIVOS 3D</a>
                         <a href="serviciodeimpresion.php" class="nav-item nav-link">SERVICIO DE IMPRESION</a>
                     </div>
@@ -605,7 +593,7 @@ function vaciarCarrito() {
                     var productPrice = parseFloat(this.getAttribute('data-price'));
 
                     // Agregar el producto al carrito
-                    agregarAlCarrito({ nombre: productName, precio: productPrice });
+                    agregarAlCarrito({ Identificador: productId, nombre: productName, precio: productPrice });
                 });
             });
         });
@@ -663,7 +651,7 @@ function vaciarCarrito() {
     </script>
     <div class="container-fluid" style="background-color: #D3D3D3; margin-top: -70px;">
         <div class="container">
-            <h1 class="display-4 text-center mb-5">Explora nuestros Repuestos</h1>
+            <h1 class="display-4 text-center mb-5">Explora nuestras impresoras 3D</h1>
             <div class="row row-cols-lg-4 row-cols-md-3 justify-content-center">
                 <?php
                 // Consulta a la base de datos para obtener productos de la categoría 5
