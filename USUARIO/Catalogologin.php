@@ -424,7 +424,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         $cliente = $_SESSION["user_id"];
 
                         // Consulta para seleccionar los productos del cliente logueado en estado "pendiente"
-                        $sql = "SELECT * FROM carrito WHERE Pe_Cliente = '$cliente' AND estado_pago = 'pendiente'";
+                        $sql = "SELECT carrito.*, 
+                        productos1.Pro_Nombre AS nombre, 
+                        productos1.Pro_PrecioVenta AS precio_venta, 
+                        productos1.nombre_imagen AS nombre_imagen
+                        FROM carrito 
+                        INNER JOIN productos AS productos1 ON carrito.id_producto = productos1.Identificador
+                        WHERE carrito.Pe_Cliente = '$cliente' AND carrito.estado_pago = 'pendiente'";
                         $result = mysqli_query($link, $sql);
 
                         // Contador de productos
@@ -449,9 +455,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             // Iterar sobre los resultados y mostrar cada producto en el modal del carrito
                             while ($row = mysqli_fetch_assoc($result)) {
                                 echo '<tr>';
-                                echo '<td style="text-align: left;">' . $row['nombre'] . '</td>'; // Alinea el texto a la izquierda en la primera columna
-                                echo '<td style="text-align: right;">$' . $row['precio'] . '</td>'; // Alinea el texto a la derecha en la segunda columna
-                                echo '<td style="text-align: center;"><img src="' . $row['imagen_producto'] . '" style="height: 50px; width: auto;" alt="' . $row['nombre'] . '"></td>'; // Muestra la imagen en la cuarta columna
+                                echo '<td style="text-align: left;">' . $row['nombre'] . '</td>';
+                                echo '<td style="text-align: left;">' . $row['precio_venta'] . '</td>';
+                                echo '<td><img height="70px" src=' . $row['nombre_imagen'] . '></td>';
                                 echo '<td style="text-align: center; width: 150px;">
                                 <div class="input-group">
                                     <button class="btn btn-outline-primary" type="button" data-id="' . $row['id'] . '" data-action="decrement"><i class="fas fa-minus"></i></button>
@@ -465,7 +471,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     </td>'; // Agrega botones para eliminar productos
                                 echo '</tr>';
                                 // Sumar el precio del producto al total acumulado
-                                $totalPrecioProductos += $row['precio'];
+                                //$totalPrecioProductos += $row['precio'];
                             }
                             echo '</tbody>';
                             echo '</table>';
