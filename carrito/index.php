@@ -1,20 +1,7 @@
 <?php
 session_start();
 // Realizar la conexión a la base de datos
-$host = "localhost";
-$user = "root";
-$password = "";
-$dbname = "mundo3d";
-
-$link = mysqli_connect($host, $user, $password);
-
-if (!$link) {
-    die("Error al conectarse al servidor: " . mysqli_connect_error());
-}
-
-if (!mysqli_select_db($link, $dbname)) {
-    die("Error al conectarse a la Base de Datos: " . mysqli_error($link));
-}
+include __DIR__ . '/../conexion.php';
 
 // Verificar si el usuario está autenticado
 if (isset($_SESSION['user_id'])) {
@@ -47,11 +34,13 @@ if (isset($_SESSION['user_id'])) {
     $sql = "SELECT carrito.*, 
             productos1.Pro_Nombre AS nombre, 
             productos1.Pro_PrecioVenta AS precio_venta, 
+            productos1.Pro_Descripcion AS descripcion, 
             productos1.nombre_imagen AS nombre_imagen
-            FROM carrito 
-            INNER JOIN productos AS productos1 ON carrito.id_producto = productos1.Identificador
-            WHERE carrito.Pe_Cliente = '$usuario_id' AND carrito.estado_pago = 'pendiente'";
-    $resultado = mysqli_query($link, $sql);
+        FROM carrito 
+        INNER JOIN productos AS productos1 ON carrito.id_producto = productos1.Identificador
+        WHERE carrito.Pe_Cliente = '$usuario_id' AND carrito.estado_pago = 'pendiente'";
+        $resultado = mysqli_query($link, $sql);
+
 
     // Calcular el total a pagar
     $total_a_pagar = 0;
@@ -253,9 +242,9 @@ if (isset($_SESSION['user_id'])) {
                                         <div class="card-body">
                                             <h5 class="card-title"><?php echo $fila['nombre']; ?></h5>
                                             <?php
-                                            if (isset($fila['descripcion_producto'])) {
+                                            if (isset($fila['descripcion'])) {
                                                 ?>
-                                                <p class="card-text"><?php echo $fila['descripcion_producto']; ?></p>
+                                                <p class="card-text"><?php echo $fila['descripcion']; ?></p>
 
                                                 <?php
                                             } else {
