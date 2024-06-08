@@ -21,7 +21,7 @@ if (isset($_SESSION['user_id'])) {
     $usuario_id = $_SESSION['user_id'];
 
     // Consulta SQL para obtener los productos del carrito del usuario actualmente autenticado
-    $sql = "SELECT id, nombre, precio, cantidad FROM carrito WHERE Pe_Cliente = $usuario_id";
+    $sql = "SELECT * FROM carrito WHERE Pe_Cliente = $usuario_id";
     $resultado = mysqli_query($link, $sql);
 
 }
@@ -44,16 +44,19 @@ if (isset($_GET['vaciar']) && $_GET['vaciar'] == 1) {
 }
 if (isset($_SESSION['user_id'])) {
     $usuario_id = $_SESSION['user_id'];
-    $sql = "SELECT c.id, c.nombre, c.precio, c.cantidad, p.nombre_imagen, c.descripcion_producto
-            FROM carrito c
-            INNER JOIN productos p ON c.id_producto = p.Identificador
-            WHERE c.Pe_Cliente = $usuario_id AND c.estado_pago != 'pagado'";
+    $sql = "SELECT carrito.*, 
+            productos1.Pro_Nombre AS nombre, 
+            productos1.Pro_PrecioVenta AS precio_venta, 
+            productos1.nombre_imagen AS nombre_imagen
+            FROM carrito 
+            INNER JOIN productos AS productos1 ON carrito.id_producto = productos1.Identificador
+            WHERE carrito.Pe_Cliente = '$usuario_id' AND carrito.estado_pago = 'pendiente'";
     $resultado = mysqli_query($link, $sql);
 
     // Calcular el total a pagar
     $total_a_pagar = 0;
     while ($fila = mysqli_fetch_assoc($resultado)) {
-        $total_a_pagar += $fila['precio'] * $fila['cantidad'];
+        $total_a_pagar += $fila['precio_venta'] * $fila['cantidad'];
     }
     // Actualizar la cantidad del producto en la base de datos si se ha enviado un formulario para ello
     if (isset($_POST['product_id']) && isset($_POST['quantity'])) {
@@ -260,7 +263,7 @@ if (isset($_SESSION['user_id'])) {
                                                 echo "<p>No hay descripción disponible para este producto.</p>";
                                             }
                                             ?>
-                                            <p class="card-text precio-producto">$<?php echo $fila['precio']; ?></p>
+                                            <p class="card-text precio-producto">$<?php echo $fila['precio_venta']; ?></p>
                                             <div class="cantidad-container">
                                                 <!-- Botones para ajustar la cantidad -->
                                                 <button class="btn btn-outline-secondary btn-cantidad"
