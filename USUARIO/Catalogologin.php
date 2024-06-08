@@ -465,13 +465,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     <button class="btn btn-outline-primary" type="button" data-id="' . $row['id'] . '" data-action="increment"><i class="fas fa-plus"></i></button>
                                 </div>
                             </td>';
-                                                        // Muestra la cantidad en la tercera columna
+                                // Muestra la cantidad en la tercera columna
                                 echo '<td style="text-align: center;">
                                         <button type="button" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>
                                     </td>'; // Agrega botones para eliminar productos
                                 echo '</tr>';
                                 // Sumar el precio del producto al total acumulado
-                                //$totalPrecioProductos += $row['precio'];
+                                $totalPrecioProductos += $row['precio_venta'];
                             }
                             echo '</tbody>';
                             echo '</table>';
@@ -490,7 +490,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <!-- Cambia el color del texto, lo alinea a la derecha y lo hace negrita -->
             </div>
             <div class="modal-footer">
-            <button type="button" class="btn btn-primary" style="background-color: red; border-color: red;" onclick="vaciarCarrito()">Vaciar Carrito</button>            <button type="button" class="btn btn-primary" id="irAPagarBtn">Ir a pagar</button>
+            <button type="button" class="btn btn-primary" style="background-color: red; border-color: red;" onclick="vaciarCarrito()">Vaciar Carrito</button>            
+            <button type="button" class="btn btn-primary" id="irAPagarBtn">Ir a pagar</button>
             </div>
         </div>
     </div>

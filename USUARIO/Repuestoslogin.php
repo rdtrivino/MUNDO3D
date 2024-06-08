@@ -45,25 +45,9 @@ $nombreCompleto = $_SESSION['username'];
 $usuario_id = $_SESSION['user_id'];
 ?>
 <?php
-$host = "localhost";
-$user = "root";
-$password = "";
-$dbname = "mundo3d";
-
-$link = mysqli_connect($host, $user, $password);
-
-if (!$link) {
-    die("Error al conectarse al servidor: " . mysqli_connect_error());
-}
-
-if (!mysqli_select_db($link, $dbname)) {
-    die("Error al conectarse a la Base de Datos: " . mysqli_error($link));
-}
-
-
 // Consulta a la base de datos para obtener productos de la categoría 5
 $sql = "SELECT * FROM productos WHERE Pro_Categoria = 2";
-$result = mysqli_query($link, $sql);
+$repuestos = mysqli_query($link, $sql);
 // Manejar la solicitud AJAX en el mismo archivo PHP
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Verificar si se recibió el producto
@@ -79,16 +63,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $cantidad = 1;
 
             // Aquí puedes realizar el procesamiento adicional, como guardar el producto en la base de datos
-            // Por ejemplo:
-            $nombre = $producto['nombre'];
-            $precio = $producto['precio'];
+            $Identificador = $producto['Identificador'];
 
             // Insertar el producto en la base de datos con el ID del usuario
          // Insertar el producto en la base de datos con el ID del usuario
-         $sql = "INSERT INTO carrito (Pe_Cliente, nombre, precio, cantidad, id_producto, imagen_producto, descripcion_producto) 
-         SELECT '$usuario_id', p.Pro_Nombre, p.Pro_PrecioVenta, $cantidad, p.Identificador, p.nombre_imagen, p.Pro_Descripcion
-         FROM productos p
-         WHERE p.Pro_Nombre = '$nombre'";
+            $sql = "INSERT INTO carrito (Pe_Cliente, cantidad, id_producto) 
+            SELECT '$usuario_id', $cantidad, p.Identificador
+            FROM productos p
+            WHERE p.Identificador = '$Identificador'";
 
             // Ejecutar la consulta
             mysqli_query($link, $sql);
@@ -437,7 +419,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         $cliente = $_SESSION["user_id"];
 
                         // Consulta para seleccionar los productos del cliente logueado en estado "pendiente"
-                        $sql = "SELECT * FROM carrito WHERE Pe_Cliente = '$cliente' AND estado_pago = 'pendiente'";
+                        $sql = "SELECT carrito.*, 
+                        productos1.Pro_Nombre AS nombre, 
+                        productos1.Pro_PrecioVenta AS precio_venta, 
+                        productos1.nombre_imagen AS nombre_imagen
+                        FROM carrito 
+                        INNER JOIN productos AS productos1 ON carrito.id_producto = productos1.Identificador
+                        WHERE carrito.Pe_Cliente = '$cliente' AND carrito.estado_pago = 'pendiente'";
                         $result = mysqli_query($link, $sql);
 
                         // Contador de productos
@@ -461,10 +449,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             echo '<tbody>';
                             // Iterar sobre los resultados y mostrar cada producto en el modal del carrito
                             while ($row = mysqli_fetch_assoc($result)) {
-                                echo '<tr>';
-                                echo '<td style="text-align: left;">' . $row['nombre'] . '</td>'; // Alinea el texto a la izquierda en la primera columna
-                                echo '<td style="text-align: right;">$' . $row['precio'] . '</td>'; // Alinea el texto a la derecha en la segunda columna
-                                echo '<td style="text-align: center;"><img src="' . $row['imagen_producto'] . '" style="height: 50px; width: auto;" alt="' . $row['nombre'] . '"></td>'; // Muestra la imagen en la cuarta columna
+                                echo '<td style="text-align: left;">' . $row['nombre'] . '</td>';
+                                echo '<td style="text-align: left;">' . $row['precio_venta'] . '</td>';
+                                echo '<td><img height="70px" src=' . $row['nombre_imagen'] . '></td>';
                                 echo '<td style="text-align: center; width: 150px;">
                                 <div class="input-group">
                                     <button class="btn btn-outline-primary" type="button" data-id="' . $row['id'] . '" data-action="decrement"><i class="fas fa-minus"></i></button>
@@ -478,7 +465,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     </td>'; // Agrega botones para eliminar productos
                                 echo '</tr>';
                                 // Sumar el precio del producto al total acumulado
-                                $totalPrecioProductos += $row['precio'];
+                                $totalPrecioProductos += $row['precio_venta'];
                             }
                             echo '</tbody>';
                             echo '</table>';
@@ -585,7 +572,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     var productPrice = parseFloat(this.getAttribute('data-price'));
 
                     // Agregar el producto al carrito
-                    agregarAlCarrito({ nombre: productName, precio: productPrice });
+                    agregarAlCarrito({ Identificador: productId, nombre: productName, precio: productPrice });
                 });
             });
         });
