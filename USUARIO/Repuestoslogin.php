@@ -265,7 +265,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </button>
                 <div class="collapse navbar-collapse justify-content-between px-3" id="navbarCollapse">
                     <div class="navbar-nav ml-auto py-0">
-                        <a href="Catalogologin.php" class="nav-item nav-link">CATALOGO</a>
+                        <a href="Catalogologin.php" class="nav-item nav-link">IMPRESORAS</a>
                         <a href="Repuestoslogin.php" class="nav-item nav-link">REPUESTOS</a>
                         <a href="Archivos3dlogin.php" class="nav-item nav-link">ARCHIVOS 3D</a>
                         <a href="serviciodeimpresion.php" class="nav-item nav-link">SERVICIO DE IMPRESION</a>

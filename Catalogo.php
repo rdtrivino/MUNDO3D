@@ -164,7 +164,7 @@
                 <div class="collapse navbar-collapse justify-content-between px-3" id="navbarCollapse">
                     <div class="navbar-nav ml-auto py-0">
                         <a href="Index.html" class="nav-item nav-link">INICIO</a>
-                        <a href="Catalogo.php" class="nav-item nav-link">CATALOGO</a>
+                        <a href="Catalogo.php" class="nav-item nav-link">IMPRESORAS</a>
                         <a href="Respuestos.php" class="nav-item nav-link">REPUESTOS</a>
                         <a href="Archivos3dlogin.php" class="nav-item nav-link" id="archivos-3d-link">ARCHIVOS 3D</a>
                         <a href="serviciodeimpresion.php" class="nav-item nav-link"
