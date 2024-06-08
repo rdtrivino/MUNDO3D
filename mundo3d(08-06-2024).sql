@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 08-06-2024 a las 00:14:30
+-- Tiempo de generación: 08-06-2024 a las 07:11:16
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.2.4
 
@@ -33,8 +33,16 @@ CREATE TABLE `calendario` (
   `color_evento` varchar(25) NOT NULL,
   `fecha_inicio` date NOT NULL,
   `fecha_fin` date NOT NULL,
-  `usuario` int(10) NOT NULL
+  `usuario` int(10) NOT NULL,
+  `observaciones` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `calendario`
+--
+
+INSERT INTO `calendario` (`identificador`, `evento`, `color_evento`, `fecha_inicio`, `fecha_fin`, `usuario`, `observaciones`) VALUES
+(1, 'Maximo', '#FFC107', '2024-06-05', '2024-06-06', 1026577616, 'maximo');
 
 -- --------------------------------------------------------
 
@@ -55,7 +63,10 @@ CREATE TABLE `carrito` (
 --
 
 INSERT INTO `carrito` (`id`, `Pe_Cliente`, `cantidad`, `estado_pago`, `id_producto`) VALUES
-(52, 1131110766, 1, 'pendiente', 1);
+(52, 1131110766, 1, 'pendiente', 1),
+(54, 1131110766, 1, 'pendiente', 1),
+(57, 1131110766, 1, 'pendiente', 4),
+(58, 1131110766, 1, 'pendiente', 3);
 
 -- --------------------------------------------------------
 
@@ -339,7 +350,7 @@ ALTER TABLE `calendario`
 -- AUTO_INCREMENT de la tabla `carrito`
 --
 ALTER TABLE `carrito`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
 
 --
 -- AUTO_INCREMENT de la tabla `pedidos`
