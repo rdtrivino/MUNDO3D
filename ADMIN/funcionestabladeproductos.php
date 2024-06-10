@@ -96,7 +96,7 @@ if (isset($_POST['guardar_cambios'])) {
             $consulta = "UPDATE productos SET Pro_Nombre=?, Pro_Descripcion=?, Pro_PrecioVenta=?, Pro_Categoria=?, Pro_Cantidad=?, Pro_Costo=?, Pro_Estado=?, nombre_imagen=? WHERE Identificador=?";
             $stmt = mysqli_prepare($link, $consulta);
             if ($stmt) {
-                mysqli_stmt_bind_param($stmt, "ssdsdsssi", $nombre, $descripcion, $precio, $categoria, $cantidad, $costo, $estado, $imagen_contenido, $identificador);
+                mysqli_stmt_bind_param($stmt, "sssssssss", $nombre, $descripcion, $precio, $categoria, $cantidad, $costo, $estado, $imagen_contenido, $identificador);
                 if (mysqli_stmt_execute($stmt)) {
                     // Si la consulta se ejecutó con éxito, devuelve un mensaje de éxito
                     echo "success";
@@ -137,6 +137,12 @@ if (isset($_POST['nombre']) && isset($_POST['descripcion']) && isset($_POST['pre
     // Estado activo por defecto
     $estado = 'activo';
 
+    // Obtener el último código de producto
+    $ultimoCodigoConsulta = mysqli_query($link, "SELECT MAX(Identificador) AS ultimo_codigo FROM productos");
+    $ultimoCodigoFila = mysqli_fetch_assoc($ultimoCodigoConsulta);
+    $ultimoCodigo = $ultimoCodigoFila['ultimo_codigo'];
+    $nuevoCodigo = $ultimoCodigo + 1;
+
     // Procesar la imagen (si se ha subido una nueva)
     $imagen_contenido = null;
     // Establecer parametros para almacenar imagen 
@@ -145,7 +151,7 @@ if (isset($_POST['nombre']) && isset($_POST['descripcion']) && isset($_POST['pre
         // Obtener la extensión del archivo
         $extension = strtolower(pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION));
         $ruta_destino = "../images/imagenes_catalogo/"; // Ruta donde quieres guardar la imagen
-        $nombre_imagen = "catalogo-" . $identificador . ".$extension"; // Nombre que deseas para la imagen
+        $nombre_imagen = "catalogo-" . $nuevoCodigo . ".$extension"; // Nombre que deseas para la imagen
 
         // Combinar la ruta de destino con el nombre de la imagen
         $imagen_contenido = $ruta_destino . $nombre_imagen;
@@ -157,12 +163,6 @@ if (isset($_POST['nombre']) && isset($_POST['descripcion']) && isset($_POST['pre
             echo "Error al guardar la imagen.";
         }
     }
-
-    // Obtener el último código de producto
-    $ultimoCodigoConsulta = mysqli_query($link, "SELECT MAX(Identificador) AS ultimo_codigo FROM productos");
-    $ultimoCodigoFila = mysqli_fetch_assoc($ultimoCodigoConsulta);
-    $ultimoCodigo = $ultimoCodigoFila['ultimo_codigo'];
-    $nuevoCodigo = $ultimoCodigo + 1;
 
     // Insertar los datos en la base de datos
     $consulta = "INSERT INTO productos (Identificador, Pro_Nombre, Pro_Descripcion, Pro_PrecioVenta, Pro_Categoria, Pro_Cantidad, Pro_Costo, Pro_Estado, nombre_imagen) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";

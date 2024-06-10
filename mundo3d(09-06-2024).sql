@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 08-06-2024 a las 18:04:35
+-- Tiempo de generación: 10-06-2024 a las 05:22:41
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.2.4
 
@@ -63,7 +63,11 @@ CREATE TABLE `carrito` (
 --
 
 INSERT INTO `carrito` (`id`, `Pe_Cliente`, `cantidad`, `estado_pago`, `id_producto`) VALUES
-(84, 1014307293, 1, 'pendiente', 12);
+(84, 1014307293, 1, 'pendiente', 12),
+(85, 1131110766, 1, 'pendiente', 14),
+(86, 1131110766, 1, 'pendiente', 4),
+(87, 1131110766, 1, 'pendiente', 14),
+(88, 1131110766, 1, 'pendiente', 13);
 
 -- --------------------------------------------------------
 
@@ -179,15 +183,19 @@ INSERT INTO `productos` (`Identificador`, `Pro_Nombre`, `Pro_Descripcion`, `Pro_
 (22, 'IMPRESORA 3D BAMBU LAB X1 - CARBON COMBO', 'Tecnología de impresión: FDM (Modelado por deposición fundida)\r\nÁrea de impresión: 256 x 256 x 256 mm\r\nMateriales de impresión: PLA/ABS/PETG/ PETG PRO/TPU 95A\r\n\r\nCaracterísticas diferenciales de la impresora 3D Bambú Lab:\r\n\r\nCapacidad de varios colores y ', 1, 2, 18000000, 9000000, 'activo', '../images/imagenes_catalogo/catalogo-22.webp', ''),
 (23, 'TAPA DE PLÁSTICO DE ENFRIAMIENTO EXTRUSOR TITAN', 'Tapa de enfriamiento para extrusor titán con barrel liso. El barrel se fija con 2 tornillos prisioneros.', 2, 150, 24000, 12000, 'activo', '../images/imagenes_catalogo/catalogo-23.webp', ''),
 (24, 'BLOQUE CALEFACTOR ALUMINIO ARTILLERY X1/GENIUS', 'Bloque calefactor térmico tipo Volcano original de Artillery. Se recomienda ser usado junto con el protector térmico el cual ayuda a mantener de forma más estable el calor dentro del bloque calentador del fusor de la impresora 3D.', 2, 15, 30000, 15000, 'activo', '../images/imagenes_catalogo/catalogo-24.webp', ''),
-(25, 'ENGRANAJE EXTRUSORTINTAN ARTILLERY X1 Y GENIUS', 'Repuesto Original de los engranajes centrales del extrusor de la impresora 3D ARTILLERY X1 y ARTILLERY GENIUS.\r\n\r\nLos engranajes centrales del extrusor titán Aero usado en la Artillery SideWinder X1 y Artillery Genius es una pieza fundamental en el sistem', 2, 10, 30000, 15000, 'activo', '../images/imagenes_catalogo/catalogo-.webp', ''),
-(26, 'DISCIPADORES CREALITY', 'Características:  Este radiador de disipador de calor es compatible con impresoras 3D Serie CR-10 y Serie Ender-3.CR-10 incluyen CR-10 CR-10Mini CR-10S CR-10S4 y CR-10S5. Ender-3/CR-10 Series (CR-10/CR-10mini/CR-10S/CR-10S4/CR-10S5) Material de aluminio s', 2, 5, 24000, 12000, 'inactivo', '../images/imagenes_catalogo/catalogo-26.webp', ''),
+(25, 'ENGRANAJE EXTRUSORTINTAN ARTILLERY X1 Y GENIUS', 'Repuesto Original de los engranajes centrales del extrusor de la impresora 3D ARTILLERY X1 y ARTILLERY GENIUS.\r\n\r\nLos engranajes centrales del extrusor titán Aero usado en la Artillery SideWinder X1 y Artillery Genius es una pieza fundamental en el sistem', 2, 10, 30000, 15000, 'activo', '../images/imagenes_catalogo/catalogo-25.webp', ''),
+(26, 'DISCIPADORES CREALITY', 'Características:  Este radiador de disipador de calor es compatible con impresoras 3D Serie CR-10 y Serie Ender-3.CR-10 incluyen CR-10 CR-10Mini CR-10S CR-10S4 y CR-10S5. Ender-3/CR-10 Series (CR-10/CR-10mini/CR-10S/CR-10S4/CR-10S5) Material de aluminio s', 2, 5, 24000, 12000, 'activo', '../images/imagenes_catalogo/catalogo-26.webp', ''),
 (27, 'VENTILADOR REFRIGERADOR DEL FUSOR CREALITY ENDER S', 'Componente de repuesto para tu impresora 3D. Una mala ventilación del sistema del fusor en tu impresora 3D repercutirá en la vida útil de tu impresora y podrá ocasionar atascos.  Compatible con Creality Ender 3, Creality Ender 3 Pro, Creality Ender 3 V2. ', 2, 30, 30000, 15000, 'inactivo', '../images/imagenes_catalogo/catalogo-27.webp', ''),
 (28, 'FINAL DE CARRERA SERIE ENDER', 'Interruptor de límite de 3 pines N / ON / C de control fácil de usar. Interruptor de límite de eje X/Y/Z. Compatible con CR-10 Series, Ender-3 u otras impresoras 3D. Pequeño y compacto, fácil de instalar, plug and play. Tensión máxima: 125 V, corriente má', 2, 15, 24000, 12000, 'inactivo', '../images/imagenes_catalogo/catalogo-28.webp', ''),
 (29, 'BARREL LISO ARTILLERY', 'Barrel Liso que se ajusta al extrusor mediante un tornillo prisionero. Requiere el uso de un tubo de teflón en su interior.', 2, 5, 30000, 15000, 'inactivo', '../images/imagenes_catalogo/catalogo-29.webp', ''),
 (30, 'TUBO DE TEFLON 1 METRO', 'Accesorio de tubo de teflón kit_L1000_D6×d4_PTEE_Blanco  Distancia: 1 m  Teflón PTFE Genérico', 2, 40, 24000, 12000, 'inactivo', '../images/imagenes_catalogo/catalogo-30.webp', ''),
 (31, 'CORREA DISTRIBUCIÓN 1GT LM1000MM', 'Utilizado como elemento de transmisión de los ejes X e Y en las impresoras 3D Creality . El producto está hecho de material de alta calidad con alta durabilidad y larga vida. Proporciona un movimiento silencioso y preciso. La tolerancia del espesor de la ', 2, 20, 30000, 15000, 'inactivo', '../images/imagenes_catalogo/catalogo-31.webp', ''),
 (32, 'AGUJAS DE LIMPIEZAS 0.2/0.35/0.4/0.6/0.8/1 MM', 'Agujas para limpieza de boquilla. Diferentes diámetros. ', 2, 15, 4000, 2000, 'inactivo', '../images/imagenes_catalogo/catalogo-32.webp', ''),
-(33, 'RESISTENCIAS CREALITY ENDER', '• Cartucho calefactor resistencia original• Marca Creality • Compatibilidad: Ender 3, Ender 3 Pro, Ender 3 v2, etc. • 24 V   • 40 W', 2, 200, 26000, 13000, 'inactivo', '../images/imagenes_catalogo/catalogo-33.webp', '');
+(33, 'RESISTENCIAS CREALITY ENDER', '• Cartucho calefactor resistencia original• Marca Creality • Compatibilidad: Ender 3, Ender 3 Pro, Ender 3 v2, etc. • 24 V   • 40 W', 2, 200, 26000, 13000, 'inactivo', '../images/imagenes_catalogo/catalogo-33.webp', ''),
+(34, 'SENSOR AUTONIVELACION CR6 / CR6 MAX', 'Con alta precisión, rendimiento estable, trabajo, mejora la tasa de éxito de impresión y precisión de impresión. Con una excelente tecnología de producción, tiene la calidad de alta dureza y función de resistencia al desgaste. Pequeño en tamaño y peso lig', 2, 20, 114000, 57000, 'inactivo', '../images/imagenes_catalogo/catalogo-34.webp', ''),
+(35, 'CORREA GT2 X/Y', 'Un juego de correas X/Y cortas de repuesto.  Modelos compatibles  Zortrax M200 Zortrax M200 Plus Zortrax M300 Plus Zortrax M300 Zortrax M300 Doble', 2, 10, 160000, 80000, 'inactivo', '../images/imagenes_catalogo/catalogo-35.webp', ''),
+(36, 'EXTRUSOR METALICO DOBLE PIÑON CREALITY', 'Hecho en aleación de aluminio Color rojo y gris Adecuado para CR-10, para CR-10S, para Ender-3, para Ender-3 PRO.  1. Mecanismo de extrusión de doble engranaje, alta fuerza de extrusión, asegurando una alimentación suave 2. El controlador original de alea', 2, 19, 200000, 100000, 'inactivo', '../images/imagenes_catalogo/catalogo-36.webp', ''),
+(37, 'KITS EXTRUSOR COMPLETAMENTE MONTADO CREALITY CR-10', 'Kit completo de extrusor CR-10 V2 con bloque de calefacción de aluminio de 0.016 in.\r\n\r\nEn caso de que el extrusor de la impresora 3D este dañado o la fuga de consumibles no se puede reparar, por favor, no reemplaces la nueva máquina, puedes mantenerlo.\r\n', 2, 10, 400000, 200000, 'activo', '../images/imagenes_catalogo/catalogo-37.webp', '');
 
 --
 -- Disparadores `productos`
@@ -332,7 +340,7 @@ ALTER TABLE `calendario`
 -- AUTO_INCREMENT de la tabla `carrito`
 --
 ALTER TABLE `carrito`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=85;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=89;
 
 --
 -- AUTO_INCREMENT de la tabla `pedidos`
