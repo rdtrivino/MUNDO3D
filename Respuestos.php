@@ -33,71 +33,6 @@
                     <button class="font-large" onclick="aumentarTamano()" style="margin-left: 10px;">A</button>
                 </div>
             </div>
-            <style>
-                .font-small {
-                    font-size: 12px;
-                    /* Tamaño pequeño */
-                }
-
-                .font-medium {
-                    font-size: 16px;
-                    /* Tamaño mediano */
-                }
-
-                .font-large {
-                    font-size: 20px;
-                    /* Tamaño grande */
-                }
-
-                .font-small,
-                .font-medium,
-                .font-large {
-                    background-color: transparent;
-                    /* Quitar el fondo */
-                    color: white;
-                    /* Color de texto blanco */
-                    font-weight: bold;
-                    /* Negrita */
-                }
-            </style>
-            <script>
-                function ajustarTamano(size) {
-                    const body = document.body;
-                    body.classList.remove('font-small', 'font-medium', 'font-large');
-
-                    switch (size) {
-                        case 'small':
-                            body.classList.add('font-small');
-                            break;
-                        case 'medium':
-                            body.classList.add('font-medium');
-                            break;
-                        case 'large':
-                            body.classList.add('font-large');
-                            break;
-                    }
-                }
-
-                function disminuirTamano() {
-                    ajustarTamano('small'); // Ajusta el tamaño a pequeño
-                }
-
-                function aumentarTamano() {
-                    const body = document.body;
-                    body.classList.remove('font-small', 'font-medium');
-                    body.classList.add('font-large'); // Ajusta el tamaño a grande
-                }
-
-
-                function cambiarCursor(event) {
-                    event.target.style.cursor = 'pointer';
-                }
-
-                function restaurarCursor(event) {
-                    event.target.style.cursor = 'default';
-                }
-
-            </script>
             <div class="col-md-6 text-center text-lg-right">
                 <div class="d-inline-flex align-items-center" style="margin-top: -10%;">
                     <img src="images/bxs-user-circle.svg" alt="inicio" id="btnModal" class="hamburguer">
@@ -337,6 +272,4 @@
     <script src="js/main.js"></script>
     <script src="../MUNDO 3D/js/productosvisi.js"></script>
 </body>
-</body>
-
 </html>

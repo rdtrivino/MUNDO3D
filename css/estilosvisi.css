@@ -266,3 +266,28 @@
     font-weight: bold;
     color: #eee7e7;
 }
+.font-small {
+    font-size: 12px;
+    /* Tamaño pequeño */
+}
+
+.font-medium {
+    font-size: 16px;
+    /* Tamaño mediano */
+}
+
+.font-large {
+    font-size: 20px;
+    /* Tamaño grande */
+}
+
+.font-small,
+.font-medium,
+.font-large {
+    background-color: transparent;
+    /* Quitar el fondo */
+    color: white;
+    /* Color de texto blanco */
+    font-weight: bold;
+    /* Negrita */
+}

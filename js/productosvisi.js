@@ -177,3 +177,4 @@ function cambiarCursor(event) {
 function restaurarCursor(event) {
     event.target.style.cursor = 'default';
 }
+

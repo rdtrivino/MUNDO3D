@@ -186,7 +186,6 @@ body {
 /* Nav */
 .nav {
     height: 5px;
-    /* Cambia la altura a "auto" para que se ajuste automáticamente al contenido */
     display: flex;
     align-items: center;
 }
@@ -232,6 +231,12 @@ body {
     transition: background-color 0.3s;
     /* Transición suave */
 }
+@media (max-width: 1500px) {
+    .nav__button {
+        display: none; /* Ocultar el botón en pantallas menores o iguales a 768px */
+    }
+}
+
 
 /* Cambio de color cuando se pasa el mouse sobre los botones */
 .nav__button:hover {
