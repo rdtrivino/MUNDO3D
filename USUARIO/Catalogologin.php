@@ -245,7 +245,7 @@
                             <button type="button" class="btn btn-primary"
                                 style="background-color: red; border-color: red;" onclick="vaciarCarrito()">Vaciar
                                 Carrito</button>
-                            <button type="button" class="btn btn-primary" id="irAPagarBtn" disabled>Ir a pagar</button>
+                            <button type="button" class="btn btn-primary" id="irAPagarBtn">Ir a pagar</button>
                         </div>
                     </div>
                 </div>

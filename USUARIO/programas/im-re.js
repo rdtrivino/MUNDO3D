@@ -74,29 +74,50 @@ function confirmLogout() {
 //vaciar carrito ________________________________________________________________________________________________________
 function vaciarCarrito() {
     if (confirm("¿Estás seguro de que deseas vaciar el carrito?")) {
-        // Crear una solicitud XMLHttpRequest
         var xhr = new XMLHttpRequest();
+        var url = 'programas/funciones-in-re.php'; // Ruta al script PHP que manejará la acción de vaciar el carrito
+
+        xhr.open("POST", url, true);
         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
-        // Manejar la respuesta del servidor
         xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                // Actualizar la interfaz de usuario según sea necesario
-                alert("El carrito ha sido vaciado.");
-                location.reload(); // Recargar la página para actualizar el carrito
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    try {
+                        var response = JSON.parse(xhr.responseText);
+                        if (response.success) {
+                            alert("El carrito ha sido vaciado correctamente.");
+                            location.reload(); // Recargar la página después de vaciar el carrito
+                        } else {
+                            console.error('Error al vaciar el carrito:', response.message);
+                            alert("Hubo un error al vaciar el carrito: " + response.message);
+                        }
+                    } catch (e) {
+                        console.error('Error al parsear JSON:', e);
+                        alert("Hubo un problema al procesar la respuesta del servidor.");
+                    }
+                } else {
+                    console.error('Error al vaciar el carrito:', xhr.status, xhr.statusText);
+                    alert("Hubo un problema al comunicarse con el servidor.");
+                }
             }
         };
 
-        // Enviar la solicitud
+        // Enviar la solicitud POST vacía, ya que no se requiere ningún dato adicional
         xhr.send();
     }
 }
+
+        
+
+
+
 //ir a pagar_______________________________________________________________________________________________________
 document.addEventListener("DOMContentLoaded", function () {
-    // Obtén referencia al botón "Ir a pagar"
+    // Obtener referencia al botón "Ir a pagar"
     var irAPagarBtn = document.getElementById('irAPagarBtn');
 
-    // Agrega un evento clic al botón
+    // Agregar un evento clic al botón
     irAPagarBtn.addEventListener('click', function (event) {
         // Aquí puedes agregar la lógica para redirigir al usuario a la página de pago
         // Utiliza una ruta absoluta y barras inclinadas hacia adelante
