@@ -1,111 +1,3 @@
-<?php
-session_start();
-include __DIR__ . '/../conexion.php';
-
-// Confirmación de que el usuario ha realizado el proceso de autenticación
-if (!isset($_SESSION['confirmado']) || $_SESSION['confirmado'] == false) {
-    header("Location: ../Programas/autenticacion.php");
-    exit(); // Terminamos la ejecución del script después de redirigir
-}
-
-// Realizamos la consulta para obtener el rol del usuario
-$peticion = "SELECT Usu_rol FROM usuario WHERE Usu_Identificacion = '" . $_SESSION['user_id'] . "'";
-$result = mysqli_query($link, $peticion);
-
-// Verificamos si la consulta tuvo éxito
-if (!$result) {
-    // Manejo de errores de consulta
-    // Redirigir a la página de autenticación o mostrar un mensaje de error
-    header("Location: ../Programas/autenticacion.php");
-    exit(); // Terminamos la ejecución del script después de redirigir
-}
-
-// Verificamos si la consulta devolvió exactamente un resultado
-if (mysqli_num_rows($result) != 1) {
-    // Si la consulta no devuelve un solo resultado, puede ser un problema de base de datos
-    // Redirigir a la página de autenticación o mostrar un mensaje de error
-    header("Location: ../Programas/autenticacion.php");
-    exit(); // Terminamos la ejecución del script después de redirigir
-}
-
-// Obtenemos el rol del usuario
-$fila = mysqli_fetch_assoc($result);
-$rolUsuario = $fila['Usu_rol'];
-
-// Verificar si el rol del usuario es diferente de 3
-if ($rolUsuario != 3) {
-    // Si el rol no es 3, redirigir a la página de autenticación
-    header("Location: ../Programas/autenticacion.php");
-    exit(); // Terminamos la ejecución del script después de redirigir
-}
-
-// Si llegamos aquí, el usuario está autenticado y tiene el rol 3
-
-// Continuar con el resto del código
-$nombreCompleto = $_SESSION['username'];
-$usuario_id = $_SESSION['user_id'];
-
-// Consulta a la base de datos para obtener productos de la categoría 2
-$sql = "SELECT * FROM productos WHERE Pro_Categoria = 2";
-$impresoras = mysqli_query($link, $sql);
-
-// Manejar la solicitud AJAX en el mismo archivo PHP
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Verificar si se recibió el producto
-    if (isset($_POST['producto'])) {
-        // Obtener el ID del usuario de la sesión
-        if (isset($_SESSION['user_id'])) {
-            $usuario_id = $_SESSION['user_id'];
-
-            // Convertir los datos del producto JSON en un array asociativo
-            $producto = json_decode($_POST['producto'], true);
-
-            // Definir la cantidad predeterminada (en este caso, 1)
-            $cantidad = 1;
-
-            // Obtener el identificador del producto
-            $Identificador = $producto['Identificador'];
-
-            // Verificar si el producto ya existe en el carrito del usuario
-            $sql_check = "SELECT cantidad FROM carrito WHERE Pe_Cliente = '$usuario_id' AND id_producto = '$Identificador' AND estado_pago = 'pendiente'";
-            $result_check = mysqli_query($link, $sql_check);
-
-            if (mysqli_num_rows($result_check) > 0) {
-                // Si el producto ya existe, actualizar la cantidad
-                $row = mysqli_fetch_assoc($result_check);
-                $nueva_cantidad = $row['cantidad'] + $cantidad;
-
-                $sql_update = "UPDATE carrito SET cantidad = $nueva_cantidad WHERE Pe_Cliente = '$usuario_id' AND id_producto = '$Identificador'";
-                mysqli_query($link, $sql_update);
-
-                echo "Cantidad del producto actualizada correctamente en el carrito.";
-            } else {
-                // Si el producto no existe, insertar un nuevo registro
-                $sql_insert = "INSERT INTO carrito (Pe_Cliente, cantidad, id_producto, estado_pago) 
-                               VALUES ('$usuario_id', $cantidad, '$Identificador', 'pendiente')";
-
-                mysqli_query($link, $sql_insert);
-
-                echo "Producto agregado al carrito correctamente.";
-            }
-
-            // Finalizar la ejecución del script para evitar la renderización adicional de HTML
-            exit();
-        } else {
-            // Si no hay un usuario logueado, mostrar un mensaje de error
-            echo "No hay un usuario logueado.";
-        }
-    } else {
-        // Si no se recibió el producto, mostrar un mensaje de error
-        echo "No se recibieron datos del producto.";
-    }
-
-    // Finalizar la ejecución del script para evitar la renderización adicional de HTML
-    exit();
-}
-?>
-
-
 <!DOCTYPE html>
 <html lang="es">
 
@@ -123,9 +15,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link href="css/style.css" rel="stylesheet">
     <link href="css\misestilos.css" rel="stylesheet">
     <link rel="stylesheet" href="../css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="programas/im-pr.css">
 </head>
 
 <body>
+    <?php include 'programas/funciones-in-re.php'; ?>
     <!-- Topbar Start -->
     <div class="container-fluid bg-primary py-3">
         <div class="row">
@@ -136,30 +30,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="text-white" id="user-name">
                         Bienvenido:
                     </div>
-
-                    <script>
-                        // Función para hacer una solicitud AJAX al servidor y obtener el nombre de usuario
-                        function getUsername() {
-                            var xhr = new XMLHttpRequest();
-                            xhr.open('GET', '../Programas/get_username.php', true);
-                            xhr.onreadystatechange = function () {
-                                if (xhr.readyState === 4 && xhr.status === 200) {
-                                    // Parsea la respuesta JSON para obtener el objeto de usuario
-                                    var userData = JSON.parse(xhr.responseText);
-                                    // Obtiene el nombre completo del objeto de usuario
-                                    var nombreCompleto = userData.nombreCompleto;
-                                    // Actualiza el contenido del elemento user-name con el nombre completo de usuario
-                                    document.getElementById('user-name').textContent = 'Bienvenid@ ' + nombreCompleto;
-                                }
-                            };
-                            xhr.send();
-                        }
-
-                        // Llama a la función getUsername al cargar la página para obtener el nombre de usuario
-                        window.onload = function () {
-                            getUsername();
-                        };
-                    </script>
                 </div>
             </div>
 
@@ -186,36 +56,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                             onmouseover="cambiarCursor(event)" onmouseout="restaurarCursor()"></i>
                                     </div>
                                 </div>
-                                <script>
-                                    function adjustFontSize(size) {
-                                        const body = document.body;
-                                        body.classList.remove('font-small', 'font-medium', 'font-large');
-
-                                        switch (size) {
-                                            case 'small':
-                                                body.classList.add('font-small');
-                                                break;
-                                            case 'medium':
-                                                body.classList.add('font-medium');
-                                                break;
-                                            case 'large':
-                                                body.classList.add('font-large');
-                                                break;
-                                        }
-                                    }
-
-                                    function aumentarTamano() {
-                                        // Funcionalidad específica para el icono de silla de ruedas
-                                    }
-
-                                    function cambiarCursor(event) {
-                                        event.target.style.cursor = 'pointer';
-                                    }
-
-                                    function restaurarCursor(event) {
-                                        event.target.style.cursor = 'default';
-                                    }
-                                </script>
                                 <!-- Menú desplegable -->
                                 <div class="dropdown" style="position: relative; white-space: nowrap;">
                                     <div id="dropdown-menu" class="dropdown-menu dropdown-menu-right"
@@ -240,30 +80,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         <span>Mi menú</span> <!-- Cambia el texto del botón de hamburguesa -->
                                     </button>
                                 </div>
-
-                                <script>
-                                    document.getElementById("menu-toggle").addEventListener("click", function (event) {
-                                        var menu = document.getElementById("dropdown-menu");
-                                        menu.style.display = (menu.style.display === "block") ? "none" : "block";
-                                        event.stopPropagation(); // Evita que el clic en el botón se propague al documento
-                                    });
-
-                                    // Event listener para cerrar el menú desplegable cuando se hace clic fuera de él
-                                    document.addEventListener("click", function (event) {
-                                        var menu = document.getElementById("dropdown-menu");
-                                        var menuToggle = document.getElementById("menu-toggle");
-                                        if (!menu.contains(event.target) && event.target !== menuToggle) {
-                                            menu.style.display = "none";
-                                        }
-                                    });
-
-                                    function confirmLogout() {
-                                        var confirmLogout = confirm("¿Estás seguro de que deseas cerrar sesión?");
-                                        if (confirmLogout) {
-                                            window.location.href = "../Programas/logout.php"; // Redirige al script de cierre de sesión
-                                        }
-                                    }
-                                </script>
                             </div>
                         </div>
                     </div>
@@ -296,77 +112,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="row align-items-center py-4">
             <div class="col-md-6 text-center text-md-left offset-md-0">
                 <div class="InputContainer">
-                    <input required="" type="text" name="text" class="input">
-                    <label class="label">Buscar <i class="fas fa-search"></i></label>
+                    <input required="" type="text" id="nombre_producto" class="input" placeholder="Buscar producto...">
                 </div>
+                <div id="resultado_busqueda" class="col-md-6 mt-3"></div>
             </div>
-            <style>
-                .InputContainer {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 7px;
-                    position: relative;
-                    color: white;
-                    padding-left: 50px;
-                    margin-top: 0%;
-
-                }
-
-                @media (max-width: 1500px) {
-                    .InputContainer {
-                        display: none;
-                        /* Ocultar el contenedor en pantallas más pequeñas que 768px */
-                    }
-                }
-
-                .InputContainer .label {
-                    font-size: 15px;
-                    padding-left: 10px;
-                    position: absolute;
-                    top: 13px;
-                    transition: 0.3s;
-                    pointer-events: none;
-                    color: black;
-                }
-
-                .input {
-                    width: 200px;
-                    height: 45px;
-                    border: none;
-                    outline: none;
-                    padding: 0px 7px;
-                    border-radius: 6px;
-                    color: #fff;
-                    font-size: 15px;
-                    background-color: transparent;
-                    box-shadow: 3px 3px 10px rgba(0, 0, 0, 1),
-                        -1px -1px 6px rgba(255, 255, 255, 0.4);
-                }
-
-                .input:focus {
-                    border: 2px solid transparent;
-                    color: black;
-                    box-shadow: 3px 3px 10px rgba(0, 0, 0, 1),
-                        -1px -1px 6px rgba(255, 255, 255, 0.4),
-                        inset 3px 3px 10px rgba(0, 0, 0, 1),
-                        inset -1px -1px 6px rgba(255, 255, 255, 0.4);
-                }
-
-                .InputContainer .input:valid~.label,
-                .InputContainer .input:focus~.label {
-                    transition: 0.3s;
-                    padding-left: 2px;
-                    transform: translateY(-35px);
-                }
-
-                .InputContainer .input:valid,
-                .InputContainer .input:focus {
-                    box-shadow: 3px 3px 10px rgba(0, 0, 0, 1),
-                        -1px -1px 6px rgba(255, 255, 255, 0.4),
-                        inset 3px 3px 10px rgba(0, 0, 0, 1),
-                        inset -1px -1px 6px rgba(255, 255, 255, 0.4);
-                }
-            </style>
             <div class="col-md-6 text-center text-md-right">
                 <a id="carritoBtn" class="btn btn-danger text-white font-weight-bold ml-3 position-relative" href="#"
                     data-toggle="modal" data-target="#carritoModal">
@@ -402,58 +151,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </span>
                 </a>
             </div>
-
-
-            <style>
-                .btn-danger {
-                    background-color: #dc3545;
-                    border-color: #dc3545;
-                    position: relative;
-                    right: 10%;
-                    margin-top: -5%;
-                    border-radius: 10px;
-                }
-
-
-                @media (max-width: 1500px) {
-                    .btn-danger {
-                        display: none;
-                        /* Ocultar el contenedor en pantallas más pequeñas que 768px */
-                    }
-                }
-
-                .btn-danger:hover {
-                    background-color: #c82333;
-                    border-color: #bd2130;
-                }
-
-                .font-weight-bold {
-                    font-weight: bold;
-                }
-
-                .contador-rojo {
-                    color: red;
-                    font-size: 12px;
-                    /* Ajustar el tamaño del contador según sea necesario */
-                    top: 50%;
-                    /* Posicionar el contador verticalmente */
-                    transform: translateY(-50%);
-                    /* Ajustar verticalmente */
-                    right: 10px;
-                    /* Posicionar el contador a la derecha */
-                    padding: 4px 8px;
-                    /* Ajustar el padding para espacio alrededor del contador */
-                    border-radius: 50%;
-                    /* Hacer el contador redondo */
-                }
-
-                @media (max-width: 1500px) {
-                    .container {
-                        margin-bottom: 10rem !important;
-                        /* Ajusta el margen inferior según tus necesidades */
-                    }
-                }
-            </style>
             </span>
             </a>
 
@@ -480,12 +177,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                                     // Consulta para seleccionar los productos del cliente logueado en estado "pendiente"
                                     $sql = "SELECT carrito.*, 
-                        productos1.Pro_Nombre AS nombre, 
-                        productos1.Pro_PrecioVenta AS precio_venta, 
-                        productos1.nombre_imagen AS nombre_imagen
-                        FROM carrito 
-                        INNER JOIN productos AS productos1 ON carrito.id_producto = productos1.Identificador
-                        WHERE carrito.Pe_Cliente = '$cliente' AND carrito.estado_pago = 'pendiente'";
+                                        productos1.Pro_Nombre AS nombre, 
+                                        productos1.Pro_PrecioVenta AS precio_venta, 
+                                        productos1.nombre_imagen AS nombre_imagen
+                                        FROM carrito 
+                                        INNER JOIN productos AS productos1 ON carrito.id_producto = productos1.Identificador
+                                        WHERE carrito.Pe_Cliente = '$cliente' AND carrito.estado_pago = 'pendiente'";
                                     $result = mysqli_query($link, $sql);
 
                                     // Contador de productos
@@ -514,16 +211,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                             echo '<td style="text-align: left;">' . $row['precio_venta'] . '</td>';
                                             echo '<td><img height="70px" src=' . $row['nombre_imagen'] . '></td>';
                                             echo '<td style="text-align: center; width: 150px;">
-                                <div class="input-group">
-                                    <button class="btn btn-outline-primary" type="button" data-id="' . $row['id'] . '" data-action="decrement"><i class="fas fa-minus"></i></button>
-                                    <input type="text" class="form-control text-center" value="' . $row['cantidad'] . '" aria-label="Example text with button addon" aria-describedby="button-addon1" disabled>  
-                                    <button class="btn btn-outline-primary" type="button" data-id="' . $row['id'] . '" data-action="increment"><i class="fas fa-plus"></i></button>
-                                </div>
-                            </td>';
+                                            <div class="input-group">
+                                                    <button class="btn btn-outline-primary" type="button" data-id="' . $row['id'] . '" data-action="decrement"><i class="fas fa-minus"></i></button>
+                                                    <input type="text" class="form-control text-center" value="' . $row['cantidad'] . '" aria-label="Example text with button addon" aria-describedby="button-addon1" disabled>  
+                                                    <button class="btn btn-outline-primary" type="button" data-id="' . $row['id'] . '" data-action="increment"><i class="fas fa-plus"></i></button>
+                                                </div>
+                                            </td>';
                                             // Muestra la cantidad en la tercera columna
                                             echo '<td style="text-align: center;">
-                                        <button type="button" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>
-                                    </td>'; // Agrega botones para eliminar productos
+                                                <button type="button" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>
+                                            </td>'; // Agrega botones para eliminar productos
                                             echo '</tr>';
                                             // Sumar el precio del producto al total acumulado
                                             $totalPrecioProductos += $row['precio_venta'];
@@ -548,174 +245,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <button type="button" class="btn btn-primary"
                                 style="background-color: red; border-color: red;" onclick="vaciarCarrito()">Vaciar
                                 Carrito</button>
-                            <button type="button" class="btn btn-primary" id="irAPagarBtn">Ir a pagar</button>
+                            <button type="button" class="btn btn-primary" id="irAPagarBtn" disabled>Ir a pagar</button>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <script>
-                function vaciarCarrito() {
-                    if (confirm("¿Estás seguro de que deseas vaciar el carrito?")) {
-                        // Crear una solicitud XMLHttpRequest
-                        var xhr = new XMLHttpRequest();
-                        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-                        // Manejar la respuesta del servidor
-                        xhr.onreadystatechange = function () {
-                            if (xhr.readyState === 4 && xhr.status === 200) {
-                                // Actualizar la interfaz de usuario según sea necesario
-                                alert("El carrito ha sido vaciado.");
-                                location.reload(); // Recargar la página para actualizar el carrito
-                            }
-                        };
-
-                        // Enviar la solicitud
-                        xhr.send();
-                    }
-                }
-            </script>
-
-            <script>
-                document.addEventListener("DOMContentLoaded", function () {
-                    // Obtener referencia al botón "Ir a pagar"
-                    var irAPagarBtn = document.getElementById('irAPagarBtn');
-
-                    // Agregar un evento clic al botón
-                    irAPagarBtn.addEventListener('click', function (event) {
-                        // Aquí puedes agregar la lógica para redirigir al usuario a la página de pago
-                        // Utiliza una ruta absoluta y barras inclinadas hacia adelante
-                        window.location.href = 'redireccionar.php';
-                    });
-                });
-            </script>
-            <script>
-
-                // Variable para almacenar los productos en el carrito
-                var carritoProductos = [];
-
-                // Función para agregar un producto al carrito
-                function agregarAlCarrito(producto) {
-                    // Agregar el producto al arreglo de productos en el carrito
-                    carritoProductos.push(producto);
-
-                    // Mostrar el carrito actualizado
-                    mostrarCarrito();
-
-                    // Actualizar el contador de productos
-                    actualizarContadorProductos();
-
-                    // Enviar datos del producto al servidor mediante AJAX
-                    var xhr = new XMLHttpRequest();
-                    xhr.open("POST", "", true); // El mismo archivo PHP
-                    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                    xhr.onreadystatechange = function () {
-                        if (xhr.readyState === XMLHttpRequest.DONE) {
-                            if (xhr.status === 200) {
-                                console.log(xhr.responseText); // Puedes mostrar un mensaje de éxito en la consola
-                                // Recargar la página después de agregar un producto
-                                location.reload();
-                            } else {
-                                console.error('Error al guardar el producto en el carrito.');
-                            }
-                        }
-                    };
-
-                    // Convertir el objeto producto a una cadena JSON para enviarlo al servidor
-                    var data = JSON.stringify(producto);
-                    xhr.send("producto=" + encodeURIComponent(data));
-                }
-
-                // Función para actualizar el contador de productos en el botón del carrito
-                function actualizarContadorProductos() {
-                    // Filtrar los productos en el carrito que tengan estado de pago "pendiente"
-                    var productosPendientes = carritoProductos.filter(function (producto) {
-                        return producto.estado_pago === 'pendiente';
-                    });
-
-                    // Actualizar el contador de productos con la longitud del arreglo filtrado
-                    var contadorProductos = document.getElementById('contadorProductos');
-                    contadorProductos.textContent = productosPendientes.length;
-
-                    // Si no hay productos pendientes, mostrar 0 en el contador
-                    if (productosPendientes.length === 0) {
-                        contadorProductos.textContent = '0';
-                    }
-                }
-
-
-                // Esperar a que el DOM esté completamente cargado
-                document.addEventListener("DOMContentLoaded", function () {
-                    // Obtener todos los botones "Agregar al carrito"
-                    var agregarAlCarritoBtns = document.querySelectorAll('.agregarAlCarritoBtn');
-
-                    agregarAlCarritoBtns.forEach(function (btn) {
-                        btn.addEventListener('click', function (event) {
-                            event.preventDefault();
-                            var productId = this.getAttribute('data-id');
-                            var productName = this.getAttribute('data-name');
-                            var productPrice = parseFloat(this.getAttribute('data-price'));
-
-                            // Agregar el producto al carrito
-                            agregarAlCarrito({ Identificador: productId, nombre: productName, precio: productPrice });
-                        });
-                    });
-                });
-
-                // Función para mostrar el carrito
-                function mostrarCarrito() {
-                    var carritoContenido = document.getElementById('carritoContenido');
-                    var totalProductos = document.getElementById('totalProductos');
-                    var total = 0;
-
-                    // Limpiar contenido previo
-                    carritoContenido.innerHTML = '';
-
-                    // Mostrar cada producto en el carrito
-                    carritoProductos.forEach(function (producto) {
-                        carritoContenido.innerHTML += '<p>' + producto.nombre + ' - Precio: $' + producto.precio + '</p>';
-                        total += producto.precio;
-                    });
-
-                    // Mostrar el total de todos los productos
-                    totalProductos.innerHTML = '<p>Total: $' + total + '</p>';
-                }
-            </script>
         </div>
     </div>
     </div>
     </div>
     </div>
-    <script>
-        function searchProducts(searchTerm) {
-            // Obtener todos los elementos de productos
-            var products = document.querySelectorAll('.product');
-
-            // Convertir el término de búsqueda a mayúsculas para hacer una comparación insensible a mayúsculas y minúsculas
-            searchTerm = searchTerm.toUpperCase();
-
-            // Iterar sobre todos los productos
-            products.forEach(function (product) {
-                // Obtener el nombre del producto
-                var productName = product.querySelector('.card-title').textContent.toUpperCase();
-
-                // Obtener la descripción del producto
-                var productDescription = product.querySelector('.card-text').textContent.toUpperCase();
-
-                // Comprobar si el término de búsqueda está presente en el nombre o la descripción del producto
-                if (productName.includes(searchTerm) || productDescription.includes(searchTerm)) {
-                    // Mostrar el producto si coincide con el término de búsqueda
-                    product.style.display = 'block';
-                } else {
-                    // Ocultar el producto si no coincide con el término de búsqueda
-                    product.style.display = 'none';
-                }
-            });
-        }
-    </script>
     <div class="container-fluid" style="background-color: #D3D3D3; margin-top: -70px;">
         <div class="container">
-            <h1 class="display-4 text-center mb-5">Explora nuestras impresoras 3D</h1>
+            <h1 class="display-4 text-center mb-5">Explora nuestros repuestos 3D</h1>
             <div class="row row-cols-lg-4 row-cols-md-3 justify-content-center">
                 <?php
                 // Consulta a la base de datos para obtener productos de la categoría 5
@@ -778,17 +320,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
         </div>
     </div>
-    <style>
-        .card {
-            width: 250px;
-            height: 300px;
-            border-radius: 30px;
-            background: #ffffff;
-            box-shadow: 15px 15px 30px rgba(0, 0, 50, 0.5),
-                -15px -15px 30px rgba(0, 0, 50, 0.5);
-
-        }
-    </style>
     <!-- Modal de detalles del producto -->
     <div class="modal fade" id="detalleProductoModal" tabindex="-1" role="dialog"
         aria-labelledby="detalleProductoModalLabel" aria-hidden="true">
@@ -822,38 +353,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
         </div>
     </div>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var detallesBtns = document.querySelectorAll('.detallesBtn');
-
-            detallesBtns.forEach(function (btn) {
-                btn.addEventListener('click', function (event) {
-                    event.preventDefault();
-                    var productName = this.getAttribute('data-name');
-                    var productDescription = this.getAttribute('data-description');
-                    var productPrice = this.getAttribute('data-price');
-                    var productImage = this.closest('.card').querySelector('.card-img-top').getAttribute('src');
-
-                    cargarDetallesProducto(productName, productDescription, productPrice, productImage);
-                });
-            });
-        });
-
-        function cargarDetallesProducto(productName, productDescription, productPrice, productImage) {
-            var modalImagen = document.getElementById('productoImagen');
-            var modalNombre = document.getElementById('productoNombre');
-            var modalDescripcion = document.getElementById('productoDescripcion');
-            var modalPrecio = document.getElementById('productoPrecio');
-
-            modalImagen.src = productImage;
-            modalNombre.textContent = productName;
-            modalDescripcion.textContent = productDescription;
-            modalPrecio.textContent = "USD-" + productPrice;
-
-            $('#detalleProductoModal').modal('show');
-        }
-    </script>
     </div>
     </div>
 
@@ -917,86 +416,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
         </div>
     </div>
-    <style>
-        .parent2 {
-            width: 30%;
-            height: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-
-        .child {
-            width: 50px;
-            height: 50px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transform-style: preserve-3d;
-            transition: all 1.6s ease-in-out;
-            border-radius: 100%;
-            margin: 0 5px;
-            position: relative;
-            /* Agregado para posicionar correctamente el texto */
-        }
-
-        .child:hover {
-            background-color: black;
-            background-position: -100px 100px, -100px 100px;
-            transform: rotate3d(0.5, 1, 0, 30deg);
-            transform: perspective(180px) rotateX(60deg) translateY(2px);
-            box-shadow: 0px 10px 10px rgb(1, 49, 182);
-        }
-
-        #button1 {
-            border: none;
-            background-color: white;
-            width: 50px;
-            height: 50px;
-            font-size: 20px;
-            border-radius: 50%;
-        }
-
-        #button1:hover {
-            width: inherit;
-            height: inherit;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transform: translate3d(0px, 0px, 15px) perspective(180px) rotateX(-35deg) translateY(2px);
-            border-radius: 100%;
-            background-color: white;
-        }
-
-        /* Estilos para el texto */
-        .child::before {
-            content: attr(data-title);
-            /* Obtener el texto del atributo data-title */
-            position: absolute;
-            top: -30px;
-            /* Posición del texto arriba del botón */
-            color: white;
-            /* Color del texto */
-            padding: 5px;
-            border-radius: 5px;
-            font-size: 13px;
-            white-space: nowrap;
-            /* Evita que el texto se divida en múltiples líneas */
-            left: 50%;
-            /* Centra horizontalmente */
-            transform: translateX(-50%);
-            opacity: 0;
-            /* Oculta inicialmente el texto */
-            transition: opacity 0.9s ease;
-            /* Transición de la opacidad */
-        }
-
-        .child:hover::before {
-            opacity: 1;
-            /* Muestra el texto al pasar el mouse sobre el botón */
-        }
-    </style>
     <!--redes sociales html-->
     <div class="container-fluid bg-dark text-white py-4 px-sm-3 px-md-5">
         <p class="m-0 text-center text-white">
@@ -1016,6 +435,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <script src="mail/jqBootstrapValidation.min.js"></script>
     <script src="mail/contact.js"></script>
     <script src="js/main.js"></script>
+    <script src="programas/im-re.js"></script>
 </body>
 
 </html>

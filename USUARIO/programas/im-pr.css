@@ -1,0 +1,196 @@
+/*buscador______________________________________________*/
+.InputContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    position: relative;
+    color: white;
+    margin-top: 0%;
+
+}
+
+@media (max-width: 1500px) {
+    .InputContainer {
+        display: none;
+        /* Ocultar el contenedor en pantallas más pequeñas que 768px */
+    }
+}
+
+.InputContainer .label {
+    font-size: 15px;
+    padding-left: 10px;
+    position: absolute;
+    top: 13px;
+    transition: 0.3s;
+    pointer-events: none;
+    color: black;
+}
+
+.input {
+    width: 300px;
+    height: 45px;
+    border: none;
+    outline: none;
+    padding: 0px 7px;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 15px;
+    background-color: transparent;
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 1),
+        -1px -1px 6px rgba(255, 255, 255, 0.4);
+}
+
+.input:focus {
+    border: 2px solid transparent;
+    color: black;
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 1),
+        -1px -1px 6px rgba(255, 255, 255, 0.4),
+        inset 3px 3px 10px rgba(0, 0, 0, 1),
+        inset -1px -1px 6px rgba(255, 255, 255, 0.4);
+}
+
+.InputContainer .input:valid~.label,
+.InputContainer .input:focus~.label {
+    transition: 0.3s;
+    padding-left: 2px;
+    transform: translateY(-35px);
+}
+
+.InputContainer .input:valid,
+.InputContainer .input:focus {
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 1),
+        -1px -1px 6px rgba(255, 255, 255, 0.4),
+        inset 3px 3px 10px rgba(0, 0, 0, 1),
+        inset -1px -1px 6px rgba(255, 255, 255, 0.4);
+}
+/*carrito____________________________________________________________________________________________________*/
+.btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    position: relative;
+    right: 10%;
+    margin-top: -5%;
+    border-radius: 10px;
+}
+
+
+@media (max-width: 1500px) {
+    .btn-danger {
+        display: none;
+        /* Ocultar el contenedor en pantallas más pequeñas que 768px */
+    }
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+}
+
+.font-weight-bold {
+    font-weight: bold;
+}
+
+.contador-rojo {
+    color: red;
+    font-size: 12px;
+    /* Ajustar el tamaño del contador según sea necesario */
+    top: 50%;
+    /* Posicionar el contador verticalmente */
+    transform: translateY(-50%);
+    /* Ajustar verticalmente */
+    right: 10px;
+    /* Posicionar el contador a la derecha */
+    padding: 4px 8px;
+    /* Ajustar el padding para espacio alrededor del contador */
+    border-radius: 50%;
+    /* Hacer el contador redondo */
+}
+/* tarjetas de productos_________________________________________________________________________________________*/
+.card {
+    width: 250px;
+    height: 300px;
+    border-radius: 30px;
+    background: #ffffff;
+    box-shadow: 15px 15px 30px rgba(0, 0, 50, 0.5),
+        -15px -15px 30px rgba(0, 0, 50, 0.5);
+
+}
+/*redes sociales__________________________________________________________________________________________________*/
+.parent2 {
+    width: 30%;
+    height: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.child {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform-style: preserve-3d;
+    transition: all 1.6s ease-in-out;
+    border-radius: 100%;
+    margin: 0 5px;
+    position: relative;
+    /* Agregado para posicionar correctamente el texto */
+}
+
+.child:hover {
+    background-color: black;
+    background-position: -100px 100px, -100px 100px;
+    transform: rotate3d(0.5, 1, 0, 30deg);
+    transform: perspective(180px) rotateX(60deg) translateY(2px);
+    box-shadow: 0px 10px 10px rgb(1, 49, 182);
+}
+
+#button1 {
+    border: none;
+    background-color: white;
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+    border-radius: 50%;
+}
+
+#button1:hover {
+    width: inherit;
+    height: inherit;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: translate3d(0px, 0px, 15px) perspective(180px) rotateX(-35deg) translateY(2px);
+    border-radius: 100%;
+    background-color: white;
+}
+
+/* Estilos para el texto */
+.child::before {
+    content: attr(data-title);
+    /* Obtener el texto del atributo data-title */
+    position: absolute;
+    top: -30px;
+    /* Posición del texto arriba del botón */
+    color: white;
+    /* Color del texto */
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 13px;
+    white-space: nowrap;
+    /* Evita que el texto se divida en múltiples líneas */
+    left: 50%;
+    /* Centra horizontalmente */
+    transform: translateX(-50%);
+    opacity: 0;
+    /* Oculta inicialmente el texto */
+    transition: opacity 0.9s ease;
+    /* Transición de la opacidad */
+}
+
+.child:hover::before {
+    opacity: 1;
+    /* Muestra el texto al pasar el mouse sobre el botón */
+}

@@ -176,31 +176,45 @@
     </div>
     <div class="page-header container-fluid bg-secondary pt-0 pt-lg-1 pb-1 mb-4">
         <div class="row align-items-center py-4">
-            <div class="col-md-6 offset-md-6 text-center text-md-right">
-                <form class="form-inline">
-                    <input class="form-control mr-sm-2 ml-auto" type="search" placeholder="Buscar" aria-label="Buscar"
-                        oninput="searchProducts(this.value)">
-                    <button class="btn btn-outline-dark my-2 my-sm-0" type="submit">Buscar</button>
-                </form>
+            <div class="col-md-9 text-center text-md-right">
+                <!-- Columna para el campo de búsqueda -->
+                <div class="InputContainer">
+                    <input required="" type="text" name="text" class="input">
+                    <label class="label">Buscar <i class="fas fa-search"></i></label>
+                </div>
             </div>
+            <div class="col-md-3"></div> <!-- Espacio en blanco para separar las columnas -->
         </div>
     </div>
-    <div class="container-fluid" style="background-color: #D3D3D3; margin-top: -50px;">
+
+    <div class="container-fluid" style="background-color: #D3D3D3; margin-top: -70px;">
         <div class="container">
-            <h1 class="display-4 text-center mb-5">Explora nuestro Catalogo</h1>
+            <h1 class="display-4 text-center mb-5">Explora nuestras impresoras 3D</h1>
             <div class="row row-cols-lg-4 row-cols-md-3 justify-content-center">
                 <?php
+                // Consulta a la base de datos para obtener productos de la categoría 5
                 $sql = "SELECT * FROM productos WHERE Pro_Categoria = 1";
                 $result = mysqli_query($link, $sql);
+
+                // Verificar si se encontraron productos en la categoría 1b
                 if (mysqli_num_rows($result) > 0) {
+                    // Iterar sobre los resultados y mostrar cada producto
                     while ($row = mysqli_fetch_assoc($result)) {
                         ?>
                         <div class="col mb-4">
-                        <div class="card h-100 position-relative">
-                        <img src="<?php echo $row['nombre_imagen']; ?>" class="card-img-top" style="height: 200px; object-fit: contain;" alt="<?php echo $row['Pro_Nombre']; ?>">
-                                <div
+                            <div class="card">
+                                <img src="<?php echo $row['nombre_imagen']; ?>" class="card-img-top"
+                                    style="height: 200px; object-fit: contain;" alt="<?php echo $row['Pro_Nombre']; ?>">
+                                <div class="overlay position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
                                     class="overlay position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
                                     <?php if ($row['Pro_Cantidad'] > 0) { ?>
+                                        <a href="#" class="btn btn-primary btn-lg agregarAlCarritoBtn"
+                                            data-id="<?php echo $row['Identificador']; ?>"
+                                            data-name="<?php echo $row['Pro_Nombre']; ?>"
+                                            data-price="<?php echo $row['Pro_PrecioVenta']; ?>"><i class="fas fa-cart-plus"></i></a>
+                                    <?php } else { ?>
+                                        <button class="btn btn-primary btn-lg agregarAlCarritoBtn" disabled><i
+                                                class="fas fa-cart-plus"></i></button>
                                     <?php } ?>
                                     <a href="#" class="btn btn-secondary btn-lg mx-2 detallesBtn" data-toggle="modal"
                                         data-target="#detalleProductoModal" data-id="<?php echo $row['Identificador']; ?>"
@@ -209,33 +223,24 @@
                                         data-price="<?php echo $row['Pro_PrecioVenta']; ?>"
                                         style="background-color: #E42E24;"><i class="fas fa-search"></i></a>
                                 </div>
+
                                 <div class="card-body">
                                     <h5 class="card-title mb-2"
                                         style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
-                                        <?php echo $row['Pro_Nombre']; ?></h5>
+                                        <?php echo $row['Pro_Nombre']; ?>
+                                    </h5>
                                     <?php if ($row['Pro_Cantidad'] == 0) { ?>
-                                        <div class="price-box text-center"
-                                            style="position: absolute; bottom: 0; left: 0; right: 0;">
-                                            <!-- Centra el cuadro del precio -->
-                                            <div style="display: inline-block;padding: 5px; border-radius: 5px;">
-                                                <!-- Cuadro rojo -->
-                                                <span style="color: red; font-weight: bold; font-size: 20px;">Agotado</span>
-                                                <!-- Establece el color del texto "Agotado" en rojo y aumenta el tamaño de la fuente -->
-                                            </div>
+                                        <div class="text-center">
+                                            <span style="color: red; font-weight: bold; font-size: 20px;">Agotado</span>
                                         </div>
                                     <?php } else { ?>
-                                        <div class="price-box text-center"
-                                            style="position: absolute; bottom: 0; left: 0; right: 0;">
-                                            <!-- Centra el cuadro del precio -->
-                                            <div style="display: inline-block; padding: 5px; border-radius: 5px;">
-                                                <!-- Cuadro rojo -->
-                                                <p class="price mb-0" style="color: black;">
-                                                    USD-<?php echo $row['Pro_PrecioVenta']; ?></p>
-                                                <!-- Establece el color del precio en negro -->
-                                            </div>
+                                        <div class="text-center">
+                                            <!-- Precio -->
+                                            <p class="price mb-0">USD-<?php echo $row['Pro_PrecioVenta']; ?></p>
                                         </div>
                                     <?php } ?>
                                 </div>
+
                             </div>
                         </div>
                         <?php
@@ -337,7 +342,6 @@
     <script src="mail/contact.js"></script>
     <script src="js/main.js"></script>
     <script src="../MUNDO 3D/js/productosvisi.js"></script>
-</body>
 </body>
 
 </html>

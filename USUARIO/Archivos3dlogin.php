@@ -83,7 +83,7 @@ $result = mysqli_query($link, $sql);
     <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
     <link href="css\misestilos.css" rel="stylesheet">
-    <link rel="stylesheet" href="../css/normalize.css">  
+    <link rel="stylesheet" href="../css/normalize.css">
 </head>
 
 <body>
@@ -258,39 +258,77 @@ $result = mysqli_query($link, $sql);
         <div class="row align-items-center py-4">
             <div class="col-md-6 text-center text-md-left offset-md-0">
                 <div class="InputContainer">
-                    <input placeholder="Buscar un producto" id="input" class="input" name="text" type="text">
-
+                    <input required="" type="text" id="nombre_producto" class="input" placeholder="Buscar producto...">
                 </div>
+                <div id="resultado_busqueda" class="col-md-6 mt-3"></div>
             </div>
             <style>
                 .InputContainer {
-                    width: 210px;
-                    height: 50px;
                     display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    background: linear-gradient(to bottom, rgb(227, 213, 255), rgb(255, 231, 231));
-                    border-radius: 30px;
-                    overflow: hidden;
-                    cursor: pointer;
-                    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.075);
+                    flex-direction: column;
+                    gap: 7px;
+                    position: relative;
+                    color: white;
+                    margin-top: 0%;
+
+                }
+
+                @media (max-width: 1500px) {
+                    .InputContainer {
+                        display: none;
+                        /* Ocultar el contenedor en pantallas más pequeñas que 768px */
+                    }
+                }
+
+                .InputContainer .label {
+                    font-size: 15px;
+                    padding-left: 10px;
+                    position: absolute;
+                    top: 13px;
+                    transition: 0.3s;
+                    pointer-events: none;
+                    color: black;
                 }
 
                 .input {
-                    width: 200px;
-                    height: 40px;
+                    width: 300px;
+                    height: 45px;
                     border: none;
                     outline: none;
-                    caret-color: rgb(255, 81, 0);
-                    background-color: rgb(255, 255, 255);
-                    border-radius: 30px;
-                    padding-left: 15px;
-                    letter-spacing: 0.8px;
-                    color: rgb(19, 19, 19);
-                    font-size: 13.4px;
+                    padding: 0px 7px;
+                    border-radius: 6px;
+                    color: #fff;
+                    font-size: 15px;
+                    background-color: transparent;
+                    box-shadow: 3px 3px 10px rgba(0, 0, 0, 1),
+                        -1px -1px 6px rgba(255, 255, 255, 0.4);
+                }
+
+                .input:focus {
+                    border: 2px solid transparent;
+                    color: black;
+                    box-shadow: 3px 3px 10px rgba(0, 0, 0, 1),
+                        -1px -1px 6px rgba(255, 255, 255, 0.4),
+                        inset 3px 3px 10px rgba(0, 0, 0, 1),
+                        inset -1px -1px 6px rgba(255, 255, 255, 0.4);
+                }
+
+                .InputContainer .input:valid~.label,
+                .InputContainer .input:focus~.label {
+                    transition: 0.3s;
+                    padding-left: 2px;
+                    transform: translateY(-35px);
+                }
+
+                .InputContainer .input:valid,
+                .InputContainer .input:focus {
+                    box-shadow: 3px 3px 10px rgba(0, 0, 0, 1),
+                        -1px -1px 6px rgba(255, 255, 255, 0.4),
+                        inset 3px 3px 10px rgba(0, 0, 0, 1),
+                        inset -1px -1px 6px rgba(255, 255, 255, 0.4);
                 }
             </style>
-    </div>
+        </div>
     </div>
     <script>
         function searchProducts(searchTerm) {
@@ -330,9 +368,8 @@ $result = mysqli_query($link, $sql);
                         ?>
                         <div class="col-lg-3 col-md-6 product">
                             <div class="card mb-5" style="height: 250px;">
-                            <img src="<?php echo $row['nombre_imagen']; ?>" class="card-img-top"
-                                    class="card-img-top" style="height: 200px; object-fit: cover;"
-                                    alt="<?php echo $row["Pro_Nombre"]; ?>">
+                                <img src="<?php echo $row['nombre_imagen']; ?>" class="card-img-top" class="card-img-top"
+                                    style="height: 200px; object-fit: cover;" alt="<?php echo $row["Pro_Nombre"]; ?>">
                                 <div class="card-body">
                                     <h5 class="card-title"
                                         style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
@@ -340,8 +377,12 @@ $result = mysqli_query($link, $sql);
                                     </h5>
                                 </div>
                                 <div class="hover-icons">
-                                    <a href="#" class="search-icon" data-toggle="modal" data-target="#modal_<?php echo $row["Identificador"]; ?>"><i class="fas fa-search"></i></a>
-                                    <a href="#" class="download-icon" onclick="downloadImage('<?php echo base64_encode($row['imagen_principal']); ?>', '<?php echo $row["Pro_Nombre"]; ?>.jpg')"><i class="fas fa-download"></i></a>
+                                    <a href="#" class="search-icon" data-toggle="modal"
+                                        data-target="#modal_<?php echo $row["Identificador"]; ?>"><i
+                                            class="fas fa-search"></i></a>
+                                    <a href="#" class="download-icon"
+                                        onclick="downloadImage('<?php echo base64_encode($row['imagen_principal']); ?>', '<?php echo $row["Pro_Nombre"]; ?>.jpg')"><i
+                                            class="fas fa-download"></i></a>
                                 </div>
                             </div>
                         </div>
@@ -367,7 +408,7 @@ $result = mysqli_query($link, $sql);
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
                                         <a href="#" class="btn btn-danger"
-                                        onclick="downloadImage('<?php echo base64_encode($row['imagen_principal']); ?>', '<?php echo $row["Pro_Nombre"]; ?>.jpg')">Descargar</a>
+                                            onclick="downloadImage('<?php echo base64_encode($row['imagen_principal']); ?>', '<?php echo $row["Pro_Nombre"]; ?>.jpg')">Descargar</a>
                                     </div>
                                 </div>
                             </div>
@@ -386,6 +427,7 @@ $result = mysqli_query($link, $sql);
             position: relative;
             overflow: hidden;
         }
+
         .card .hover-icons {
             position: absolute;
             top: 0;
@@ -399,9 +441,11 @@ $result = mysqli_query($link, $sql);
             opacity: 0;
             transition: opacity 0.3s;
         }
+
         .card:hover .hover-icons {
             opacity: 1;
         }
+
         .hover-icons a {
             color: white;
             font-size: 1.5em;
@@ -409,9 +453,11 @@ $result = mysqli_query($link, $sql);
             padding: 15px;
             border-radius: 5px;
         }
+
         .hover-icons a.search-icon {
             background-color: blue;
         }
+
         .hover-icons a.download-icon {
             background-color: red;
         }
@@ -439,32 +485,34 @@ $result = mysqli_query($link, $sql);
                 </a>
                 <p>¡Adéntrate en un mundo tridimensional como nunca antes! ¡Bienvenid@ nuestra página 3D, donde tus
                     sueños cobran vida!</p>
-                    <!--redes sociales html-->
+                <!--redes sociales html-->
                 <div class="parent2">
-                <div class="child child-2" data-title="Instagram">
-                    <a href="https://www.instagram.com/" target="_blank"
-                        rel="noopener noreferrer"><!--ruta de la pagina de instagram-->
-                        <button id="button1" class="button btn-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512" fill="#ff00ff">
-                                <path
-                                    d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z">
-                                </path>
-                            </svg>
-                    </a>
-                    </button>
+                    <div class="child child-2" data-title="Instagram">
+                        <a href="https://www.instagram.com/" target="_blank"
+                            rel="noopener noreferrer"><!--ruta de la pagina de instagram-->
+                            <button id="button1" class="button btn-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"
+                                    fill="#ff00ff">
+                                    <path
+                                        d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z">
+                                    </path>
+                                </svg>
+                        </a>
+                        </button>
+                    </div>
+                    <div class="child child-4" data-title="Facebook">
+                        <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">
+                            <button id="button1" class="button btn-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 320 512"
+                                    fill="#4267B2">
+                                    <path
+                                        d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z">
+                                    </path>
+                                </svg>
+                        </a>
+                        </button>
+                    </div>
                 </div>
-                <div class="child child-4" data-title="Facebook">
-                    <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">
-                        <button id="button1" class="button btn-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 320 512" fill="#4267B2">
-                                <path
-                                    d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z">
-                                </path>
-                            </svg>
-                    </a>
-                    </button>
-                </div>
-            </div>
             </div>
             <div class="col-lg-4 col-md-6 mb-5">
                 <h4 class="text-white mb-4">Ponerse en contacto</h4>
@@ -488,8 +536,8 @@ $result = mysqli_query($link, $sql);
             </div>
         </div>
     </div>
-            <style>
-            .parent2 {
+    <style>
+        .parent2 {
             width: 30%;
             height: 50%;
             display: flex;
@@ -567,8 +615,8 @@ $result = mysqli_query($link, $sql);
             opacity: 1;
             /* Muestra el texto al pasar el mouse sobre el botón */
         }
-        </style>
-<!--redes sociales html-->
+    </style>
+    <!--redes sociales html-->
     <div class="container-fluid bg-dark text-white py-4 px-sm-3 px-md-5">
         <p class="m-0 text-center text-white">
             &copy; <a class="text-white font-weight-medium" href="#">MUNDO 3D</a>. Todos los derechos reservados
