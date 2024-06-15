@@ -87,7 +87,7 @@ if (isset($_SESSION['user_id'])) {
         }
 
         .cuadro-global {
-            background-color: #0077cc;
+            background-color: #000000;
             /* Color de fondo del cuadro global */
             padding: 20px;
             border-radius: 10px;
@@ -100,7 +100,15 @@ if (isset($_SESSION['user_id'])) {
             font-weight: bold;
             margin-bottom: 30px;
             text-align: center;
-            color: #333;
+            color: #ffffff;
+        }
+
+        .titulo-2 {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            text-align: center;
+            color: #000000;
         }
 
         .cuadro-productos {
@@ -194,7 +202,8 @@ if (isset($_SESSION['user_id'])) {
 </head>
 <style>
     body {
-        background: linear-gradient(to bottom right, #6ca6cd, #ffb6c1);
+        background: linear-gradient(to bottom right, #dddddd, #dddddd);
+
     }
 </style>
 <a href="../USUARIO/Catalogologin.php" class="btn btn-link">
@@ -210,7 +219,7 @@ if (isset($_SESSION['user_id'])) {
         <div class="row">
             <div class="col-md-6">
                 <div class="cuadro-productos">
-                    <h3 class="titulo">Productos</h3>
+                    <h3 class="titulo-2">Productos</h3>
                     <div class="text-right mb-3">
                     </div>
                     <!-- Iterar sobre los resultados de la consulta -->
@@ -262,11 +271,11 @@ if (isset($_SESSION['user_id'])) {
 
             <div class="col-md-6">
                 <div class="cuadro-pago">
-                    <h2 class="titulo">Resumen de compra</h2>
+                    <h2 class="titulo-2">Resumen de compra</h2>
                     <?php if ($total_a_pagar > 0) { ?>
                         <!-- Subtotal -->
                         <div class="subtotal">
-                            Total a pagar: <span id="total">$<?php echo number_format($total_a_pagar, 2, '.', ','); ?></span>
+                            Total a pagar: <span id="total" >$<?php echo number_format($total_a_pagar, 2, '.', ','); ?></span>
                         </div>
 
                         <br>
