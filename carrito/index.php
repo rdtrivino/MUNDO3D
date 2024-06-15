@@ -162,19 +162,15 @@ if (isset($_SESSION['user_id'])) {
             margin-bottom: 15px;
         }
 
-        .btn-vaciar-carrito,
-        .btn-pagar {
-            font-size: 18px;
-            width: 150px;
-            margin-top: 20px;
-        }
-
         .subtotal {
-            font-size: 24px;
-            font-weight: bold;
-            text-align: right;
-            margin-top: 30px;
-        }
+        font-size: 24px;
+        font-weight: bold;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        text-align: left;
+        margin-top: 30px;
+    }
 
         .cantidad-container {
             display: flex;
@@ -209,16 +205,13 @@ if (isset($_SESSION['user_id'])) {
     <div class="cuadro-global">
         <h2 class="titulo">
             <!-- Icono del carrito junto al título -->
-            <i class="bi bi-cart-fill"></i> Mi Carrito
+            <i class="bi bi-cart-fill"></i> Confirmación de compra
         </h2>
         <div class="row">
             <div class="col-md-6">
                 <div class="cuadro-productos">
-                    <h3 class="titulo">Productos en el Carrito</h3>
+                    <h3 class="titulo">Productos</h3>
                     <div class="text-right mb-3">
-                        <a href="index.php?vaciar=1" class="btn btn-danger btn-vaciar-carrito">
-                            <i class="bi bi-cart-fill"></i> Vaciar
-                        </a>
                     </div>
                     <!-- Iterar sobre los resultados de la consulta -->
                     <?php
@@ -241,17 +234,7 @@ if (isset($_SESSION['user_id'])) {
                                     <div class="col-md-8">
                                         <div class="card-body">
                                             <h5 class="card-title"><?php echo $fila['nombre']; ?></h5>
-                                            <?php
-                                            if (isset($fila['descripcion'])) {
-                                                ?>
-                                                <p class="card-text"><?php echo $fila['descripcion']; ?></p>
-
-                                                <?php
-                                            } else {
-                                                // Si la columna 'descripcion' no está presente, puedes mostrar un mensaje alternativo o dejarlo en blanco
-                                                echo "<p>No hay descripción disponible para este producto.</p>";
-                                            }
-                                            ?>
+                                           
                                             <p class="card-text precio-producto">$<?php echo $fila['precio_venta']; ?></p>
                                             <div class="cantidad-container">
                                                 <!-- Botones para ajustar la cantidad -->
@@ -279,12 +262,14 @@ if (isset($_SESSION['user_id'])) {
 
             <div class="col-md-6">
                 <div class="cuadro-pago">
-                    <h2 class="titulo">Resumen y Pago</h2>
+                    <h2 class="titulo">Resumen de compra</h2>
                     <?php if ($total_a_pagar > 0) { ?>
                         <!-- Subtotal -->
                         <div class="subtotal">
-                            Total a pagar: <span id="total">$<?php echo number_format($total_a_pagar, 2); ?></span>
+                            Total a pagar: <span id="total">$<?php echo number_format($total_a_pagar, 2, '.', ','); ?></span>
                         </div>
+
+                        <br>
 
                         <!-- Otro contenido para métodos de pago -->
                         <div class="checkoutpro">
