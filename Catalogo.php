@@ -203,8 +203,9 @@
                         ?>
                         <div class="col mb-4">
                             <div class="card">
-                                <img src="<?php echo $row['nombre_imagen']; ?>" class="card-img-top"
+                                <img src="<?php echo substr($row['nombre_imagen'], 3) ?>" class="card-img-top"
                                     style="height: 200px; object-fit: contain;" alt="<?php echo $row['Pro_Nombre']; ?>">
+
                                 <div class="overlay position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
                                     class="overlay position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
                                     <?php if ($row['Pro_Cantidad'] > 0) { ?>
