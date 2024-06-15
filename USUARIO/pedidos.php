@@ -129,23 +129,6 @@ function obtenerNombreEstado($IdentificadorEstado, $conexion)
       background-color: #e9ecef;
     }
 
-    .home-icon {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      cursor: pointer;
-      z-index: 999;
-    }
-
-    .home-icon img {
-      width: 50px;
-      height: 50px;
-      background-color: white;
-      padding: 5px;
-      border-radius: 50%;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-
     .text-white {
       color: white;
     }
@@ -175,13 +158,80 @@ function obtenerNombreEstado($IdentificadorEstado, $conexion)
       top: 10px;
       right: 10px;
     }
+
+      /* Boton Home */
+            .Btn-1 {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        width: 45px;
+        height: 45px;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        transition-duration: .3s;
+        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.199);
+        background-color: rgb(0, 0, 0);
+        margin-top: 10px;
+        margin-left: 10px;
+        }
+
+        /* plus sign */
+        .sign {
+        width: 100%;
+        transition-duration: .3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        }
+
+        .sign svg {
+        width: 17px;
+        }
+
+        .sign svg path {
+        fill: white;
+        }
+        /* text */
+        .text {
+        position: absolute;
+        right: -10px; /* Ajusta la posición a la derecha, con un margen de 10px */
+        opacity: 0; /* Cambia la opacidad para hacer visible el texto */
+        color: white;
+        font-size: 1.2em;
+        font-weight: 600;
+        transition-duration: .3s;
+        }
+        /* hover effect on button width */
+        .Btn-1:hover {
+        width: 125px;
+        border-radius: 40px;
+        transition-duration: .3s;
+        }
+
+        .Btn-1:hover .sign {
+        width: 30%;
+        transition-duration: .3s;
+        padding-left: 20px;
+        }
+        /* hover effect button's text */
+        .Btn-1:hover .text {
+        opacity: 1;
+        width: 70%;
+        transition-duration: .3s;
+        padding-right: 10px;
+        }
+        /* button click effect*/
+        .Btn-1:active {
+        transform: translate(2px ,2px);
+        }
   </style>
 </head>
 
-<body style="background: linear-gradient(135deg, #2980b9, #2c3e50); color: white;">
-  <a href="Catalogologin.php" class="home-icon">
-    <img src="/../MUNDO 3D/images/bx-home-alt-2.svg" alt="Ir a Inicio">
-  </a>
+<body style="background: linear-gradient(to bottom right, #dddddd, #dddddd);">
+
   <div id="buttons-container" style="display: flex; justify-content: flex-end; align-items: center;">
     <a href="#" class="font-small text-white font-weight-bold mr-3" onclick="adjustFontSize('small')">A</a>
     <a href="#" class="font-medium text-white font-weight-bold mr-3" onclick="adjustFontSize('medium')">A</a>
@@ -192,6 +242,15 @@ function obtenerNombreEstado($IdentificadorEstado, $conexion)
     </div>
   </div>
   <div class="container-fluid mt-4">
+
+    <a class="Btn-1" href="../USUARIO/Catalogologin.php">
+      <div class="sign">
+          <img src="../images/iconizer-bx-home-alt-2.2.svg" alt="Inicio">
+      </div>
+      <div class="text">INICIO</div>
+    </a>
+
+
     <h2 class="text-center mb-4">Mis Pedidos</h2>
     <div class="table-responsive">
       <table class="table table-striped table-bordered table-hover">
