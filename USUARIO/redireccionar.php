@@ -8,41 +8,47 @@
   <link rel="shortcut icon" href="../images/Logo Mundo 3d.png" type="image/x-icon">
   <title>Redireccionando...</title>
   <style>
-.loader {
-  width: fit-content;
-  font-weight: bold;
-  font-family: monospace;
-  font-size: 30px;
-  background: radial-gradient(circle closest-side,#000 94%,#0000) right/calc(200% - 1em) 100%;
-  animation: l24 1s infinite alternate linear;
-}
+    .loader {
+      width: fit-content;
+      font-weight: bold;
+      font-family: monospace;
+      font-size: 30px;
+      background: radial-gradient(circle closest-side, #000 94%, #0000) right/calc(200% - 1em) 100%;
+      animation: l24 1s infinite alternate linear;
+    }
 
-.loader::before {
-  content: "Cargando...";
-  line-height: 1em;
-  color: #0000;
-  background: inherit;
-  background-image: radial-gradient(circle closest-side,#fff 94%,#000);
-  -webkit-background-clip: text;
-  background-clip: text;
-}
+    .loader::before {
+      content: "Cargando...";
+      line-height: 1em;
+      color: #0000;
+      background: inherit;
+      background-image: radial-gradient(circle closest-side, #fff 94%, #000);
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
 
-@keyframes l24 {
-  100% {
-    background-position: left
-  }
-}
-.loader{
-            margin: 45%; /* Centrar horizontalmente */
-            width: 80%; /* Ancho del elemento */
-            max-width: 400px; /* Ancho máximo del elemento */
-            margin-top: 20%;
-        }
+    @keyframes l24 {
+      100% {
+        background-position: left
+      }
+    }
 
-        .loader{
-            width: 100%; /* Ajustar el tamaño del SVG al contenedor */
-            height: auto; /* Mantener la proporción de aspecto */
-        }
+    .loader {
+      margin: 45%;
+      /* Centrar horizontalmente */
+      width: 80%;
+      /* Ancho del elemento */
+      max-width: 400px;
+      /* Ancho máximo del elemento */
+      margin-top: 20%;
+    }
+
+    .loader {
+      width: 100%;
+      /* Ajustar el tamaño del SVG al contenedor */
+      height: auto;
+      /* Mantener la proporción de aspecto */
+    }
   </style>
   <script>
     setTimeout(function () {
@@ -52,7 +58,7 @@
 </head>
 
 <body style="background-color: #D3D3D3;">
-<div class="loader"></div>
+  <div class="loader"></div>
 
 </body>
 
