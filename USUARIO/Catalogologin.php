@@ -245,7 +245,7 @@
                 </div>
             </div>
 
-            <div class="container-fluid" style="background-color: #D3D3D3; margin-top: -70px;">
+            <div class="container-fluid" style="background-color: #D3D3D3; margin-top: 50px;">
                 <div class="container">
                     <h1 class="display-4 text-center mb-5">Explora Nuestras Impresoras 3D</h1>
                     <div class="row row-cols-lg-4 row-cols-md-3 justify-content-center">

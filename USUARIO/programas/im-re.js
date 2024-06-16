@@ -72,7 +72,6 @@ function confirmLogout() {
     }
 }
 //vaciar carrito ________________________________________________________________________________________________________
-// Función para vaciar el carrito
 function vaciarCarrito() {
     var xhr = new XMLHttpRequest();
     xhr.open("POST", "programas/funciones-in-re.php", true);
