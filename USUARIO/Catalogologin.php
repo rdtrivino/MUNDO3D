@@ -60,11 +60,13 @@
                                 <div class="dropdown" style="position: relative; white-space: nowrap;">
                                     <div id="dropdown-menu" class="dropdown-menu dropdown-menu-right"
                                         aria-labelledby="menu-toggle" style="background-color: black;"> <a
-                                            href="confi.php" class="dropdown-menu-item">
+                                            href="../Programas/redireccionarpaginas.php?page=configuracion"
+                                            class="dropdown-menu-item">
                                             <i class="fas fa-cogs"></i> <!-- Icono de configuración -->
                                             Configurar mi cuenta
                                         </a>
-                                        <a href="pedidos.php" class="dropdown-menu-item bm-2">
+                                        <a href="../Programas/redireccionarpaginas.php?page=pedidos"
+                                            class="dropdown-menu-item bm-2">
                                             <i class="fas fa-list"></i> <!-- Icono de lista -->
                                             Mis pedidos
                                         </a>
@@ -98,10 +100,14 @@
                 </button>
                 <div class="collapse navbar-collapse justify-content-between px-3" id="navbarCollapse">
                     <div class="navbar-nav ml-auto py-0">
-                        <a href="Catalogologin.php" class="nav-item nav-link">IMPRESORAS</a>
-                        <a href="Repuestoslogin.php" class="nav-item nav-link">REPUESTOS</a>
-                        <a href="Archivos3dlogin.php" class="nav-item nav-link">ARCHIVOS 3D</a>
-                        <a href="serviciodeimpresion.php" class="nav-item nav-link">SERVICIO DE IMPRESION</a>
+                        <a href="../Programas/redireccionarpaginas.php?page=impresoras"
+                            class="nav-item nav-link">IMPRESORAS</a>
+                        <a href="../Programas/redireccionarpaginas.php?page=repuestos"
+                            class="nav-item nav-link">REPUESTOS</a>
+                        <a href="../Programas/redireccionarpaginas.php?page=archivos3d"
+                            class="nav-item nav-link">ARCHIVOS 3D</a>
+                        <a href="../Programas/redireccionarpaginas.php?page=servicioimpresion"
+                            class="nav-item nav-link">SERVICIO DE IMPRESION</a>
                     </div>
                 </div>
             </nav>
@@ -257,7 +263,7 @@
     </div>
     <div class="container-fluid" style="background-color: #D3D3D3; margin-top: -70px;">
         <div class="container">
-            <h1 class="display-4 text-center mb-5">Explora nuestros repuestos 3D</h1>
+            <h1 class="display-4 text-center mb-5">Explora Nuestras Impresoras 3D</h1>
             <div class="row row-cols-lg-4 row-cols-md-3 justify-content-center">
                 <?php
                 // Consulta a la base de datos para obtener productos de la categoría 5

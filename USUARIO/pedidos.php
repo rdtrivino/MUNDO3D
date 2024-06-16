@@ -273,7 +273,7 @@ function obtenerNombreEstado($IdentificadorEstado, $conexion)
 
     <div class="container-fluid mt-4">
       <div class="d-flex justify-content-between align-items-center mb-4 position-relative">
-        <a class="Btn-1" href="../USUARIO/Catalogologin.php">
+        <a class="Btn-1" href=../Programas/redireccionarpaginas.php?page=impresoras">
           <div class="sign">
             <img src="../images/iconizer-bx-home-alt-2.2.svg" alt="Inicio">
           </div>

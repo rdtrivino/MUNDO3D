@@ -290,7 +290,7 @@ mysqli_close($link);
 </head>
 
 <body style="background: linear-gradient(to bottom right, #dddddd, #dddddd);">
-    <a class="Btn-1" href="../USUARIO/Catalogologin.php">
+    <a class="Btn-1" href="../Programas/redireccionarpaginas.php?page=impresoras">
         <div class="sign">
             <img src="../images/iconizer-bx-home-alt-2.2.svg" alt="Inicio">
         </div>
