@@ -184,21 +184,132 @@ mysqli_close($link);
             top: 10px;
             right: 10px;
         }
+
+        .font-small,
+        .font-medium,
+        .font-large {
+            background-color: transparent;
+            /* Quitar el fondo */
+            color: black;
+            /* Color de texto blanco */
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            /* Negrita */
+        }
+
+        /* Boton Home */
+        .Btn-1 {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            width: 45px;
+            height: 45px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition-duration: .3s;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.199);
+            background-color: rgb(0, 0, 0);
+            margin-top: 10px;
+            margin-left: 10px;
+        }
+
+        /* plus sign */
+        .sign {
+            width: 100%;
+            transition-duration: .3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sign svg {
+            width: 17px;
+        }
+
+        .sign svg path {
+            fill: white;
+        }
+
+        /* text */
+        .text {
+            position: absolute;
+            right: -10px;
+            /* Ajusta la posición a la derecha, con un margen de 10px */
+            opacity: 0;
+            /* Cambia la opacidad para hacer visible el texto */
+            color: white;
+            font-size: 1.2em;
+            font-weight: 600;
+            transition-duration: .3s;
+        }
+
+
+
+        /* hover effect on button width */
+        .Btn-1:hover {
+            width: 125px;
+            border-radius: 40px;
+            transition-duration: .3s;
+        }
+
+        .Btn-1:hover .sign {
+            width: 30%;
+            transition-duration: .3s;
+            padding-left: 20px;
+        }
+
+        /* hover effect button's text */
+        .Btn-1:hover .text {
+            opacity: 1;
+            width: 70%;
+            transition-duration: .3s;
+            padding-right: 10px;
+        }
+
+        /* button click effect*/
+        .Btn-1:active {
+            transform: translate(2px, 2px);
+        }
+
+        .title-container h2 {
+            margin: 0;
+            pointer-events: auto;
+        }
+
+        .title-container {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+        }
     </style>
 </head>
 
-<body style="background: linear-gradient(135deg, #2980b9, #2c3e50); color: white;">
-    <a href="Catalogologin.php" class="home-icon">
-        <img src="/../MUNDO 3D/images/bx-home-alt-2.svg" alt="Ir a Inicio">
+<body style="background: linear-gradient(to bottom right, #dddddd, #dddddd);">
+    <a class="Btn-1" href="../USUARIO/Catalogologin.php">
+        <div class="sign">
+            <img src="../images/iconizer-bx-home-alt-2.2.svg" alt="Inicio">
+        </div>
+        <div class="text">INICIO</div>
     </a>
 
-    <div id="buttons-container" style="display: flex; justify-content: flex-end; align-items: center;">
-        <a href="#" class="font-small text-white font-weight-bold mr-3" onclick="adjustFontSize('small')">A</a>
-        <a href="#" class="font-medium text-white font-weight-bold mr-3" onclick="adjustFontSize('medium')">A</a>
-        <a href="#" class="font-large text-white font-weight-bold mr-3" onclick="adjustFontSize('large')">A</a>
-        <div id="disabled-icon">
-            <i class="fas fa-wheelchair fa-lg text-white" onclick="aumentarTamano()" onmouseover="cambiarCursor(event)"
-                onmouseout="restaurarCursor()"></i>
+    <div id="buttons-container"
+        style="display: flex; justify-content: flex-end; align-items: center; margin-right: 10px;">
+        <div class="button-box">
+            <button class="font-small text-black" onclick="disminuirTamano()">A</button>
+        </div>
+        <div class="button-box">
+            <button class="font-medium text-black" onclick="ajustarTamano('medium')">A</button>
+        </div>
+        <div class="button-box">
+            <button class="font-large text-black" onclick="aumentarTamano()">A</button>
+        </div>
+        <div class="button-box" style="margin-right: 10px;">
+            <i class="fas fa-wheelchair fa-lg text-black"></i>
         </div>
     </div>
     <div class="container mt-5">
@@ -272,34 +383,57 @@ mysqli_close($link);
                 error.style.display = "none";
             }
         }
-        function adjustFontSize(size) {
-            const body = document.body;
-            body.classList.remove('font-small', 'font-medium', 'font-large');
+        var tamanoOriginal = ''; // Variable global para almacenar el tamaño original
 
+        function disminuirTamano() {
+            var currentFontSize = parseFloat(document.body.style.fontSize) || 1;
+            var newFontSize = currentFontSize - 1 + 'rem';
+            document.body.style.fontSize = newFontSize;
+        }
+
+        function ajustarTamano(size) {
             switch (size) {
                 case 'small':
-                    body.classList.add('font-small');
+                    document.body.style.fontSize = 'small';
                     break;
                 case 'medium':
-                    body.classList.add('font-medium');
+                    document.body.style.fontSize = 'medium';
                     break;
                 case 'large':
-                    body.classList.add('font-large');
+                    document.body.style.fontSize = 'large';
+                    break;
+                default:
                     break;
             }
         }
 
         function aumentarTamano() {
-            // Funcionalidad específica para el icono de silla de ruedas
+            // Aumentar el tamaño de fuente
+            var currentFontSize = parseFloat(document.body.style.fontSize) || 1;
+            var newFontSize = currentFontSize + 1 + 'rem';
+            document.body.style.fontSize = newFontSize;
+        }
+
+        function restaurarTamano() {
+            // Restaurar el tamaño de fuente al original guardado
+            if (tamanoOriginal !== '') {
+                document.body.style.fontSize = tamanoOriginal;
+            }
         }
 
         function cambiarCursor(event) {
             event.target.style.cursor = 'pointer';
         }
 
-        function restaurarCursor(event) {
-            event.target.style.cursor = 'default';
+        function restaurarCursor() {
+            document.body.style.cursor = 'default';
         }
+
+        // Guardar el tamaño original al cargar la página
+        document.addEventListener('DOMContentLoaded', function () {
+            tamanoOriginal = window.getComputedStyle(document.body).fontSize;
+        });
+
 
         function checkPasswordMatch() {
             const password = document.getElementById('edit-contrasena').value;

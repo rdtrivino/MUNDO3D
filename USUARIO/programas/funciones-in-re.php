@@ -7,7 +7,12 @@ if (!isset($_SESSION['confirmado']) || $_SESSION['confirmado'] == false) {
     header("Location: ../Programas/autenticacion.php");
     exit(); // Terminamos la ejecución del script después de redirigir
 }
+$_SESSION['carrito'] = array(); // o $_SESSION['carrito'] = []; en PHP >= 5.4
 
+// Puedes realizar otras operaciones aquí si es necesario
+
+// Enviar respuesta al cliente (JavaScript)
+echo "Carrito vaciado correctamente.";
 // Realizamos la consulta para obtener el rol del usuario
 $peticion = "SELECT Usu_rol FROM usuario WHERE Usu_Identificacion = '" . $_SESSION['user_id'] . "'";
 $result = mysqli_query($link, $peticion);

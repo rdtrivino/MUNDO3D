@@ -73,44 +73,24 @@ function confirmLogout() {
 }
 //vaciar carrito ________________________________________________________________________________________________________
 function vaciarCarrito() {
-    if (confirm("¿Estás seguro de que deseas vaciar el carrito?")) {
-        var xhr = new XMLHttpRequest();
-        var url = 'programas/funciones-in-re.php'; // Ruta al script PHP que manejará la acción de vaciar el carrito
-
-        xhr.open("POST", url, true);
-        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4) {
-                if (xhr.status === 200) {
-                    try {
-                        var response = JSON.parse(xhr.responseText);
-                        if (response.success) {
-                            alert("El carrito ha sido vaciado correctamente.");
-                            location.reload(); // Recargar la página después de vaciar el carrito
-                        } else {
-                            console.error('Error al vaciar el carrito:', response.message);
-                            alert("Hubo un error al vaciar el carrito: " + response.message);
-                        }
-                    } catch (e) {
-                        console.error('Error al parsear JSON:', e);
-                        alert("Hubo un problema al procesar la respuesta del servidor.");
-                    }
-                } else {
-                    console.error('Error al vaciar el carrito:', xhr.status, xhr.statusText);
-                    alert("Hubo un problema al comunicarse con el servidor.");
-                }
+    // Enviar una solicitud AJAX al servidor para vaciar el carrito
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "programas/funciones-in-re.php", true); // Asegúrate de que la URL sea correcta
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            // Respuesta del servidor
+            alert(xhr.responseText); // Muestra el mensaje del servidor
+            
+            // Actualizar la vista del carrito en la página
+            const carritoElement = document.getElementById('carrito');
+            if (carritoElement) {
+                carritoElement.innerHTML = '<p>El carrito está vacío.</p>';
             }
-        };
-
-        // Enviar la solicitud POST vacía, ya que no se requiere ningún dato adicional
-        xhr.send();
-    }
+        }
+    };
+    xhr.send();
 }
-
-        
-
-
 
 //ir a pagar_______________________________________________________________________________________________________
 document.addEventListener("DOMContentLoaded", function () {

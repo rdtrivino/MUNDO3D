@@ -12,23 +12,6 @@ if (isset($_SESSION['user_id'])) {
     $resultado = mysqli_query($link, $sql);
 
 }
-
-// Verificar si se ha enviado la solicitud para vaciar el carrito
-if (isset($_GET['vaciar']) && $_GET['vaciar'] == 1) {
-    // Realizar la consulta para eliminar todos los registros de la tabla 'carrito' asociados al usuario actual
-    if (isset($_SESSION['user_id'])) {
-        $usuario_id = $_SESSION['user_id'];
-        $sql = "DELETE FROM carrito WHERE Pe_Cliente = $usuario_id";
-        if (mysqli_query($link, $sql)) {
-            // Redirigir al usuario de nuevo a la misma página después de vaciar el carrito
-            header("Location: index.php");
-            exit; // Terminar el script después de redirigir
-        } else {
-            // Opcional: mostrar un mensaje de error en caso de fallo en la eliminación
-            echo "<p>Error al vaciar el carrito.</p>";
-        }
-    }
-}
 if (isset($_SESSION['user_id'])) {
     $usuario_id = $_SESSION['user_id'];
     $sql = "SELECT carrito.*, 
@@ -39,7 +22,7 @@ if (isset($_SESSION['user_id'])) {
         FROM carrito 
         INNER JOIN productos AS productos1 ON carrito.id_producto = productos1.Identificador
         WHERE carrito.Pe_Cliente = '$usuario_id' AND carrito.estado_pago = 'pendiente'";
-        $resultado = mysqli_query($link, $sql);
+    $resultado = mysqli_query($link, $sql);
 
 
     // Calcular el total a pagar
@@ -47,20 +30,6 @@ if (isset($_SESSION['user_id'])) {
     while ($fila = mysqli_fetch_assoc($resultado)) {
         $total_a_pagar += $fila['precio_venta'] * $fila['cantidad'];
     }
-    // Actualizar la cantidad del producto en la base de datos si se ha enviado un formulario para ello
-    if (isset($_POST['product_id']) && isset($_POST['quantity'])) {
-        $producto_id = $_POST['product_id'];
-        $cantidad = $_POST['quantity'];
-
-        $sql_update = "UPDATE carrito SET cantidad = $cantidad WHERE Pe_Cliente = $usuario_id AND id = $producto_id";
-        if (mysqli_query($link, $sql_update)) {
-            echo "La cantidad del producto se ha actualizado correctamente en la base de datos.";
-        } else {
-            echo "Error al actualizar la cantidad del producto en la base de datos: " . mysqli_error($link);
-        }
-    }
-} else {
-    echo "Error: Falta información requerida para actualizar la cantidad del producto.";
 }
 ?>
 
@@ -76,6 +45,8 @@ if (isset($_SESSION['user_id'])) {
     <!-- Enlace a los archivos de Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
     <style>
         body {
             background-color: #f8f9fa;
@@ -171,14 +142,14 @@ if (isset($_SESSION['user_id'])) {
         }
 
         .subtotal {
-        font-size: 24px;
-        font-weight: bold;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        text-align: left;
-        margin-top: 30px;
-    }
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-align: left;
+            margin-top: 30px;
+        }
 
         .cantidad-container {
             display: flex;
@@ -201,74 +172,121 @@ if (isset($_SESSION['user_id'])) {
 
         /* Boton Home */
         .Btn-1 {
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-        width: 60px;
-        height: 60px;
-        border: none;
-        border-radius: 50%;
-        cursor: pointer;
-        position: relative;
-        overflow: hidden;
-        transition-duration: .3s;
-        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.199);
-        background-color: rgb(0, 0, 0);
-        margin-top: 10px;
-        margin-left: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            width: 60px;
+            height: 60px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition-duration: .3s;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.199);
+            background-color: rgb(0, 0, 0);
+            margin-top: 10px;
+            margin-left: 10px;
         }
 
         /* plus sign */
         .sign {
-        width: 100%;
-        transition-duration: .3s;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+            width: 100%;
+            transition-duration: .3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .sign svg {
-        width: 17px;
+            width: 17px;
         }
 
         .sign svg path {
-        fill: white;
+            fill: white;
         }
+
         /* text */
         .text {
-        position: absolute;
-        right: -10px; /* Ajusta la posición a la derecha, con un margen de 10px */
-        opacity: 0; /* Cambia la opacidad para hacer visible el texto */
-        color: white;
-        font-size: 1.2em;
-        font-weight: 600;
-        transition-duration: .3s;
+            position: absolute;
+            right: -10px;
+            /* Ajusta la posición a la derecha, con un margen de 10px */
+            opacity: 0;
+            /* Cambia la opacidad para hacer visible el texto */
+            color: white;
+            font-size: 1.2em;
+            font-weight: 600;
+            transition-duration: .3s;
         }
+
         /* hover effect on button width */
         .Btn-1:hover {
-        width: 125px;
-        border-radius: 40px;
-        transition-duration: .3s;
+            width: 125px;
+            border-radius: 40px;
+            transition-duration: .3s;
         }
 
         .Btn-1:hover .sign {
-        width: 30%;
-        transition-duration: .3s;
-        padding-left: 20px;
+            width: 30%;
+            transition-duration: .3s;
+            padding-left: 20px;
         }
+
         /* hover effect button's text */
         .Btn-1:hover .text {
-        opacity: 1;
-        width: 70%;
-        transition-duration: .3s;
-        padding-right: 10px;
+            opacity: 1;
+            width: 70%;
+            transition-duration: .3s;
+            padding-right: 10px;
         }
+
         /* button click effect*/
         .Btn-1:active {
-        transform: translate(2px ,2px);
+            transform: translate(2px, 2px);
         }
-        
 
+        .text-white {
+            color: white;
+        }
+
+        .font-weight-bold {
+            font-weight: bold;
+        }
+
+        .mr-3 {
+            margin-right: 1rem;
+        }
+
+        .font-small {
+            font-size: 14px;
+        }
+
+        .font-medium {
+            font-size: 16px;
+        }
+
+        .font-large {
+            font-size: 20px;
+        }
+
+        #buttons-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        .font-small,
+        .font-medium,
+        .font-large {
+            background-color: transparent;
+            /* Quitar el fondo */
+            color: black;
+            /* Color de texto blanco */
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            /* Negrita */
+        }
     </style>
 </head>
 <style>
@@ -285,7 +303,20 @@ if (isset($_SESSION['user_id'])) {
     <div class="text">INICIO</div>
 </a>
 
-
+<div id="buttons-container" style="display: flex; justify-content: flex-end; align-items: center; margin-right: 10px;">
+    <div class="button-box">
+        <button class="font-small text-black" onclick="disminuirTamano()">A</button>
+    </div>
+    <div class="button-box">
+        <button class="font-medium text-black" onclick="ajustarTamano('medium')">A</button>
+    </div>
+    <div class="button-box">
+        <button class="font-large text-black" onclick="aumentarTamano()">A</button>
+    </div>
+    <div class="button-box" style="margin-right: 10px;">
+        <i class="fas fa-wheelchair fa-lg text-black"></i>
+    </div>
+</div>
 <div class="container">
     <div class="cuadro-global">
         <h2 class="titulo">
@@ -319,17 +350,13 @@ if (isset($_SESSION['user_id'])) {
                                     <div class="col-md-8">
                                         <div class="card-body">
                                             <h5 class="card-title"><?php echo $fila['nombre']; ?></h5>
-                                           
+
                                             <p class="card-text precio-producto">$<?php echo $fila['precio_venta']; ?></p>
                                             <div class="cantidad-container">
                                                 <!-- Botones para ajustar la cantidad -->
-                                                <button class="btn btn-outline-secondary btn-cantidad"
-                                                    onclick="restarCantidad(<?php echo $fila['id']; ?>)">-</button>
                                                 <input type="text" id="cantidad-<?php echo $fila['id']; ?>"
                                                     class="form-control text-center selector-cantidad"
                                                     value="<?php echo $fila['cantidad']; ?>" aria-label="Cantidad">
-                                                <button class="btn btn-outline-secondary btn-cantidad"
-                                                    onclick="sumarCantidad(<?php echo $fila['id']; ?>)">+</button>
                                             </div>
                                         </div>
                                     </div>
@@ -351,7 +378,8 @@ if (isset($_SESSION['user_id'])) {
                     <?php if ($total_a_pagar > 0) { ?>
                         <!-- Subtotal -->
                         <div class="subtotal">
-                            Total a pagar: <span id="total" >$<?php echo number_format($total_a_pagar, 2, '.', ','); ?></span>
+                            Total a pagar: <span
+                                id="total">$<?php echo number_format($total_a_pagar, 2, '.', ','); ?></span>
                         </div>
 
                         <br>
@@ -394,16 +422,64 @@ if (isset($_SESSION['user_id'])) {
 
 <!-- Scripts JavaScript -->
 <script>
-        $(document).ready(function () {
-            // Agregar event listener para el cambio en el selector de cantidad
-            $(".selector-cantidad").change(function () {
-                actualizarTotal();
-                actualizarCantidadEnBD($(this).data('product-id'), $(this).val());
-            });
+        function disminuirTamano() {
+            var currentFontSize = parseFloat(document.body.style.fontSize) || 1;
+            var newFontSize = currentFontSize - 1 + 'rem';
+            document.body.style.fontSize = newFontSize;
+        }
 
-            // Calcular el total inicial al cargar la página
+    function ajustarTamano(size) {
+        switch (size) {
+            case 'small':
+                document.body.style.fontSize = 'small';
+                break;
+            case 'medium':
+                document.body.style.fontSize = 'medium';
+                break;
+            case 'large':
+                document.body.style.fontSize = 'large';
+                break;
+            default:
+                break;
+        }
+    }
+
+    function aumentarTamano() {
+        // Aumentar el tamaño de fuente
+        var currentFontSize = parseFloat(document.body.style.fontSize) || 1;
+        var newFontSize = currentFontSize + 1 + 'rem';
+        document.body.style.fontSize = newFontSize;
+    }
+
+    function restaurarTamano() {
+        // Restaurar el tamaño de fuente al original guardado
+        if (tamanoOriginal !== '') {
+            document.body.style.fontSize = tamanoOriginal;
+        }
+    }
+
+    function cambiarCursor(event) {
+        event.target.style.cursor = 'pointer';
+    }
+
+    function restaurarCursor() {
+        document.body.style.cursor = 'default';
+    }
+
+    // Guardar el tamaño original al cargar la página
+    document.addEventListener('DOMContentLoaded', function () {
+        tamanoOriginal = window.getComputedStyle(document.body).fontSize;
+    });
+    $(document).ready(function () {
+        // Agregar event listener para el cambio en el selector de cantidad
+        $(".selector-cantidad").change(function () {
             actualizarTotal();
+            actualizarCantidadEnBD($(this).data('product-id'), $(this).val());
         });
+
+        // Calcular el total inicial al cargar la página
+        actualizarTotal();
+    });
 
     function restarCantidad(productId) {
         var cantidadInput = $("#cantidad-" + productId);

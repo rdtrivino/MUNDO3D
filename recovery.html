@@ -62,14 +62,14 @@
         .home-icon img {
             width: 50px;
             height: 50px;
-            background-color: white;
+            background-color: rgb(12, 12, 12);
             padding: 5px;
             border-radius: 50%;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
         .text-white {
-            color: white;
+            color: rgb(10, 10, 10);
         }
 
         .font-weight-bold {
@@ -97,21 +97,122 @@
             top: 10px;
             right: 10px;
         }
+                        /* Boton Home */
+        .Btn-1 {
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+          width: 45px;
+          height: 45px;
+          border: none;
+          border-radius: 50%;
+          cursor: pointer;
+          position: relative;
+          overflow: hidden;
+          transition-duration: .3s;
+          box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.199);
+          background-color: rgb(0, 0, 0);
+          margin-top: 10px;
+          margin-left: 10px;
+          position: absolute;
+          top: 10px; /* Ajusta la distancia desde la parte superior según sea necesario */
+          left: 10px; /* Ajusta la distancia desde la izquierda según sea necesario */
+      }
+
+      /* plus sign */
+      .sign {
+          width: 100%;
+          transition-duration: .3s;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+      }
+
+      .sign svg {
+          width: 17px;
+      }
+
+      .sign svg path {
+          fill: white;
+      }
+
+      /* text */
+      .text {
+          position: absolute;
+          right: -10px;
+          /* Ajusta la posición a la derecha, con un margen de 10px */
+          opacity: 0;
+          /* Cambia la opacidad para hacer visible el texto */
+          color: white;
+          font-size: 1.2em;
+          font-weight: 600;
+          transition-duration: .3s;
+      }
+
+
+
+      /* hover effect on button width */
+      .Btn-1:hover {
+          width: 125px;
+          border-radius: 40px;
+          transition-duration: .3s;
+      }
+
+      .Btn-1:hover .sign {
+          width: 30%;
+          transition-duration: .3s;
+          padding-left: 20px;
+      }
+
+      /* hover effect button's text */
+      .Btn-1:hover .text {
+          opacity: 1;
+          width: 70%;
+          transition-duration: .3s;
+          padding-right: 10px;
+      }
+
+      /* button click effect*/
+      .Btn-1:active {
+          transform: translate(2px, 2px);
+      }
+
+      .title-container h2 {
+          margin: 0;
+          pointer-events: auto;
+      }
+
+      .title-container {
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+          text-align: center;
+      }
+      .text-black {
+  color: black !important;
+}
+
+.text-black-icon {
+  color: black !important;
+}
     </style>
 </head>
 
-<body style="background: linear-gradient(135deg, #2980b9, #2c3e50); color: white;">
-    <a href="index.html" class="home-icon">
-        <img src="../MUNDO 3D/images/bx-home-alt-2.svg" alt="Ir a Inicio">
+<body style="background: linear-gradient(to bottom right, #dddddd, #dddddd);">
+    <a class="Btn-1" href="index.html">
+        <div class="sign">
+            <img src="images/iconizer-bx-home-alt-2.2.svg" alt="Inicio">
+        </div>
+        <div class="text">INICIO</div>
     </a>
     <div id="buttons-container" style="display: flex; justify-content: flex-end; align-items: center;">
         <a href="#" class="font-small text-white font-weight-bold mr-3" onclick="adjustFontSize('small')">A</a>
         <a href="#" class="font-medium text-white font-weight-bold mr-3" onclick="adjustFontSize('medium')">A</a>
         <a href="#" class="font-large text-white font-weight-bold mr-3" onclick="adjustFontSize('large')">A</a>
         <div id="disabled-icon">
-            <i class="fas fa-wheelchair fa-lg text-white" onclick="aumentarTamano()" onmouseover="cambiarCursor(event)"
-                onmouseout="restaurarCursor()"></i>
+            <i class="fas fa-wheelchair fa-lg text-black" onclick="aumentarTamano()" onmouseover="cambiarCursor(event)" onmouseout="restaurarCursor()"></i>
         </div>
+        
     </div>
     <div class="container">
         <img src="images/Logo Mundo 3d.png" alt="logo mundo 3D">

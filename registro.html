@@ -14,17 +14,19 @@
     <title>Página de registro</title>
 </head>
 
-<body style="background: linear-gradient(135deg, #2980b9, #2c3e50); color: white;">
-    <a href="index.html" class="home-icon">
-        <img src="../MUNDO 3D/images/bx-home-alt-2.svg" alt="Ir a Inicio">
+<body style="background: linear-gradient(to bottom right, #dddddd, #dddddd);">
+    <a class="Btn-1" href="index.html">
+        <div class="sign">
+            <img src="images/iconizer-bx-home-alt-2.2.svg" alt="Inicio">
+        </div>
+        <div class="text">INICIO</div>
     </a>
     <div id="buttons-container" style="display: flex; justify-content: flex-end; align-items: center;">
         <a href="#" class="font-small text-white font-weight-bold mr-3" onclick="adjustFontSize('small')">A</a>
         <a href="#" class="font-medium text-white font-weight-bold mr-3" onclick="adjustFontSize('medium')">A</a>
         <a href="#" class="font-large text-white font-weight-bold mr-3" onclick="adjustFontSize('large')">A</a>
         <div id="disabled-icon">
-            <i class="fas fa-wheelchair fa-lg text-white" onclick="aumentarTamano()" onmouseover="cambiarCursor(event)"
-                onmouseout="restaurarCursor()"></i>
+            <i class="fas fa-wheelchair fa-lg text-black" onclick="aumentarTamano()" onmouseover="cambiarCursor(event)" onmouseout="restaurarCursor()"></i>
         </div>
     </div>
     <div class="container-form">
