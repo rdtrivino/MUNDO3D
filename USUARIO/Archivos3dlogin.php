@@ -84,6 +84,7 @@ $result = mysqli_query($link, $sql);
     <link href="css/style.css" rel="stylesheet">
     <link href="css\misestilos.css" rel="stylesheet">
     <link rel="stylesheet" href="../css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="programas/im-pr.css">
 </head>
 
 <body>
@@ -203,7 +204,6 @@ $result = mysqli_query($link, $sql);
                                         <span>Mi menú</span> <!-- Cambia el texto del botón de hamburguesa -->
                                     </button>
                                 </div>
-
                                 <script>
                                     document.getElementById("menu-toggle").addEventListener("click", function (event) {
                                         var menu = document.getElementById("dropdown-menu");
@@ -245,15 +245,17 @@ $result = mysqli_query($link, $sql);
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse justify-content-between px-3" id="navbarCollapse">
-                    <div class="navbar-nav ml-auto py-0">
-                        <a href="../Programas/redireccionarpaginas.php?page=impresoras"
-                            class="nav-item nav-link">IMPRESORAS</a>
-                        <a href="../Programas/redireccionarpaginas.php?page=repuestos"
-                            class="nav-item nav-link">REPUESTOS</a>
-                        <a href="../Programas/redireccionarpaginas.php?page=archivos3d"
-                            class="nav-item nav-link">ARCHIVOS 3D</a>
-                        <a href="../Programas/redireccionarpaginas.php?page=servicioimpresion"
-                            class="nav-item nav-link">SERVICIO DE IMPRESION</a>
+                    <div class="collapse navbar-collapse justify-content-between px-3" id="navbarCollapse">
+                        <div class="navbar-nav ml-auto py-0">
+                            <a href="../Programas/redireccionarpaginas.php?page=impresoras"
+                                class="nav-item nav-link">IMPRESORAS</a>
+                            <a href="../Programas/redireccionarpaginas.php?page=repuestos"
+                                class="nav-item nav-link">REPUESTOS</a>
+                            <a href="../Programas/redireccionarpaginas.php?page=archivos3d"
+                                class="nav-item nav-link">ARCHIVOS 3D</a>
+                            <a href="../Programas/redireccionarpaginas.php?page=servicioimpresion"
+                                class="nav-item nav-link">SERVICIO DE IMPRESION</a>
+                        </div>
                     </div>
                 </div>
             </nav>
@@ -365,56 +367,104 @@ $result = mysqli_query($link, $sql);
     </script>
     <div class="container-fluid" style="background-color: #D3D3D3; margin-top: -50px;">
         <div class="container">
-            <h1 class="display-4 text-center mb-5">Explore nuestros Archivos 3D</h1>
-            <div class="row">
+            <h1 class="display-4 text-center mb-5">Explora nuestros archivos 3D</h1>
+            <div class="row row-cols-lg-4 row-cols-md-3 justify-content-center">
                 <?php
-                // Mostrar productos si hay resultados
+                // Consulta a la base de datos para obtener productos de la categoría 5
+                $sql = "SELECT * FROM productos WHERE Pro_Categoria = 5";
+                $result = mysqli_query($link, $sql);
+
+                // Verificar si se encontraron productos en la categoría 1b
                 if (mysqli_num_rows($result) > 0) {
+                    // Iterar sobre los resultados y mostrar cada producto
                     while ($row = mysqli_fetch_assoc($result)) {
                         ?>
-                        <div class="col-lg-3 col-md-6 product">
-                            <div class="card mb-5" style="height: 250px;">
-                                <img src="<?php echo $row['nombre_imagen']; ?>" class="card-img-top" class="card-img-top"
-                                    style="height: 200px; object-fit: cover;" alt="<?php echo $row["Pro_Nombre"]; ?>">
-                                <div class="card-body">
-                                    <h5 class="card-title"
-                                        style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                        <?php echo $row["Pro_Nombre"]; ?>
+                        <div class="col mb-4">
+                            <div class="card h-100">
+                                <img src="<?php echo $row['nombre_imagen']; ?>" class="card-img-top"
+                                    style="height: 200px; object-fit: contain;" alt="<?php echo $row['Pro_Nombre']; ?>">
+                                <div
+                                    class="overlay position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
+                                    <?php if ($row['Pro_Cantidad'] > 0) { ?>
+                                        <button class="btn btn-primary btn-lg descargar"
+                                            onclick="downloadImage('<?php echo base64_encode($row['nombre_imagen']); ?>', '<?php echo htmlspecialchars($row['Pro_Nombre']); ?>.jpg')"
+                                            style="background-color: #000080;">
+                                            <i class="fas fa-download"></i>
+                                        </button>
+                                    <?php } else { ?>
+                                        <button class="btn btn-primary btn-lg descargar" disabled>
+                                            <i class="fas fa-download"></i>
+                                        </button>
+                                    <?php } ?>
+                                    <a href="#" class="btn btn-secondary btn-lg mx-2 detallesBtn" data-toggle="modal"
+                                        data-target="#detalleProductoModal" data-id="<?php echo $row['Identificador']; ?>"
+                                        data-name="<?php echo $row['Pro_Nombre']; ?>"
+                                        data-description="<?php echo $row['Pro_Descripcion']; ?>"
+                                        style="background-color: #800000;"><i class="fas fa-search"></i></a>
+                                </div>
+
+                                <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                                    <h5 class="card-title mb-2 text-center"
+                                        style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+                                        <?php echo $row['Pro_Nombre']; ?>
                                     </h5>
                                 </div>
-                                <div class="hover-icons">
-                                    <a href="#" class="search-icon" data-toggle="modal"
-                                        data-target="#modal_<?php echo $row["Identificador"]; ?>"><i
-                                            class="fas fa-search"></i></a>
-                                    <a href="#" class="download-icon"
-                                        onclick="downloadImage('<?php echo base64_encode($row['imagen_principal']); ?>', '<?php echo $row["Pro_Nombre"]; ?>.jpg')"><i
-                                            class="fas fa-download"></i></a>
-                                </div>
                             </div>
-                        </div>
+                            <style>
+                                /* Estilos para centrar verticalmente el nombre del producto en la tarjeta */
+                                .card-body {
+                                    height: 100%;
+                                    /* Asegura que la tarjeta ocupe toda la altura disponible */
+                                }
 
-                        <!-- Modal -->
-                        <div class="modal fade" id="modal_<?php echo $row["Identificador"]; ?>" tabindex="-1" role="dialog"
-                            aria-labelledby="modalTitle_<?php echo $row["Identificador"]; ?>" aria-hidden="true">
-                            <div class="modal-dialog modal-lg" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="modalTitle_<?php echo $row["Identificador"]; ?>">
-                                            <?php echo $row["Pro_Nombre"]; ?>
-                                        </h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <img src="data:image/jpeg;base64,<?php echo base64_encode($row['imagen_principal']); ?>"
-                                            class="img-fluid" alt="<?php echo $row["Pro_Nombre"]; ?>">
-                                        <p><?php echo $row["Pro_Descripcion"]; ?></p>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
-                                        <a href="#" class="btn btn-danger"
-                                            onclick="downloadImage('<?php echo base64_encode($row['imagen_principal']); ?>', '<?php echo $row["Pro_Nombre"]; ?>.jpg')">Descargar</a>
+                                .card-title {
+                                    margin-top: auto;
+                                    /* Centra verticalmente el título */
+                                    margin-bottom: auto;
+                                }
+                            </style>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="detalleProductoModal" tabindex="-1" role="dialog"
+                                aria-labelledby="detalleProductoModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg modal-solid-bg" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="detalleProductoModalLabel">Detalles del Producto</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="container-fluid">
+                                                <div class="row align-items-center">
+                                                    <div class="col-md-6 text-center">
+                                                        <!-- Imagen del producto -->
+                                                        <img src="<?php echo $row['nombre_imagen']; ?>" class="img-fluid"
+                                                            style="height: 300px; object-fit: contain;"
+                                                            alt="<?php echo $row["Pro_Nombre"]; ?>">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <!-- Descripción del producto -->
+                                                        <h4 id="productoNombre"><?php echo $row["Pro_Nombre"]; ?></h4>
+                                                        <p><strong>Descripción:</strong></p>
+                                                        <p id="productoDescripcion"><?php echo $row["Pro_Descripcion"]; ?></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                                    style="background-color: #E42E24;">
+                                                    Cerrar
+                                                </button>
+                                                <button class="btn btn-primary btn-lg descargar"
+                                                    onclick="downloadImage('<?php echo base64_encode($row['nombre_imagen']); ?>', '<?php echo htmlspecialchars($row['Pro_Nombre']); ?>.jpg')"
+                                                    style="background-color: #000080;">
+                                                    <i class="fas fa-download"></i> Descargar
+                                                </button>
+                                            </div>
+
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -428,46 +478,6 @@ $result = mysqli_query($link, $sql);
             </div>
         </div>
     </div>
-    <style>
-        .card {
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card .hover-icons {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: rgba(0, 0, 0, 0.5);
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .card:hover .hover-icons {
-            opacity: 1;
-        }
-
-        .hover-icons a {
-            color: white;
-            font-size: 1.5em;
-            margin: 0 10px;
-            padding: 15px;
-            border-radius: 5px;
-        }
-
-        .hover-icons a.search-icon {
-            background-color: blue;
-        }
-
-        .hover-icons a.download-icon {
-            background-color: red;
-        }
-    </style>
     <script>
         // Función para descargar la imagen
         function downloadImage(imageData, imageName) {

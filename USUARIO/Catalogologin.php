@@ -237,7 +237,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-primary"
-                                style="background-color: red; border-color: red;" onclick="vaciarCarrito()">Vaciar
+                                style="background-color: #800000; border-color: red;" onclick="vaciarCarrito()">Vaciar
                                 Carrito</button>
                             <button type="button" class="btn btn-primary" id="irAPagarBtn">Ir a pagar</button>
                         </div>
@@ -269,8 +269,8 @@
                                                 <a href="#" class="btn btn-primary btn-lg agregarAlCarritoBtn"
                                                     data-id="<?php echo $row['Identificador']; ?>"
                                                     data-name="<?php echo $row['Pro_Nombre']; ?>"
-                                                    data-price="<?php echo $row['Pro_PrecioVenta']; ?>"><i
-                                                        class="fas fa-cart-plus"></i></a>
+                                                    data-price="<?php echo $row['Pro_PrecioVenta']; ?>"
+                                                    style="background-color: #000080;"><i class="fas fa-cart-plus"></i></a>
                                             <?php } else { ?>
                                                 <button class="btn btn-primary btn-lg agregarAlCarritoBtn" disabled><i
                                                         class="fas fa-cart-plus"></i></button>
@@ -281,7 +281,7 @@
                                                 data-name="<?php echo $row['Pro_Nombre']; ?>"
                                                 data-description="<?php echo $row['Pro_Descripcion']; ?>"
                                                 data-price="<?php echo $row['Pro_PrecioVenta']; ?>"
-                                                style="background-color: #E42E24;"><i class="fas fa-search"></i></a>
+                                                style="background-color: #800000;"><i class="fas fa-search"></i></a>
                                         </div>
 
                                         <div class="card-body">
