@@ -1,6 +1,6 @@
 <?php
 session_start();
-require '../conexion.php';
+require dirname(__DIR__) . './../conexion.php';
 
 // Confirmación de que el usuario ha realizado el proceso de autenticación
 if (!isset($_SESSION['confirmado']) || $_SESSION['confirmado'] == false) {
@@ -9,10 +9,6 @@ if (!isset($_SESSION['confirmado']) || $_SESSION['confirmado'] == false) {
 }
 $_SESSION['carrito'] = array(); // o $_SESSION['carrito'] = []; en PHP >= 5.4
 
-// Puedes realizar otras operaciones aquí si es necesario
-
-// Enviar respuesta al cliente (JavaScript)
-echo "Carrito vaciado correctamente.";
 // Realizamos la consulta para obtener el rol del usuario
 $peticion = "SELECT Usu_rol FROM usuario WHERE Usu_Identificacion = '" . $_SESSION['user_id'] . "'";
 $result = mysqli_query($link, $peticion);
@@ -20,15 +16,12 @@ $result = mysqli_query($link, $peticion);
 // Verificamos si la consulta tuvo éxito
 if (!$result) {
     // Manejo de errores de consulta
-    // Redirigir a la página de autenticación o mostrar un mensaje de error
     header("Location: ../Programas/autenticacion.php");
     exit(); // Terminamos la ejecución del script después de redirigir
 }
 
 // Verificamos si la consulta devolvió exactamente un resultado
 if (mysqli_num_rows($result) != 1) {
-    // Si la consulta no devuelve un solo resultado, puede ser un problema de base de datos
-    // Redirigir a la página de autenticación o mostrar un mensaje de error
     header("Location: ../Programas/autenticacion.php");
     exit(); // Terminamos la ejecución del script después de redirigir
 }
@@ -39,44 +32,70 @@ $rolUsuario = $fila['Usu_rol'];
 
 // Verificar si el rol del usuario es diferente de 3
 if ($rolUsuario != 3) {
-    // Si el rol no es 3, redirigir a la página de autenticación
     header("Location: ../Programas/autenticacion.php");
     exit(); // Terminamos la ejecución del script después de redirigir
 }
 
 // Si llegamos aquí, el usuario está autenticado y tiene el rol 3
-
-// Continuar con el resto del código
 $nombreCompleto = $_SESSION['username'];
 $usuario_id = $_SESSION['user_id'];
 
-// Consulta a la base de datos para obtener productos de la categoría 2
-$sql = "SELECT * FROM productos WHERE Pro_Categoria = 2";
-$impresoras = mysqli_query($link, $sql);
-
-// Manejar la solicitud AJAX en el mismo archivo PHP
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Verificar si se recibió el producto
+    if (isset($_POST['action'])) {
+        if ($_POST['action'] == 'vaciar_carrito') {
+            $sql = "DELETE FROM carrito WHERE Pe_Cliente = '$usuario_id'";
+            if (mysqli_query($link, $sql)) {
+                echo "Carrito vaciado exitosamente.";
+            } else {
+                echo "Error al vaciar el carrito: " . mysqli_error($link);
+            }
+            exit();
+        } elseif ($_POST['action'] == 'actualizar_cantidad') {
+            $id = $_POST['id'];
+            $action_type = $_POST['action_type'];
+
+            // Obtener la cantidad actual del producto en el carrito
+            $sql = "SELECT cantidad FROM carrito WHERE id = '$id'";
+            $result = mysqli_query($link, $sql);
+            $row = mysqli_fetch_assoc($result);
+            $cantidad = $row['cantidad'];
+
+            if ($action_type == 'increment') {
+                $cantidad++;
+            } elseif ($action_type == 'decrement' && $cantidad > 1) {
+                $cantidad--;
+            }
+
+            $sql = "UPDATE carrito SET cantidad = '$cantidad' WHERE id = '$id'";
+            if (mysqli_query($link, $sql)) {
+                echo "Cantidad actualizada.";
+            } else {
+                echo "Error al actualizar la cantidad: " . mysqli_error($link);
+            }
+            exit();
+        } elseif ($_POST['action'] == 'eliminar_producto') {
+            $id = $_POST['id'];
+
+            $sql = "DELETE FROM carrito WHERE id = '$id'";
+            if (mysqli_query($link, $sql)) {
+                echo "Producto eliminado.";
+            } else {
+                echo "Error al eliminar el producto: " . mysqli_error($link);
+            }
+            exit();
+        }
+    }
+
     if (isset($_POST['producto'])) {
-        // Obtener el ID del usuario de la sesión
-        if (isset($_SESSION['user_id'])) {
-            $usuario_id = $_SESSION['user_id'];
-
-            // Convertir los datos del producto JSON en un array asociativo
-            $producto = json_decode($_POST['producto'], true);
-
-            // Definir la cantidad predeterminada (en este caso, 1)
+        $producto = json_decode($_POST['producto'], true);
+        if ($producto) {
             $cantidad = 1;
-
-            // Obtener el identificador del producto
             $Identificador = $producto['Identificador'];
 
-            // Verificar si el producto ya existe en el carrito del usuario
             $sql_check = "SELECT cantidad FROM carrito WHERE Pe_Cliente = '$usuario_id' AND id_producto = '$Identificador' AND estado_pago = 'pendiente'";
             $result_check = mysqli_query($link, $sql_check);
 
             if (mysqli_num_rows($result_check) > 0) {
-                // Si el producto ya existe, actualizar la cantidad
                 $row = mysqli_fetch_assoc($result_check);
                 $nueva_cantidad = $row['cantidad'] + $cantidad;
 
@@ -85,7 +104,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 echo "Cantidad del producto actualizada correctamente en el carrito.";
             } else {
-                // Si el producto no existe, insertar un nuevo registro
                 $sql_insert = "INSERT INTO carrito (Pe_Cliente, cantidad, id_producto, estado_pago) 
                                VALUES ('$usuario_id', $cantidad, '$Identificador', 'pendiente')";
 
@@ -94,18 +112,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 echo "Producto agregado al carrito correctamente.";
             }
 
-            // Finalizar la ejecución del script para evitar la renderización adicional de HTML
             exit();
         } else {
-            // Si no hay un usuario logueado, mostrar un mensaje de error
-            echo "No hay un usuario logueado.";
+            echo "No se recibieron datos del producto.";
         }
     } else {
-        // Si no se recibió el producto, mostrar un mensaje de error
-        echo "No se recibieron datos del producto.";
+        echo "Acción no válida.";
     }
 
-    // Finalizar la ejecución del script para evitar la renderización adicional de HTML
     exit();
 }
+
 ?>

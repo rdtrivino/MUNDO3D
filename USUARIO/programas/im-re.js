@@ -72,25 +72,75 @@ function confirmLogout() {
     }
 }
 //vaciar carrito ________________________________________________________________________________________________________
+// Función para vaciar el carrito
 function vaciarCarrito() {
-    // Enviar una solicitud AJAX al servidor para vaciar el carrito
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "programas/funciones-in-re.php", true); // Asegúrate de que la URL sea correcta
+    xhr.open("POST", "programas/funciones-in-re.php", true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4 && xhr.status === 200) {
-            // Respuesta del servidor
             alert(xhr.responseText); // Muestra el mensaje del servidor
-            
             // Actualizar la vista del carrito en la página
-            const carritoElement = document.getElementById('carrito');
-            if (carritoElement) {
-                carritoElement.innerHTML = '<p>El carrito está vacío.</p>';
-            }
+            document.getElementById('carritoContenido').innerHTML = '<p>El carrito está vacío.</p>';
+            document.getElementById('totalProductos').innerHTML = 'Total a pagar: $0';
         }
     };
-    xhr.send();
+    xhr.send("action=vaciar_carrito");
 }
+
+// Función para actualizar la cantidad de productos en el carrito
+function actualizarCantidad(id, action) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "programas/funciones-in-re.php", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            // Recargar la página o actualizar la vista del carrito dinámicamente
+            location.reload();
+        }
+    };
+    xhr.send("action=actualizar_cantidad&id=" + id + "&action_type=" + action);
+}
+
+// Función para eliminar un producto del carrito
+function eliminarProducto(id) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "programas/funciones-in-re.php", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            alert(xhr.responseText); // Muestra el mensaje del servidor
+            location.reload();
+        }
+    };
+    xhr.send("action=eliminar_producto&id=" + id);
+}
+
+// Event listeners para los botones del carrito
+document.addEventListener("DOMContentLoaded", function() {
+    // Incrementar/decrementar cantidad
+    document.querySelectorAll("[data-action='increment']").forEach(button => {
+        button.addEventListener("click", function() {
+            var id = this.getAttribute("data-id");
+            actualizarCantidad(id, 'increment');
+        });
+    });
+
+    document.querySelectorAll("[data-action='decrement']").forEach(button => {
+        button.addEventListener("click", function() {
+            var id = this.getAttribute("data-id");
+            actualizarCantidad(id, 'decrement');
+        });
+    });
+
+    // Eliminar producto
+    document.querySelectorAll("[data-action='remove']").forEach(button => {
+        button.addEventListener("click", function() {
+            var id = this.getAttribute("data-id");
+            eliminarProducto(id);
+        });
+    });
+});
 
 //ir a pagar_______________________________________________________________________________________________________
 document.addEventListener("DOMContentLoaded", function () {
