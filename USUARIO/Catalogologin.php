@@ -361,7 +361,7 @@
                 <!--redes sociales html-->
                 <div class="parent2">
                     <div class="child child-2" data-title="Instagram">
-                        <a href="https://www.instagram.com/" target="_blank"
+                        <a href="//www.instagram.com/mundo3d.rysj/" target="_blank"
                             rel="noopener noreferrer"><!--ruta de la pagina de instagram-->
                             <button id="button1" class="button btn-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"
@@ -374,7 +374,7 @@
                         </button>
                     </div>
                     <div class="child child-4" data-title="Facebook">
-                        <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">
+                        <a href="//www.facebook.com/profile.php?id=61559444922903" target="_blank" rel="noopener noreferrer">
                             <button id="button1" class="button btn-4">
                                 <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 320 512"
                                     fill="#4267B2">

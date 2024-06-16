@@ -133,8 +133,8 @@ mysqli_close($link);
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css" rel="stylesheet">
     <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
-
     <link rel="stylesheet" href="../css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="programas/im-pr.css">
 </head>
 
 <body>
@@ -654,60 +654,59 @@ mysqli_close($link);
         });
     </script>
     
-  <!-- Footer   Start -->
+  <!-- Footer  Start -->
     
                     
-                <div class="container-fluid bg-primary text-white px-sm-3 px-md-5" style="margin-top: auto; margin-bottom: 0;">
+        <div class="container-fluid bg-primary text-white px-sm-3 px-md-5" style="margin-top: auto; margin-bottom: 0;">
                    
-    <div cla    ss="row pt-5">
+    <div class="row pt-5">
          <div cla   ss="col-lg-4 col-md-6 mb-5">
              <a h   ref=""><h1 class="text-secondary mb-3"><span class="text-white">MUNDO</span>3D</h1></a>
              <p>¡Adén   trate en un mundo tridimensional como nunca antes! ¡Bienvenid@ nuestra página 3D, donde tus sueños cobran vida!</p>
-             <div class="   parent2">
-                  <!--rede  s sociales html-->
-                  <div class="  child child-2" data-title="Instagram">
-
-                                                         <a href="htt  ps://www.instagram.com/" target="_blank"
-                           rel="noopene r noreferrer"><!--ruta de la pagina de instagram-->
-                           <button  id="button1" class="button btn-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512" fill="#ff00ff">
+             <!--redes sociales html-->
+             <div class="parent2">
+                    <div class="child child-2" data-title="Instagram">
+                        <a href="//www.instagram.com/mundo3d.rysj/" target="_blank"
+                            rel="noopener noreferrer"><!--ruta de la pagina de instagram-->
+                            <button id="button1" class="button btn-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"
+                                    fill="#ff00ff">
                                     <path
                                         d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z">
                                     </path>
                                 </svg>
                         </a>
-                    </bu    tton>
-                </div>
-    
-                                                       <div class="child child-4" data-title="Facebook">
-                     <a href="https:/   /www.facebook.com/" target="_blank" rel="noopener noreferrer">
-                          <button   id="button1" class="button btn-4">
-                                <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 320 512" fill="#4267B2">
+                        </button>
+                    </div>
+                    <div class="child child-4" data-title="Facebook">
+                        <a href="//www.facebook.com/profile.php?id=61559444922903" target="_blank" rel="noopener noreferrer">
+                            <button id="button1" class="button btn-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 320 512"
+                                    fill="#4267B2">
                                     <path
                                         d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z">
                                     </path>
                                 </svg>
-                    </a>
+                        </a>
                         </button>
                     </div>
                 </div>
-    
-        </di    v>
+            </div>
             <div class="col-lg-4 col-md-6 mb-5">
                 <h4 class="text-white mb-4">Ponerse en contacto</h4>
                 <p>Contactanos para tener el gusto de atenderlos.</p>
                 <p><i class="fa fa-map-marker-alt mr-2"></i>Calle 15 #31-42 Bogotá, Colombia</p>
                 <p><i class="fab fa-whatsapp mr-2"></i>3124672836</p>
                 <p><i class="fa fa-envelope mr-2"></i>rdtrivino6@misena.edu.co</p>
-        </div>
+            </div>
     
-                                       <div class="col-lg-4 col-md-6 mb-5">
+                    <div class="col-lg-4 col-md-6 mb-5">
 
-                                           <h4 class="text-white mb-4">Enlaces Rápidos</h4>
+                        <h4 class="text-white mb-4">Enlaces Rápidos</h4>
 
-                                      <div  class="d-flex flex-column justify-content-start">
+                    <div  class="d-flex flex-column justify-content-start">
 
-                                           <a class="text-white mb-2" href="Catalogologin.php"><i class="fa fa-angle-right mr-2"></i>IMPRESORAS</a>
+                    <a class="text-white mb-2" href="Catalogologin.php"><i class="fa fa-angle-right mr-2"></i>IMPRESORAS</a>
                     <a class="text-white mb-2" href="Respuestoslogin.php"><i class="fa fa-angle-right mr-2"></i>REPUESTOS</a>
                     <a class="text-white mb-2" href="Archivos3dlogin.php"><i class="fa fa-angle-right mr-2"></i>ARCHIVOS 3D</a>
                     <a class="text-white" href="serviciodeimpresion.php"><i class="fa fa-angle-right mr-2"></i>SERVICIO DE IMPRESION</a>
@@ -715,88 +714,7 @@ mysqli_close($link);
         </div>
         </div>
     </div>
-    <sty    le>
-            .parent2 {
-            width: 30%;
-            height: 50%;
-        display: flex;
-        justify-content: center;
-            align-items: center;
-     }
-    
-    
-        .chi   ld {
-            width: 50px;
-            height: 50px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transform-style: preserve-3d;
-            transition: all 1.6s ease-in-out;
-            border-radius: 100%;
-        margin: 0 5px;
-            position: relative;
-            /* Agregado para posicionar correctamente el texto */
-    }
-        
-    .chi    ld:hover {
-            background-color: black;
-            background-position: -100px 100px, -100px 100px;
-        transform: rotate3d(0.5, 1, 0, 30deg);
-            transform: perspective(180px) rotateX(60deg) translateY(2px);
-            box-shadow: 0px 10px 10px rgb(1, 49, 182);
-     }
-    
-        #but   ton1 {
-            border: none;
-            background-color: white;
-            width: 50px;
-        height: 50px;
-            font-size: 20px;
-            border-radius: 50%;
-       }
-    
-        #but ton1:hover {
-            width: inherit;
-            height: inherit;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        transform: translate3d(0px, 0px, 15px) perspective(180px) rotateX(-35deg) translateY(2px);
-            border-radius: 100%;
-            background-color: white;
-    }
-        
-    /* E    stilos para el texto */
-     .chi   ld::before {
-            content: attr(data-title);
-            /* Obtener el texto del atributo data-title */
-            position: absolute;
-            top: -30px;
-            /* Posición del texto arriba del botón */
-            color: white;
-            /* Color del texto */
-            padding: 5px;
-            border-radius: 5px;
-            font-size: 13px;
-            white-space: nowrap;
-            /* Evita que el texto se divida en múltiples líneas */
-            left: 50%;
-            /* Centra horizontalmente */
-            transform: translateX(-50%);
-            opacity: 0;
-        /* Oculta inicialmente el texto */
-            transition: opacity 0.9s ease;
-            /* Transición de la opacidad */
-        }
-
-        .child:hover::before {
-            opacity: 1;
-        /* Muestra el texto al pasar el mouse sobre el botón */
-        }
-    </st    yle>
-
-               <!--redes sociales html-->
+    </div>
     <div class="container-fluid bg-dark text-white py-4 px-sm-3 px-md-5">
     <p class="m-0 text-center text-white">
         &copy; <a class="text-white font-weight-medium" href="#">MUNDO 3D</a>. Todos los derechos reservados <?php echo date('Y'); ?>
