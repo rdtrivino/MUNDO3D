@@ -517,7 +517,8 @@ $result = mysqli_query($link, $sql);
                         </button>
                     </div>
                     <div class="child child-4" data-title="Facebook">
-                        <a href="//www.facebook.com/profile.php?id=61559444922903" target="_blank" rel="noopener noreferrer">
+                        <a href="//www.facebook.com/profile.php?id=61559444922903" target="_blank"
+                            rel="noopener noreferrer">
                             <button id="button1" class="button btn-4">
                                 <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 320 512"
                                     fill="#4267B2">
