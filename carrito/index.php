@@ -387,9 +387,9 @@ if (isset($_SESSION['user_id'])) {
                         <!-- Otro contenido para métodos de pago -->
                         <div class="checkoutpro">
                             <label>Selecciona tu método de pago:</label><br>
-                            <!-- Botón de Stripe -->
+                            <!-- Formulario de Stripe -->
                             <form id="payment-form" action="procesar_pago.php" method="POST">
-                                <!-- Campo oculto para enviar el monto -->
+                                <!-- Campo oculto para enviar el monto en centavos -->
                                 <input type="hidden" name="monto" id="monto" value="<?php echo $total_a_pagar * 100; ?>">
                                 <!-- Convertir a centavos -->
 
@@ -397,14 +397,13 @@ if (isset($_SESSION['user_id'])) {
                                     data-key="pk_test_51PCx2gRxUN5OHb78Un4Cxh9oWW7Xnk9nzmWDzPqyrjFbfDQP187to1ujx3eAsRByEIU8hHhMwxvgj2FiVq0rGRJ600hiaE79NV"
                                     data-amount="<?php echo $total_a_pagar * 100; ?>" <!-- Convertir a centavos -->
                                         data - name="MUNDO 3D" <!-- Cambiar el nombre de tu tienda -->
-                                        data - description="MUNDO 3D" < !--Cambiar la descripción del pedido-- >
+                                        data - description="Compra en MUNDO 3D" < !--Cambiar la descripción del pedido-- >
                                             data - image="RUTA_DE_LA_IMAGEN_DEL_PRODUCTO" < !--Cambiar la ruta de la imagen del producto-- >
                                                 data - locale="auto"
-                                        data - currency="USD" >
+                                        data - currency="COP" > < !--Cambiar la moneda a COP-- >
                                     </script>
                             </form>
                         </div>
-
                     <?php } else { ?>
                         <p>No hay productos en el carrito. Por favor, agrega productos para continuar con el pago.</p>
                     <?php } ?>

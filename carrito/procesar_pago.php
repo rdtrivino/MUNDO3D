@@ -2,23 +2,18 @@
 session_start(); // Iniciar sesión si no está iniciada
 
 // Verificar si el usuario está autenticado
-if (isset($_SESSION['user_id'])) {
-    // Obtener el ID de usuario de la sesión
-    $Pe_Cliente = $_SESSION['user_id'];
-} else {
+if (!isset($_SESSION['user_id'])) {
     // Manejar el caso en que el usuario no esté autenticado
     // Por ejemplo, redirigir a la página de inicio de sesión
     header("Location: login.php");
     exit(); // Finalizar el script para evitar ejecución adicional
 }
 
-require_once ('vendor/autoload.php');
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
+$cliente_id = $_SESSION['user_id']; // Obtener el ID de usuario de la sesión
 
+require_once ('vendor/autoload.php');
 \Stripe\Stripe::setApiKey('sk_test_51PCx2gRxUN5OHb784L4vrVA5ta8V9wpXoHXThlHuiDh0cBAQs2VCdCEiAma1CtUJDz5QzBgBElhyB3fu3fDNg8JO008Tfah9xf');
 
-// Realizar la conexión a la base de datos
 $host = "localhost";
 $user = "root";
 $password = "";
@@ -37,7 +32,7 @@ if (!mysqli_select_db($link, $dbname)) {
 // Definir una variable para indicar si el pago fue exitoso o rechazado
 $pagoExitoso = false;
 
-// Verificar si el monto total está definido en $_POST
+// Verificar si el monto total está definido en $_POST y procesar el pago
 if (isset($_POST['monto']) && isset($_POST['stripeToken'])) {
     $monto = $_POST['monto'];
     $token = $_POST['stripeToken'];
@@ -56,33 +51,101 @@ if (isset($_POST['monto']) && isset($_POST['stripeToken'])) {
         // Actualizar el estado de pago en la base de datos de "pendiente" a "pagado"
         if ($pagoExitoso) {
             // Realizar la consulta SQL para actualizar el estado de pago
-            $sql_update = "UPDATE carrito SET estado_pago = 'pagado' WHERE estado_pago = 'pendiente' AND Pe_Cliente = '$Pe_Cliente'";
+            $sql_update = "UPDATE carrito SET estado_pago = 'pagado' WHERE estado_pago = 'pendiente' AND Pe_Cliente = ?";
+            $stmt = mysqli_prepare($link, $sql_update);
+            mysqli_stmt_bind_param($stmt, "i", $cliente_id);
+            mysqli_stmt_execute($stmt);
+            mysqli_stmt_close($stmt);
 
-            // Ejecutar la consulta SQL para actualizar el estado de pago
-            if (mysqli_query($link, $sql_update)) {
-                // Transferir los productos del carrito a la tabla de pedidos cuando el pago sea exitoso
-                $sql_transfer = "INSERT INTO pedidos (Pe_Cliente, Pe_Estado, Pe_Producto, Pe_Cantidad, Pe_Fechapedido)
-                                SELECT carrito.Pe_Cliente, 1, productos.Identificador, carrito.cantidad, NOW()
-                                FROM carrito
-                                INNER JOIN productos ON carrito.id_producto = productos.Identificador
-                                WHERE carrito.estado_pago = 'pagado' AND carrito.Pe_Cliente = '$Pe_Cliente'";
+            // Obtener la fecha actual para el pedido
+            $fechaPedido = date('Y-m-d'); // Fecha de pedido actual
 
-                // Ejecutar la consulta de transferencia
-                if (mysqli_query($link, $sql_transfer)) {
-                    // Si la transferencia es exitosa, puedes realizar otras acciones aquí, como vaciar el carrito
-                    $sql_vaciar = "DELETE FROM carrito WHERE estado_pago = 'pagado' AND Pe_Cliente = '$Pe_Cliente'";
-                    if (mysqli_query($link, $sql_vaciar)) {
-                        // Obtener el correo electrónico del usuario
-                        $email = obtenerEmailUsuario($Pe_Cliente);
-                        // Enviar la factura por correo electrónico al usuario
-                        enviarFacturaPorCorreo($email);
-                    } else {
-                        echo "Error al vaciar el carrito: " . mysqli_error($link);
+            // Función para calcular la fecha de entrega
+            function calcularFechaEntrega($fechaPedido)
+            {
+                $diasHabiles = 15; // Número de días hábiles para la entrega
+                $fechaEntrega = new DateTime($fechaPedido);
+                $diasAgregados = 0;
+
+                while ($diasAgregados < $diasHabiles) {
+                    $fechaEntrega->add(new DateInterval('P1D')); // Añadir un día
+                    // Si el día agregado no es sábado ni domingo, contarlo como hábil
+                    if ($fechaEntrega->format('N') < 6) {
+                        $diasAgregados++;
                     }
-                } else {
-                    echo "Error al realizar el pedido: " . mysqli_error($link);
                 }
+
+                return $fechaEntrega->format('Y-m-d'); // Formato de fecha 'YYYY-MM-DD'
             }
+
+            // Calcular la fecha de entrega
+            $fechaEntrega = calcularFechaEntrega($fechaPedido);
+
+            // Insertar pedido con fecha de entrega calculada
+            $sql_transfer = "INSERT INTO pedidos (Pe_Cliente, Pe_Estado, Pe_Producto, Pe_Cantidad, Pe_Fechapedido, Pe_Fechaentrega)
+                            SELECT carrito.Pe_Cliente, 1, productos.Identificador, carrito.cantidad, ?, ?
+                            FROM carrito
+                            INNER JOIN productos ON carrito.id_producto = productos.Identificador
+                            WHERE carrito.estado_pago = 'pagado' AND carrito.Pe_Cliente = ?";
+            $stmt = mysqli_prepare($link, $sql_transfer);
+            mysqli_stmt_bind_param($stmt, "ssi", $fechaPedido, $fechaEntrega, $cliente_id);
+            mysqli_stmt_execute($stmt);
+            mysqli_stmt_close($stmt);
+
+            // Obtener el último ID insertado en la tabla pedidos
+            $pedido_id = mysqli_insert_id($link);
+
+            // Función para obtener el nombre del cliente
+            function obtenerNombreCliente($conexion, $cliente_id)
+            {
+                $sql = "SELECT Usu_Nombre_completo FROM usuario WHERE Usu_Identificacion = ?";
+                $stmt = mysqli_prepare($conexion, $sql);
+                mysqli_stmt_bind_param($stmt, "i", $cliente_id);
+                mysqli_stmt_execute($stmt);
+                mysqli_stmt_bind_result($stmt, $nombre_completo);
+                mysqli_stmt_fetch($stmt);
+                mysqli_stmt_close($stmt);
+                return $nombre_completo;
+            }
+
+            // Función para obtener el número de documento del cliente
+            function obtenerNumeroDocumentoCliente($conexion, $cliente_id)
+            {
+                $sql = "SELECT Usu_Identificacion FROM usuario WHERE Usu_Identificacion = ?";
+                $stmt = mysqli_prepare($conexion, $sql);
+                mysqli_stmt_bind_param($stmt, "i", $cliente_id);
+                mysqli_stmt_execute($stmt);
+                mysqli_stmt_bind_result($stmt, $numero_documento);
+                mysqli_stmt_fetch($stmt);
+                mysqli_stmt_close($stmt);
+                return $numero_documento;
+            }
+
+            // Obtener el nombre del cliente y número de documento
+            $nombre_cliente = obtenerNombreCliente($link, $cliente_id);
+            $numero_documento = obtenerNumeroDocumentoCliente($link, $cliente_id);
+
+            // Insertar datos en la tabla factura
+            $numero_factura = uniqid('FACT-'); // Generar un número de factura único
+            $fecha = date('Y-m-d');
+            $total = $monto / 100; // Convertir de centavos a dólares (o la moneda que uses)
+            $estado = 'pagado';
+
+            $sql_factura = "INSERT INTO factura (numero_factura, fecha, pedido_id, total, estado, nombre_cliente, numero_documento)
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            $stmt = mysqli_prepare($link, $sql_factura);
+            mysqli_stmt_bind_param($stmt, "ssidsiss", $numero_factura, $fecha, $pedido_id, $total, $estado, $nombre_cliente, $numero_documento);
+            mysqli_stmt_execute($stmt);
+            mysqli_stmt_close($stmt);
+
+            // Vaciar el carrito
+            $sql_vaciar = "DELETE FROM carrito WHERE estado_pago = 'pagado' AND Pe_Cliente = ?";
+            $stmt = mysqli_prepare($link, $sql_vaciar);
+            mysqli_stmt_bind_param($stmt, "i", $cliente_id);
+            mysqli_stmt_execute($stmt);
+            mysqli_stmt_close($stmt);
+
+            // Aquí puedes enviar un correo electrónico al cliente si lo deseas
         }
     } catch (\Stripe\Exception\CardException $e) {
         // El pago fue rechazado
@@ -92,77 +155,11 @@ if (isset($_POST['monto']) && isset($_POST['stripeToken'])) {
         echo 'Error al procesar el pago: ' . $e->getMessage();
     }
 }
-// Función para obtener el correo electrónico del usuario
-function obtenerEmailUsuario($Pe_Cliente)
-{
-    global $link;
 
-    // Consulta SQL para obtener el correo electrónico del usuario
-    $sql = "SELECT Usu_Email FROM usuario WHERE id = $Pe_Cliente";
-
-    // Ejecutar la consulta
-    $result = mysqli_query($link, $sql);
-
-    // Verificar si se encontró el usuario y obtener su correo electrónico
-    if ($result && mysqli_num_rows($result) > 0) {
-        $row = mysqli_fetch_assoc($result);
-        return $row['Usu_Email']; // Corregido para que coincida con el nombre de la columna en la consulta SQL
-    } else {
-        // Si no se encontró el usuario o hubo un error en la consulta, retornar un valor por defecto o lanzar una excepción
-        return null; // O podrías lanzar una excepción o retornar un correo electrónico por defecto
-    }
-}
-
-// Función para enviar la factura por correo electrónico
-function enviarFacturaPorCorreo($email)
-{
-    global $link;
-
-    require_once ('../conexion.php');
-    require '../Programas/phpmailer/Exception.php';
-    require '../Programas/phpmailer/PHPMailer.php';
-    require '../Programas/phpmailer/SMTP.php';
-
-    $mail = new PHPMailer(true);
-
-    try {
-        // Configuración del servidor de correo
-        $mail->isSMTP();
-        $mail->Host = 'smtp.office365.com';
-        $mail->SMTPAuth = true;
-        $mail->Username = 'Mundo3D.RYSJ@outlook.com'; // Correo electrónico del remitente
-        $mail->Password = 'Mundo3D123'; // Contraseña del remitente
-        $mail->SMTPSecure = 'tls';
-        $mail->Port = 587;
-
-        // Configuración del correo electrónico
-        $mail->setFrom('Mundo3D.RYSJ@outlook.com', 'MUNDO 3D'); // Correo electrónico y nombre del remitente
-        $mail->addAddress($email); // Correo electrónico del destinatario
-        $mail->Subject = 'Factura'; // Asunto del correo
-        $mail->Body = "Adjunto encontrarás la factura solicitada."; // Cuerpo del correo
-        $mail->isHTML(true); // Establecer el formato del correo como HTML
-
-        // Obtener la ruta del archivo PDF de la factura
-        $pdf_file = generarFactura($datos_factura); // Asegúrate de tener $datos_factura definido
-
-        // Adjuntar el archivo PDF de la factura
-        $mail->addAttachment($pdf_file, 'Factura.pdf');
-
-        // Envío del correo electrónico
-        $mail->send();
-
-        // Eliminar el archivo PDF después de enviar el correo electrónico
-        unlink($pdf_file);
-
-        return true;
-    } catch (Exception $e) {
-        // Manejar cualquier error y registrar en el archivo de registro
-        error_log("Error al enviar el correo: {$mail->ErrorInfo}");
-        return false;
-    }
-}
+mysqli_close($link); // Cerrar conexión a la base de datos al finalizar
 
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -216,7 +213,7 @@ function enviarFacturaPorCorreo($email)
     <script>
         // Verifica si el pago fue exitoso y muestra el modal correspondiente
         if (<?php echo $pagoExitoso ? 'true' : 'false'; ?>) {
-        // Muestra el modal de éxito
+            // Muestra el modal de éxito
             document.getElementById('modal-exito').style.display = 'block';
             // Cierra el modal de éxito después de 10 segundos
             setTimeout(function () {
