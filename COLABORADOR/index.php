@@ -13,9 +13,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <title>COLABORADOR</title>
         <link rel="shortcut icon" href="../images/Logo Mundo 3d.png" type="image/x-icon">
-        <link href="css/styles.css" rel="stylesheet" />
         <script src="js/all.js" crossorigin="anonymous"></script>
         <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/styles.css" rel="stylesheet" />
         <script src="js/scripts.js"></script>
 
     </head>
@@ -106,7 +106,7 @@
             <main>
                 <div class="container-fluid px-4">
                     <!--Definir el titulo de la pagina-->
-                        <?php 
+                    <?php 
                         $titulo = "";
 
                         if (isset($_GET['tabla'])) { 
@@ -120,18 +120,17 @@
                             }
                         }
                     ?>
-                    <?php if (!empty($titulo)): ?>
-                        <h1 class="mt-4"><?php echo $titulo; ?></h1>
-                    <?php endif; ?>
+                        <?php if (!empty($titulo)): ?>
+                            <h1 class="mt-4"><?php echo $titulo; ?></h1>
+                        <?php endif; ?>
 
-                        <div class="btn-group mr-2">
-                            <!--Si hay una tabla seleccionada mostrar los botones adicionar, exportar e imprimir-->  
+                        <div class="btn-group mr-7">
                             <?php
-                            if (isset($_GET['tabla'])) {
-                                echo '<a href="adicionar.php?tabla=' . $_GET['tabla'] . '" class="btn btn-sm btn-outline-secondary">Adicionar registro</a>';
-                                echo '<a href="crear_excel.php?tabla=' . $_GET['tabla'] . '" type="button" class="btn btn-sm btn-outline-secondary">Exportar</a>';
-                                echo '<a href="crear_pdf.php?tabla=' . $_GET['tabla'] . '" type="button" class="btn btn-sm btn-outline-secondary" target="_blank">Imprimir</a>';
-                            }
+                                   if (isset($_GET['tabla'])) {
+                                    echo '<a href="adicionar.php?tabla=' . $_GET['tabla'] . '" class="btn btn-sm btn-outline-secondary">Adicionar registro</a>';
+                                    echo '<a href="crear_excel.php?tabla=' . $_GET['tabla'] . '" type="button" class="btn btn-sm btn-outline-secondary">Exportar</a>';
+                                    echo '<a href="crear_pdf.php?tabla=' . $_GET['tabla'] . '" type="button" class="btn btn-sm btn-outline-secondary" target="_blank">Imprimir</a>';
+                                }
                             ?>
                         </div>
                          

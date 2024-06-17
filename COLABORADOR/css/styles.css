@@ -11225,3 +11225,13 @@ body {
   font-size: 0.75rem;
   border-radius: 0.375rem !important;
 }
+
+/*Estilos para el grupo de botones adiconar, exportar e imprimir*/
+.btn-group {
+  float: right; 
+}
+
+.mr-7 {
+  margin-right: 3px;
+}
+
