@@ -692,6 +692,12 @@ mysqli_close($link);
                     </div>
                 </div>
             </div>
+            <style>
+        .parent2 {
+            width: 17%;
+            height: 30%;
+        }
+            </style>
             <div class="col-lg-4 col-md-6 mb-5">
                 <h4 class="text-white mb-4">Ponerse en contacto</h4>
                 <p>Contactanos para tener el gusto de atenderlos.</p>
