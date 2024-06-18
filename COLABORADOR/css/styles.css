@@ -11235,3 +11235,51 @@ body {
   margin-right: 3px;
 }
 
+/* Estilos para el menú desplegable */
+
+/* Estilos para el menú horizontal dentro del navbar */
+.navbar-nav {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-nav .nav-item {
+  position: relative;
+}
+
+.navbar-nav .nav-item .dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0; /* Alinea el menú a la derecha */
+  display: none;
+  list-style: none;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 0;
+  margin: 0;
+  white-space: nowrap; /* Evita el salto de línea en el texto largo */
+}
+
+.navbar-nav .nav-item:hover .dropdown-menu {
+  display: block;
+}
+
+/* Estilos para los elementos del menú vertical */
+.navbar-nav .nav-item .dropdown-menu li {
+  text-align: right; /* Alinear el texto a la derecha */
+}
+
+.navbar-nav .nav-item .dropdown-menu li a {
+  display: block;
+  padding: 15px 20px;
+  color: white;
+  text-decoration: none;
+  font-size: 16px; /* Tamaño de fuente igual al del título */
+}
+
+.navbar-nav .nav-item .dropdown-menu li:hover {
+  background-color: rgba(0, 0, 0, 0.8); /* Cambiar color de fondo al hacer hover */
+}
+
+.navbar-nav .nav-item .dropdown-menu li a:hover {
+  background-color: rgba(0, 0, 0, 0.8);} /* Cambiar color de fondo del enlace al
+
