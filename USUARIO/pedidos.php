@@ -325,7 +325,7 @@ function obtenerNombreEstado($IdentificadorEstado, $conexion)
                     <div class="button-container">
                       <!-- Botón para descargar la factura -->
                       <a href="factura.php?numero_factura=00123&fecha=16%20de%20junio%20de%202024&cliente=Juan%20Pérez&productos=%5B%7B%22descripcion%22%3A%22Producto%20A%22%2C%22cantidad%22%3A2%2C%22precio_unitario%22%3A50%2C%22total%22%3A100%7D%2C%7B%22descripcion%22%3A%22Producto%20B%22%2C%22cantidad%22%3A1%2C%22precio_unitario%22%3A75%2C%22total%22%3A75%7D%5D&total=175"
-                        class="download-button">
+                        class="download-button" style="text-decoration: none;">
                         <div class="docs">
                           <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"
                             stroke-linecap="round" stroke-linejoin="round">
@@ -352,6 +352,10 @@ function obtenerNombreEstado($IdentificadorEstado, $conexion)
 
                 </tr>
                 <style>
+                  a {
+                    text-decoration: none;
+                  }
+
                   .download-button {
                     position: relative;
                     border-width: 0;

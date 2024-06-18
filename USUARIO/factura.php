@@ -30,7 +30,7 @@ if (!mysqli_select_db($link, $dbname)) {
 mysqli_set_charset($link, "utf8");
 
 // Obtener la factura más reciente para el cliente
-$sql_factura = "SELECT id, numero_factura, fecha, pedido_id, total, estado, nombre_cliente, creado_en, numero_documento 
+$sql_factura = "SELECT * 
                 FROM factura 
                 WHERE numero_documento = ? 
                 ORDER BY creado_en DESC 
@@ -43,6 +43,7 @@ $result = mysqli_stmt_get_result($stmt);
 
 if ($result && mysqli_num_rows($result) > 0) {
     $factura = mysqli_fetch_assoc($result);
+
 
     // Incluir la biblioteca FPDF
     require_once ('../libs/fpdf.php');
@@ -84,19 +85,19 @@ if ($result && mysqli_num_rows($result) > 0) {
     $pdf->Cell(0, 10, utf8_decode('Detalles de la Factura'), 0, 1, 'C');
 
     // Tabla de detalles de la factura
+    // Tabla de detalles de la factura
     $pdf->SetFont('Arial', 'B', 12);
-    $pdf->Cell(30, 10, 'ID', 1);
-    $pdf->Cell(50, 10, 'Pedido ID', 1); // Ajustar el ancho de la celda del Pedido ID aquí
-    $pdf->Cell(50, 10, 'Total', 1);
-    $pdf->Cell(40, 10, 'Estado', 1);
+    $pdf->Cell(20, 5, 'ID', 1, 0, 'C');
+    $pdf->Cell(30, 5, 'Cantidad', 1, 0, 'C'); // Ajustar el ancho de la celda según sea necesario
+    $pdf->Cell(110, 5, 'Producto', 1, 0, 'C'); // Ajustar el ancho de la celda según sea necesario
+    $pdf->Cell(30, 5, 'Total', 1, 0, 'C');
     $pdf->Ln();
 
-    $pdf->SetFont('Arial', '', 12);
-    $pdf->Cell(30, 10, $factura['id'], 1);
-    $pdf->Cell(50, 10, $factura['pedido_id'], 1); // Ajustar el ancho de la celda del Pedido ID aquí
-    $pdf->Cell(50, 10, '$' . number_format($factura['total'], 2), 1);
-    $pdf->Cell(40, 10, $factura['estado'], 1);
-    $pdf->Ln();
+    // Contenido de la tabla (centrado)
+    $pdf->Cell(20, 10, $factura['id'], 1, 0, 'C'); // Contenido ID centrado
+    $pdf->Cell(30, 10, $factura['cantidad'], 1, 0, 'C'); // Contenido Cantidad centrado
+    $pdf->Cell(110, 10, $factura['producto'], 1, 0, 'C'); // Contenido Producto centrado
+    $pdf->Cell(30, 10, '$' . number_format($factura['total'], 2), 1, 1, 'C'); // Contenido Total centrado y salto de línea
 
     $pdf->Ln(10); // Espacio adicional
 

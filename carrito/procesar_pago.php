@@ -81,6 +81,19 @@ if (isset($_POST['monto']) && isset($_POST['stripeToken'])) {
             // Calcular la fecha de entrega
             $fechaEntrega = calcularFechaEntrega($fechaPedido);
 
+            // Obtener detalles del carrito antes de vaciarlo
+            $sql_carrito = "SELECT id_producto, cantidad FROM carrito WHERE estado_pago = 'pagado' AND Pe_Cliente = ?";
+            $stmt = mysqli_prepare($link, $sql_carrito);
+            mysqli_stmt_bind_param($stmt, "i", $cliente_id);
+            mysqli_stmt_execute($stmt);
+            mysqli_stmt_bind_result($stmt, $id_producto, $cantidad);
+
+            $productos_comprados = [];
+            while (mysqli_stmt_fetch($stmt)) {
+                $productos_comprados[] = ['id_producto' => $id_producto, 'cantidad' => $cantidad];
+            }
+            mysqli_stmt_close($stmt);
+
             // Insertar pedido con fecha de entrega calculada
             $sql_transfer = "INSERT INTO pedidos (Pe_Cliente, Pe_Estado, Pe_Producto, Pe_Cantidad, Pe_Fechapedido, Pe_Fechaentrega)
                             SELECT carrito.Pe_Cliente, 1, productos.Identificador, carrito.cantidad, ?, ?
@@ -131,11 +144,18 @@ if (isset($_POST['monto']) && isset($_POST['stripeToken'])) {
             $total = $monto / 100; // Convertir de centavos a dólares (o la moneda que uses)
             $estado = 'pagado';
 
-            $sql_factura = "INSERT INTO factura (numero_factura, fecha, pedido_id, total, estado, nombre_cliente, numero_documento)
-                            VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            $sql_factura = "INSERT INTO factura (numero_factura, fecha, pedido_id, total, estado, nombre_cliente, numero_documento, producto, cantidad)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $stmt = mysqli_prepare($link, $sql_factura);
-            mysqli_stmt_bind_param($stmt, "ssidsiss", $numero_factura, $fecha, $pedido_id, $total, $estado, $nombre_cliente, $numero_documento);
-            mysqli_stmt_execute($stmt);
+
+            foreach ($productos_comprados as $producto) {
+                $id_producto = $producto['id_producto'];
+                $cantidad = $producto['cantidad'];
+
+                mysqli_stmt_bind_param($stmt, "ssdisssii", $numero_factura, $fecha, $pedido_id, $total, $estado, $nombre_cliente, $numero_documento, $id_producto, $cantidad);
+                mysqli_stmt_execute($stmt);
+            }
+
             mysqli_stmt_close($stmt);
 
             // Vaciar el carrito
@@ -157,8 +177,8 @@ if (isset($_POST['monto']) && isset($_POST['stripeToken'])) {
 }
 
 mysqli_close($link); // Cerrar conexión a la base de datos al finalizar
-
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
