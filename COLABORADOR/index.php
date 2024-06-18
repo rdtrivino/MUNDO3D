@@ -24,15 +24,18 @@
         <!--Inicia el codigo de la barra lateral izquierda de navegacion-->
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>  
-            <a class="navbar-brand ps-3" href="index.php">COLABORADOR</a>     
+            <a class="navbar-brand ps-3" href="index.php">COLABORADOR</a>
+
             <ul class="navbar-nav ms-auto ms-auto me-0 me-md-3 my-2 my-md-0">
                 <li class="nav-item dropdown">
-                <a class="nav-link dropdown" data-bs-toggle="" aria-expanded="">Bienvenid@ <?php echo $nombreCompleto; ?></a>
-                <div>
-                    <li><a class="nav-link dropdown" href="Programas/config.php">Configuracion de cuenta</a></li>
-                    <li><a class="nav-link dropdown" href="../Programas/logout.php" id="cerrar-sesion-button">Cerrar sesión</a></li>                       
-                </div>
-            </li>
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Bienvenid@ <?php echo $nombreCompleto; ?>
+                    </a>
+                    <ul class="menu-vertical dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="Programas/config.php">Configuracion de cuenta</a></li>
+                        <li><a class="dropdown-item" href="../Programas/logout.php" id="cerrar-sesion-button">Cerrar sesión</a></li>
+                    </ul>
+                </li>
             </ul>
         </nav>
 
@@ -120,10 +123,21 @@
                             }
                         }
                     ?>
-                        <?php if (!empty($titulo)): ?>
-                            <h1 class="mt-4"><?php echo $titulo; ?></h1>
-                        <?php endif; ?>
 
+                    <!-- Seccion para validar la variable titulo y agregar el buscador-->
+                    <?php if (!empty($titulo)): ?>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <h1 class="mt-4"><?php echo $titulo; ?></h1>
+
+                            <!-- Sección del buscador -->
+                            <form action="" method="POST">
+                                <label for="campo">Buscar: </label>
+                                <input type="text" name="campo" id="campo">
+                            </form>
+                        </div>
+                    <?php endif; ?>
+
+                    <!--Seccion donde se encuentran los botones adicionar, exportar e imprimir-->
                         <div class="btn-group mr-7">
                             <?php
                                    if (isset($_GET['tabla'])) {
@@ -138,6 +152,7 @@
                     <table class="table table-striped table-sm">
                         <thead>
                             <tr>
+
                             <!--Mostrar los encabezados de la tabla seleccionada-->
                             <?php  
                                 if (isset($_GET['tabla'])) {
@@ -163,7 +178,7 @@
                             </tr>
                         </thead>
                         <!--Mostrar contenido de la tabla-->
-                        <tbody>
+                        <tbody id="content">
                 
                         <?php
                             include __DIR__ . '/../conexion.php';
@@ -178,6 +193,7 @@
                                     $result = mysqli_query($link, $peticion);
                                     foreach ($result as $row) {
                                         echo '<tr>
+                                            <th scope="row">' . $row['Identificador'] . '</th>
                                             <th scope="row">' . $row['Identificador'] . '</th>
                                             <td>' . $row['Pe_Cliente'] . '</td>
                                             <td>' . $row['Pe_Estado'] . '</td>
@@ -218,7 +234,30 @@
                                 }
                         ?>
                         </tbody>
-                    </table>       
+                    </table> 
+                    
+                    <script>
+                        document.getElementById("campo").addEventListener("keyup", getData);
+
+                        function getData() {
+                            let input = document.getElementById("campo").value.trim(); // Trim para eliminar espacios en blanco al inicio y al final
+                            let content = document.getElementById("content");
+                            let formData = new FormData();
+                            formData.append('campo', input);
+
+                            fetch('Programas/load.php?tabla=<?php echo $table; ?>', {
+                                method: "POST",
+                                body: formData
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                content.innerHTML = data;
+                            })
+                            .catch(err => console.error('Error al obtener datos: ' + err));
+                        }
+                    </script>
+
+
                     </div>
                         <!--Definicion para incluir o no el calendario-->
                         <div class="container">
