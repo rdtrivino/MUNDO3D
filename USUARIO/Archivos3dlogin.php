@@ -371,7 +371,7 @@ $result = mysqli_query($link, $sql);
             <div class="row row-cols-lg-4 row-cols-md-3 justify-content-center">
                 <?php
                 // Consulta a la base de datos para obtener productos de la categoría 5
-                $sql = "SELECT * FROM productos WHERE Pro_Categoria = 5";
+                $sql = "SELECT * FROM productos WHERE Pro_Categoria = 5 AND Pro_Estado = 'activo'";
                 $result = mysqli_query($link, $sql);
 
                 // Verificar si se encontraron productos en la categoría 1b

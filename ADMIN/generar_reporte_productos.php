@@ -12,87 +12,125 @@ if (!$conexion) {
     die("Error al conectarse a la Base de Datos: " . mysqli_connect_error());
 }
 
-// Incluir la biblioteca FPDF
-require_once ('../libs/fpdf.php');
+require_once 'vendor/autoload.php'; // Ruta donde se encuentra autoload.php de Composer
+
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 // Función para generar el reporte de la tabla de productos
 function generarReporteProductos($conexion)
 {
-    // Crear una instancia de FPDF con orientación horizontal
-    $pdf = new FPDF('L'); // 'L' indica orientación horizontal (landscape)
-    $pdf->AddPage(); // Añadir una página al PDF
+    $options = new Options();
+    $options->set('isHtml5ParserEnabled', true);
 
-    // Configurar la fuente para UTF-8 y reducir el tamaño de las letras
-    $pdf->SetFont('Arial', '', 8); // Eliminar el parámetro 'true' para evitar subrayado en amarillo
+    // Crear una instancia de Dompdf con las opciones
+    $pdf = new Dompdf($options);
+    $pdf->setPaper('A4', 'landscape'); // Establecer tamaño de papel y orientación
 
-    // Título del reporte en un cuadro azul con letras blancas (a la derecha)
-    $pdf->SetFillColor(0, 102, 204); // Color de fondo azul
-    $pdf->SetTextColor(255, 255, 255); // Color de texto blanco
-    $pdf->SetFont('Arial', '', 12); // Quitar la negrita y reducir el tamaño de las letras
+    // Contenido HTML para el PDF
+    ob_start();
+    ?>
+    <html>
 
-    // Obtener el ancho del texto "MUNDO 3D - Reporte de Productos"
-    $anchoTexto = $pdf->GetStringWidth('MUNDO 3D - Reporte de Productos');
+    <head>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                font-size: 10pt;
+            }
 
-    // Definir el tamaño del recuadro ajustado al texto
-    $altoRecuadro = 10; // Alto del recuadro
-    $anchoRecuadro = $anchoTexto + 10; // Ancho del recuadro (más margen)
-    $x = $pdf->GetPageWidth() - $anchoRecuadro - 10; // Posición X para alinear a la derecha
-    $y = 10; // Posición Y para alinear arriba
+            .header {
+                background-color: #0066CC;
+                color: #FFFFFF;
+                text-align: center;
+                padding: 10px;
+                margin-bottom: 20px;
+            }
 
-    // Escribir el texto en el recuadro
-    $pdf->SetXY($x, $y + 1);
-    $pdf->Cell($anchoRecuadro, $altoRecuadro, 'MUNDO 3D - Reporte de Productos', 0, 0, 'C', true);
-    $pdf->Ln(); // Salto de línea
-    $pdf->Ln(); // Salto de línea adicional
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
 
-    // Definir el encabezado del PDF
-    $pdf->SetTextColor(255, 255, 255); // Color de texto blanco
-    $pdf->SetFillColor(50, 50, 50); // Color de fondo oscuro
-    $pdf->SetFont('Arial', 'B', 8); // Negrita para el encabezado y reducir el tamaño de las letras
+            table,
+            th,
+            td {
+                border: 1px solid black;
+                padding: 5px;
+                text-align: center;
+            }
 
-    // Encabezados de las columnas con celdas del mismo tamaño
-    $alturaCelda = 15; // Ajustar la altura de las celdas
-    $pdf->Cell(85, $alturaCelda, 'Nombre', 1, 0, 'C', true); // Encabezado de la columna 1
-    $pdf->Cell(15, $alturaCelda, 'Codigo', 1, 0, 'C', true); // Encabezado de la columna 2
-    $pdf->Cell(25, $alturaCelda, 'Categoría', 1, 0, 'C', true); // Encabezado de la columna 3
-    $pdf->Cell(20, $alturaCelda, 'Precio Venta', 1, 0, 'C', true); // Encabezado de la columna 4
-    $pdf->Cell(20, $alturaCelda, 'Cantidad', 1, 0, 'C', true); // Encabezado de la columna 5
-    $pdf->Cell(15, $alturaCelda, 'Costo', 1, 0, 'C', true); // Encabezado de la columna 6
-    $pdf->Cell(100, $alturaCelda, 'Descripción', 1, 0, 'C', true); // Encabezado de la columna 7
+            .odd {
+                background-color: #E6E6E6;
+            }
 
-    // Consultar la base de datos para obtener los datos de la tabla de productos
-    $sql = "SELECT p.Pro_Nombre, p.Identificador, p.Pro_Descripcion, p.Pro_PrecioVenta, c.Cgo_Nombre AS Pro_Categoria, p.Pro_Cantidad, p.Pro_Costo
-    FROM productos p
-    INNER JOIN categoria c ON p.Pro_Categoria = c.Cgo_Codigo";
+            .even {
+                background-color: #FFFFFF;
+            }
+        </style>
+    </head>
 
-    $resultado = mysqli_query($conexion, $sql);
+    <body>
+        <div class="header">
+            <img src="../images/Logo Mundo 3d.png" alt="Logo Mundo 3D" style="height: 20px; vertical-align: middle;">
+            <span style="vertical-align: middle; font-size: 12pt; font-weight: bold;"> MUNDO 3D - Reporte de
+                Productos</span>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Codigo</th>
+                    <th>Categoría</th>
+                    <th>Precio Venta</th>
+                    <th>Cantidad</th>
+                    <th>Costo</th>
+                    <th>Descripción</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $colorFondo = 'odd';
+                $sql = "SELECT p.Pro_Nombre, p.Identificador, p.Pro_Descripcion, p.Pro_PrecioVenta, c.Cgo_Nombre AS Pro_Categoria, p.Pro_Cantidad, p.Pro_Costo
+                        FROM productos p
+                        INNER JOIN categoria c ON p.Pro_Categoria = c.Cgo_Codigo";
+                $resultado = mysqli_query($conexion, $sql);
 
-    // Comprobar si la consulta fue exitosa
-    if (!$resultado) {
-        die("Error en la consulta: " . mysqli_error($conexion));
-    }
+                if (!$resultado) {
+                    die("Error en la consulta: " . mysqli_error($conexion));
+                }
 
-    // Restaurar la configuración para la construcción de la tabla
-    $pdf->SetTextColor(0, 0, 0); // Restaurar el color de texto a negro
-    $pdf->SetFont('Arial', '', 8); // Restaurar el tamaño normal de letra
+                while ($row = mysqli_fetch_assoc($resultado)) {
+                    ?>
+                    <tr class="<?php echo $colorFondo; ?>">
+                        <td><?php echo utf8_decode($row['Pro_Nombre']); ?></td>
+                        <td><?php echo utf8_decode($row['Identificador']); ?></td>
+                        <td><?php echo utf8_decode($row['Pro_Categoria']); ?></td>
+                        <td><?php echo utf8_decode($row['Pro_PrecioVenta']); ?></td>
+                        <td><?php echo utf8_decode($row['Pro_Cantidad']); ?></td>
+                        <td><?php echo utf8_decode($row['Pro_Costo']); ?></td>
+                        <td><?php echo utf8_decode($row['Pro_Descripcion']); ?></td>
+                    </tr>
+                    <?php
+                    $colorFondo = ($colorFondo == 'odd') ? 'even' : 'odd';
+                }
+                ?>
+            </tbody>
+        </table>
+    </body>
 
-    // Construir la tabla con los datos de la consulta
-    while ($row = mysqli_fetch_assoc($resultado)) {
-        // Rellenar las celdas con los datos obtenidos de la base de datos
-        $pdf->Cell(85, $alturaCelda, utf8_decode($row['Pro_Nombre']), 1, 0, 'C'); // Celda para el nombre
-        $pdf->Cell(15, $alturaCelda, utf8_decode($row['Identificador']), 1, 0, 'C'); // Celda para el identificador
-        $pdf->Cell(25, $alturaCelda, utf8_decode($row['Pro_Categoria']), 1, 0, 'C'); // Celda para la categoría
-        $pdf->Cell(20, $alturaCelda, utf8_decode($row['Pro_PrecioVenta']), 1, 0, 'C'); // Celda para el precio de venta
-        $pdf->Cell(20, $alturaCelda, utf8_decode($row['Pro_Cantidad']), 1, 0, 'C'); // Celda para la cantidad
-        $pdf->Cell(15, $alturaCelda, utf8_decode($row['Pro_Costo']), 1, 0, 'C'); // Celda para el costo
-        // Celda para la descripción con MultiCell para manejar saltos de línea
-        $pdf->MultiCell(100, 6, utf8_decode($row['Pro_Descripcion']), 1, 'C');
-        // Salto de línea después de cada fila
-        $pdf->Ln();
-    }
+    </html>
+    <?php
+    $html = ob_get_clean();
 
-    // Generar y descargar el PDF con el nombre adecuado
-    $pdf->Output('Reporte_Productos.pdf', 'D');
+    // Cargar el contenido HTML en Dompdf
+    $pdf->loadHtml($html);
+
+    // Renderizar el PDF
+    $pdf->render();
+
+    // Generar salida del PDF (descargar automáticamente)
+    $pdf->stream('Reporte_Productos.pdf', array('Attachment' => 1));
 }
 
 // Generar el reporte de productos

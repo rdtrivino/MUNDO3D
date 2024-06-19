@@ -10,90 +10,124 @@ if (!$conexion) {
     die("Error al conectarse a la Base de Datos: " . mysqli_connect_error());
 }
 
-require_once ('../libs/fpdf.php');
+require_once 'vendor/autoload.php'; // Ruta donde se encuentra autoload.php de Composer
+
+use Dompdf\Dompdf;
+use Dompdf\Options;
+
+function obtenerEtiquetaRol($rol)
+{
+    switch ($rol) {
+        case '1':
+            return 'ADMI';
+        case '3':
+            return 'USU';
+        case '2':
+            return 'COL';
+        default:
+            return '';
+    }
+}
 
 function generarReporteUsuarios($conexion)
 {
-    $pdf = new FPDF('L');
-    $pdf->AddPage();
+    $options = new Options();
+    $options->set('isHtml5ParserEnabled', true);
 
-    $pdf->SetFont('Arial', '', 8);
+    $pdf = new Dompdf($options);
+    $pdf->setPaper('A4', 'landscape');
 
-    $pdf->Image('../images/Logo Mundo 3d.png', 10, 5, 20);
-    $pdf->Ln(30);
+    ob_start();
+    ?>
+        <html>
+        <head>
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    font-size: 10pt;
+                }
+                .header {
+                    background-color: #0066CC;
+                    color: #FFFFFF;
+                    text-align: center;
+                    padding: 10px;
+                    margin-bottom: 20px;
+                }
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                }
+                table, th, td {
+                    border: 1px solid black;
+                    padding: 5px;
+                    text-align: center;
+                }
+                .odd {
+                    background-color: #E6E6E6;
+                }
+                .even {
+                    background-color: #FFFFFF;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <img src="../images/Logo Mundo 3d.png" alt="Logo Mundo 3D" style="height: 20px; vertical-align: middle;">
+                <span style="vertical-align: middle; font-size: 12pt; font-weight: bold;">MUNDO 3D - Reporte de Usuarios</span>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Identificación</th>
+                        <th>Nombre completo</th>
+                        <th>Teléfono</th>
+                        <th>Email</th>
+                        <th>Ciudad</th>
+                        <th>Dirección</th>
+                        <th>Rol</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $colorFondo = 'odd';
+                    $sql = "SELECT Usu_Identificacion, Usu_Nombre_completo, Usu_Telefono, Usu_Email, Usu_Ciudad, Usu_Direccion, Usu_Rol, Usu_Estado FROM usuario";
+                    $resultado = mysqli_query($conexion, $sql);
 
-    $pdf->SetFillColor(0, 102, 204);
-    $pdf->SetTextColor(255, 255, 255);
-    $pdf->SetFont('Arial', '', 12);
+                    if (!$resultado) {
+                        die("Error en la consulta: " . mysqli_error($conexion));
+                    }
 
-    $anchoTexto = $pdf->GetStringWidth('MUNDO 3D - Reporte de Usuarios');
-    $altoRecuadro = 10;
-    $anchoRecuadro = $anchoTexto + 10;
-    $x = $pdf->GetPageWidth() - $anchoRecuadro - 30;
-    $y = 10;
+                    while ($row = mysqli_fetch_assoc($resultado)) {
+                        $estadoColor = ($row['Usu_Estado'] == 'inactivo') ? 'style="background-color: #FF0000;"' : 'style="background-color: #00FF00;"';
+                        ?>
+                            <tr class="<?php echo $colorFondo; ?>">
+                                <td><?php echo utf8_decode($row['Usu_Identificacion']); ?></td>
+                                <td><?php echo utf8_decode($row['Usu_Nombre_completo']); ?></td>
+                                <td><?php echo utf8_decode($row['Usu_Telefono']); ?></td>
+                                <td><?php echo utf8_decode($row['Usu_Email']); ?></td>
+                                <td><?php echo utf8_decode($row['Usu_Ciudad']); ?></td>
+                                <td><?php echo utf8_decode($row['Usu_Direccion']); ?></td>
+                                <td><?php echo obtenerEtiquetaRol($row['Usu_Rol']); ?></td>
+                                <td <?php echo $estadoColor; ?>><?php echo utf8_decode($row['Usu_Estado']); ?></td>
+                            </tr>
+                            <?php
+                            $colorFondo = ($colorFondo == 'odd') ? 'even' : 'odd';
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </body>
+        </html>
+        <?php
+        $html = ob_get_clean();
 
-    $pdf->SetXY($x, $y + 1);
-    $pdf->Cell($anchoRecuadro, $altoRecuadro, 'MUNDO 3D - Reporte de Usuarios', 0, 0, 'C', true);
-    $pdf->Ln();
-    $pdf->Ln();
+        $pdf->loadHtml($html);
+        $pdf->render();
 
-    $pdf->SetTextColor(255, 255, 255);
-    $pdf->SetFillColor(50, 50, 50);
-    $pdf->SetFont('Arial', 'B', 8);
-    $pdf->Cell(30, 10, 'Identificacion', 1, 0, 'C', true);
-    $pdf->Cell(40, 10, 'Nombre completo', 1, 0, 'C', true);
-    $pdf->Cell(30, 10, 'Telefono', 1, 0, 'C', true);
-    $pdf->Cell(50, 10, 'Email', 1, 0, 'C', true);
-    $pdf->Cell(20, 10, 'Ciudad', 1, 0, 'C', true);
-    $pdf->Cell(40, 10, 'Direccion', 1, 0, 'C', true);
-    $pdf->Cell(20, 10, 'Rol', 1, 0, 'C', true);
-    $pdf->Cell(30, 10, 'Estado', 1, 1, 'C', true);
-
-    function obtenerEtiquetaRol($rol)
-    {
-        switch ($rol) {
-            case '1':
-                return 'ADMI';
-            case '3':
-                return 'USU';
-            case '2':
-                return 'COL';
-            default:
-                return '';
-        }
-    }
-
-    $sql = "SELECT Usu_Identificacion, Usu_Nombre_completo, Usu_Telefono, Usu_Email, Usu_Ciudad, Usu_Direccion, Usu_Rol, Usu_Pedidos, Usu_Estado FROM usuario";
-    $resultado = mysqli_query($conexion, $sql);
-
-    if (!$resultado) {
-        die("Error en la consulta: " . mysqli_error($conexion));
-    }
-
-    $pdf->SetTextColor(0, 0, 0);
-    $pdf->SetFont('Arial', '', 8);
-
-    $colorFondo = true;
-
-    while ($row = mysqli_fetch_assoc($resultado)) {
-        if ($row['Usu_Estado'] == 'inactivo') {
-            $pdf->SetFillColor(255, 0, 0);
-        } else {
-            $pdf->SetFillColor(0, 255, 0);
-        }
-
-        $pdf->Cell(30, 8, utf8_decode($row['Usu_Identificacion']), 1, 0, 'C', true);
-        $pdf->Cell(40, 8, utf8_decode($row['Usu_Nombre_completo']), 1, 0, 'C', true);
-        $pdf->Cell(30, 8, utf8_decode($row['Usu_Telefono']), 1, 0, 'C', true);
-        $pdf->Cell(50, 8, utf8_decode($row['Usu_Email']), 1, 0, 'C', true);
-        $pdf->Cell(20, 8, utf8_decode($row['Usu_Ciudad']), 1, 0, 'C', true);
-        $pdf->Cell(40, 8, utf8_decode($row['Usu_Direccion']), 1, 0, 'C', true);
-        $pdf->Cell(20, 8, obtenerEtiquetaRol($row['Usu_Rol']), 1, 0, 'C', true);
-        $pdf->Cell(30, 8, utf8_decode($row['Usu_Estado']), 1, 1, 'C', true);
-    }
-
-    $pdf->Output('Reporte_Usuarios.pdf', 'D');
+        $pdf->stream('Reporte_Usuarios.pdf', array('Attachment' => 1));
 }
 
 generarReporteUsuarios($conexion);
+mysqli_close($conexion);
 ?>

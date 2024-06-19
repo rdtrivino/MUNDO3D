@@ -3,10 +3,8 @@ session_start(); // Iniciar sesión si no está iniciada
 
 // Verificar si el usuario está autenticado
 if (!isset($_SESSION['user_id'])) {
-    // Manejar el caso en que el usuario no esté autenticado
-    // Por ejemplo, redirigir a la página de inicio de sesión
     header("Location: login.php");
-    exit(); // Finalizar el script para evitar ejecución adicional
+    exit();
 }
 
 $cliente_id = $_SESSION['user_id']; // Obtener el ID de usuario de la sesión
@@ -19,14 +17,10 @@ $user = "root";
 $password = "";
 $dbname = "mundo3d";
 
-$link = mysqli_connect($host, $user, $password);
+$link = mysqli_connect($host, $user, $password, $dbname);
 
 if (!$link) {
     die("Error al conectarse al servidor: " . mysqli_connect_error());
-}
-
-if (!mysqli_select_db($link, $dbname)) {
-    die("Error al conectarse a la Base de Datos: " . mysqli_error($link));
 }
 
 // Definir una variable para indicar si el pago fue exitoso o rechazado
@@ -48,9 +42,19 @@ if (isset($_POST['monto']) && isset($_POST['stripeToken'])) {
         // Marcar el pago como exitoso si no se lanzó ninguna excepción
         $pagoExitoso = true;
 
+        // Empezar una transacción
+        mysqli_begin_transaction($link);
+
+        // Insertar una nueva entrada en la tabla compras
+        $sql_insert_compra = "INSERT INTO compras (cliente_id) VALUES (?)";
+        $stmt = mysqli_prepare($link, $sql_insert_compra);
+        mysqli_stmt_bind_param($stmt, "i", $cliente_id);
+        mysqli_stmt_execute($stmt);
+        $compra_id = mysqli_insert_id($link); // Obtener el ID de la compra recién insertada
+        mysqli_stmt_close($stmt);
+
         // Actualizar el estado de pago en la base de datos de "pendiente" a "pagado"
         if ($pagoExitoso) {
-            // Realizar la consulta SQL para actualizar el estado de pago
             $sql_update = "UPDATE carrito SET estado_pago = 'pagado' WHERE estado_pago = 'pendiente' AND Pe_Cliente = ?";
             $stmt = mysqli_prepare($link, $sql_update);
             mysqli_stmt_bind_param($stmt, "i", $cliente_id);
@@ -69,7 +73,6 @@ if (isset($_POST['monto']) && isset($_POST['stripeToken'])) {
 
                 while ($diasAgregados < $diasHabiles) {
                     $fechaEntrega->add(new DateInterval('P1D')); // Añadir un día
-                    // Si el día agregado no es sábado ni domingo, contarlo como hábil
                     if ($fechaEntrega->format('N') < 6) {
                         $diasAgregados++;
                     }
@@ -94,19 +97,18 @@ if (isset($_POST['monto']) && isset($_POST['stripeToken'])) {
             }
             mysqli_stmt_close($stmt);
 
-            // Insertar pedido con fecha de entrega calculada
-            $sql_transfer = "INSERT INTO pedidos (Pe_Cliente, Pe_Estado, Pe_Producto, Pe_Cantidad, Pe_Fechapedido, Pe_Fechaentrega)
-                            SELECT carrito.Pe_Cliente, 1, productos.Identificador, carrito.cantidad, ?, ?
-                            FROM carrito
-                            INNER JOIN productos ON carrito.id_producto = productos.Identificador
-                            WHERE carrito.estado_pago = 'pagado' AND carrito.Pe_Cliente = ?";
-            $stmt = mysqli_prepare($link, $sql_transfer);
-            mysqli_stmt_bind_param($stmt, "ssi", $fechaPedido, $fechaEntrega, $cliente_id);
-            mysqli_stmt_execute($stmt);
-            mysqli_stmt_close($stmt);
+            // Insertar productos en la tabla pedidos con el mismo identificador de compra
+            foreach ($productos_comprados as $producto) {
+                $id_producto = $producto['id_producto'];
+                $cantidad = $producto['cantidad'];
 
-            // Obtener el último ID insertado en la tabla pedidos
-            $pedido_id = mysqli_insert_id($link);
+                $sql_transfer = "INSERT INTO pedidos (Pe_Cliente, Pe_Estado, Pe_Producto, Pe_Cantidad, Pe_Fechapedido, Pe_Fechaentrega, Compra_ID)
+                                 VALUES (?, 1, ?, ?, ?, ?, ?)";
+                $stmt = mysqli_prepare($link, $sql_transfer);
+                mysqli_stmt_bind_param($stmt, "iiissi", $cliente_id, $id_producto, $cantidad, $fechaPedido, $fechaEntrega, $compra_id);
+                mysqli_stmt_execute($stmt);
+            }
+            mysqli_stmt_close($stmt);
 
             // Función para obtener el nombre del cliente
             function obtenerNombreCliente($conexion, $cliente_id)
@@ -144,15 +146,15 @@ if (isset($_POST['monto']) && isset($_POST['stripeToken'])) {
             $total = $monto / 100; // Convertir de centavos a dólares (o la moneda que uses)
             $estado = 'pagado';
 
-            $sql_factura = "INSERT INTO factura (numero_factura, fecha, pedido_id, total, estado, nombre_cliente, numero_documento, producto, cantidad)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $sql_factura = "INSERT INTO factura (numero_factura, fecha, total, estado, nombre_cliente, numero_documento, producto, cantidad, pedido_id)
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $stmt = mysqli_prepare($link, $sql_factura);
 
             foreach ($productos_comprados as $producto) {
                 $id_producto = $producto['id_producto'];
                 $cantidad = $producto['cantidad'];
 
-                mysqli_stmt_bind_param($stmt, "ssdisssii", $numero_factura, $fecha, $pedido_id, $total, $estado, $nombre_cliente, $numero_documento, $id_producto, $cantidad);
+                mysqli_stmt_bind_param($stmt, "ssidsisss", $numero_factura, $fecha, $total, $estado, $nombre_cliente, $numero_documento, $id_producto, $cantidad, $compra_id);
                 mysqli_stmt_execute($stmt);
             }
 
@@ -165,14 +167,17 @@ if (isset($_POST['monto']) && isset($_POST['stripeToken'])) {
             mysqli_stmt_execute($stmt);
             mysqli_stmt_close($stmt);
 
+            // Commit de la transacción
+            mysqli_commit($link);
+
             // Aquí puedes enviar un correo electrónico al cliente si lo deseas
         }
     } catch (\Stripe\Exception\CardException $e) {
-        // El pago fue rechazado
         echo 'Error al procesar el pago: ' . $e->getError()->message;
+        mysqli_rollback($link);
     } catch (Exception $e) {
-        // Otra excepción
         echo 'Error al procesar el pago: ' . $e->getMessage();
+        mysqli_rollback($link);
     }
 }
 

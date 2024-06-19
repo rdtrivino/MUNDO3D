@@ -1,0 +1,47 @@
+<?php
+session_start();
+require '../conexion.php';
+
+$nombreCompleto = $_SESSION['username'];
+$usuario_id = $_SESSION['user_id'];
+
+function obtenerNombreProducto($IdentificadorProducto, $conexion)
+{
+    $sql = "SELECT pro_nombre FROM productos WHERE Identificador = ?";
+    $stmt = mysqli_prepare($conexion, $sql);
+    mysqli_stmt_bind_param($stmt, "i", $IdentificadorProducto);
+    mysqli_stmt_execute($stmt);
+    mysqli_stmt_bind_result($stmt, $nombreProducto);
+    mysqli_stmt_fetch($stmt);
+    mysqli_stmt_close($stmt);
+    return $nombreProducto ? $nombreProducto : "Producto no encontrado";
+}
+
+// Función para obtener todos los productos disponibles desde la base de datos
+function obtenerProductos($link)
+{
+    // Array para almacenar los productos
+    $productos = array();
+
+    // Consulta SQL para obtener todos los productos
+    $sql = "SELECT Identificador, Pro_Nombre FROM productos";
+
+    // Ejecutar la consulta
+    $result = mysqli_query($link, $sql);
+
+    // Verificar si la consulta fue exitosa y procesar los resultados
+    if ($result && mysqli_num_rows($result) > 0) {
+        // Iterar sobre los resultados y almacenar cada producto en el array
+        while ($row = mysqli_fetch_assoc($result)) {
+            $productos[] = $row;
+        }
+    }
+
+    // Retornar el array de productos
+    return $productos;
+}
+
+$stmt->close();
+$link->close();
+
+?>

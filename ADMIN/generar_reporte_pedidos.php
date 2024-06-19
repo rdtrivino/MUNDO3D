@@ -10,7 +10,10 @@ if (!$conexion) {
     die("Error al conectarse a la Base de Datos: " . mysqli_connect_error());
 }
 
-require_once ('../libs/fpdf.php');
+require_once 'vendor/autoload.php'; // Ruta donde se encuentra autoload.php de Composer
+
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 function obtenerNombreEstado($conexion, $codigoEstado)
 {
@@ -46,75 +49,128 @@ function truncarTexto($texto, $longitudMaxima)
 
 function generarReportePedidos($conexion)
 {
-    $pdf = new FPDF('L');
-    $pdf->AddPage();
+    $options = new Options();
+    $options->set('isHtml5ParserEnabled', true); // Habilitar el analizador HTML5
 
-    $pdf->Image('../images/Logo Mundo 3d.png', 10, 5, 20);
-    $pdf->SetFont('Arial', '', 8);
+    // Crear una instancia de Dompdf con las opciones
+    $pdf = new Dompdf($options);
+    $pdf->setPaper('A4', 'landscape'); // Establecer tamaño de papel y orientación
 
-    $pdf->SetTextColor(0);
-    $pdf->SetFont('Arial', 'B', 12);
+    // Contenido HTML para el PDF
+    ob_start();
+    ?>
+    <html>
 
-    $anchoTexto = $pdf->GetStringWidth('MUNDO 3D - Reporte de Pedidos');
+    <head>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                font-size: 10pt;
+            }
 
-    $altoRecuadro = 10;
-    $anchoRecuadro = $anchoTexto + 10;
-    $x = $pdf->GetPageWidth() - $anchoRecuadro - 10;
-    $y = 10;
+            .header {
+                background-color: #0066CC;
+                color: #FFFFFF;
+                text-align: center;
+                padding: 10px;
+                margin-bottom: 20px;
+            }
 
-    $pdf->SetFillColor(0, 102, 204);
-    $pdf->SetTextColor(255, 255, 255);
-    $pdf->Rect($x, $y, $anchoRecuadro, $altoRecuadro, 'F');
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
 
-    $pdf->SetXY($x, $y + 1);
-    $pdf->Cell($anchoRecuadro, $altoRecuadro, 'MUNDO 3D - Reporte de Pedidos', 0, 0, 'C');
+            table,
+            th,
+            td {
+                border: 1px solid black;
+                padding: 5px;
+                text-align: center;
+            }
 
-    $pdf->Ln(20);
+            .odd {
+                background-color: #E6E6E6;
+            }
 
-    $pdf->SetFillColor(50, 50, 50);
-    $pdf->SetTextColor(255, 255, 255);
-    $pdf->SetFont('Arial', 'B', 8);
-    $pdf->Cell(15, 10, 'Codigo', 1, 0, 'C', true);
-    $pdf->Cell(20, 10, 'Estado', 1, 0, 'C', true);
-    $pdf->Cell(80, 10, 'Producto', 1, 0, 'C', true);
-    $pdf->Cell(15, 10, 'Cantidad', 1, 0, 'C', true);
-    $pdf->Cell(25, 10, 'Fecha de Entrega', 1, 0, 'C', true);
-    $pdf->Cell(25, 10, 'Fecha de Pedido', 1, 0, 'C', true);
-    $pdf->Cell(30, 10, 'Cliente', 1, 0, 'C', true);
-    $pdf->Cell(65, 10, 'Observación', 1, 1, 'C', true);
+            .even {
+                background-color: #FFFFFF;
+            }
+        </style>
+    </head>
 
-    $colorFondo = true;
+    <body>
+        <div class="header">
+            <img src="../images/Logo Mundo 3d.png" alt="" style="height: 20px; vertical-align: middle;">
+            <span style="vertical-align: middle; font-size: 12pt; font-weight: bold;"> MUNDO 3D - Reporte de Pedidos</span>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Codigo</th>
+                    <th>Estado</th>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Fecha de Entrega</th>
+                    <th>Fecha de Pedido</th>
+                    <th>Cliente</th>
+                    <th>Observación</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $colorFondo = 'odd';
+                $sql = "SELECT * FROM pedidos";
+                $resultado = mysqli_query($conexion, $sql);
 
-    $sql = "SELECT * FROM pedidos";
-    $resultado = mysqli_query($conexion, $sql);
+                if (!$resultado) {
+                    die("Error en la consulta: " . mysqli_error($conexion));
+                }
 
-    if (!$resultado) {
-        die("Error en la consulta: " . mysqli_error($conexion));
-    }
+                while ($row = mysqli_fetch_assoc($resultado)) {
+                    $estado = obtenerNombreEstado($conexion, $row['Pe_Estado']);
+                    $cliente = obtenerNombreCliente($conexion, $row['Pe_Cliente']);
+                    $producto = obtenerNombreProducto($conexion, $row['Pe_Producto']);
+                    ?>
+                    <tr class="<?php echo $colorFondo; ?>">
+                        <td><?php echo isset($row['Identificador']) ? $row['Identificador'] : ''; ?></td>
+                        <td><?php echo utf8_decode($estado); ?></td>
+                        <td><?php echo utf8_decode(truncarTexto($producto, 40)); ?></td>
+                        <td><?php echo isset($row['Pe_Cantidad']) ? $row['Pe_Cantidad'] : ''; ?></td>
+                        <td><?php echo isset($row['Pe_Fechaentrega']) ? $row['Pe_Fechaentrega'] : ''; ?></td>
+                        <td><?php echo isset($row['Pe_Fechapedido']) ? $row['Pe_Fechapedido'] : ''; ?></td>
+                        <td><?php echo utf8_decode($cliente); ?></td>
+                        <td><?php echo utf8_decode(truncarTexto(isset($row['Pe_Observacion']) ? $row['Pe_Observacion'] : '', 40)); ?>
+                        </td>
+                    </tr>
+                    <?php
+                    $colorFondo = ($colorFondo == 'odd') ? 'even' : 'odd';
+                }
+                ?>
+            </tbody>
+        </table>
+    </body>
 
-    while ($row = mysqli_fetch_assoc($resultado)) {
-        $estado = obtenerNombreEstado($conexion, $row['Pe_Estado']);
-        $cliente = obtenerNombreCliente($conexion, $row['Pe_Cliente']);
-        $producto = obtenerNombreProducto($conexion, $row['Pe_Producto']);
+    </html>
+    <?php
+    $html = ob_get_clean();
 
-        $pdf->SetFillColor($colorFondo ? 200 : 255, 255, 255);
-        $pdf->SetTextColor(0);
-        $pdf->SetFont('Arial', '', 8);
+    // Cargar el contenido HTML en Dompdf
+    $pdf->loadHtml($html);
 
-        $pdf->Cell(15, 10, utf8_decode(isset($row['Identificador']) ? $row['Identificador'] : ''), 1, 0, 'C', $colorFondo);
-        $pdf->Cell(20, 10, utf8_decode($estado), 1, 0, 'C', $colorFondo);
-        $pdf->Cell(80, 10, utf8_decode(truncarTexto($producto, 40)), 1, 0, 'C', $colorFondo);
-        $pdf->Cell(15, 10, utf8_decode(isset($row['Pe_Cantidad']) ? $row['Pe_Cantidad'] : ''), 1, 0, 'C', $colorFondo);
-        $pdf->Cell(25, 10, utf8_decode(isset($row['Pe_Fechaentrega']) ? $row['Pe_Fechaentrega'] : ''), 1, 0, 'C', $colorFondo);
-        $pdf->Cell(25, 10, utf8_decode(isset($row['Pe_Fechapedido']) ? $row['Pe_Fechapedido'] : ''), 1, 0, 'C', $colorFondo);
-        $pdf->Cell(30, 10, utf8_decode($cliente), 1, 0, 'C', $colorFondo);
-        $pdf->MultiCell(65, 10, utf8_decode(truncarTexto(isset($row['Pe_Observacion']) ? $row['Pe_Observacion'] : '', 40)), 1, 'C', $colorFondo);
+    // Renderizar el PDF
+    $pdf->render();
 
-        $colorFondo = !$colorFondo;
-    }
+    // Obtener el contenido del PDF generado
+    $pdfOutput = $pdf->output();
 
+    // Establecer las cabeceras para descarga del archivo PDF
+    header('Content-Type: application/pdf');
+    header('Content-Disposition: attachment;filename="Reporte_Pedidos.pdf"');
+    header('Cache-Control: max-age=0');
 
-    $pdf->Output('Reporte_Pedidos.pdf', 'D');
+    // Enviar el contenido del PDF al navegador
+    echo $pdfOutput;
 }
 
 generarReportePedidos($conexion);

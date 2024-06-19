@@ -72,6 +72,10 @@ include ("Programas/graficos.php");
                                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                                 Tabla Productos
                             </a>
+                            <a class="nav-link" href="tablesfacturas.php">
+                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                                Facturas
+                            </a>
                         </div>
                         <div class="mb-3 text-center" style="margin-top: 70px;">
                             <div style="max-width: 80%; margin: 0 auto;">

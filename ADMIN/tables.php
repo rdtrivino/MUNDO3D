@@ -105,6 +105,10 @@
                                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                                 Tablas Productos
                             </a>
+                            <a class="nav-link" href="tablesfacturas.php">
+                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                                Facturas
+                            </a>
                             <div class="mb-3">
                                 <button type="button" class="btn btn-primary w-100" onclick="generarReportePDF()">
                                     <i class="fas fa-file-pdf me-1"></i> Generar Reporte PDF

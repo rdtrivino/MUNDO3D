@@ -5,27 +5,23 @@ include __DIR__ . '/../conexion.php';
 // Confirmación de que el usuario ha realizado el proceso de autenticación
 if (!isset($_SESSION['confirmado']) || $_SESSION['confirmado'] == false) {
   header("Location: ../Programas/autenticacion.php");
-  exit(); // Terminamos la ejecución del script después de redirigir
+  exit();
 }
 
 // Realizamos la consulta para obtener el rol del usuario
-$peticion = "SELECT Usu_rol FROM usuario WHERE Usu_Identificacion = '" . $_SESSION['user_id'] . "'";
-$result = mysqli_query($link, $peticion);
+$peticion = "SELECT Usu_rol FROM usuario WHERE Usu_Identificacion = ?";
+$stmt = mysqli_prepare($link, $peticion);
+if (!$stmt) {
+  die('Error en la preparación de la consulta: ' . mysqli_error($link));
+}
+mysqli_stmt_bind_param($stmt, "s", $_SESSION['user_id']);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
 
 // Verificamos si la consulta tuvo éxito
-if (!$result) {
-  // Manejo de errores de consulta
-  // Redirigir a la página de autenticación o mostrar un mensaje de error
+if (!$result || mysqli_num_rows($result) != 1) {
   header("Location: ../Programas/autenticacion.php");
-  exit(); // Terminamos la ejecución del script después de redirigir
-}
-
-// Verificamos si la consulta devolvió exactamente un resultado
-if (mysqli_num_rows($result) != 1) {
-  // Si la consulta no devuelve un solo resultado, puede ser un problema de base de datos
-  // Redirigir a la página de autenticación o mostrar un mensaje de error
-  header("Location: ../Programas/autenticacion.php");
-  exit(); // Terminamos la ejecución del script después de redirigir
+  exit();
 }
 
 // Obtenemos el rol del usuario
@@ -34,9 +30,8 @@ $rolUsuario = $fila['Usu_rol'];
 
 // Verificar si el rol del usuario es diferente de 3
 if ($rolUsuario != 3) {
-  // Si el rol no es 3, redirigir a la página de autenticación
   header("Location: ../Programas/autenticacion.php");
-  exit(); // Terminamos la ejecución del script después de redirigir
+  exit();
 }
 
 $nombreCompleto = $_SESSION['username'];
@@ -48,25 +43,53 @@ $user = "root";
 $password = "";
 $dbname = "mundo3d";
 
-$link = mysqli_connect($host, $user, $password);
+$link = mysqli_connect($host, $user, $password, $dbname);
 
 if (!$link) {
   die("Error al conectarse al servidor: " . mysqli_connect_error());
 }
 
-if (!mysqli_select_db($link, $dbname)) {
-  die("Error al conectarse a la Base de Datos: " . mysqli_error($link));
-}
+// Consulta para obtener los pedidos del usuario logueado
+$sql_pedidos_usuario = "
+    SELECT 
+        c.Compra_ID,
+        c.Pe_Estado,
+        GROUP_CONCAT(p.Pe_Producto SEPARATOR ', ') AS Productos,
+        GROUP_CONCAT(p.Pe_Cantidad SEPARATOR ', ') AS Cantidades,
+        c.Pe_Fechapedido,
+        c.Pe_Fechaentrega,
+        c.pe_nombre_pedido,
+        c.nombre_imagen,
+        c.pe_tipo_impresion,
+        c.pe_color,
+        c.Pe_Observacion
+    FROM 
+        pedidos c
+    INNER JOIN 
+        pedidos p ON c.Compra_ID = p.Compra_ID
+    WHERE 
+        c.Pe_Cliente = ? AND p.Acciones <> 'inactivo'
+    GROUP BY 
+        c.Compra_ID
+";
 
-// Consulta SQL para obtener los pedidos del usuario logueado
-$sql_pedidos_usuario = "SELECT * FROM pedidos WHERE Pe_Cliente = $usuario_id AND Acciones <> 'inactivo'";
-$resultado_pedidos_usuario = mysqli_query($link, $sql_pedidos_usuario);
+
+$stmt = mysqli_prepare($link, $sql_pedidos_usuario);
+if (!$stmt) {
+  die('Error en la preparación de la consulta: ' . mysqli_error($link));
+}
+mysqli_stmt_bind_param($stmt, "i", $usuario_id);
+mysqli_stmt_execute($stmt);
+$resultado_pedidos_usuario = mysqli_stmt_get_result($stmt);
 
 // Función para obtener el nombre del producto a partir de su identificador
 function obtenerNombreProducto($IdentificadorProducto, $conexion)
 {
   $sql = "SELECT pro_nombre FROM productos WHERE Identificador = ?";
   $stmt = mysqli_prepare($conexion, $sql);
+  if (!$stmt) {
+    return "Error en la preparación de la consulta: " . mysqli_error($conexion);
+  }
   mysqli_stmt_bind_param($stmt, "i", $IdentificadorProducto);
   mysqli_stmt_execute($stmt);
   mysqli_stmt_bind_result($stmt, $nombreProducto);
@@ -80,6 +103,9 @@ function obtenerNombreEstado($IdentificadorEstado, $conexion)
 {
   $sql = "SELECT Es_Nombre FROM pedido_estado WHERE Es_Codigo = ?";
   $stmt = mysqli_prepare($conexion, $sql);
+  if (!$stmt) {
+    return "Error en la preparación de la consulta: " . mysqli_error($conexion);
+  }
   mysqli_stmt_bind_param($stmt, "i", $IdentificadorEstado);
   mysqli_stmt_execute($stmt);
   mysqli_stmt_bind_result($stmt, $nombreEstado);
@@ -88,7 +114,6 @@ function obtenerNombreEstado($IdentificadorEstado, $conexion)
   return $nombreEstado ? $nombreEstado : "Estado no encontrado";
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 
@@ -295,9 +320,7 @@ function obtenerNombreEstado($IdentificadorEstado, $conexion)
               <th>Fecha de Pedido</th>
               <th>Fecha de Entrega</th>
               <th>Nombre de Pedido</th>
-              <th>Imagen</th>
               <th>Tipo de Impresión</th>
-              <th>Color</th>
               <th>Observación</th>
               <th>Factura</th>
             </tr>
@@ -308,18 +331,15 @@ function obtenerNombreEstado($IdentificadorEstado, $conexion)
             if ($resultado_pedidos_usuario && mysqli_num_rows($resultado_pedidos_usuario) > 0) {
               while ($row = mysqli_fetch_assoc($resultado_pedidos_usuario)) {
                 ?>
-                <tr id="pedidoRow<?php echo $row['Identificador']; ?>">
-                  <td><?php echo $row['Identificador']; ?></td>
+                <tr id="pedidoRow<?php echo $row['Compra_ID']; ?>">
+                  <td><?php echo $row['Compra_ID']; ?></td>
                   <td><?php echo obtenerNombreEstado($row['Pe_Estado'], $link); ?></td>
-                  <td><?php echo obtenerNombreProducto($row['Pe_Producto'], $link); ?></td>
-                  <td><?php echo $row['Pe_Cantidad']; ?></td>
+                  <td><?php echo $row['Productos']; ?></td>
+                  <td><?php echo $row['Cantidades']; ?></td>
                   <td><?php echo $row['Pe_Fechapedido']; ?></td>
                   <td><?php echo $row['Pe_Fechaentrega']; ?></td>
                   <td><?php echo $row['pe_nombre_pedido']; ?></td>
-                  <td><img src="data:image/png;base64,<?php echo base64_encode($row['pe_imagen_pedido']); ?>"
-                      alt="Imagen del pedido" style="width: 200px; height: 200px;"></td>
                   <td><?php echo $row['pe_tipo_impresion']; ?></td>
-                  <td><?php echo $row['pe_color']; ?></td>
                   <td><?php echo $row['Pe_Observacion']; ?></td>
                   <td>
                     <div class="button-container">
