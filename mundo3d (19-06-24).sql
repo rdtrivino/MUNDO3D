@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 18-06-2024 a las 07:04:21
+-- Tiempo de generación: 19-06-2024 a las 11:26:05
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -83,22 +83,66 @@ INSERT INTO `categoria` (`Cgo_Codigo`, `Cgo_Nombre`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `compras`
+--
+
+CREATE TABLE `compras` (
+  `id` int(11) NOT NULL,
+  `cliente_id` int(11) DEFAULT NULL,
+  `fecha` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `compras`
+--
+
+INSERT INTO `compras` (`id`, `cliente_id`, `fecha`) VALUES
+(39, 1131110766, '2024-06-18 22:07:58'),
+(52, 1131110766, '2024-06-18 22:40:02');
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `factura`
 --
 
 CREATE TABLE `factura` (
   `id` int(11) NOT NULL,
-  `numero_factura` varchar(50) DEFAULT NULL,
-  `fecha` date DEFAULT NULL,
-  `total` decimal(10,2) DEFAULT NULL,
-  `estado` varchar(20) DEFAULT NULL,
-  `nombre_cliente` varchar(100) DEFAULT NULL,
-  `creado_en` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `numero_documento` varchar(50) DEFAULT NULL,
-  `producto` varchar(100) DEFAULT NULL,
-  `cantidad` int(11) DEFAULT NULL,
-  `pedido_id` int(11) DEFAULT NULL
+  `numero_factura` varchar(50) NOT NULL,
+  `fecha` date NOT NULL,
+  `total` decimal(10,2) NOT NULL,
+  `estado` varchar(20) NOT NULL,
+  `nombre_cliente` varchar(100) NOT NULL,
+  `creado_en` timestamp NOT NULL DEFAULT current_timestamp(),
+  `numero_documento` varchar(20) NOT NULL,
+  `producto` int(11) NOT NULL,
+  `cantidad` int(11) NOT NULL,
+  `pedido_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `factura`
+--
+
+INSERT INTO `factura` (`id`, `numero_factura`, `fecha`, `total`, `estado`, `nombre_cliente`, `creado_en`, `numero_documento`, `producto`, `cantidad`, `pedido_id`) VALUES
+(15, 'FACT-66724b8e1d829', '2024-06-19', 90.00, '0', 'Ruben Dario Triviño', '2024-06-19 03:07:58', '1131110766', 11, 1, 39),
+(16, 'FACT-66724b8e1d829', '2024-06-19', 90.00, '0', 'Ruben Dario Triviño', '2024-06-19 03:07:58', '1131110766', 12, 1, 39),
+(17, 'FACT-66724b8e1d829', '2024-06-19', 90.00, '0', 'Ruben Dario Triviño', '2024-06-19 03:07:58', '1131110766', 14, 1, 39),
+(18, 'FACT-667253130c263', '2024-06-19', 270.00, '0', 'Ruben Dario Triviño', '2024-06-19 03:40:03', '1131110766', 11, 3, 52),
+(19, 'FACT-667253130c263', '2024-06-19', 270.00, '0', 'Ruben Dario Triviño', '2024-06-19 03:40:03', '1131110766', 12, 3, 52),
+(20, 'FACT-667253130c263', '2024-06-19', 270.00, '0', 'Ruben Dario Triviño', '2024-06-19 03:40:03', '1131110766', 14, 3, 52),
+(21, 'FACT-667253130c263', '2024-06-19', 270.00, '0', 'Ruben Dario Triviño', '2024-06-19 03:40:03', '1131110766', 11, 3, 52),
+(22, 'FACT-667253130c263', '2024-06-19', 270.00, '0', 'Ruben Dario Triviño', '2024-06-19 03:40:03', '1131110766', 12, 3, 52),
+(23, 'FACT-667253130c263', '2024-06-19', 270.00, '0', 'Ruben Dario Triviño', '2024-06-19 03:40:03', '1131110766', 14, 3, 52),
+(24, 'FACT-667253130c263', '2024-06-19', 270.00, '0', 'Ruben Dario Triviño', '2024-06-19 03:40:03', '1131110766', 11, 3, 52),
+(25, 'FACT-667253130c263', '2024-06-19', 270.00, '0', 'Ruben Dario Triviño', '2024-06-19 03:40:03', '1131110766', 12, 3, 52),
+(26, 'FACT-667253130c263', '2024-06-19', 270.00, '0', 'Ruben Dario Triviño', '2024-06-19 03:40:03', '1131110766', 14, 3, 52),
+(27, 'FACT-667253130c263', '2024-06-19', 270.00, '0', 'Ruben Dario Triviño', '2024-06-19 03:40:03', '1131110766', 11, 3, 52),
+(28, 'FACT-667253130c263', '2024-06-19', 270.00, '0', 'Ruben Dario Triviño', '2024-06-19 03:40:03', '1131110766', 12, 3, 52),
+(29, 'FACT-667253130c263', '2024-06-19', 270.00, '0', 'Ruben Dario Triviño', '2024-06-19 03:40:03', '1131110766', 14, 3, 52),
+(30, 'FACT-667253130c263', '2024-06-19', 270.00, '0', 'Ruben Dario Triviño', '2024-06-19 03:40:03', '1131110766', 11, 3, 52),
+(31, 'FACT-667253130c263', '2024-06-19', 270.00, '0', 'Ruben Dario Triviño', '2024-06-19 03:40:03', '1131110766', 12, 3, 52),
+(32, 'FACT-667253130c263', '2024-06-19', 270.00, '0', 'Ruben Dario Triviño', '2024-06-19 03:40:03', '1131110766', 14, 3, 52);
 
 -- --------------------------------------------------------
 
@@ -119,8 +163,33 @@ CREATE TABLE `pedidos` (
   `Acciones` enum('activo','inactivo') DEFAULT 'activo',
   `pe_tipo_impresion` varchar(50) DEFAULT NULL,
   `pe_color` varchar(30) DEFAULT NULL,
-  `nombre_imagen` varchar(50) NOT NULL
+  `nombre_imagen` varchar(50) NOT NULL,
+  `Compra_ID` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `pedidos`
+--
+
+INSERT INTO `pedidos` (`Identificador`, `Pe_Cliente`, `Pe_Estado`, `Pe_Producto`, `Pe_Cantidad`, `Pe_Fechapedido`, `Pe_Fechaentrega`, `pe_nombre_pedido`, `Pe_Observacion`, `Acciones`, `pe_tipo_impresion`, `pe_color`, `nombre_imagen`, `Compra_ID`) VALUES
+(416, 1131110766, 1, 11, 1, '2024-06-19', '2024-07-10', '', '', 'activo', NULL, NULL, '', 39),
+(417, 1131110766, 1, 12, 1, '2024-06-19', '2024-07-10', '', '', 'activo', NULL, NULL, '', 39),
+(418, 1131110766, 1, 14, 1, '2024-06-19', '2024-07-10', '', '', 'activo', NULL, NULL, '', 39),
+(422, 1131110766, 1, 11, 3, '2024-06-19', '2024-07-10', '', '', 'activo', NULL, NULL, '', 52),
+(423, 1131110766, 1, 12, 3, '2024-06-19', '2024-07-10', '', '', 'activo', NULL, NULL, '', 52),
+(424, 1131110766, 1, 14, 3, '2024-06-19', '2024-07-10', '', '', 'activo', NULL, NULL, '', 52),
+(425, 1131110766, 1, 11, 3, '2024-06-19', '2024-07-10', '', '', 'activo', NULL, NULL, '', 52),
+(426, 1131110766, 1, 12, 3, '2024-06-19', '2024-07-10', '', '', 'activo', NULL, NULL, '', 52),
+(427, 1131110766, 1, 14, 3, '2024-06-19', '2024-07-10', '', '', 'activo', NULL, NULL, '', 52),
+(428, 1131110766, 1, 11, 3, '2024-06-19', '2024-07-10', '', '', 'activo', NULL, NULL, '', 52),
+(429, 1131110766, 1, 12, 3, '2024-06-19', '2024-07-10', '', '', 'activo', NULL, NULL, '', 52),
+(430, 1131110766, 1, 14, 3, '2024-06-19', '2024-07-10', '', '', 'activo', NULL, NULL, '', 52),
+(431, 1131110766, 1, 11, 3, '2024-06-19', '2024-07-10', '', '', 'activo', NULL, NULL, '', 52),
+(432, 1131110766, 1, 12, 3, '2024-06-19', '2024-07-10', '', '', 'activo', NULL, NULL, '', 52),
+(433, 1131110766, 1, 14, 3, '2024-06-19', '2024-07-10', '', '', 'activo', NULL, NULL, '', 52),
+(434, 1131110766, 1, 11, 3, '2024-06-19', '2024-07-10', '', '', 'activo', NULL, NULL, '', 52),
+(435, 1131110766, 1, 12, 3, '2024-06-19', '2024-07-10', '', '', 'activo', NULL, NULL, '', 52),
+(436, 1131110766, 1, 14, 3, '2024-06-19', '2024-07-10', '', '', 'activo', NULL, NULL, '', 52);
 
 -- --------------------------------------------------------
 
@@ -193,7 +262,7 @@ INSERT INTO `productos` (`Identificador`, `Pro_Nombre`, `Pro_Descripcion`, `Pro_
 (24, 'BLOQUE CALEFACTOR ALUMINIO ARTILLERY X1/GENIUS', 'Bloque calefactor térmico tipo Volcano original de Artillery. Se recomienda ser usado junto con el protector térmico el cual ayuda a mantener de forma más estable el calor dentro del bloque calentador del fusor de la impresora 3D.', 2, 15, 30000, 15000, 'activo', '../images/imagenes_catalogo/catalogo-24.webp', ''),
 (25, 'ENGRANAJE EXTRUSORTINTAN ARTILLERY X1 Y GENIUS', 'Repuesto Original de los engranajes centrales del extrusor de la impresora 3D ARTILLERY X1 y ARTILLERY GENIUS.\r\n\r\nLos engranajes centrales del extrusor titán Aero usado en la Artillery SideWinder X1 y Artillery Genius es una pieza fundamental en el sistem', 2, 10, 30000, 15000, 'activo', '../images/imagenes_catalogo/catalogo-25.webp', ''),
 (26, 'DISCIPADORES CREALITY', 'Características:  Este radiador de disipador de calor es compatible con impresoras 3D Serie CR-10 y Serie Ender-3.CR-10 incluyen CR-10 CR-10Mini CR-10S CR-10S4 y CR-10S5. Ender-3/CR-10 Series (CR-10/CR-10mini/CR-10S/CR-10S4/CR-10S5) Material de aluminio s', 2, 5, 24000, 12000, 'activo', '../images/imagenes_catalogo/catalogo-26.webp', ''),
-(27, 'VENTILADOR REFRIGERADOR DEL FUSOR CREALITY ENDER S', 'Componente de repuesto para tu impresora 3D. Una mala ventilación del sistema del fusor en tu impresora 3D repercutirá en la vida útil de tu impresora y podrá ocasionar atascos.  Compatible con Creality Ender 3, Creality Ender 3 Pro, Creality Ender 3 V2. ', 2, 30, 30000, 15000, 'inactivo', '../images/imagenes_catalogo/catalogo-27.webp', ''),
+(27, 'VENTILADOR REFRIGERADOR DEL FUSOR CREALITY ENDER S', 'Componente de repuesto para tu impresora 3D. Una mala ventilación del sistema del fusor en tu impresora 3D repercutirá en la vida útil de tu impresora y podrá ocasionar atascos.  Compatible con Creality Ender 3, Creality Ender 3 Pro, Creality Ender 3 V2. ', 2, 30, 30000, 15000, 'activo', '../images/imagenes_catalogo/catalogo-27.webp', ''),
 (28, 'FINAL DE CARRERA SERIE ENDER', 'Interruptor de límite de 3 pines N / ON / C de control fácil de usar. Interruptor de límite de eje X/Y/Z. Compatible con CR-10 Series, Ender-3 u otras impresoras 3D. Pequeño y compacto, fácil de instalar, plug and play. Tensión máxima: 125 V, corriente má', 2, 15, 24000, 12000, 'inactivo', '../images/imagenes_catalogo/catalogo-28.webp', ''),
 (29, 'BARREL LISO ARTILLERY', 'Barrel Liso que se ajusta al extrusor mediante un tornillo prisionero. Requiere el uso de un tubo de teflón en su interior.', 2, 5, 30000, 15000, 'inactivo', '../images/imagenes_catalogo/catalogo-29.webp', ''),
 (30, 'TUBO DE TEFLON 1 METRO', 'Accesorio de tubo de teflón kit_L1000_D6×d4_PTEE_Blanco  Distancia: 1 m  Teflón PTFE Genérico', 2, 40, 24000, 12000, 'inactivo', '../images/imagenes_catalogo/catalogo-30.webp', ''),
@@ -279,7 +348,7 @@ INSERT INTO `usuario` (`Usu_Identificacion`, `Usu_Nombre_completo`, `Usu_Telefon
 (1014307293, 'Sebastian Lammy', '3194599719', 'sebastiancamilo@gmail.com', 'Bogota D.C.', 'CR 101 23 05 ', '$2y$10$ofavOWpSlCymMmhvQPuDpePeLq7h97SUiVLSmOMG1ttGucY4esdTO', 3, 'activo'),
 (1026577616, 'Yordy Suárez Bonilla', '3214996400', 'ysuarez61@misena.edu.co', 'Bogotá', 'Calle Falsa # 123-4', '$2y$10$DjDdnVOHHBR6rnG2yc73Iut2xUU8c0n5O53n0DdAVbvayZ1smsdU.', 2, 'activo'),
 (1026577618, 'Yordy Suarez', 'Usuario', 'yordy_9328@hotmail.com', 'Bogota D.C.', 'CL 72 SUR 22 26', '$2y$10$WNVnjb/exohqd3hKbyqfQuKk5HcCd5IgBBZOE9bFBOD5OX9IdXvwu', 1, 'activo'),
-(1131110766, 'Ruben Dario Triviño', '3113287379', 'darioruben876@gmail.com', 'Bogotá', 'suba-bogota', '$2y$10$PGM06.gFmaiE7JxFpl9Fz.4TkyqEwW4IkOHsRg/pbjvyNVKzBt5Sm', 3, 'activo');
+(1131110766, 'Ruben Dario Triviño', '3113287379', 'darioruben876@gmail.com', 'Bogotá', 'suba-bogota', '$2y$10$PGM06.gFmaiE7JxFpl9Fz.4TkyqEwW4IkOHsRg/pbjvyNVKzBt5Sm', 1, 'activo');
 
 --
 -- Índices para tablas volcadas
@@ -307,6 +376,13 @@ ALTER TABLE `categoria`
   ADD PRIMARY KEY (`Cgo_Codigo`);
 
 --
+-- Indices de la tabla `compras`
+--
+ALTER TABLE `compras`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `cliente_id` (`cliente_id`);
+
+--
 -- Indices de la tabla `factura`
 --
 ALTER TABLE `factura`
@@ -320,7 +396,8 @@ ALTER TABLE `pedidos`
   ADD PRIMARY KEY (`Identificador`),
   ADD KEY `Pe_Cliente` (`Pe_Cliente`),
   ADD KEY `Pe_Estado` (`Pe_Estado`),
-  ADD KEY `Pe_Producto` (`Pe_Producto`);
+  ADD KEY `Pe_Producto` (`Pe_Producto`),
+  ADD KEY `fk_compra_id` (`Compra_ID`);
 
 --
 -- Indices de la tabla `pedido_estado`
@@ -363,19 +440,25 @@ ALTER TABLE `calendario`
 -- AUTO_INCREMENT de la tabla `carrito`
 --
 ALTER TABLE `carrito`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=225;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=281;
+
+--
+-- AUTO_INCREMENT de la tabla `compras`
+--
+ALTER TABLE `compras`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
 -- AUTO_INCREMENT de la tabla `factura`
 --
 ALTER TABLE `factura`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT de la tabla `pedidos`
 --
 ALTER TABLE `pedidos`
-  MODIFY `Identificador` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=340;
+  MODIFY `Identificador` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=437;
 
 --
 -- AUTO_INCREMENT de la tabla `productos`
@@ -401,15 +484,22 @@ ALTER TABLE `carrito`
   ADD CONSTRAINT `fk_id_producto` FOREIGN KEY (`id_producto`) REFERENCES `productos` (`Identificador`);
 
 --
+-- Filtros para la tabla `compras`
+--
+ALTER TABLE `compras`
+  ADD CONSTRAINT `compras_ibfk_1` FOREIGN KEY (`cliente_id`) REFERENCES `usuario` (`Usu_Identificacion`);
+
+--
 -- Filtros para la tabla `factura`
 --
 ALTER TABLE `factura`
-  ADD CONSTRAINT `factura_ibfk_1` FOREIGN KEY (`pedido_id`) REFERENCES `pedidos` (`Identificador`);
+  ADD CONSTRAINT `factura_ibfk_1` FOREIGN KEY (`pedido_id`) REFERENCES `pedidos` (`Compra_ID`);
 
 --
 -- Filtros para la tabla `pedidos`
 --
 ALTER TABLE `pedidos`
+  ADD CONSTRAINT `fk_compra_id` FOREIGN KEY (`Compra_ID`) REFERENCES `compras` (`id`),
   ADD CONSTRAINT `pedidos_ibfk_1` FOREIGN KEY (`Pe_Cliente`) REFERENCES `usuario` (`Usu_Identificacion`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `pedidos_ibfk_3` FOREIGN KEY (`Pe_Estado`) REFERENCES `pedido_estado` (`Es_Codigo`) ON DELETE CASCADE ON UPDATE CASCADE;
 

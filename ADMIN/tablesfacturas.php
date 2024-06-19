@@ -99,6 +99,10 @@ include ("Programas/controlsesion.php");
                                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                                 Tablas Productos
                             </a>
+                            <a class="nav-link" href="tablespedidos.php">
+                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                                Tablas Pedidos
+                            </a>
                         </div>
                         <div class="mb-3 text-center" style="margin-top: 50px;">
                             <h4>FACTURAS</h4>
