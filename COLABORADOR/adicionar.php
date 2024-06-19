@@ -58,48 +58,33 @@ $usuario_id = $_SESSION['user_id'];
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crear</title>
     <link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/checkout/">
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet"> 
+    <link href="form-validation.css" rel="stylesheet">  
     <link href="css/estilo.css" rel="stylesheet">
     <link rel="shortcut icon" href="../images/Logo Mundo 3d.png" type="image/x-icon">
     <script src="js/scripts.js"></script>
-    <style>
-        .bd-placeholder-img {
-            font-size: 1.125rem;
-            text-anchor: middle;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-
-        @media (min-width: 768px) {
-            .bd-placeholder-img-lg {
-                font-size: 3.5rem;
-            }
-        }
-
-        .link-container {
-            margin: 0.5cm;
-            display: inline-block;
-        }
-    </style>
-    <link href="form-validation.css" rel="stylesheet">
 </head>
 
 <body class="bg-light">
 
-    <div class="link-container">
+    <div class="">
         <?php $tabla = $_GET['tabla']; ?>
-
-        <a href="index.php?tabla=<?php echo $tabla; ?>">
-            <img class="home" src="../images/bx-home-alt-2.svg" alt="Home">
+        <a class="Btn-1" href="index.php?tabla=<?php echo $tabla; ?>">
+            <div class="sign">
+                <img src="../images/iconizer-bx-home-alt-2.2.svg" alt="Inicio">
+            </div>
+            <div class="text">INICIO</div>
         </a>
     </div>
+
+
 
     <div class="container">
         <div class="py-5 text-center">
             <img class="mundo" src="../images/Logo Mundo 3d.png" alt="" width="150" height="150">
         </div>
+
+        
 
         <form class="needs-validation" novalidate method="POST" enctype="multipart/form-data"
             action="procesarnuevo.php?tabla=<?php echo $tabla; ?>">
