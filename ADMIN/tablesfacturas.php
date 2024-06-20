@@ -189,7 +189,6 @@ include ("Programas/controlsesion.php");
                                                 <th>Creado En</th>
                                                 <th>Número de Documento</th>
                                                 <th>Producto</th>
-                                                <th>Cantidad</th>
                                                 <th>ID de Pedido</th>
                                                 <th>Acciones</th>
                                             </tr>
@@ -197,27 +196,26 @@ include ("Programas/controlsesion.php");
                                         <tbody>
                                             <?php
                                             $sql_facturas = "
-            SELECT 
-                f.id, 
-                f.numero_factura, 
-                f.fecha, 
-                f.total, 
-                f.estado, 
-                f.nombre_cliente, 
-                f.creado_en, 
-                f.numero_documento, 
-                GROUP_CONCAT(p.Pro_Nombre SEPARATOR ', ') AS productos, 
-                SUM(f.cantidad) AS cantidad, 
-                f.pedido_id 
-            FROM 
-                factura f 
-            LEFT JOIN 
-                productos p ON f.producto = p.Identificador
-            WHERE 
-                f.estado <> 'inactivo'
-            GROUP BY 
-                f.pedido_id
-            ";
+                                                SELECT 
+                                                    f.id, 
+                                                    f.numero_factura, 
+                                                    f.fecha, 
+                                                    f.total, 
+                                                    f.estado, 
+                                                    f.nombre_cliente, 
+                                                    f.creado_en, 
+                                                    f.numero_documento, 
+                                                    GROUP_CONCAT(DISTINCT CONCAT(f.cantidad, ' -) ', p.Pro_Nombre) ORDER BY p.Pro_Nombre SEPARATOR '<br>') AS productos,
+                                                    f.pedido_id 
+                                                FROM 
+                                                    factura f 
+                                                LEFT JOIN 
+                                                    productos p ON f.producto = p.Identificador
+                                                WHERE 
+                                                    f.estado <> 'inactivo'
+                                                GROUP BY 
+                                                    f.pedido_id
+                                                ";
                                             $resultado_facturas = mysqli_query($link, $sql_facturas);
 
                                             if ($resultado_facturas && mysqli_num_rows($resultado_facturas) > 0) {
@@ -233,14 +231,29 @@ include ("Programas/controlsesion.php");
                                                         <td><?php echo $row['creado_en']; ?></td>
                                                         <td><?php echo $row['numero_documento']; ?></td>
                                                         <td><?php echo $row['productos']; ?></td>
-                                                        <td><?php echo $row['cantidad']; ?></td>
                                                         <td><?php echo $row['pedido_id']; ?></td>
                                                         <td style="display: flex; align-items: center;">
                                                             <div class="mr-2">
-                                                                <a href="generarfactura.php?id=<?php echo $row['id']; ?>"
-                                                                    class="btn btn-sm btn-success">
-                                                                    <i class="fas fa-download"></i> Descargar
-                                                                </a>
+                                                                <button class="button" type="button"
+                                                                    onclick="window.location.href='generarfactura.php?id=<?php echo $row['id']; ?>'">
+                                                                    <span class="button__text">Descargar</span>
+                                                                    <span class="button__icon">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                                                            viewBox="0 0 35 35"
+                                                                            id="bdd05811-e15d-428c-bb53-8661459f9307"
+                                                                            data-name="Layer 2" class="svg">
+                                                                            <path
+                                                                                d="M17.5,22.131a1.249,1.249,0,0,1-1.25-1.25V2.187a1.25,1.25,0,0,1,2.5,0V20.881A1.25,1.25,0,0,1,17.5,22.131Z">
+                                                                            </path>
+                                                                            <path
+                                                                                d="M17.5,22.693a3.189,3.189,0,0,1-2.262-.936L8.487,15.006a1.249,1.249,0,0,1,1.767-1.767l6.751,6.751a.7.7,0,0,0,.99,0l6.751-6.751a1.25,1.25,0,0,1,1.768,1.767l-6.752,6.751A3.191,3.191,0,0,1,17.5,22.693Z">
+                                                                            </path>
+                                                                            <path
+                                                                                d="M31.436,34.063H3.564A3.318,3.318,0,0,1,.25,30.749V22.011a1.25,1.25,0,0,1,2.5,0v8.738a.815.815,0,0,0,.814.814H31.436a.815.815,0,0,0,.814-.814V22.011a1.25,1.25,0,1,1,2.5,0v8.738A3.318,3.318,0,0,1,31.436,34.063Z">
+                                                                            </path>
+                                                                        </svg>
+                                                                    </span>
+                                                                </button>
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -252,20 +265,68 @@ include ("Programas/controlsesion.php");
                                             ?>
                                         </tbody>
                                     </table>
-                                    <script type="text/javascript">
-                                        $(document).ready(function () {
-                                            $('#datatables').DataTable({
-                                                "paging": true,            // Habilitar paginación
-                                                "lengthChange": false,     // Mostrar selección de cantidad de registros por página
-                                                "searching": true,         // Habilitar búsqueda
-                                                "ordering": true,          // Habilitar ordenamiento
-                                                "info": true,              // Mostrar información de paginación
-                                                "autoWidth": false,        // Deshabilitar ajuste automático del ancho de las columnas
-                                                "responsive": true,        // Habilitar diseño responsivo
-                                                "pageLength": 5            // Cantidad de registros por página
-                                            });
-                                        });
-                                    </script>
+                                    <style>
+                                        .button {
+                                            position: relative;
+                                            width: 150px;
+                                            height: 40px;
+                                            cursor: pointer;
+                                            display: flex;
+                                            align-items: center;
+                                            border: 1px solid #17795E;
+                                            background-color: #209978;
+                                            overflow: hidden;
+                                        }
+
+                                        .button,
+                                        .button__icon,
+                                        .button__text {
+                                            transition: all 0.3s;
+                                        }
+
+                                        .button .button__text {
+                                            transform: translateX(22px);
+                                            color: #fff;
+                                            font-weight: 600;
+                                        }
+
+                                        .button .button__icon {
+                                            position: absolute;
+                                            transform: translateX(109px);
+                                            height: 100%;
+                                            width: 39px;
+                                            background-color: #17795E;
+                                            display: flex;
+                                            align-items: center;
+                                            justify-content: center;
+                                        }
+
+                                        .button .svg {
+                                            width: 20px;
+                                            fill: #fff;
+                                        }
+
+                                        .button:hover {
+                                            background: #17795E;
+                                        }
+
+                                        .button:hover .button__text {
+                                            color: transparent;
+                                        }
+
+                                        .button:hover .button__icon {
+                                            width: 148px;
+                                            transform: translateX(0);
+                                        }
+
+                                        .button:active .button__icon {
+                                            background-color: #146c54;
+                                        }
+
+                                        .button:active {
+                                            border: 1px solid #146c54;
+                                        }
+                                    </style>
 
                                 </div>
                             </div>

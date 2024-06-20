@@ -177,26 +177,25 @@
     <div class="page-header container-fluid bg-secondary pt-0 pt-lg-1 pb-1 mb-4">
         <div class="row align-items-center py-4">
             <div class="col-md-9 text-center text-md-right">
-                <!-- Columna para el campo de búsqueda -->
-                <div class="InputContainer">
-                    <input required="" type="text" name="text" class="input">
-                    <label class="label">Buscar <i class="fas fa-search"></i></label>
+                <div class="col-md-6 text-center text-md-left offset-md-0">
+                    <div class="InputContainer">
+                        <input required="" type="text" id="nombre_producto" class="input"
+                            placeholder="Buscar producto..." onkeyup="buscarProducto()">
+                    </div>
                 </div>
             </div>
-            <div class="col-md-3"></div> <!-- Espacio en blanco para separar las columnas -->
         </div>
     </div>
-
     <div class="container-fluid" style="background-color: #D3D3D3; margin-top: -70px;">
         <div class="container">
             <h1 class="display-4 text-center mb-5">Explora nuestras impresoras 3D</h1>
-            <div class="row row-cols-lg-4 row-cols-md-3 justify-content-center">
+            <div class="row row-cols-lg-4 row-cols-md-3 justify-content-center" id="productosContainer">
                 <?php
-                // Consulta a la base de datos para obtener productos de la categoría 5
+                // Consulta a la base de datos para obtener productos de la categoría 1
                 $sql = "SELECT * FROM productos WHERE Pro_Categoria = 1 AND Pro_Estado = 'activo'";
                 $result = mysqli_query($link, $sql);
 
-                // Verificar si se encontraron productos en la categoría 1b
+                // Verificar si se encontraron productos en la categoría 1
                 if (mysqli_num_rows($result) > 0) {
                     // Iterar sobre los resultados y mostrar cada producto
                     while ($row = mysqli_fetch_assoc($result)) {
@@ -206,7 +205,7 @@
                                 <img src="<?php echo substr($row['nombre_imagen'], 3) ?>" class="card-img-top"
                                     style="height: 200px; object-fit: contain;" alt="<?php echo $row['Pro_Nombre']; ?>">
 
-                                <div class="overlay position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
+                                <div
                                     class="overlay position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
                                     <?php if ($row['Pro_Cantidad'] > 0) { ?>
                                         <a href="#" class="btn btn-primary btn-lg agregarAlCarritoBtn"
@@ -247,12 +246,50 @@
                         <?php
                     }
                 } else {
-                    echo "No se encontraron productos en la categoría 1b.";
+                    echo "No se encontraron productos en la categoría 1.";
                 }
                 ?>
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Función para buscar productos
+            function buscarProducto() {
+                var inputValor = document.getElementById('nombre_producto').value.trim().toLowerCase();
+                var productos = document.querySelectorAll('#productosContainer .col.mb-4');
+
+                productos.forEach(function (producto) {
+                    var nombreProducto = producto.querySelector('.card-body .card-title').innerText.trim().toLowerCase();
+
+                    // Verificar si el nombre del producto contiene el valor de búsqueda
+                    if (nombreProducto.includes(inputValor)) {
+                        producto.style.display = 'block';  // Mostrar el producto
+                    } else {
+                        producto.style.display = 'none';   // Ocultar el producto si no coincide
+                    }
+                });
+            }
+
+            // Función para limpiar la búsqueda y mostrar todos los productos
+            function limpiarBusqueda() {
+                var productos = document.querySelectorAll('#productosContainer .col.mb-4');
+
+                productos.forEach(function (producto) {
+                    producto.style.display = 'block';  // Mostrar todos los productos
+                });
+
+                document.getElementById('nombre_producto').value = '';  // Limpiar el campo de búsqueda
+            }
+
+            // Evento para llamar a buscarProducto() cada vez que se presione una tecla en el campo de búsqueda
+            document.getElementById('nombre_producto').addEventListener('keyup', function () {
+                buscarProducto();
+            });
+        });
+    </script>
+
+
     <!-- Modal de detalles del producto -->
     <div class="modal fade" id="detalleProductoModal" tabindex="-1" role="dialog"
         aria-labelledby="detalleProductoModalLabel" aria-hidden="true">

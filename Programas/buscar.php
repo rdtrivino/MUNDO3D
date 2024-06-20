@@ -3,20 +3,17 @@ include __DIR__ . '/../conexion.php'; // Ajusta la ruta según la ubicación de 
 
 if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['nombre_producto'])) {
     $nombreProducto = mysqli_real_escape_string($link, $_GET['nombre_producto']);
-    $sql = "SELECT * FROM productos WHERE Pro_Nombre LIKE '%$nombreProducto%'";
+    $sql = "SELECT Pro_Nombre, Pro_Descripcion FROM productos WHERE Pro_Nombre LIKE '%$nombreProducto%'";
     $result = mysqli_query($link, $sql);
 
+    $productos = array();
     if (mysqli_num_rows($result) > 0) {
-        echo "<h2>Resultados de la búsqueda:</h2>";
-        echo "<ul>";
         while ($row = mysqli_fetch_assoc($result)) {
-            echo "<li>{$row['Pro_Nombre']} - {$row['Pro_Descripcion']}</li>";
+            $productos[] = $row;
         }
-        echo "</ul>";
-    } else {
-        echo "<p>No se encontraron productos que coincidan con '{$nombreProducto}'.</p>";
     }
 
+    echo json_encode($productos);
     mysqli_free_result($result);
 }
 

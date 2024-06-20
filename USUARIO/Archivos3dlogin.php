@@ -266,7 +266,8 @@ $result = mysqli_query($link, $sql);
         <div class="row align-items-center py-4">
             <div class="col-md-6 text-center text-md-left offset-md-0">
                 <div class="InputContainer">
-                    <input required="" type="text" id="nombre_producto" class="input" placeholder="Buscar producto...">
+                    <input required="" type="text" id="nombre_producto" class="input" placeholder="Buscar producto..."
+                        onkeyup="buscarProducto()">
                 </div>
                 <div id="resultado_busqueda" class="col-md-6 mt-3"></div>
             </div>
@@ -338,48 +339,21 @@ $result = mysqli_query($link, $sql);
             </style>
         </div>
     </div>
-    <script>
-        function searchProducts(searchTerm) {
-            // Obtener todos los elementos de productos
-            var products = document.querySelectorAll('.product');
-
-            // Convertir el término de búsqueda a mayúsculas para hacer una comparación insensible a mayúsculas y minúsculas
-            searchTerm = searchTerm.toUpperCase();
-
-            // Iterar sobre todos los productos
-            products.forEach(function (product) {
-                // Obtener el nombre del producto
-                var productName = product.querySelector('.card-title').textContent.toUpperCase();
-
-                // Obtener la descripción del producto
-                var productDescription = product.querySelector('.card-text').textContent.toUpperCase();
-
-                // Comprobar si el término de búsqueda está presente en el nombre o la descripción del producto
-                if (productName.includes(searchTerm) || productDescription.includes(searchTerm)) {
-                    // Mostrar el producto si coincide con el término de búsqueda
-                    product.style.display = 'block';
-                } else {
-                    // Ocultar el producto si no coincide con el término de búsqueda
-                    product.style.display = 'none';
-                }
-            });
-        }
-    </script>
     <div class="container-fluid" style="background-color: #D3D3D3; margin-top: -50px;">
         <div class="container">
             <h1 class="display-4 text-center mb-5">Explora nuestros archivos 3D</h1>
-            <div class="row row-cols-lg-4 row-cols-md-3 justify-content-center">
+            <div class="row row-cols-lg-4 row-cols-md-3 justify-content-center" id="productosContainer">
                 <?php
                 // Consulta a la base de datos para obtener productos de la categoría 5
                 $sql = "SELECT * FROM productos WHERE Pro_Categoria = 5 AND Pro_Estado = 'activo'";
                 $result = mysqli_query($link, $sql);
 
-                // Verificar si se encontraron productos en la categoría 1b
+                // Verificar si se encontraron productos en la categoría 5
                 if (mysqli_num_rows($result) > 0) {
                     // Iterar sobre los resultados y mostrar cada producto
                     while ($row = mysqli_fetch_assoc($result)) {
                         ?>
-                        <div class="col mb-4">
+                        <div class="col mb-4 producto">
                             <div class="card h-100">
                                 <img src="<?php echo $row['nombre_imagen']; ?>" class="card-img-top"
                                     style="height: 200px; object-fit: contain;" alt="<?php echo $row['Pro_Nombre']; ?>">
@@ -478,6 +452,42 @@ $result = mysqli_query($link, $sql);
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Función para buscar productos
+            function buscarProducto() {
+                var inputValor = document.getElementById('nombre_producto').value.trim().toLowerCase();
+                var productos = document.querySelectorAll('#productosContainer .col.mb-4');
+
+                productos.forEach(function (producto) {
+                    var nombreProducto = producto.querySelector('.card-body .card-title').innerText.trim().toLowerCase();
+
+                    // Verificar si el nombre del producto contiene el valor de búsqueda
+                    if (nombreProducto.includes(inputValor)) {
+                        producto.style.display = 'block';  // Mostrar el producto
+                    } else {
+                        producto.style.display = 'none';   // Ocultar el producto si no coincide
+                    }
+                });
+            }
+
+            // Función para limpiar la búsqueda y mostrar todos los productos
+            function limpiarBusqueda() {
+                var productos = document.querySelectorAll('#productosContainer .col.mb-4');
+
+                productos.forEach(function (producto) {
+                    producto.style.display = 'block';  // Mostrar todos los productos
+                });
+
+                document.getElementById('nombre_producto').value = '';  // Limpiar el campo de búsqueda
+            }
+
+            // Evento para llamar a buscarProducto() cada vez que se presione una tecla en el campo de búsqueda
+            document.getElementById('nombre_producto').addEventListener('keyup', function () {
+                buscarProducto();
+            });
+        });
+    </script>
     <script>
         // Función para descargar la imagen
         function downloadImage(imageData, imageName) {
