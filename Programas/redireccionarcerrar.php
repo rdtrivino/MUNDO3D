@@ -108,7 +108,7 @@
         // Redirecciona al usuario después de 5 segundos
         setTimeout(function () {
             window.location.href = "../Index.html";
-        }, 3000); // 5000 milisegundos = 5 segundos
+        }, 900); // 5000 milisegundos = 5 segundos
     </script>
 
 </body>

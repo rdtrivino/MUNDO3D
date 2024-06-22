@@ -38,6 +38,7 @@ if (isset($_GET['page'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="../images/Logo Mundo 3d.png" type="image/x-icon">
     <title>Redireccionando...</title>
+    <!--
     <style>
         /* Estilos para centrar el contenedor */
         .loader {
@@ -74,37 +75,141 @@ if (isset($_GET['page'])) {
                 transform: rotate(360deg);
             }
         }
+    </style>-->
+    <style>
+        .container {
+  position: absolute;
+  top: 45%;
+  left: 48%;
+}
+
+.square {
+  width: 20px;
+  height: 60px;
+  background: rgb(71, 195, 248);
+  border-radius: 10px;
+  display: block;
+  /*margin:10px;*/
+  -webkit-animation: turn 2.5s ease infinite;
+  animation: turn 2.5s ease infinite;
+  box-shadow: rgb(71, 195, 248) 0px 1px 15px 0px;
+}
+
+.top {
+  position: absolute;
+  left: 40%;
+  top: 50%;
+  -webkit-transform: rotate(90deg);
+  transform: rotate(90deg);
+}
+
+.bottom {
+  position: absolute;
+  left: 40%;
+  top: 50%;
+  -webkit-transform: rotate(-90deg);
+  transform: rotate(-90deg);
+}
+
+.left {
+  position: absolute;
+  left: 40%;
+  top: 50%;
+}
+
+.right {
+  position: absolute;
+  left: 40%;
+  top: 50%;
+  -webkit-transform: rotate(-180deg);
+  transform: rotate(-180deg);
+}
+
+@-webkit-keyframes turn {
+  0% {
+    transform: translateX(0) translateY(0) rotate(0);
+  }
+
+  50% {
+    transform: translateX(400%) translateY(100%) rotate(90deg);
+  }
+
+  100% {
+    transform: translateX(0) translateY(0) rotate(0);
+  }
+}
+
+@keyframes turn {
+  0% {
+    transform: translateX(0) translateY(0) rotate(0);
+  }
+
+  70% {
+    transform: translateX(400%) translateY(100%) rotate(90deg);
+  }
+
+  100% {
+    transform: translateX(0) translateY(0) rotate(0);
+  }
+}
     </style>
 </head>
-
-<body style="background: linear-gradient(to bottom right, #dddddd, #dddddd);">
-    <div aria-label="Loading..." role="status" class="loader">
-        <svg class="icon" viewBox="0 0 256 256">
-            <line x1="128" y1="32" x2="128" y2="64" stroke-linecap="round" stroke-linejoin="round" stroke-width="24">
-            </line>
-            <line x1="195.9" y1="60.1" x2="173.3" y2="82.7" stroke-linecap="round" stroke-linejoin="round"
-                stroke-width="24"></line>
-            <line x1="224" y1="128" x2="192" y2="128" stroke-linecap="round" stroke-linejoin="round" stroke-width="24">
-            </line>
-            <line x1="195.9" y1="195.9" x2="173.3" y2="173.3" stroke-linecap="round" stroke-linejoin="round"
-                stroke-width="24"></line>
-            <line x1="128" y1="224" x2="128" y2="192" stroke-linecap="round" stroke-linejoin="round" stroke-width="24">
-            </line>
-            <line x1="60.1" y1="195.9" x2="82.7" y2="173.3" stroke-linecap="round" stroke-linejoin="round"
-                stroke-width="24"></line>
-            <line x1="32" y1="128" x2="64" y2="128" stroke-linecap="round" stroke-linejoin="round" stroke-width="24">
-            </line>
-            <line x1="60.1" y1="60.1" x2="82.7" y2="82.7" stroke-linecap="round" stroke-linejoin="round"
-                stroke-width="24"></line>
-        </svg>
-        <span class="loading-text">Cargando...</span>
+<div class="container">
+  <div class="top">
+    <div class="square">
+      <div class="square">
+        <div class="square">
+          <div class="square">
+            <div class="square"><div class="square">
+            </div></div>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
+  <div class="bottom">
+    <div class="square">
+      <div class="square">
+        <div class="square">
+          <div class="square">
+            <div class="square"><div class="square">
+            </div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="left">
+    <div class="square">
+      <div class="square">
+        <div class="square">
+          <div class="square">
+            <div class="square"><div class="square">
+            </div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="right">
+    <div class="square">
+      <div class="square">
+        <div class="square">
+          <div class="square">
+            <div class="square"><div class="square">
+            </div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
     <script>
         // Redirecciona al usuario después de 3 segundos
         setTimeout(function () {
             var redirectUrl = "<?php echo $redirectUrl; ?>";
             window.location.href = redirectUrl;
-        }, 1000); // Espera 3 segundos antes de redirigir (3000 milisegundos)
+        }, 2000); // Espera 3 segundos antes de redirigir (3000 milisegundos)
     </script>
 </body>
 

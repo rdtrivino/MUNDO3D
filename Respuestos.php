@@ -293,7 +293,7 @@
                         </button>
                     </div>
                 </div>
-                <!-- <style>
+                <style>
         .parent2 {
             width: 30%;
             height: 50%;
@@ -372,15 +372,14 @@
             opacity: 1;
             /* Muestra el texto al pasar el mouse sobre el botón */
         }
-        </style>-->
-                <!--redes sociales html-->
+        </style>
             </div>
             <div class="col-lg-4 col-md-6 mb-5">
                 <h4 class="text-white mb-4">Ponerse en contacto</h4>
                 <p>Contactanos para tener el gusto de atenderlos.</p>
                 <p><i class="fa fa-map-marker-alt mr-2"></i>Calle 15 #31-42 Bogotá, Colombia</p>
                 <p><i class="fab fa-whatsapp mr-2"></i>3124672836</p>
-                <p><i class="fa fa-envelope mr-2"></i>rdtrivino6@misena.edu.co</p>
+                <p><i class="fa fa-envelope mr-2"></i>Mundo3D.RYSJ@outlook.com</p>
             </div>
             <div class="col-lg-4 col-md-6 mb-5">
                 <h4 class="text-white mb-4">Enlaces Rápidos</h4>
