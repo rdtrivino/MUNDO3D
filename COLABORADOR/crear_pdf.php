@@ -4,7 +4,7 @@
     // Incluir la librería PDF
     include_once('libs/fpdf.php');
 
-    mysqli_set_charset($link, "utf8");
+    
     
     class PDF extends FPDF
     {
@@ -41,12 +41,17 @@
     // Crear una instancia de la conexión a la base de datos
     $link = mysqli_connect($host, $user, $password);
 
-    if (!$link) {   die("Error al conectarse al servidor: " . mysqli_connect_error());
+    if (!$link) {   
+        die("Error al conectarse al servidor: " . mysqli_connect_error());
     }
 
     if (!mysqli_select_db($link, $dbname)) {
         die("Error al conectarse a la Base de Datos: " . mysqli_error($link));
     }
+
+    // Definir juego de caracteres UTF-8 en la conexión
+    mysqli_set_charset($link, "utf8");
+    
     if ($_GET['tabla'] == 'pedidos') {
         // Consulta SQL para obtener los datos del pedido
         $result = mysqli_query($link, "SELECT pedidos.*, pedido_estado.Es_Nombre AS Pe_Estado, 
@@ -57,12 +62,13 @@
     
         // Crear una instancia del objeto PDF
         $pdf = new PDF('L'); // Establecer orientación como landscape
+        $pdf->SetAutoPageBreak(true, 15); // Habilitar el salto automático de página con margen de 15mm
         // Encabezado
         $pdf->AddPage();
         // Pie de página
         $pdf->AliasNbPages();
         $pdf->SetFont('Arial','B',12);
-        // Declaramos el ancho de las columnas
+    // Declaramos el ancho de las columnas
         $w = array(10, 28, 24, 50, 12, 29, 30, 22, 20, 55); // Anchos de las columnas ajustados para landscape
         // Encabezado de la tabla
         $pdf->Cell($w[0],12,'ID',1);
@@ -79,9 +85,24 @@
         $pdf->SetFont('Arial','',12);
         // Mostrar el contenido de la tabla
         foreach($result as $row) {
-            // Guardar la posición actual
-            $x = $pdf->GetX();
-            $y = $pdf->GetY();
+            // Verificar si queda suficiente espacio para la fila
+            if ($pdf->getPageHeight() - $pdf->GetY() < 12) {
+                $pdf->AddPage(); // Agregar una nueva página si no hay suficiente espacio
+                // Reconfigurar el encabezado de la tabla para la nueva página
+                $pdf->SetFont('Arial','B',12);
+                $pdf->Cell($w[0],12,'ID',1);
+                $pdf->Cell($w[1],12,'Cliente',1);
+                $pdf->Cell($w[2],12,'Estado',1);
+                $pdf->Cell($w[3],12,'Producto',1);
+                $pdf->Cell($w[4],12,'Cant',1);
+                $pdf->Cell($w[5],12,'Fecha pedido',1);
+                $pdf->Cell($w[6],12,'Fecha entrega',1);
+                $pdf->Cell($w[7],12,'Tipo',1);
+                $pdf->Cell($w[8],12,'Color',1);
+                $pdf->Cell($w[9],12,'Observacion',1);
+                $pdf->Ln();
+                $pdf->SetFont('Arial','',12);
+            }
     
             // Imprimir las primeras celdas como de costumbre
             $pdf->Cell($w[0],6,$row['Identificador'],1);
@@ -95,9 +116,9 @@
             $pdf->Cell($w[8],6,$row['pe_color'],1);
             $pdf->Cell($w[9],6,$row['Pe_Observacion'],1);
     
-            // Ir a la siguiente fila
-            $pdf->SetXY($x, $y + 6); // Sumar 6 para la siguiente fila, ajustar según sea necesario
+            $pdf->Ln(); // Salto de línea después de cada fila
         }  
+    
         // Salida del PDF
         $pdf->Output();
     } elseif ($_GET['tabla'] == 'productos') {
@@ -110,6 +131,9 @@
 
         // Crear una instancia del objeto PDF
         $pdf = new PDF('L'); // Establecer orientación como landscape
+        // Encabezado
+        $pdf->SetAutoPageBreak(true, 15); // Habilitar el salto automático de página con margen de 15mm
+
         // Encabezado
         $pdf->AddPage();
         // Pie de página
@@ -130,9 +154,22 @@
         $pdf->SetFont('Arial','',12);
         // Mostrar el contenido de la tabla
         foreach($result as $row) {
-            // Guardar la posición actual
-            $x = $pdf->GetX();
-            $y = $pdf->GetY();
+            // Verificar si queda suficiente espacio para la fila
+            if ($pdf->getPageHeight() - $pdf->GetY() < 12) {
+                $pdf->AddPage(); // Agregar una nueva página si no hay suficiente espacio
+                // Reconfigurar el encabezado de la tabla para la nueva página
+                $pdf->SetFont('Arial','B',12);
+                $pdf->Cell($w[0],12,'ID',1);
+                $pdf->Cell($w[1],12,'Nombre',1);
+                $pdf->Cell($w[2],12,'Descripcion',1);
+                $pdf->Cell($w[3],12,'Categoria',1);
+                $pdf->Cell($w[4],12,'Cantidad',1);
+                $pdf->Cell($w[5],12,'Precio Venta',1);
+                $pdf->Cell($w[6],12,'Costo',1);
+                $pdf->Cell($w[7],12,'Estado',1);
+                $pdf->Ln();
+                $pdf->SetFont('Arial','',12);
+            }
 
             // Imprimir las celdas de cada fila
             $pdf->Cell($w[0],6,$row['Identificador'],1);
@@ -145,8 +182,9 @@
             $pdf->Cell($w[7],6,$row['Pro_Estado'],1);
             
             // Ir a la siguiente fila
-            $pdf->SetXY($x, $y + 6); // Sumar 6 para la siguiente fila, ajustar según sea necesario
+            $pdf->Ln(); // Salto de línea después de cada fila
         }  
+        
         // Salida del PDF
         $pdf->Output();
     }
