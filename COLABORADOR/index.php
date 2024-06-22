@@ -16,7 +16,11 @@
         <script src="js/all.js" crossorigin="anonymous"></script>
         <link href="css/bootstrap.min.css" rel="stylesheet">
         <link href="css/styles.css" rel="stylesheet" />
+        <script src="Librerias/DataTables/js/jquery.min.js"></script>
         <script src="js/scripts.js"></script>
+        <link rel="stylesheet" href="Librerias/DataTables/css/dataTables.bootstrap4.min.css">
+        <link rel="stylesheet" href="Librerias/DataTables/css/es.css">
+        
 
     </head>
 
@@ -129,11 +133,6 @@
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <h1 class="mt-4"><?php echo $titulo; ?></h1>
 
-                            <!-- Sección del buscador -->
-                            <form action="" method="POST">
-                                <label for="campo">Buscar: </label>
-                                <input type="text" name="campo" id="campo">
-                            </form>
                         </div>
                     <?php endif; ?>
 
@@ -149,7 +148,7 @@
                         </div>
                          
                     <style>.table-responsive{overflow-x: visible !important;}</style>
-                    <table class="table table-striped table-sm">
+                    <table class="table table-striped table-sm" id="table_id">
                         <thead>
                             <tr>
 
@@ -236,28 +235,6 @@
                         </tbody>
                     </table> 
                     
-                    <script>
-                        document.getElementById("campo").addEventListener("keyup", getData);
-
-                        function getData() {
-                            let input = document.getElementById("campo").value.trim(); // Trim para eliminar espacios en blanco al inicio y al final
-                            let content = document.getElementById("content");
-                            let formData = new FormData();
-                            formData.append('campo', input);
-
-                            fetch('Programas/load.php?tabla=<?php echo $table; ?>', {
-                                method: "POST",
-                                body: formData
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                content.innerHTML = data;
-                            })
-                            .catch(err => console.error('Error al obtener datos: ' + err));
-                        }
-                    </script>
-
-
                     </div>
                         <!--Definicion para incluir o no el calendario-->
                         <div class="container">
@@ -297,4 +274,7 @@
         </div>
     |</div>
     </body>
+    <script type="text/javascript" src="Librerias/DataTables/js/jquery.dataTables.min.js"></script>
+    <script src="Librerias/DataTables/js/dataTables.bootstrap4.min.js"></script>
+    <script src="Librerias/DataTables/js/user.js"></script>
 </html>

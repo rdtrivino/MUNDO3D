@@ -148,26 +148,26 @@ $usuario_id = $_SESSION['user_id'];
 
                 <div class="form-group">
                     <label for="cantidad">Cantidad (*)</label>
-                    <input type="text" class="form-control" id="cantidad" name="cantidad" />
+                    <input type="text" class="form-control" id="cantidad" name="cantidad" required/>
                 </div>
 
                 <div class="form-group">
                     <label for="fechapedido">Fecha de Pedido (*)</label>
-                    <input type="date" class="form-control" id="fechapedido" name="fechapedido" />
+                    <input type="date" class="form-control" id="fechapedido" name="fechapedido" required/>
                 </div>
 
                 <div class="form-group">
                     <label for="fechaentrega">Fecha estimada de entrega</label>
-                    <input type="date" class="form-control" id="fechaentrega" name="fechaentrega" />
+                    <input type="date" class="form-control" id="fechaentrega" name="fechaentrega" required/>
                 </div>
 
                 <div class="form-group">
                     <label for="imagen" class="form-control">Imagen del producto</label>
-                    <input type="file" class="form-control-file" id="imagen" name="imagen" accept="image/*">
+                    <input type="file" class="form-control-file" id="imagen" name="imagen" accept="image/*" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="tipoimpresion">Tipo de impresión</label>
+                    <label for="tipoimpresion">Tipo de impresión</label required>
                     <select class="form-control" id="tipoimpresion" name="tipoimpresion">
                         <option value="No informado">Seleccionar el tipo de impresión</option>
                         <option value="Poliácido Láctico">Poliácido Láctico</option>
@@ -183,7 +183,7 @@ $usuario_id = $_SESSION['user_id'];
                 </div>
 
                 <div class="form-group">
-                    <label for="color">Color de la impresión</label>
+                    <label for="color">Color de la impresión</label required>
                     <select class="form-control" id="color" name="color">
                         <option value="No informado">Seleccionar el color de impresión</option>
                         <option value="Negro Fibra de Carbono">Negro Fibra de Carbono</option>
@@ -203,17 +203,17 @@ $usuario_id = $_SESSION['user_id'];
 
                 <div class="form-group">
                     <label for="nombre">Nombre (*)</label>
-                    <input type="text" class="form-control" id="nombre" name="nombre" />
+                    <input type="text" class="form-control" id="nombre" name="nombre"  required/>
                 </div>
 
                 <div class="form-group">
                     <label for="descripcion">Descripción (*)</label>
-                    <input type="text" class="form-control" id="descripcion" name="descripcion" />
+                    <input type="text" class="form-control" id="descripcion" name="descripcion"  required/>
                 </div>
 
                 <div class="form-group">
                     <label for="categoria">Categoría (*)</label>
-                    <select class="form-control" id="categoria" name="categoria">
+                    <select class="form-control" id="categoria" name="categoria" required>
                         <option value="">Seleccionar la categoría del producto</option>
                         <?php
                         $consulta = "SELECT Cgo_Codigo, Cgo_Nombre FROM categoria";
@@ -230,22 +230,22 @@ $usuario_id = $_SESSION['user_id'];
 
                 <div class="form-group">
                     <label for="cantidad">Cantidad (*)</label>
-                    <input type="text" class="form-control" id="cantidad" name="cantidad" />
+                    <input type="text" class="form-control" id="cantidad" name="cantidad"  required/>
                 </div>
 
                 <div class="form-group">
                     <label for="precioventa">Precio de Venta (*)</label>
-                    <input type="text" class="form-control" id="precioventa" name="precioventa" />
+                    <input type="text" class="form-control" id="precioventa" name="precioventa"  required/>
                 </div>
 
                 <div class="form-group">
                     <label for="costo">Costo (*)</label>
-                    <input type="text" class="form-control" id="costo" name="costo" />
+                    <input type="text" class="form-control" id="costo" name="costo"  required/>
                 </div>
 
                 <div class="form-group">
                     <label for="imagen" class="form-label">Imagen (*)</label>
-                    <input type="file" class="form-control-file" id="imagen" name="imagen" accept="image/*">
+                    <input type="file" class="form-control-file" id="imagen" name="imagen" accept="image/*" required>
                 </div>
 
             <?php } ?>
