@@ -18,6 +18,7 @@
         <link href="css/styles.css" rel="stylesheet" />
         <script src="Librerias/DataTables/js/jquery.min.js"></script>
         <script src="js/scripts.js"></script>
+        
         <link rel="stylesheet" href="Librerias/DataTables/css/dataTables.bootstrap4.min.css">
         <link rel="stylesheet" href="Librerias/DataTables/css/es.css">
         
@@ -158,8 +159,8 @@
                                     $tabla_seleccionada = $_GET['tabla'];
                                     
                                     // Definir encabezados específicos para cada tabla
-                                    $encabezados_pedidos = array("ID", "Cliente", "Estado", "Producto", "Cantidad", "Fecha Pedido", "Fecha Entrega", "Imagen", "Tipo", "Color", "Observación", "Editar");
-                                    $encabezados_productos = array("ID", "Nombre", "Descripción", "Categoría", "Cantidad", "Precio Venta", "Costo", "Imagen", "Estado", "Editar");
+                                    $encabezados_pedidos = array("ID", "Cliente", "Estado", "Producto", "Cantidad", "F. Pédido", "F. Entrega", "Observación", "Editar");
+                                    $encabezados_productos = array("ID", "Nombre", "Descripción", "Categoría", "Cantidad", "P.Venta", "Costo", "Imagen", "Estado", "Editar");
                                     
                                     // Mostrar los encabezados según la tabla seleccionada
                                     if ($tabla_seleccionada === 'pedidos') {
@@ -193,16 +194,12 @@
                                     foreach ($result as $row) {
                                         echo '<tr>
                                             <th scope="row">' . $row['Identificador'] . '</th>
-                                            <th scope="row">' . $row['Identificador'] . '</th>
                                             <td>' . $row['Pe_Cliente'] . '</td>
                                             <td>' . $row['Pe_Estado'] . '</td>
                                             <td>' . $row['Pe_Producto'] . '</td>
                                             <td>' . $row['Pe_Cantidad'] . '</td>
                                             <td>' . $row['Pe_Fechapedido'] . '</td>
                                             <td>' . $row['Pe_Fechaentrega'] . '</td>
-                                            <td><img height="150px" src=' . $row['nombre_imagen'] . '></td>
-                                            <td>' . $row['pe_tipo_impresion'] . '</td>
-                                            <td>' . $row['pe_color'] . '</td>
                                             <td>' . $row['Pe_Observacion'] . '</td>
                                             <td><a href="editar.php?tabla=' . $_GET['tabla'] . '&id=' . $row['Identificador'] . '"><i class="fas fa-edit"></i></a></td>
                                             </tr>';
@@ -216,7 +213,7 @@
                                         echo '<tr>
                                             <th scope="row">' . $row['Identificador'] . '</th>
                                             <td>' . $row['Pro_Nombre'] . '</td>
-                                            <td>' . $row['Pro_Descripcion'] . '</td>
+                                            <td>' . htmlspecialchars(substr($row['Pro_Descripcion'], 0, 40)) . "... (Editar para ver mas)" .'</td>
                                             <td>' . $row['Pro_Categoria'] . '</td>
                                             <td>' . $row['Pro_Cantidad'] . '</td>
                                             <td>' . $row['Pro_PrecioVenta'] . '</td>
