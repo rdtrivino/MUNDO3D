@@ -177,4 +177,38 @@ function cambiarCursor(event) {
 function restaurarCursor(event) {
     event.target.style.cursor = 'default';
 }
+// buscador de productos
+document.addEventListener('DOMContentLoaded', function () {
+    function buscarProducto() {
+        var inputValor = document.getElementById('nombre_producto').value.trim().toLowerCase();
+        var productos = document.querySelectorAll('#productosContainer .col.mb-4');
+
+        productos.forEach(function (producto) {
+            var nombreProducto = producto.querySelector('.card-body .card-title').innerText.trim().toLowerCase();
+
+            // Verificar si el nombre del producto contiene el valor de búsqueda
+            if (nombreProducto.includes(inputValor)) {
+                producto.style.display = 'block';  // Mostrar el producto
+            } else {
+                producto.style.display = 'none';   // Ocultar el producto si no coincide
+            }
+        });
+    }
+
+    // Función para limpiar la búsqueda y mostrar todos los productos
+    function limpiarBusqueda() {
+        var productos = document.querySelectorAll('#productosContainer .col.mb-4');
+
+        productos.forEach(function (producto) {
+            producto.style.display = 'block';  // Mostrar todos los productos
+        });
+
+        document.getElementById('nombre_producto').value = '';  // Limpiar el campo de búsqueda
+    }
+
+    // Evento para llamar a buscarProducto() cada vez que se presione una tecla en el campo de búsqueda
+    document.getElementById('nombre_producto').addEventListener('keyup', function () {
+        buscarProducto();
+    });
+});
 

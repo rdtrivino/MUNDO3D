@@ -33,71 +33,6 @@
                     <button class="font-large" onclick="aumentarTamano()" style="margin-left: 10px;">A</button>
                 </div>
             </div>
-            <style>
-                .font-small {
-                    font-size: 12px;
-                    /* Tamaño pequeño */
-                }
-
-                .font-medium {
-                    font-size: 16px;
-                    /* Tamaño mediano */
-                }
-
-                .font-large {
-                    font-size: 20px;
-                    /* Tamaño grande */
-                }
-
-                .font-small,
-                .font-medium,
-                .font-large {
-                    background-color: transparent;
-                    /* Quitar el fondo */
-                    color: white;
-                    /* Color de texto blanco */
-                    font-weight: bold;
-                    /* Negrita */
-                }
-            </style>
-            <script>
-                function ajustarTamano(size) {
-                    const body = document.body;
-                    body.classList.remove('font-small', 'font-medium', 'font-large');
-
-                    switch (size) {
-                        case 'small':
-                            body.classList.add('font-small');
-                            break;
-                        case 'medium':
-                            body.classList.add('font-medium');
-                            break;
-                        case 'large':
-                            body.classList.add('font-large');
-                            break;
-                    }
-                }
-
-                function disminuirTamano() {
-                    ajustarTamano('small'); // Ajusta el tamaño a pequeño
-                }
-
-                function aumentarTamano() {
-                    const body = document.body;
-                    body.classList.remove('font-small', 'font-medium');
-                    body.classList.add('font-large'); // Ajusta el tamaño a grande
-                }
-
-
-                function cambiarCursor(event) {
-                    event.target.style.cursor = 'pointer';
-                }
-
-                function restaurarCursor(event) {
-                    event.target.style.cursor = 'default';
-                }
-
-            </script>
             <div class="col-md-6 text-center text-lg-right">
                 <div class="d-inline-flex align-items-center" style="margin-top: -10%;">
                     <img src="images/bxs-user-circle.svg" alt="inicio" id="btnModal" class="hamburguer">
@@ -252,44 +187,6 @@
             </div>
         </div>
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Función para buscar productos
-            function buscarProducto() {
-                var inputValor = document.getElementById('nombre_producto').value.trim().toLowerCase();
-                var productos = document.querySelectorAll('#productosContainer .col.mb-4');
-
-                productos.forEach(function (producto) {
-                    var nombreProducto = producto.querySelector('.card-body .card-title').innerText.trim().toLowerCase();
-
-                    // Verificar si el nombre del producto contiene el valor de búsqueda
-                    if (nombreProducto.includes(inputValor)) {
-                        producto.style.display = 'block';  // Mostrar el producto
-                    } else {
-                        producto.style.display = 'none';   // Ocultar el producto si no coincide
-                    }
-                });
-            }
-
-            // Función para limpiar la búsqueda y mostrar todos los productos
-            function limpiarBusqueda() {
-                var productos = document.querySelectorAll('#productosContainer .col.mb-4');
-
-                productos.forEach(function (producto) {
-                    producto.style.display = 'block';  // Mostrar todos los productos
-                });
-
-                document.getElementById('nombre_producto').value = '';  // Limpiar el campo de búsqueda
-            }
-
-            // Evento para llamar a buscarProducto() cada vez que se presione una tecla en el campo de búsqueda
-            document.getElementById('nombre_producto').addEventListener('keyup', function () {
-                buscarProducto();
-            });
-        });
-    </script>
-
-
     <!-- Modal de detalles del producto -->
     <div class="modal fade" id="detalleProductoModal" tabindex="-1" role="dialog"
         aria-labelledby="detalleProductoModalLabel" aria-hidden="true">
@@ -361,86 +258,6 @@
                         </button>
                     </div>
                 </div>
-                <style>
-                    .parent2 {
-                        width: 30%;
-                        height: 50%;
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                    }
-
-
-                    .child {
-                        width: 50px;
-                        height: 50px;
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        transform-style: preserve-3d;
-                        transition: all 1.6s ease-in-out;
-                        border-radius: 100%;
-                        margin: 0 5px;
-                        position: relative;
-                        /* Agregado para posicionar correctamente el texto */
-                    }
-
-                    .child:hover {
-                        background-color: black;
-                        background-position: -100px 100px, -100px 100px;
-                        transform: rotate3d(0.5, 1, 0, 30deg);
-                        transform: perspective(180px) rotateX(60deg) translateY(2px);
-                        box-shadow: 0px 10px 10px rgb(1, 49, 182);
-                    }
-
-                    #button1 {
-                        border: none;
-                        background-color: white;
-                        width: 50px;
-                        height: 50px;
-                        font-size: 20px;
-                        border-radius: 50%;
-                    }
-
-                    #button1:hover {
-                        width: inherit;
-                        height: inherit;
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        transform: translate3d(0px, 0px, 15px) perspective(180px) rotateX(-35deg) translateY(2px);
-                        border-radius: 100%;
-                        background-color: white;
-                    }
-
-                    /* Estilos para el texto */
-                    .child::before {
-                        content: attr(data-title);
-                        /* Obtener el texto del atributo data-title */
-                        position: absolute;
-                        top: -30px;
-                        /* Posición del texto arriba del botón */
-                        color: white;
-                        /* Color del texto */
-                        padding: 5px;
-                        border-radius: 5px;
-                        font-size: 13px;
-                        white-space: nowrap;
-                        /* Evita que el texto se divida en múltiples líneas */
-                        left: 50%;
-                        /* Centra horizontalmente */
-                        transform: translateX(-50%);
-                        opacity: 0;
-                        /* Oculta inicialmente el texto */
-                        transition: opacity 0.9s ease;
-                        /* Transición de la opacidad */
-                    }
-
-                    .child:hover::before {
-                        opacity: 1;
-                        /* Muestra el texto al pasar el mouse sobre el botón */
-                    }
-                </style>
                 <!--redes sociales html-->
             </div>
             <div class="col-lg-4 col-md-6 mb-5">

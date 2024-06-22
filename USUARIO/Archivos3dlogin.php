@@ -1,72 +1,3 @@
-<?php
-session_start();
-include __DIR__ . '/../conexion.php';
-
-// Confirmación de que el usuario ha realizado el proceso de autenticación
-if (!isset($_SESSION['confirmado']) || $_SESSION['confirmado'] == false) {
-    header("Location: ../Programas/autenticacion.php");
-    exit(); // Terminamos la ejecución del script después de redirigir
-}
-
-// Realizamos la consulta para obtener el rol del usuario
-$peticion = "SELECT Usu_rol FROM usuario WHERE Usu_Identificacion = '" . $_SESSION['user_id'] . "'";
-$result = mysqli_query($link, $peticion);
-
-// Verificamos si la consulta tuvo éxito
-if (!$result) {
-    // Manejo de errores de consulta
-    // Redirigir a la página de autenticación o mostrar un mensaje de error
-    header("Location: ../Programas/autenticacion.php");
-    exit(); // Terminamos la ejecución del script después de redirigir
-}
-
-// Verificamos si la consulta devolvió exactamente un resultado
-if (mysqli_num_rows($result) != 1) {
-    // Si la consulta no devuelve un solo resultado, puede ser un problema de base de datos
-    // Redirigir a la página de autenticación o mostrar un mensaje de error
-    header("Location: ../Programas/autenticacion.php");
-    exit(); // Terminamos la ejecución del script después de redirigir
-}
-
-// Obtenemos el rol del usuario
-$fila = mysqli_fetch_assoc($result);
-$rolUsuario = $fila['Usu_rol'];
-
-// Verificar si el rol del usuario es diferente de 3
-if ($rolUsuario != 3) {
-    // Si el rol no es 3, redirigir a la página de autenticación
-    header("Location: ../Programas/autenticacion.php");
-    exit(); // Terminamos la ejecución del script después de redirigir
-}
-
-// Si llegamos aquí, el usuario está autenticado y tiene el rol 3
-// Continuar con el resto del código
-$nombreCompleto = $_SESSION['username'];
-$usuario_id = $_SESSION['user_id'];
-?>
-<?php
-$host = "localhost";
-$user = "root";
-$password = "";
-$dbname = "mundo3d";
-
-$link = mysqli_connect($host, $user, $password);
-
-if (!$link) {
-    die("Error al conectarse al servidor: " . mysqli_connect_error());
-}
-
-if (!mysqli_select_db($link, $dbname)) {
-    die("Error al conectarse a la Base de Datos: " . mysqli_error($link));
-}
-
-
-// Consulta a la base de datos para obtener productos de la categoría 5
-$sql = "SELECT * FROM productos WHERE Pro_Categoria = 5";
-$result = mysqli_query($link, $sql);
-
-?>
-
 <!DOCTYPE html>
 <html lang="es">
 
@@ -88,6 +19,7 @@ $result = mysqli_query($link, $sql);
 </head>
 
 <body>
+<?php include 'programas/funciones-in-re.php'; ?>
     <!-- Topbar Start -->
     <div class="container-fluid bg-primary py-3">
         <div class="row">
@@ -98,30 +30,6 @@ $result = mysqli_query($link, $sql);
                     <div class="text-white" id="user-name">
                         Bienvenido:
                     </div>
-
-                    <script>
-                        // Función para hacer una solicitud AJAX al servidor y obtener el nombre de usuario
-                        function getUsername() {
-                            var xhr = new XMLHttpRequest();
-                            xhr.open('GET', '../Programas/get_username.php', true);
-                            xhr.onreadystatechange = function () {
-                                if (xhr.readyState === 4 && xhr.status === 200) {
-                                    // Parsea la respuesta JSON para obtener el objeto de usuario
-                                    var userData = JSON.parse(xhr.responseText);
-                                    // Obtiene el nombre completo del objeto de usuario
-                                    var nombreCompleto = userData.nombreCompleto;
-                                    // Actualiza el contenido del elemento user-name con el nombre completo de usuario
-                                    document.getElementById('user-name').textContent = 'Bienvenid@ ' + nombreCompleto;
-                                }
-                            };
-                            xhr.send();
-                        }
-
-                        // Llama a la función getUsername al cargar la página para obtener el nombre de usuario
-                        window.onload = function () {
-                            getUsername();
-                        };
-                    </script>
                 </div>
             </div>
             </head>
@@ -147,37 +55,6 @@ $result = mysqli_query($link, $sql);
                                             onmouseover="cambiarCursor(event)" onmouseout="restaurarCursor()"></i>
                                     </div>
                                 </div>
-                                <script>
-                                    function adjustFontSize(size) {
-                                        const body = document.body;
-                                        body.classList.remove('font-small', 'font-medium', 'font-large');
-
-                                        switch (size) {
-                                            case 'small':
-                                                body.classList.add('font-small');
-                                                break;
-                                            case 'medium':
-                                                body.classList.add('font-medium');
-                                                break;
-                                            case 'large':
-                                                body.classList.add('font-large');
-                                                break;
-                                        }
-                                    }
-
-                                    function aumentarTamano() {
-                                        // Funcionalidad específica para el icono de silla de ruedas
-                                    }
-
-                                    function cambiarCursor(event) {
-                                        event.target.style.cursor = 'pointer';
-                                    }
-
-                                    function restaurarCursor(event) {
-                                        event.target.style.cursor = 'default';
-                                    }
-                                </script>
-
                                 <!-- Menú desplegable -->
                                 <div class="dropdown" style="position: relative; white-space: nowrap;">
                                     <div id="dropdown-menu" class="dropdown-menu dropdown-menu-right"
@@ -204,29 +81,6 @@ $result = mysqli_query($link, $sql);
                                         <span>Mi menú</span> <!-- Cambia el texto del botón de hamburguesa -->
                                     </button>
                                 </div>
-                                <script>
-                                    document.getElementById("menu-toggle").addEventListener("click", function (event) {
-                                        var menu = document.getElementById("dropdown-menu");
-                                        menu.style.display = (menu.style.display === "block") ? "none" : "block";
-                                        event.stopPropagation(); // Evita que el clic en el botón se propague al documento
-                                    });
-
-                                    // Event listener para cerrar el menú desplegable cuando se hace clic fuera de él
-                                    document.addEventListener("click", function (event) {
-                                        var menu = document.getElementById("dropdown-menu");
-                                        var menuToggle = document.getElementById("menu-toggle");
-                                        if (!menu.contains(event.target) && event.target !== menuToggle) {
-                                            menu.style.display = "none";
-                                        }
-                                    });
-
-                                    function confirmLogout() {
-                                        var confirmLogout = confirm("¿Estás seguro de que deseas cerrar sesión?");
-                                        if (confirmLogout) {
-                                            window.location.href = "../Programas/logout.php"; // Redirige al script de cierre de sesión
-                                        }
-                                    }
-                                </script>
                             </div>
                         </div>
                     </div>
@@ -271,72 +125,6 @@ $result = mysqli_query($link, $sql);
                 </div>
                 <div id="resultado_busqueda" class="col-md-6 mt-3"></div>
             </div>
-            <style>
-                .InputContainer {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 7px;
-                    position: relative;
-                    color: white;
-                    margin-top: 0%;
-
-                }
-
-                @media (max-width: 1500px) {
-                    .InputContainer {
-                        display: none;
-                        /* Ocultar el contenedor en pantallas más pequeñas que 768px */
-                    }
-                }
-
-                .InputContainer .label {
-                    font-size: 15px;
-                    padding-left: 10px;
-                    position: absolute;
-                    top: 13px;
-                    transition: 0.3s;
-                    pointer-events: none;
-                    color: black;
-                }
-
-                .input {
-                    width: 300px;
-                    height: 45px;
-                    border: none;
-                    outline: none;
-                    padding: 0px 7px;
-                    border-radius: 6px;
-                    color: #fff;
-                    font-size: 15px;
-                    background-color: transparent;
-                    box-shadow: 3px 3px 10px rgba(0, 0, 0, 1),
-                        -1px -1px 6px rgba(255, 255, 255, 0.4);
-                }
-
-                .input:focus {
-                    border: 2px solid transparent;
-                    color: black;
-                    box-shadow: 3px 3px 10px rgba(0, 0, 0, 1),
-                        -1px -1px 6px rgba(255, 255, 255, 0.4),
-                        inset 3px 3px 10px rgba(0, 0, 0, 1),
-                        inset -1px -1px 6px rgba(255, 255, 255, 0.4);
-                }
-
-                .InputContainer .input:valid~.label,
-                .InputContainer .input:focus~.label {
-                    transition: 0.3s;
-                    padding-left: 2px;
-                    transform: translateY(-35px);
-                }
-
-                .InputContainer .input:valid,
-                .InputContainer .input:focus {
-                    box-shadow: 3px 3px 10px rgba(0, 0, 0, 1),
-                        -1px -1px 6px rgba(255, 255, 255, 0.4),
-                        inset 3px 3px 10px rgba(0, 0, 0, 1),
-                        inset -1px -1px 6px rgba(255, 255, 255, 0.4);
-                }
-            </style>
         </div>
     </div>
     <div class="container-fluid" style="background-color: #D3D3D3; margin-top: -50px;">
@@ -384,20 +172,6 @@ $result = mysqli_query($link, $sql);
                                     </h5>
                                 </div>
                             </div>
-                            <style>
-                                /* Estilos para centrar verticalmente el nombre del producto en la tarjeta */
-                                .card-body {
-                                    height: 100%;
-                                    /* Asegura que la tarjeta ocupe toda la altura disponible */
-                                }
-
-                                .card-title {
-                                    margin-top: auto;
-                                    /* Centra verticalmente el título */
-                                    margin-bottom: auto;
-                                }
-                            </style>
-
                             <!-- Modal -->
                             <div class="modal fade" id="detalleProductoModal" tabindex="-1" role="dialog"
                                 aria-labelledby="detalleProductoModalLabel" aria-hidden="true">
@@ -412,12 +186,11 @@ $result = mysqli_query($link, $sql);
                                         <div class="modal-body">
                                             <div class="container-fluid">
                                                 <div class="row align-items-center">
-                                                    <div class="col-md-6 text-center">
-                                                        <!-- Imagen del producto -->
-                                                        <img src="<?php echo $row['nombre_imagen']; ?>" class="img-fluid"
-                                                            style="height: 300px; object-fit: contain;"
-                                                            alt="<?php echo $row["Pro_Nombre"]; ?>">
-                                                    </div>
+                                                <div class="col-md-6 text-center">
+                                                    <!-- Imagen del producto -->
+                                                    <img id="nombre_imagen" src="" height="150px"
+                                                        style="border: 1px solid #dddddd; padding: 8px;">
+                                                </div>
                                                     <div class="col-md-6">
                                                         <!-- Descripción del producto -->
                                                         <h4 id="productoNombre"><?php echo $row["Pro_Nombre"]; ?></h4>
@@ -452,56 +225,6 @@ $result = mysqli_query($link, $sql);
             </div>
         </div>
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Función para buscar productos
-            function buscarProducto() {
-                var inputValor = document.getElementById('nombre_producto').value.trim().toLowerCase();
-                var productos = document.querySelectorAll('#productosContainer .col.mb-4');
-
-                productos.forEach(function (producto) {
-                    var nombreProducto = producto.querySelector('.card-body .card-title').innerText.trim().toLowerCase();
-
-                    // Verificar si el nombre del producto contiene el valor de búsqueda
-                    if (nombreProducto.includes(inputValor)) {
-                        producto.style.display = 'block';  // Mostrar el producto
-                    } else {
-                        producto.style.display = 'none';   // Ocultar el producto si no coincide
-                    }
-                });
-            }
-
-            // Función para limpiar la búsqueda y mostrar todos los productos
-            function limpiarBusqueda() {
-                var productos = document.querySelectorAll('#productosContainer .col.mb-4');
-
-                productos.forEach(function (producto) {
-                    producto.style.display = 'block';  // Mostrar todos los productos
-                });
-
-                document.getElementById('nombre_producto').value = '';  // Limpiar el campo de búsqueda
-            }
-
-            // Evento para llamar a buscarProducto() cada vez que se presione una tecla en el campo de búsqueda
-            document.getElementById('nombre_producto').addEventListener('keyup', function () {
-                buscarProducto();
-            });
-        });
-    </script>
-    <script>
-        // Función para descargar la imagen
-        function downloadImage(imageData, imageName) {
-            // Crear un enlace temporal
-            var link = document.createElement('a');
-            link.href = 'data:image/jpeg;base64,' + imageData;
-            link.download = imageName;
-            // Simular un clic en el enlace para iniciar la descarga
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-    </script>
-
     <!-- Footer Start -->
     <div class="container-fluid bg-primary text-white px-sm-3 px-md-5" style="margin-top: auto; margin-bottom: 0;">
         <div class="row pt-5">
@@ -563,86 +286,6 @@ $result = mysqli_query($link, $sql);
             </div>
         </div>
     </div>
-    <style>
-        .parent2 {
-            width: 30%;
-            height: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-
-        .child {
-            width: 50px;
-            height: 50px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transform-style: preserve-3d;
-            transition: all 1.6s ease-in-out;
-            border-radius: 100%;
-            margin: 0 5px;
-            position: relative;
-            /* Agregado para posicionar correctamente el texto */
-        }
-
-        .child:hover {
-            background-color: black;
-            background-position: -100px 100px, -100px 100px;
-            transform: rotate3d(0.5, 1, 0, 30deg);
-            transform: perspective(180px) rotateX(60deg) translateY(2px);
-            box-shadow: 0px 10px 10px rgb(1, 49, 182);
-        }
-
-        #button1 {
-            border: none;
-            background-color: white;
-            width: 50px;
-            height: 50px;
-            font-size: 20px;
-            border-radius: 50%;
-        }
-
-        #button1:hover {
-            width: inherit;
-            height: inherit;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transform: translate3d(0px, 0px, 15px) perspective(180px) rotateX(-35deg) translateY(2px);
-            border-radius: 100%;
-            background-color: white;
-        }
-
-        /* Estilos para el texto */
-        .child::before {
-            content: attr(data-title);
-            /* Obtener el texto del atributo data-title */
-            position: absolute;
-            top: -30px;
-            /* Posición del texto arriba del botón */
-            color: white;
-            /* Color del texto */
-            padding: 5px;
-            border-radius: 5px;
-            font-size: 13px;
-            white-space: nowrap;
-            /* Evita que el texto se divida en múltiples líneas */
-            left: 50%;
-            /* Centra horizontalmente */
-            transform: translateX(-50%);
-            opacity: 0;
-            /* Oculta inicialmente el texto */
-            transition: opacity 0.9s ease;
-            /* Transición de la opacidad */
-        }
-
-        .child:hover::before {
-            opacity: 1;
-            /* Muestra el texto al pasar el mouse sobre el botón */
-        }
-    </style>
     <!--redes sociales html-->
     <div class="container-fluid bg-dark text-white py-4 px-sm-3 px-md-5">
         <p class="m-0 text-center text-white">
@@ -650,11 +293,7 @@ $result = mysqli_query($link, $sql);
             <?php echo date('Y'); ?>
         </p>
     </div>
-
-
-    <!-- Back to Top -->
     <a href="#" class="btn btn-lg btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
-
 
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -663,13 +302,10 @@ $result = mysqli_query($link, $sql);
     <script src="lib/waypoints/waypoints.min.js"></script>
     <script src="lib/counterup/counterup.min.js"></script>
     <script src="lib/owlcarousel/owl.carousel.min.js"></script>
-
-    <!-- Contact Javascript File -->
     <script src="mail/jqBootstrapValidation.min.js"></script>
     <script src="mail/contact.js"></script>
-
-    <!-- Template Javascript -->
     <script src="js/main.js"></script>
+    <script src="programas/im-re.js"></script>
 </body>
 
 </html>
