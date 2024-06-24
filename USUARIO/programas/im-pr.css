@@ -67,19 +67,25 @@
 .btn-danger {
     background-color: #dc3545;
     border-color: #dc3545;
-    position: relative;
-    right: 10%;
-    margin-top: -5%;
+    position: fixed; /* Cambiado a fixed para que permanezca estático */
+    bottom: 20px; /* Distancia desde el borde inferior */
+    right: 20px; /* Distancia desde el borde derecho */
+    z-index: 1000; /* Asegura que esté por encima de otros elementos */
     border-radius: 10px;
+    box-shadow:
+        0 0 0 6px rgba(1, 49, 182, 0.2),
+        0 0 0 12px rgba(1, 49, 182, 0.15),
+        0 0 0 18px rgba(1, 49, 182, 0.1);
 }
 
-
-@media (max-width: 1500px) {
+  @media (min-width: 1500px) {
     .btn-danger {
-        display: none;
-        /* Ocultar el contenedor en pantallas más pequeñas que 768px */
+      display: inline-block; /* Mostrar el botón en pantallas más grandes */
+      position: relative; /* Restaurar a posición relativa en pantallas grandes */
+      right: 10%; /* Ajustar si es necesario */
+      margin-top: 3%; /* Ajustar si es necesario */
     }
-}
+  }
 
 .btn-danger:hover {
     background-color: #c82333;
