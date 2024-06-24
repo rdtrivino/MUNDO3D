@@ -274,6 +274,8 @@ document.addEventListener("DOMContentLoaded", function () {
         
                     $('#detalleProductoModal').modal('show');
                 }
+
+                
 // buscador de productos //
 document.addEventListener('DOMContentLoaded', function () {
     // Función para buscar productos
@@ -310,13 +312,56 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 // descargar imagen archivos 3d//
-        function downloadImage(imageData, imageName) {
-            // Crear un enlace temporal
-            var link = document.createElement('a');
-            link.href = 'data:image/jpeg;base64,' + imageData;
-            link.download = imageName;
-            // Simular un clic en el enlace para iniciar la descarga
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+document.addEventListener('DOMContentLoaded', function() {
+    // Función para descargar la imagen
+    function downloadImage(base64Data, filename) {
+        var link = document.createElement('a');
+        link.download = filename; // Nombre del archivo a descargar
+        link.href = base64Data;   // Datos en base64
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    // Evento de clic en el botón de descarga
+    document.getElementById('modalDownloadButton').addEventListener('click', function() {
+        // Obtener la imagen codificada en base64 y el nombre del archivo
+        var base64ImageData = document.getElementById('productoImagen').getAttribute('src');
+        var filename = document.getElementById('productoNombre').textContent.trim() + '.jpg';
+
+        // Llamar a la función para descargar la imagen
+        downloadImage(base64ImageData, filename);
+    });
+
+    // Ejemplo de carga de datos del producto (simulado)
+    // Esto podría ser reemplazado por tu lógica para cargar los datos reales del producto
+    document.getElementById('productoImagen').setAttribute('src', 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/...'); // Aquí va tu base64 completo
+
+    // Ejemplo de carga de datos del producto (simulado)
+    document.getElementById('productoNombre').textContent = 'Nombre del Producto';
+    document.getElementById('productoDescripcion').textContent = 'Descripción detallada del producto.';
+});
+//____________________________________________________________________________
+function downloadImage(base64Data, filename) {
+    // Convert base64 to blob
+    const byteCharacters = atob(base64Data);
+    const byteArrays = [];
+    for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+        const slice = byteCharacters.slice(offset, offset + 512);
+        const byteNumbers = new Array(slice.length);
+        for (let i = 0; i < slice.length; i++) {
+            byteNumbers[i] = slice.charCodeAt(i);
         }
+        const byteArray = new Uint8Array(byteNumbers);
+        byteArrays.push(byteArray);
+    }
+    const blob = new Blob(byteArrays, { type: 'image/jpeg' });
+
+    // Create download link
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}

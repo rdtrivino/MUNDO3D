@@ -19,7 +19,7 @@
 </head>
 
 <body>
-<?php include 'programas/funciones-in-re.php'; ?>
+    <?php include 'programas/funciones-in-re.php'; ?>
     <!-- Topbar Start -->
     <div class="container-fluid bg-primary py-3">
         <div class="row">
@@ -127,29 +127,26 @@
             </div>
         </div>
     </div>
-    <div class="container-fluid" style="background-color: #D3D3D3; margin-top: -50px;">
+    <div class="container-fluid" style="background-color: #D3D3D3; margin-top: -2%;">
         <div class="container">
-            <h1 class="display-4 text-center mb-5">Explora nuestros archivos 3D</h1>
+            <h1 class="display-4 text-center mb-5">Explora Nuestros archivos 3D</h1>
             <div class="row row-cols-lg-4 row-cols-md-3 justify-content-center" id="productosContainer">
                 <?php
-                // Consulta a la base de datos para obtener productos de la categoría 5
-                $sql = "SELECT * FROM productos WHERE Pro_Categoria = 5 AND Pro_Estado = 'activo'";
-                $result = mysqli_query($link, $sql);
-
                 // Verificar si se encontraron productos en la categoría 5
                 if (mysqli_num_rows($result) > 0) {
                     // Iterar sobre los resultados y mostrar cada producto
                     while ($row = mysqli_fetch_assoc($result)) {
                         ?>
                         <div class="col mb-4 producto">
-                            <div class="card h-100">
+                            <div class="card">
                                 <img src="<?php echo $row['nombre_imagen']; ?>" class="card-img-top"
-                                    style="height: 200px; object-fit: contain;" alt="<?php echo $row['Pro_Nombre']; ?>">
+                                    style="height: 200px; object-fit: contain;"
+                                    alt="<?php echo htmlspecialchars($row['Pro_Nombre']); ?>">
                                 <div
                                     class="overlay position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
                                     <?php if ($row['Pro_Cantidad'] > 0) { ?>
                                         <button class="btn btn-primary btn-lg descargar"
-                                            onclick="downloadImage('<?php echo base64_encode($row['nombre_imagen']); ?>', '<?php echo htmlspecialchars($row['Pro_Nombre']); ?>.jpg')"
+                                            onclick="downloadImage('<?php echo base64_encode(file_get_contents($row['nombre_imagen'])); ?>', '<?php echo htmlspecialchars($row['Pro_Nombre']); ?>.jpg')"
                                             style="background-color: #000080;">
                                             <i class="fas fa-download"></i>
                                         </button>
@@ -160,71 +157,76 @@
                                     <?php } ?>
                                     <a href="#" class="btn btn-secondary btn-lg mx-2 detallesBtn" data-toggle="modal"
                                         data-target="#detalleProductoModal" data-id="<?php echo $row['Identificador']; ?>"
-                                        data-name="<?php echo $row['Pro_Nombre']; ?>"
-                                        data-description="<?php echo $row['Pro_Descripcion']; ?>"
-                                        style="background-color: #800000;"><i class="fas fa-search"></i></a>
+                                        data-name="<?php echo htmlspecialchars($row['Pro_Nombre']); ?>"
+                                        data-description="<?php echo htmlspecialchars($row['Pro_Descripcion']); ?>"
+                                        data-image="<?php echo $row['nombre_imagen']; ?>" style="background-color: #800000;"><i
+                                            class="fas fa-search"></i></a>
                                 </div>
-
-                                <div class="card-body d-flex flex-column justify-content-center align-items-center">
-                                    <h5 class="card-title mb-2 text-center"
+                                <div class="card-body text-center">
+                                    <h5 class="card-title mb-2"
                                         style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
-                                        <?php echo $row['Pro_Nombre']; ?>
+                                        <?php echo htmlspecialchars($row['Pro_Nombre']); ?>
                                     </h5>
-                                </div>
-                            </div>
-                            <!-- Modal -->
-                            <div class="modal fade" id="detalleProductoModal" tabindex="-1" role="dialog"
-                                aria-labelledby="detalleProductoModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-lg modal-solid-bg" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="detalleProductoModalLabel">Detalles del Producto</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
+                                    <?php if ($row['Pro_Cantidad'] == 0) { ?>
+                                        <div>
+                                            <span style="color: red; font-weight: bold; font-size: 20px;">Agotado</span>
                                         </div>
-                                        <div class="modal-body">
-                                            <div class="container-fluid">
-                                                <div class="row align-items-center">
-                                                <div class="col-md-6 text-center">
-                                                    <!-- Imagen del producto -->
-                                                    <img id="nombre_imagen" src="" height="150px"
-                                                        style="border: 1px solid #dddddd; padding: 8px;">
-                                                </div>
-                                                    <div class="col-md-6">
-                                                        <!-- Descripción del producto -->
-                                                        <h4 id="productoNombre"><?php echo $row["Pro_Nombre"]; ?></h4>
-                                                        <p><strong>Descripción:</strong></p>
-                                                        <p id="productoDescripcion"><?php echo $row["Pro_Descripcion"]; ?></p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal"
-                                                    style="background-color: #E42E24;">
-                                                    Cerrar
-                                                </button>
-                                                <button class="btn btn-primary btn-lg descargar"
-                                                    onclick="downloadImage('<?php echo base64_encode($row['nombre_imagen']); ?>', '<?php echo htmlspecialchars($row['Pro_Nombre']); ?>.jpg')"
-                                                    style="background-color: #000080;">
-                                                    <i class="fas fa-download"></i> Descargar
-                                                </button>
-                                            </div>
-
+                                    <?php } else { ?>
+                                        <div>
+                                            <!-- Precio -->
                                         </div>
-                                    </div>
+                                    <?php } ?>
                                 </div>
                             </div>
                         </div>
                         <?php
                     }
                 } else {
-                    echo "No se encontraron productos en esta categoría.";
+                    echo "No se encontraron productos en la categoría 5.";
                 }
                 ?>
             </div>
         </div>
     </div>
+
+
+    <!-- Modal de detalles del producto -->
+    <div class="modal fade" id="detalleProductoModal" tabindex="-1" role="dialog"
+        aria-labelledby="detalleProductoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detalleProductoModalLabel">Detalles del Producto</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-6 text-center">
+                            <!-- Imagen del producto -->
+                            <img id="productoImagen" src="" height="150px"
+                                style="border: 1px solid #dddddd; padding: 8px;">
+                        </div>
+                        <div class="col-md-6">
+                            <!-- Descripción y precio del producto -->
+                            <h4 id="productoNombre"></h4>
+                            <p><strong>Descripción:</strong> <span id="productoDescripcion"></span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                        style="background-color: #E42E24;">Cerrar</button>
+                    <button class="btn btn-primary btn-lg descargar" id="modalDownloadButton"
+                        style="background-color: #000080;">
+                        <i class="fas fa-download"></i> Descargar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer Start -->
     <div class="container-fluid bg-primary text-white px-sm-3 px-md-5" style="margin-top: auto; margin-bottom: 0;">
         <div class="row pt-5">

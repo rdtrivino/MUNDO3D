@@ -1,30 +1,33 @@
 <?php
 session_start();
-include __DIR__ . '/../conexion.php';
+require dirname(__DIR__) . '../conexion.php';
 
-// Confirmación de que el usuario ha realizado el proceso de autenticación
+// Confirmar que el usuario ha realizado el proceso de autenticación
 if (!isset($_SESSION['confirmado']) || $_SESSION['confirmado'] == false) {
   header("Location: ../Programas/autenticacion.php");
   exit();
 }
 
-// Realizamos la consulta para obtener el rol del usuario
+// Inicializar carrito de compras
+$_SESSION['carrito'] = array();
+
+// Realizar la consulta para obtener el rol del usuario
 $peticion = "SELECT Usu_rol FROM usuario WHERE Usu_Identificacion = ?";
 $stmt = mysqli_prepare($link, $peticion);
 if (!$stmt) {
   die('Error en la preparación de la consulta: ' . mysqli_error($link));
 }
-mysqli_stmt_bind_param($stmt, "s", $_SESSION['user_id']);
+mysqli_stmt_bind_param($stmt, "i", $_SESSION['user_id']);
 mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
 
-// Verificamos si la consulta tuvo éxito
-if (!$result || mysqli_num_rows($result) != 1) {
+// Verificar si la consulta devolvió exactamente un resultado
+if (mysqli_num_rows($result) != 1) {
   header("Location: ../Programas/autenticacion.php");
   exit();
 }
 
-// Obtenemos el rol del usuario
+// Obtener el rol del usuario
 $fila = mysqli_fetch_assoc($result);
 $rolUsuario = $fila['Usu_rol'];
 
@@ -34,21 +37,9 @@ if ($rolUsuario != 3) {
   exit();
 }
 
+// Si llegamos aquí, el usuario está autenticado y tiene el rol 3
 $nombreCompleto = $_SESSION['username'];
 $usuario_id = $_SESSION['user_id'];
-
-// Realizar la conexión a la base de datos
-$host = "localhost";
-$user = "root";
-$password = "";
-$dbname = "mundo3d";
-
-$link = mysqli_connect($host, $user, $password, $dbname);
-
-if (!$link) {
-  die("Error al conectarse al servidor: " . mysqli_connect_error());
-}
-
 // Consulta para obtener los pedidos del usuario logueado
 $sql_pedidos_usuario = "
     SELECT 
@@ -72,7 +63,6 @@ $sql_pedidos_usuario = "
     GROUP BY 
         c.Compra_ID
 ";
-
 
 $stmt = mysqli_prepare($link, $sql_pedidos_usuario);
 if (!$stmt) {
@@ -330,34 +320,40 @@ function obtenerNombreEstado($IdentificadorEstado, $conexion)
               <tbody>
                 <?php
                 $sql_pedidos = "
-              SELECT 
-                  p.compra_ID AS pedido_id,
-                  MIN(p.Pe_Fechapedido) AS fecha_pedido,
-                  MIN(p.Pe_Fechaentrega) AS fecha_entrega,
-                  GROUP_CONCAT(DISTINCT CONCAT(p.Pe_Cantidad, ' - ', pr.Pro_Nombre) ORDER BY p.Pe_Producto SEPARATOR '<br>') AS producto,
-                  MIN(p.pe_nombre_pedido) AS nombre_pedido,
-                  MIN(p.pe_tipo_impresion) AS tipo_impresion,
-                  MIN(p.pe_color) AS color,
-                  MIN(p.Pe_Observacion) AS observacion,
-                  ep.Es_Nombre AS estado_pedido,
-                  MIN(f.id) AS factura_id
-              FROM 
-                  pedidos p
-              LEFT JOIN 
-                  factura f ON p.compra_ID = f.pedido_id
-              LEFT JOIN 
-                  pedido_estado ep ON p.Pe_Estado = ep.Es_Codigo
-              LEFT JOIN 
-                  productos pr ON p.Pe_Producto = pr.Identificador
-              WHERE 
-                  p.Pe_Estado <> 'inactivo'
-              GROUP BY 
-                  p.compra_ID
-              ORDER BY 
-                  p.compra_ID
-          ";
+                        SELECT 
+                            p.compra_ID AS pedido_id,
+                            MIN(p.Pe_Fechapedido) AS fecha_pedido,
+                            MIN(p.Pe_Fechaentrega) AS fecha_entrega,
+                            GROUP_CONCAT(DISTINCT CONCAT(p.Pe_Cantidad, ' - ', pr.Pro_Nombre) ORDER BY p.Pe_Producto SEPARATOR '<br>') AS producto,
+                            MIN(p.pe_nombre_pedido) AS nombre_pedido,
+                            MIN(p.pe_tipo_impresion) AS tipo_impresion,
+                            MIN(p.pe_color) AS color,
+                            MIN(p.Pe_Observacion) AS observacion,
+                            ep.Es_Nombre AS estado_pedido,
+                            MIN(f.id) AS factura_id
+                        FROM 
+                            pedidos p
+                        LEFT JOIN 
+                            factura f ON p.compra_ID = f.pedido_id
+                        LEFT JOIN 
+                            pedido_estado ep ON p.Pe_Estado = ep.Es_Codigo
+                        LEFT JOIN 
+                            productos pr ON p.Pe_Producto = pr.Identificador
+                        WHERE 
+                            p.Pe_Cliente = ? AND p.Pe_Estado <> 'inactivo'
+                        GROUP BY 
+                            p.compra_ID
+                        ORDER BY 
+                            p.compra_ID
+                    ";
 
-                $resultado_pedidos = mysqli_query($link, $sql_pedidos);
+                $stmt = mysqli_prepare($link, $sql_pedidos);
+                if (!$stmt) {
+                  die('Error en la preparación de la consulta: ' . mysqli_error($link));
+                }
+                mysqli_stmt_bind_param($stmt, "i", $usuario_id);
+                mysqli_stmt_execute($stmt);
+                $resultado_pedidos = mysqli_stmt_get_result($stmt);
 
                 if ($resultado_pedidos && mysqli_num_rows($resultado_pedidos) > 0) {
                   while ($row = mysqli_fetch_assoc($resultado_pedidos)) {
