@@ -368,91 +368,99 @@ function obtenerNombreEstado($IdentificadorEstado, $conexion)
                       <td><?php echo $row['color']; ?></td>
                       <td><?php echo $row['observacion']; ?></td>
                       <td><?php echo $row['estado_pedido']; ?></td>
-                      <td style="display: flex; align-items: center;">
-                        <div class="mr-2">
-                          <?php if ($row['factura_id']) { ?>
-                            <a href="factura.php?id=<?php echo $row['factura_id']; ?>" class="btn btn-sm btn-success">
-                              <i class="fas fa-download"></i> Descargar Factura
-                            </a>
-                          <?php } else { ?>
-                            <span class="text-muted">Sin factura</span>
-                          <?php } ?>
+                      <td style="text-align: center;">
+                        <div class="button-container">
+                          <a href="factura.php?id=<?php echo $row['factura_id']; ?>" class="button__link">
+                            <button class="button" type="button">
+                              <span class="button__text">Factura</span>
+                              <span class="button__icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 35 35"
+                                  id="bdd05811-e15d-428c-bb53-8661459f9307" data-name="Layer 2" class="svg">
+                                  <path
+                                    d="M17.5,22.131a1.249,1.249,0,0,1-1.25-1.25V2.187a1.25,1.25,0,0,1,2.5,0V20.881A1.25,1.25,0,0,1,17.5,22.131Z">
+                                  </path>
+                                  <path
+                                    d="M17.5,22.693a3.189,3.189,0,0,1-2.262-.936L8.487,15.006a1.249,1.249,0,0,1,1.767-1.767l6.751,6.751a.7.7,0,0,0,.99,0l6.751-6.751a1.25,1.25,0,0,1,1.768,1.767l-6.752,6.751A3.191,3.191,0,0,1,17.5,22.693Z">
+                                  </path>
+                                  <path
+                                    d="M31.436,34.063H3.564A3.318,3.318,0,0,1,.25,30.749V22.011a1.25,1.25,0,0,1,2.5,0v8.738a.815.815,0,0,0,.814.814H31.436a.815.815,0,0,0,.814-.814V22.011a1.25,1.25,0,1,1,2.5,0v8.738A3.318,3.318,0,0,1,31.436,34.063Z">
+                                  </path>
+                                </svg>
+                              </span>
+                            </button>
+                          </a>
                         </div>
                       </td>
+
+
                     </tr>
                     <style>
-                      a {
-                        text-decoration: none;
+                      .button-container {
+                        display: flex;
+                        justify-content: flex-end;
+                        width: 100%;
+                        padding-right: 10px;
                       }
 
-                      .download-button {
+                      .button {
                         position: relative;
-                        border-width: 0;
-                        color: rgb(19, 19, 19);
-                        font-size: 15px;
-                        font-weight: 600;
-                        border-radius: 4px;
-                        z-index: 1;
-                      }
-
-                      .download-button .docs {
+                        width: 150px;
+                        height: 40px;
+                        cursor: pointer;
                         display: flex;
                         align-items: center;
-                        justify-content: space-between;
-                        gap: 10px;
-                        min-height: 40px;
-                        padding: 0 10px;
-                        border-radius: 4px;
-                        z-index: 1;
-                        background-color: #ffffff;
-                        border: solid 1px #e8e8e82d;
-                        transition: all 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+                        border: 1px solid #17795E;
+                        background-color: #209978;
+                        overflow: hidden;
                       }
 
-                      .download-button:hover {
-                        box-shadow: rgba(233, 233, 233, 0.555) 0px 54px 55px,
-                          rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
-                          rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+                      .button,
+                      .button__icon,
+                      .button__text {
+                        transition: all 0.3s;
                       }
 
-                      .download {
+                      .button .button__text {
+                        transform: translateX(22px);
+                        color: #fff;
+                        font-weight: 600;
+                      }
+
+                      .button .button__icon {
                         position: absolute;
-                        inset: 0;
+                        transform: translateX(109px);
+                        height: 100%;
+                        width: 39px;
+                        background-color: #17795E;
                         display: flex;
                         align-items: center;
                         justify-content: center;
-                        max-width: 90%;
-                        margin: 0 auto;
-                        z-index: -1;
-                        border-radius: 0px 0px 4px 4px;
-                        transform: translateY(0%);
-                        background-color: #01e056;
-                        border: solid 1px #01e0572d;
-                        transition: all 0.5s cubic-bezier(0.77, 0, 0.175, 1);
-                        cursor: pointer;
                       }
 
-                      .download-button:hover .download {
-                        transform: translateY(100%);
+                      .button .svg {
+                        width: 20px;
+                        fill: #fff;
                       }
 
-                      .download svg polyline,
-                      .download svg line {
-                        animation: docs 1s infinite;
+                      .button:hover {
+                        background: #17795E;
                       }
 
-                      @keyframes docs {
-                        0% {
-                          transform: translateY(0%);
-                        }
+                      .button:hover .button__text {
+                        color: transparent;
+                      }
 
-                        50% {
-                          transform: translateY(-15%);
-                        }
+                      .button:hover .button__icon {
+                        width: 148px;
+                        transform: translateX(0);
+                      }
 
-                        100% {
-                          transform: translateY(0%);
-                        }
+                      .button:active .button__icon {
+                        background-color: #146c54;
+                      }
+
+                      .button:active {
+                        border: 1px solid #146c54;
                       }
                     </style>
                     <?php
