@@ -80,13 +80,17 @@
     <link href="form-validation.css" rel="stylesheet">
 </head>
 <body class="bg-light">
-<div class="link-container">
-    <?php $tabla = $_GET['tabla']?>
-    <?php $id = $_GET['id']?>
-    <a href="index.php?tabla=<?php echo $tabla;?>">
-        <img class="#" src="../images/bx-home-alt-2.svg" alt="Home">
-    </a>
-</div>
+
+<div class="">
+        <?php $tabla = $_GET['tabla']; ?>
+        <a class="Btn-1" href="index.php?tabla=<?php echo $tabla; ?>">
+            <div class="sign">
+                <img src="../images/iconizer-bx-home-alt-2.2.svg" alt="Inicio">
+            </div>
+            <div class="text">INICIO</div>
+        </a>
+    </div>
+    
 <div class="container">
     <div class="py-5 text-center">
         <img class="" src="../images/Logo Mundo 3d.png" alt="" width="150" height="150">

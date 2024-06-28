@@ -89,6 +89,7 @@ mysqli_close($link);
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="shortcut icon" href="../images/Logo Mundo 3d.png" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="../css/estilo.css" rel="stylesheet">
     <style>
         .container {
             position: relative;
@@ -188,18 +189,21 @@ mysqli_close($link);
 </head>
 
 <body style="background: linear-gradient(135deg, #2980b9, #2c3e50); color: white;">
-    <a href="../index.php" class="home-icon">
-        <img src="/../MUNDO 3D/images/bx-home-alt-2.svg" alt="Ir a Inicio">
-    </a>
+
+    <div class="">
+        <a class="Btn-1" href="../index.php">
+            <div class="sign">
+                <img src="../../images/iconizer-bx-home-alt-2.2.svg" alt="Inicio">
+            </div>
+            <div class="text">INICIO</div>
+        </a>
+    </div>
 
     <div id="buttons-container" style="display: flex; justify-content: flex-end; align-items: center;">
         <a href="#" class="font-small text-white font-weight-bold mr-3" onclick="adjustFontSize('small')">A</a>
         <a href="#" class="font-medium text-white font-weight-bold mr-3" onclick="adjustFontSize('medium')">A</a>
         <a href="#" class="font-large text-white font-weight-bold mr-3" onclick="adjustFontSize('large')">A</a>
-        <div id="disabled-icon">
-            <i class="fas fa-wheelchair fa-lg text-white" onclick="aumentarTamano()" onmouseover="cambiarCursor(event)"
-                onmouseout="restaurarCursor()"></i>
-        </div>
+
     </div>
     <div class="container mt-5">
         <h2 class="mb-4">Editar Usuario</h2>
