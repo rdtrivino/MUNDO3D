@@ -151,22 +151,36 @@
                                 <!-- Cambiar tamaño del texto y fuente -->
                             </div>
                         </div>
-                        <div class="row mt-4">
-                            <div class="col d-flex justify-content-end">
-                                <div class="col-auto">
-                                    <div class="input-group input-group-sm rounded-pill" style="width: 300px;">
-                                        <!-- Ajusta el ancho total aquí -->
-                                        <span class="input-group-text" id="basic-addon1">
-                                            <!-- Espacio adicional para la izquierda -->
-                                            <i class="fas fa-search"></i>
-                                        </span>
-                                        <input type="text" class="form-control rounded-end" id="searchInput"
-                                            placeholder="Buscar..." oninput="searchTable()" style="width: 250px;">
-                                        <!-- Ajusta el ancho del campo de entrada aquí -->
-                                    </div>
+                       
+                    <!--boton de busqueda de la tabla-->
+                    <div class="col d-flex justify-content-end mt-4 align-items-center">
+                            <div class="d-flex justify-content-end ">
+                                <div class="input-group input-group-sm rounded-pill" style="width: 300px;">
+                                    <span class="input-group-text" id="basic-addon1">
+                                     <!-- Ajusta el ancho total aquí -->
+                                        <i class="fas fa-search"></i></span>
+                                     <!-- Espacio adicional para la izquierda -->
+                                    <input type="text" class="form-control rounded-end" id="searchInput"
+                                        placeholder="Buscar..." oninput="searchTable()" style="width: 250px;">
+                                     <!-- Ajusta el ancho del campo de entrada aquí -->
                                 </div>
                             </div>
                         </div>
+                    <!--paginacion -->
+                        <div class="d-flex align-items-center">
+                            <div class="d-flex align-items-center">
+                                <label for="num_registros" class="col-form-label"></label>
+                            </div>
+                            <div class="col-auto">
+                                <select name="num_registros" id="num_registros" class="form-select" onchange="cambiarRegistrosPorPagina()">
+                                    <option value="10" <?php if ($registrosPorPagina == 10) echo 'selected'; ?>>10</option>
+                                    <option value="25" <?php if ($registrosPorPagina == 25) echo 'selected'; ?>>25</option>
+                                    <option value="50" <?php if ($registrosPorPagina == 50) echo 'selected'; ?>>50</option>
+                                    <option value="100" <?php if ($registrosPorPagina == 100) echo 'selected'; ?>>100</option>
+                                </select>
+                            </div>
+                        </div>
+
                         <script>
                             function searchTable() {
                                 var input, filter, table, tr, td, i, txtValue;
@@ -530,10 +544,102 @@
                                             ?>
                             </tbody>
                             </table>
+                            </div>
 
                         </div>
                     </div>
             </div>
+            <!-- Funciones de paginación -->
+                        <ul class="pagination" id="pagination">
+                            <?php if ($pagina > 1): ?>
+                                <li>
+                                    <button onclick="cambiarPagina(<?php echo ($pagina - 1); ?>)">Anterior</button>
+                                </li>
+                            <?php endif; ?>
+
+                            <?php
+                            $totalPaginas = ceil($totalProductos / $registrosPorPagina);
+                            $rango = 2; // Mostrar dos páginas antes y después de la actual
+                            $inicio = max(1, $pagina - $rango);
+                            $fin = min($totalPaginas, $pagina + $rango);
+                            ?>
+
+                            <?php if ($inicio > 1): ?>
+                                <li>
+                                    <button onclick="cambiarPagina(1)">1</button>
+                                </li>
+                                <?php if ($inicio > 2): ?>
+                                    <li>...</li>
+                                <?php endif; ?>
+                            <?php endif; ?>
+
+                            <?php for ($i = $inicio; $i <= $fin; $i++): ?>
+                                <li>
+                                    <button onclick="cambiarPagina(<?php echo $i; ?>)" <?php if ($i == $pagina) echo 'disabled'; ?>><?php echo $i; ?></button>
+                                </li>
+                            <?php endfor; ?>
+
+                            <?php if ($fin < $totalPaginas): ?>
+                                <?php if ($fin < $totalPaginas - 1): ?>
+                                    <li>...</li>
+                                <?php endif; ?>
+                                <li>
+                                    <button onclick="cambiarPagina(<?php echo $totalPaginas; ?>)"><?php echo $totalPaginas; ?></button>
+                                </li>
+                            <?php endif; ?>
+
+                            <?php if ($pagina < $totalPaginas): ?>
+                                <li>
+                                    <button onclick="cambiarPagina(<?php echo ($pagina + 1); ?>)">Siguiente</button>
+                                </li>
+                            <?php endif; ?>
+                        </ul>
+
+                        <script>
+                            function cambiarRegistrosPorPagina() {
+                                const registrosPorPagina = document.getElementById('num_registros').value;
+                                window.location.href = `?pagina=1&registrosPorPagina=${registrosPorPagina}`;
+                            }
+
+                            function cambiarPagina(pagina) {
+                                const registrosPorPagina = document.getElementById('num_registros').value;
+                                window.location.href = `?pagina=${pagina}&registrosPorPagina=${registrosPorPagina}`;
+                            }
+                        </script>
+            <!--estilos de paginacion-->
+            <style>
+                    /* Estilos existentes de la paginación */
+
+                    .pagination {
+                        display: flex;
+                        justify-content: center;
+                        list-style: none;
+                        padding: 0;
+                    }
+
+                    .pagination li {
+                        margin: 0 5px;
+                    }
+
+                    .pagination button {
+                        padding: 5px 10px;
+                        cursor: pointer;
+                        border: 1px solid #000; /* Borde negro */
+                        background-color: #fff; /* Fondo blanco */
+                        border-radius: 5px; /* Bordes redondeados */
+                    }
+
+                    .pagination button:hover {
+                        background-color: #f0f0f0; /* Fondo gris claro al pasar el ratón */
+                    }
+
+                    .pagination button:disabled {
+                        cursor: not-allowed;
+                        background-color: #ddd; /* Fondo gris claro para botones deshabilitados */
+                    }
+                </style>
+                <!--estilos de paginacion-->
+
             </main>
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">

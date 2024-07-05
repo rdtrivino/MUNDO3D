@@ -5,6 +5,22 @@ require '../conexion.php';
 $nombreCompleto = $_SESSION['username'];
 $usuario_id = $_SESSION['user_id'];
 
+
+// Consulta SQL para obtener el número total de productos
+$totalProductosResult = mysqli_query($link, "SELECT COUNT(*) as total FROM productos");
+$totalProductosRow = mysqli_fetch_assoc($totalProductosResult);
+$totalProductos = $totalProductosRow['total'];
+
+// Obtener los parámetros de paginación de la URL
+$pagina = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1; // Página actual, por defecto la primera página
+$registrosPorPagina = isset($_GET['registrosPorPagina']) ? (int)$_GET['registrosPorPagina'] : 10; // Número de registros por página, por defecto 10
+$offset = ($pagina - 1) * $registrosPorPagina; // Calcular el offset para la consulta SQL
+
+//-----------------------------------------------------
+// Consulta SQL para obtener las facturas con paginación
+$sql = "SELECT * FROM factura ORDER BY id_factura DESC LIMIT $registrosPorPagina OFFSET $offset";
+//-----------------------------------------------------
+
 function obtenerNombreProducto($IdentificadorProducto, $conexion)
 {
     $sql = "SELECT pro_nombre FROM productos WHERE Identificador = ?";

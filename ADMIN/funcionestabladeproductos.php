@@ -4,9 +4,21 @@ require '../conexion.php';
 $nombreCompleto = $_SESSION['username'];
 $usuario_id = $_SESSION['user_id'];
 
+
+// Obtener el número total de productos
+$totalProductosResult = mysqli_query($link, "SELECT COUNT(*) as total FROM productos");
+$totalProductosRow = mysqli_fetch_assoc($totalProductosResult);
+$totalProductos = $totalProductosRow['total'];
+
+// Obtener los parámetros de paginación
+$pagina = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+$registrosPorPagina = isset($_GET['registrosPorPagina']) ? (int)$_GET['registrosPorPagina'] : 10;
+$offset = ($pagina - 1) * $registrosPorPagina;
+
 $sql = "SELECT p.Pro_Nombre, p.Identificador, p.Pro_Descripcion, p.Pro_PrecioVenta, c.Cgo_Nombre, p.Pro_Cantidad, p.Pro_Costo, p.Pro_Estado, p.nombre_imagen
         FROM productos p
-        INNER JOIN categoria c ON p.Pro_Categoria = c.Cgo_Codigo";
+        INNER JOIN categoria c ON p.Pro_Categoria = c.Cgo_Codigo
+        LIMIT $registrosPorPagina OFFSET $offset"; // Limitamos los resultados según la página actual y el número de registros por página
 
 $resultado = mysqli_query($link, $sql);
 

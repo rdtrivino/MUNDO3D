@@ -8,6 +8,19 @@ if (!isset($_SESSION['confirmado']) || $_SESSION['confirmado'] == false) {
     exit(); // Terminamos la ejecución del script después de redirigir
 }
 
+
+// Obtener el número total de productos
+$totalProductosResult = mysqli_query($link, "SELECT COUNT(*) as total FROM productos");
+$totalProductosRow = mysqli_fetch_assoc($totalProductosResult);
+$totalProductos = $totalProductosRow['total'];
+
+// Obtener los parámetros de paginación
+$pagina = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+$registrosPorPagina = isset($_GET['registrosPorPagina']) ? (int)$_GET['registrosPorPagina'] : 10;
+$offset = ($pagina - 1) * $registrosPorPagina;
+
+
+
 // Realizamos la consulta para obtener el rol del usuario
 $peticion = "SELECT Usu_rol FROM usuario WHERE Usu_Identificacion = '" . $_SESSION['user_id'] . "'";
 $result = mysqli_query($link, $peticion);
@@ -57,12 +70,22 @@ if (!isset($_SESSION['username'])) {
 $nombreCompleto = $_SESSION['username'];
 $usuario_id = $_SESSION['user_id'];
 
-$sql = "SELECT  Usu_Identificacion, Usu_Nombre_completo, Usu_Telefono, Usu_Email, Usu_Ciudad, Usu_Direccion, Usu_Rol, Usu_Estado FROM usuario";
-$resultado = mysqli_query($link, $sql);
+
+
+// Calcular el offset
+$offset = ($pagina - 1) * $registrosPorPagina;
+
+// Modificar la consulta SQL para incluir LIMIT y OFFSET
+$sql = "SELECT Usu_Identificacion, Usu_Nombre_completo, Usu_Telefono, Usu_Email, Usu_Ciudad, Usu_Direccion, Usu_Rol, Usu_Estado 
+        FROM usuario
+        LIMIT $registrosPorPagina OFFSET $offset";
+        $resultado = mysqli_query($link, $sql);
 
 if (!$resultado) {
     die("Error en la consulta: " . mysqli_error($link));
 }
+
+
 
 
 // Verifica si se recibieron los datos del formulario de actualización
