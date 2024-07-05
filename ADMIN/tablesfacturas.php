@@ -150,7 +150,7 @@ include ("Programas/controlsesion.php");
                             </div>
                             <div class="col-auto">
                                 <select name="num_registros" id="num_registros" class="form-select" onchange="cambiarRegistrosPorPagina()">
-                                <option value="10" <?php if ($registrosPorPagina == 10) echo 'selected'; ?>>10</option>
+                                    <option value="10" <?php if ($registrosPorPagina == 10) echo 'selected'; ?>>10</option>
                                     <option value="25" <?php if ($registrosPorPagina == 25) echo 'selected'; ?>>25</option>
                                     <option value="50" <?php if ($registrosPorPagina == 50) echo 'selected'; ?>>50</option>
                                     <option value="100" <?php if ($registrosPorPagina == 100) echo 'selected'; ?>>100</option>
