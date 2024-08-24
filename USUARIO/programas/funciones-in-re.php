@@ -4,7 +4,7 @@ require dirname(__DIR__) . '../../conexion.php';
 
 // Confirmación de que el usuario ha realizado el proceso de autenticación
 if (!isset($_SESSION['confirmado']) || $_SESSION['confirmado'] == false) {
-    header("Location: ../Programas/autenticacion.php");
+    header("Location: ../../Programas/autenticacion.php");
     exit(); // Terminamos la ejecución del script después de redirigir
 }
 $_SESSION['carrito'] = array(); // o $_SESSION['carrito'] = []; en PHP >= 5.4
@@ -16,13 +16,13 @@ $result = mysqli_query($link, $peticion);
 // Verificamos si la consulta tuvo éxito
 if (!$result) {
     // Manejo de errores de consulta
-    header("Location: ../Programas/autenticacion.php");
+    header("Location: ../../Programas/autenticacion.php");
     exit(); // Terminamos la ejecución del script después de redirigir
 }
 
 // Verificamos si la consulta devolvió exactamente un resultado
 if (mysqli_num_rows($result) != 1) {
-    header("Location: ../Programas/autenticacion.php");
+    header("Location: ../../Programas/autenticacion.php");
     exit(); // Terminamos la ejecución del script después de redirigir
 }
 
@@ -32,7 +32,7 @@ $rolUsuario = $fila['Usu_rol'];
 
 // Verificar si el rol del usuario es diferente de 3
 if ($rolUsuario != 3) {
-    header("Location: ../Programas/autenticacion.php");
+    header("Location: ../../Programas/autenticacion.php");
     exit(); // Terminamos la ejecución del script después de redirigir
 }
 
@@ -130,7 +130,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Verificar si el rol del usuario es diferente de 3
     if ($rolUsuario != 3) {
         // Si el rol no es 3, redirigir a la página de autenticación
-        header("Location: ../Programas/autenticacion.php");
+        header("Location: ../../Programas/autenticacion.php");
         exit(); // Terminamos la ejecución del script después de redirigir
     }
 
@@ -140,11 +140,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $usuario_id = $_SESSION['user_id'];
     ?>
     <?php
-
-    $host = "localhost";
+    /*$host = "localhost";
     $user = "root";
     $password = "";
-    $dbname = "mundo3d";
+    $dbname = "mundo3d";*/
+    
+    $host = "localhost";
+    $user = "u255704174_root";
+    $password = "Mundo3d2024";
+    $dbname = "u255704174_mundo3d";
 
     $link = mysqli_connect($host, $user, $password, $dbname);
 
