@@ -83,6 +83,7 @@
 
 <div class="">
         <?php $tabla = $_GET['tabla']; ?>
+        <?php $id = $_GET['id']?>
         <a class="Btn-1" href="index.php?tabla=<?php echo $tabla; ?>">
             <div class="sign">
                 <img src="../images/iconizer-bx-home-alt-2.2.svg" alt="Inicio">
