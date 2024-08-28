@@ -11,6 +11,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css" rel="stylesheet">
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
     <link href="css\misestilos.css" rel="stylesheet">
@@ -179,7 +183,6 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <!-- Contenedor para mostrar los productos agregados al carrito -->
                             <div id="carritoContenido">
                                 <?php
                                 $totalPrecioProductos = 0;
@@ -223,8 +226,10 @@
                                 </div>
                                 </td>';
                                             echo '<td style="text-align: center;">
-                                    <button type="button" class="btn btn-danger btn-sm" data-id="' . $row['id'] . '" data-action="remove"><i class="fas fa-trash-alt"></i></button>
-                                </td>';
+                                <button type="button" class="btn btn-danger btn-sm" onclick="eliminarProducto(' . $row['id'] . ')">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </td>';
                                             echo '</tr>';
                                             $totalPrecioProductos += $row['precio_venta'];
                                         }

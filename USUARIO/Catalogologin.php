@@ -11,6 +11,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css" rel="stylesheet">
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
     <link href="css\misestilos.css" rel="stylesheet">
@@ -244,7 +247,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-primary"
-                                style="background-color: #800000; border-color: red;" onclick="vaciarCarrito()">Vaciar
+                                style="background-color: red; border-color: red;" onclick="vaciarCarrito()">Vaciar
                                 Carrito</button>
                             <button type="button" class="btn btn-primary" id="irAPagarBtn">Ir a pagar</button>
                         </div>
