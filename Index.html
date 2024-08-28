@@ -1,309 +1,316 @@
 <!DOCTYPE html>
 <html lang="es">
+	<head>
+		<meta charset="utf-8" />
+		<title>MUNDO3D - Inicio</title>
+		<meta content="width=device-width, initial-scale=1.0" name="viewport" />
+		<meta content="Plantilla HTML gratuita" name="keywords" />
+		<meta content="Plantilla HTML gratuita" name="description" />
+		<link
+			rel="shortcut icon"
+			href="images/Logo Mundo 3d.png"
+			type="image/x-icon"
+		/>
+		<link
+			rel="stylesheet"
+			href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+		/>
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+		/>
+		<!-- SweetAlert2 CSS -->
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"
+		/>
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MUNDO 3D </title>
-    <link rel="shortcut icon" href="./images/Logo Mundo 3d.png" type="image/x-icon">
-    <link rel="stylesheet" href="./css/normalize.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-        integrity="sha512-dTZE7k4oZl5WueNpEyRaqm87kpKGyqkl3KQa4U2jz/AHJl5OzFUsY+lykmr5LQm1kiRts6AF5RnmnH8+1TcOVg=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" type="text/css" href="./css/index1.css">
+		<!-- SweetAlert2 JS -->
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <link rel="stylesheet" href="./Programas/css/index.css">
+	</head>
+	<body>
+		<!-- Barra de Navegación -->
+		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+			<a class="navbar-brand" href="#">
+				<h1 class="m-0 text-primary">
+					<span class="text-secondary">MUNDO</span>3D
+				</h1>
+			</a>
+			<button
+				class="navbar-toggler"
+				type="button"
+				data-toggle="collapse"
+				data-target="#navbarNav"
+				aria-controls="navbarNav"
+				aria-expanded="false"
+				aria-label="Toggle navigation"
+			>
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item">
+						<a class="nav-link" href="Catalogo.php">IMPRESORAS</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="Respuestos.php">REPUESTOS</a>
+					</li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="checkLogin('Archivos3dlogin.php')">ARCHIVOS 3D</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="checkLogin('serviciodeimpresion.php')">SERVICIO DE IMPRESION</a>
+                    </li>
 
+                    <script>
+                    function checkLogin(targetUrl) {
+                        var isLoggedIn = false; 
 
-<body>
-    <header class="hero">
-        <div class="top-bar"></div>
-        <div class="nav__logo">
-            <img src="./images/Logo Mundo 3d.png" alt="Logo de la empresa" class="logo"
-                style="margin-top: 0.5%;margin-left: 3%;">
-        </div>
-        <div id="buttons-container" style="display: flex; justify-content: flex-end; align-items: center;">
-            <a href="#" class="font-small text-white font-weight-bold mr-3" onclick="adjustFontSize('small')">A</a>
-            <a href="#" class="font-medium text-white font-weight-bold mr-3" onclick="adjustFontSize('medium')">A</a>
-            <a href="#" class="font-large text-white font-weight-bold mr-3" onclick="adjustFontSize('large')">A</a>
-            <div id="disabled-icon">
-                <i class="fas fa-wheelchair fa-lg text-white" onclick="aumentarTamano()"
-                    onmouseover="cambiarCursor(event)" onmouseout="restaurarCursor()"></i>
-            </div>
-        </div>
-        <nav class="nav container">
-            <ul class="nav__link nav__link--menu nav justify-content-between">
-                <li class="nav__items">
-                    <a href="./Catalogo.php" class="nav__links nav__button btn btn-primary">Impresoras</a>
-                </li>
-                <li class="nav__items">
-                    <a href="./Repuestos.php" class="nav__links nav__button btn btn-primary">Repuestos</a>
-                </li>
-                <li class="nav__items">
-                    <a href="#" class="nav__links nav__button btn btn-primary" id="archivos-3d-link">Archivos 3D</a>
-                </li>
-                <li class="nav__items">
-                    <a href="#" class="nav__links nav__button btn btn-primary" id="Servicio-de-impresión-link">Servicio
-                        de impresión</a>
-                </li>
-            </ul>
-        </nav>
+                        if (!isLoggedIn) {
+                            Swal.fire({
+                                title: "No has iniciado sesión",
+                                text: "Debes iniciar sesión para acceder a esta opción.",
+                                icon: "warning",
+                                confirmButtonText: "Aceptar"
+                            });
+                        } else {
+                            window.location.href = targetUrl;
+                        }
+                    }
+                    </script>
 
-        </nav>
-        <section>
-            <h1 class="hero__title" style="margin-top: 5%; text-align: center;">Transformando ideas en realidad
-                tridimensional</h1>
-            <p class="hero__paragraph"
-                style="margin-bottom: 10%; margin-top: 20px; display: block; text-align: center;">¡Adéntrate en un mundo
-                tridimensional como nunca antes! ¡Bienvenid@ a nuestra página MUNDO 3D, donde tus sueños cobran vida!</p>
-        </section>
+					</li>
+				</ul>
+				<ul class="navbar-nav">
+					<li class="nav-item">
+						<div class="cta-buttons">
+							<a href="login.html" class="btn btn-primary">Iniciar sesión</a>
+							<a href="register.html" class="btn btn-outline-primary"
+								>Regístrate</a
+							>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</nav>
 
-        <img src="./images/bxs-user-circle.svg" alt="inicio" id="btnModal" class="hamburguer"
-            style="margin-top: 0.5%; margin-right: 5%;">
+		<!-- Sección de Hero -->
+		<header class="hero">
+			<div class="hero-content">
+				<h1 class="display-4">Bienvenido a Mundo 3D</h1>
+				<p class="lead">Tu tienda de tecnología 3D de confianza</p>
+			</div>
+		</header>
 
-        <section class="hero__container container">
-            <div id="myModal" class="modalContainer">
-                <div class="modal-content">
-                    <span class="close">×</span>
-                    <h2>BIENVENIDOS</h2>
-                    <p><span></span></p><br>
-                    <p><span></span></p><br>
-                    <form action="Programas/login.php" method="POST" onsubmit="return validateForm()">
-                        <div class="form-group">
-                            <label for="username">Correo Electrónico:</label>
-                            <input type="text" id="username" name="username" placeholder="Ingrese su usuario" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="password">Contraseña:</label>
-                            <div class="password-input-container">
-                                <input type="password" id="password" name="password" placeholder="Ingrese su contraseña"
-                                    required>
-                                <span class="password-toggle-icon" onclick="togglePasswordVisibility()">
-                                    <img src="./images/bxs-show.svg" alt="Mostrar contraseña"
-                                        class="show-password-icon">
-                                    <img src="./images/bxs-low-vision.svg" alt="Ocultar contraseña"
-                                        class="hide-password-icon" style="display: none;">
-                                </span>
-                            </div>
-                        </div>
-                        <div class="form-group forgot-password">
-                            <a href="./recovery.html" class="forgot-password-link">¿Olvidó su contraseña?</a>
-                        </div>
-                        <button type="submit" class="button">Iniciar sesión</button>
-                        <div class="form-group forgot-password">
-                            <p><span></span></p><br>
-                            <hr size="3px" color="black">
-                            <p><span></span></p><br>
-                            <a class="forgot-password-link">¿Aún no tienes cuenta?</a>
-                        </div>
-                        <button type="button" class="registro"
-                            onclick="window.location.href='./registro.html'">Registrate</button>
-                        <div class="form-group forgot-password"></div>
-                    </form>
-                </div>
-            </div>
-        </section>
+		<!-- Sección de ¿Quiénes Somos? -->
+		<section class="about py-5">
+			<div class="container">
+				<div class="row align-items-center">
+					<div class="col-md-6 text-center text-md-left">
+						<h2 class="font-weight-bold">¿Quiénes Somos?</h2>
+						<p class="lead">
+							En Mundo 3D, nos especializamos en tecnología de impresión 3D,
+							ofreciendo productos y servicios de alta calidad para satisfacer
+							todas tus necesidades en el campo de la impresión 3D. Nuestro
+							objetivo es proporcionar soluciones innovadoras y un excelente
+							soporte técnico.
+						</p>
+					</div>
+					<div class="col-md-6 text-center">
+						<img
+							src="images/Logo Mundo 3d.png"
+							class="img-fluid rounded"
+							alt="Logo Mundo 3D"
+							style="max-width: 70%; height: auto;"
+						/>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!-- Sección de Visión y Misión -->
+		<section class="vision-mission py-5">
+			<div class="container">
+				<div class="row">
+					<!-- Sección de Visión -->
+					<div class="col-md-6 mb-4 mb-md-0">
+						<div class="card vision">
+							<div class="card-header" id="headingVision">
+								<h2 class="mb-0">
+									<button
+										class="btn btn-link"
+										type="button"
+										data-toggle="collapse"
+										data-target="#collapseVision"
+										aria-expanded="true"
+										aria-controls="collapseVision"
+									>
+										<i class="fas fa-chevron-down mr-2"></i> Visión
+									</button>
+								</h2>
+							</div>
 
-    </header>
+							<div
+								id="collapseVision"
+								class="collapse"
+								aria-labelledby="headingVision"
+								data-parent=".vision-mission"
+							>
+								<div class="card-body">
+									Ser líderes en el mercado de impresión 3D, reconocidos por
+									nuestra innovación, calidad de productos y servicios, y
+									compromiso con la satisfacción del cliente. Buscamos impulsar
+									la tecnología de impresión 3D para transformar ideas en
+									soluciones tangibles y accesibles para todos.
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- Sección de Misión -->
+					<div class="col-md-6">
+						<div class="card mission">
+							<div class="card-header" id="headingMission">
+								<h2 class="mb-0">
+									<button
+										class="btn btn-link"
+										type="button"
+										data-toggle="collapse"
+										data-target="#collapseMission"
+										aria-expanded="true"
+										aria-controls="collapseMission"
+									>
+										<i class="fas fa-chevron-down mr-2"></i> Misión
+									</button>
+								</h2>
+							</div>
 
-    <main>
-        <section class="knowledge">
-            <div class="knowledge__container container">
-                <div class="knowledege__texts">
-                    <h2 class="subtitle">¿QUIENES SOMOS?</h2>
-                    <p class="knowledge__paragraph">Empresa en Colombiana que importa y comercializa profesionalmente
-                        tecnología 3D en todo el territorio nacional. Buscamos facilitar a los entusiastas de la
-                        impresión 3D el acceso a esta tecnología revolucionaria.
-                        Acompañamos a personas, empresas e instituciones innovadoras a materializar sus proyectos
-                        mediante tecnología especializada en prototipado 3D, con un servicio post-venta de alta calidad.
-                        Mundo 3D está enfocado en la venta exclusiva de tecnología 3D, proveemos un servicio post-venta
-                        eficaz y rápido. Cuenta con un departamento de soporte técnico que tiene como fin proporcionar
-                        asistencia a nuestros clientes resolviendo determinados problemas que se presentan.</p>
-                </div>
+							<div
+								id="collapseMission"
+								class="collapse"
+								aria-labelledby="headingMission"
+								data-parent=".vision-mission"
+							>
+								<div class="card-body">
+									Ofrecer soluciones integrales en impresión 3D que superen las
+									expectativas de nuestros clientes. Nos dedicamos a
+									proporcionar productos y servicios de alta calidad, con un
+									enfoque en la innovación y la atención al cliente. Trabajamos
+									para que cada proyecto sea un éxito y cada cliente quede
+									satisfecho con nuestros servicios.
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!-- Sección de Información de los Creadores -->
+		<section class="creator-info py-5">
+			<div class="container">
+				<h2 class="text-center font-weight-bold mb-5">Sobre los Creadores</h2>
+				<div class="row">
+					<div class="col-md-3 mb-4">
+						<div class="creator-card d-flex flex-column align-items-center">
+							<div class="creator-img-wrapper">
+								<img
+									src="images/ruben.jpg"
+									alt="Creador 1"
+									class="img-fluid rounded-circle creator-img"
+								/>
+							</div>
+							<h3 class="creator-name">Rubén Triviño</h3>
+							<p class="creator-description">
+								Full-stack web developer
+							</p>
+						</div>
+					</div>
+					<div class="col-md-3 mb-4">
+						<div class="creator-card d-flex flex-column align-items-center">
+							<div class="creator-img-wrapper">
+								<img
+									src="images/yordi.jpg"
+									alt="Creador 2"
+									class="img-fluid rounded-circle creator-img"
+								/>
+							</div>
+							<h3 class="creator-name">Yordy Suarez</h3>
+							<p class="creator-description">
+								Backend web developer
+							</p>
+						</div>
+					</div>
+					<div class="col-md-3 mb-4">
+						<div class="creator-card d-flex flex-column align-items-center">
+							<div class="creator-img-wrapper">
+								<img
+									src="images/lamy.jpg"
+									alt="Creador 3"
+									class="img-fluid rounded-circle creator-img"
+								/>
+							</div>
+							<h3 class="creator-name">Sebastian Lamy</h3>
+							<p class="creator-description">
+								quality (QA) and designer
+							</p>
+						</div>
+					</div>
+					<div class="col-md-3 mb-4">
+						<div class="creator-card d-flex flex-column align-items-center">
+							<div class="creator-img-wrapper">
+								<img
+									src="images/gato.jpg"
+									alt="Creador 4"
+									class="img-fluid rounded-circle creator-img"
+								/>
+							</div>
+							<h3 class="creator-name">Juan Penagos</h3>
+							<p class="creator-description">
+								Frontend web developer
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
 
-                <figure class="knowledge__picture">
-                    <img src="./images/vivir-de-la-impresion-3D-2-300x198.png" class="knowledge__img">
-                </figure>
-            </div>
-        </section>
+		<!-- Sección de Pie de Página -->
+		<footer class="footer py-4">
+			<div class="container">
+				<h5 class="font-weight-bold">Síguenos en Redes Sociales</h5>
+				<div class="social-icons">
+					<a href="#" class="fab fa-facebook-f"></a>
+					<a href="#" class="fab fa-twitter"></a>
+					<a href="#" class="fab fa-instagram"></a>
+					<a href="#" class="fab fa-youtube"></a>
+				</div>
+				<div class="credits mt-3">
+					<p>&copy; 2024 Mundo 3D. Todos los derechos reservados.</p>
+				</div>
+			</div>
+		</footer>
 
-        <section class="testimony">
-            <div class="testimony__container container">
-                <img src="./images/leftarrow.svg" class="testimony__arrow" id="before">
+		<!-- Scripts de Bootstrap y jQuery -->
+		<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+		<script>
+			// Ejemplo de inicialización de mapa (puedes reemplazarlo con tu código de mapa)
+			function initMap() {
+				var mapOptions = {
+					center: new google.maps.LatLng(37.7749, -122.4194),
+					zoom: 12,
+					mapTypeId: google.maps.MapTypeId.ROADMAP
+				}
+				var map = new google.maps.Map(
+					document.getElementById('map'),
+					mapOptions
+				)
+			}
 
-                <section class="testimony__body testimony__body--show" data-id="1">
-                    <div class="testimony__texts">
-                        <h2 class="subtitle">IMPRESORAS 3D. <span class="testimony__course">Impresoras 3D de
-                                Recina-Filamento.</span></h2>
-                        <p class="testimony__review">Contamos con un amplio catalogo de impresoras 3D industruales y de
-                            escritorio.</p>
-                    </div>
-
-                    <figure class="testimony__picture">
-                        <img src="./images/impresora-3c-portada-m.jpg.webp" class="testimony__img">
-                    </figure>
-                </section>
-
-                <section class="testimony__body" data-id="2">
-                    <div class="testimony__texts">
-                        <h2 class="subtitle">SERVICIO DE IMPRESION 3D. <br><span class="testimony__course">Impresion
-                                3D.</span></h2>
-                        <p class="testimony__review">Brindamos servicio de impresion de alta resolucion e impresión 3D a
-                            los mejores precios asequibles.
-                        <p><span></span></p><br>
-                        <p><span></span></p><br>
-                        <span class="testimony__review">"TU TE LO IMAGINAS, NOSOTROS LO CREAMOS" </span>
-
-                        </p>
-                    </div>
-
-                    <figure class="testimony__picture">
-                        <img src="./images/1.jpg" class="testimony__img">
-                    </figure>
-                </section>
-
-                <section class="testimony__body" data-id="3">
-                    <div class="testimony__texts">
-                        <h2 class="subtitle">ARCHIVOS 3D <br><span class="testimony__course">imagenes 3D</span></h2>
-                        <p class="testimony__review">Explora una variedad de archivos 3D e imágenes tridimensionales
-                            para dar vida a tus proyectos. ¡El único límite es tu imaginación!</p>
-                    </div>
-
-                    <figure class="testimony__picture">
-                        <img src="./images/mariia-shalabaieva-HBkpnDVc_Ic-unsplash.jpg" class="testimony__img">
-                    </figure>
-                </section>
-
-                <section class="testimony__body" data-id="4">
-                    <div class="testimony__texts">
-                        <h2 class="subtitle">REPUESTOS <br><span class="testimony__course">Repuestos para maquinaria
-                                3D</span></h2>
-                        <p class="testimony__review">Encuentra los repuestos esenciales para tu maquinaria 3D y mantén
-                            tu impresora funcionando al máximo rendimiento.</p>
-                    </div>
-
-                    <figure class="testimony__picture">
-                        <img src="./images/images.jpg" class="testimony__img">
-                    </figure>
-                </section>
-                <img src="./images/rightarrow.svg" class="testimony__arrow" id="next">
-            </div>
-        </section>
-        <section class="questions container">
-
-            <section class="questions__container">
-                <article class="questions__padding">
-                    <div class="questions__answer">
-                        <h3 class="questions__title">VISIÓN
-                            <span class="questions__arrow">
-                                <img src="./images/arrow.svg" class="questions__img">
-                            </span>
-                        </h3>
-
-                        <p class="questions__show">Brindamos el asesoramiento y las técnicas adecuadas para
-                            satisfacer las necesidades de nuestros clientes en todos los
-                            aspectos de reproducción de productos y diseño gráfco.
-                            Construimos relaciones de largo plazo basadas en la confanza
-                            mutua y la calidad del servicio. En MUNDO 3D queremos seguir
-                            siendo líderes en el desarrollo e implementación técnica de
-                            procesos de impresión, para que nuestros clientes encuentren
-                            junto a nosotros la solución adecuada para optimizar el
-                            procesamiento de documentos.
-                        </p>
-                    </div>
-                </article>
-
-                <article class="questions__padding">
-                    <div class="questions__answer">
-                        <h3 class="questions__title">MISIÓN
-                            <span class="questions__arrow">
-                                <img src="./images/arrow.svg" class="questions__img">
-                            </span>
-                        </h3>
-
-                        <p class="questions__show">Le ofrecemos asesoría y tecnología adecuadas para solucionar
-                            las necesidades de nuestros clientes en todo lo relacionado
-                            con la duplicación y la creación gráfica de sus productos.
-                            Construimos relaciones a largo plazo basadas en la confanza
-                            mutua y en la calidad que nuestro servicio.
-                            Nuestro mayor valor está representado en nuestra gente que
-                            son la base de nuestro éxito. En MUNDO 3D valoramos la
-                            productividad, la lealtad y creemos en el trabajo en equipo.
-                            Contamos con la experiencia que nos ha hecho pioneros y
-                            líderes en los servicios que prestamos. Confamos en nuestro
-                            futuro y nos sentimos orgullosos de nuestra organización.
-                        </p>
-                    </div>
-                </article>
-            </section>
-        </section>
-    </main>
-    <footer class="footer">
-        <section class="footer__container container">
-            <nav class="nav nav--footer">
-                <div class="contac-us">
-                    <h2 class="contac-us">CONTACTENOS:</h2>
-                    <div class="contactactanos">
-                        <img src="./images/bx email.svg" alt="">
-                        <p>rdtrivino6@misena.edu.co</p>
-                    </div>
-                    <div class="contactactanos">
-                        <img src="images/bx-location-plus.svg" alt="">
-                        <p>Email: Calle 15 #31-42 Bogotá, Colombia</p>
-                    </div>
-            </nav>
-        </section>
-        <section class="footer__copy container">
-            <!--redes sociales html-->
-            <div class="parent">
-                <div class="child child-2" data-title="Instagram">
-                    <a href="//www.instagram.com/mundo3d.rysj/" target="_blank"
-                        rel="noopener noreferrer"><!--ruta de la pagina de instagram-->
-                        <button id="button1" class="button btn-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512" fill="#ff00ff">
-                                <path
-                                    d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z">
-                                </path>
-                            </svg>
-
-                    </a>
-                    </button>
-                </div>
-                <div class="child child-4" data-title="Facebook">
-                    <a href="//www.facebook.com/profile.php?id=61559444922903" target="_blank" rel="noopener noreferrer">
-                        <button id="button1" class="button btn-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 320 512" fill="#4267B2">
-                                <path
-                                    d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z">
-                                </path>
-                            </svg>
-                    </a>
-                    </button>
-                </div>
-                <div class="child child-4" data-title="WhatsApp">
-                    <a href="https://web.whatsapp.com/" target="_blank" rel="noopener noreferrer">
-                        <button id="button1" class="button btn-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="10 20 518 502" height="1em" fill="#25D366">
-                                <path d="M380.9 97.1c-40.9-40.9-95.8-63.1-154.1-63.1-120.4 0-218.6 98.2-218.6 218.6 0 38.4 9.9 76.4 29 109.7L0 512l151.4-40.2c33.7 18.5 71.3 28.3 110.3 28.3 120.4 0 218.6-98.2 218.6-218.6 0-58.3-23.1-113.1-65.1-155.2zm-154.1 344.3c-33.5 0-66.2-8.8-95.1-25.3l-6.8-4-70.6 18.7 18.8-68.9-4.3-7.1c-18.6-30.3-28.4-65.7-28.4-102.2 0-106.1 86.2-192.3 192.3-192.3 51.4 0 99.8 20 136.1 56.3s56.3 84.7 56.3 136.1c0 106.1-86.2 192.3-192.3 192.3zm101.7-138.7c-5.5-2.7-32.6-16.1-37.7-17.9-5.1-1.8-8.8-2.7-12.5 2.7-3.7 5.5-14.3 17.9-17.6 21.6-3.2 3.7-6.5 4.1-12 1.4-5.5-2.7-23.2-8.5-44.2-27.1-16.4-14.6-27.4-32.7-30.6-38.2-3.2-5.5-.3-8.5 2.4-11.2 2.5-2.6 5.5-6.8 8.2-10.3 2.7-3.7 3.7-6.3 5.5-10.8 1.8-4.5.9-8.2-.5-11.1-1.4-2.7-12.5-30.1-17.1-41.1-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.8-.2-10.3-.2s-9.3 1.3-14.1 6.8c-4.8 5.5-18.6 18.2-18.6 44.5s19.1 51.6 21.8 55.1c2.7 3.7 37.4 57.2 90.7 80.1 12.7 5.5 22.6 8.8 30.3 11.3 12.7 4 24.4 3.4 33.7 2 10.3-1.5 31.6-12.9 36-25.4 4.5-12.5 4.5-23.2 3.2-25.4-1.3-2.3-5-3.7-10.5-6.5z"/>
-                            </svg>
-                    </a>
-                    </button>
-                </div> 
-            </div>
-            <h3 id="copyright" class="footer__copyright">
-                Derechos reservados <span id="currentYear"></span> &copy; MUNDO 3D
-            </h3>
-            <script>
-                document.getElementById("currentYear").textContent = new Date().getFullYear();
-            </script>
-        </section>
-    </footer>
-
-    <script src="./js/slider.js"></script>
-    <script src="./js/questions.js"></script>
-    <script src="./js/menu.js"></script>
-    <script src="./js/productosvisi.js"></script>
-</body>
-</body>
-
+			window.onload = function () {
+				initMap()
+			}
+		</script>
+		<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
+	</body>
 </html>
