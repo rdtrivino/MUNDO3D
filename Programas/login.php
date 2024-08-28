@@ -2,47 +2,53 @@
 session_start();
 include __DIR__ . '/../conexion.php';
 
+// Configurar encabezados para JSON
+header('Content-Type: application/json');
+
+$response = [
+    'success' => false,
+    'message' => ''
+];
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST["username"]) && isset($_POST["password"])) {
-        $usuario = $_POST["username"];
-        $contrasena = $_POST["password"];
-        $usuario = mysqli_real_escape_string($link, $usuario);
+    if (isset($_POST["Usu_Identificacion"]) && isset($_POST["Usu_Contraseña"])) {
+        $usuario = mysqli_real_escape_string($link, $_POST["Usu_Identificacion"]);
+        $contrasena = $_POST["Usu_Contraseña"];
 
         $sql = "SELECT * FROM usuario WHERE Usu_Email = '$usuario'";
         $resultado = mysqli_query($link, $sql);
 
         if (!$resultado) {
-            die("Error en la consulta: " . mysqli_error($link));
-        }
-
-        $_SESSION['confirmado'] = false;
-
-        if (mysqli_num_rows($resultado) == 1) {
-            $user_data = mysqli_fetch_assoc($resultado);
-
-            if ($user_data["Usu_Estado"] == "inactivo") {
-                echo "<script>alert('Tu cuenta está inactiva. Por favor, contacta al administrador.'); window.location.href = '../index.html';</script>";
-            } else {
-                if (password_verify($contrasena, $user_data["Usu_Contraseña"])) {
-
-                    $_SESSION["user_id"] = $user_data["Usu_Identificacion"];
-                    $_SESSION["username"] = $user_data["Usu_Nombre_completo"];
-                    $_SESSION["user_rol"] = $user_data["Usu_Rol"]; // Añadir el rol del usuario a la sesión
-
-                    $_SESSION['confirmado'] = true;
-
-                    // Redirigir a redireccionar.php después de verificar las credenciales
-                    header("Location: ../redireccionar.php");
-                    exit();
-                } else {
-                    echo "<script>alert('Credenciales incorrectas.'); window.location.href = '../Index.html';</script>";
-                }
-            }
+            $response['message'] = "Error en la consulta: " . mysqli_error($link);
         } else {
-            echo "<script>alert('Credenciales incorrectas.'); window.location.href = '../Index.html';</script>";
+            if (mysqli_num_rows($resultado) == 1) {
+                $user_data = mysqli_fetch_assoc($resultado);
+
+                if ($user_data["Usu_Estado"] == "inactivo") {
+                    $response['message'] = 'Tu cuenta está inactiva. Por favor, contacta al administrador.';
+                } else {
+                    if (password_verify($contrasena, $user_data["Usu_Contraseña"])) {
+                        $_SESSION["user_id"] = $user_data["Usu_Identificacion"];
+                        $_SESSION["username"] = $user_data["Usu_Nombre_completo"];
+                        $_SESSION["user_rol"] = $user_data["Usu_Rol"];
+                        $_SESSION['confirmado'] = true;
+
+                        $response['success'] = true;
+                        $response['message'] = 'Inicio de sesión correcto.';
+                    } else {
+                        $response['message'] = 'Credenciales incorrectas.';
+                    }
+                }
+            } else {
+                $response['message'] = 'Credenciales incorrectas.';
+            }
         }
+    } else {
+        $response['message'] = 'Datos de entrada faltantes.';
     }
+} else {
+    $response['message'] = 'Método de solicitud no permitido.';
 }
 
 mysqli_close($link);
-?>
+echo json_encode($response);

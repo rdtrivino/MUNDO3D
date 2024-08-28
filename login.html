@@ -23,15 +23,10 @@
 			rel="stylesheet"
 			href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"
 		/>
-		<title>Recuperar Contraseña</title>
+		<title>Iniciar sesión</title>
 		<style>
-			body {
-				background: linear-gradient(to bottom right, #dddddd, #dddddd);
-				font-family: 'Roboto', sans-serif;
-			}
-
 			.container {
-				max-width: 500px;
+				max-width: 500px; /* Ajusta el ancho máximo aquí */
 				background: #f8f9fd;
 				background: linear-gradient(
 					0deg,
@@ -51,13 +46,6 @@
 				font-size: 30px;
 				color: rgb(16, 137, 211);
 				margin-bottom: 20px;
-			}
-
-			.info {
-				margin-top: 15px;
-				font-size: 16px;
-				color: rgb(100, 100, 100);
-				line-height: 1.5;
 			}
 
 			.form {
@@ -88,7 +76,7 @@
 				border-inline: 2px solid #12b1d1;
 			}
 
-			.form .submit-button {
+			.form .login-button {
 				display: block;
 				width: 100%;
 				font-weight: bold;
@@ -106,32 +94,32 @@
 				transition: all 0.2s ease-in-out;
 			}
 
-			.form .submit-button:hover {
+			.form .login-button:hover {
 				transform: scale(1.03);
 				box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 23px 10px -20px;
 			}
 
-			.form .submit-button:active {
+			.form .login-button:active {
 				transform: scale(0.95);
 				box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 15px 10px -10px;
 			}
 
-			.back-link {
+			.forgot-password {
 				margin-top: 15px;
 			}
 
-			.back-link a {
+			.forgot-password a {
 				text-decoration: none;
 				color: #0099ff;
 				font-size: 14px;
 			}
 
-			.back-link a:hover {
+			.forgot-password a:hover {
 				text-decoration: underline;
 			}
 		</style>
 	</head>
-	<body>
+	<body style="background: linear-gradient(to bottom right, #dddddd, #dddddd);">
 		<a class="Btn-1" href="index.html">
 			<div class="sign">
 				<img src="images/iconizer-bx-home-alt-2.2.svg" alt="Inicio" />
@@ -139,34 +127,30 @@
 			<div class="text">INICIO</div>
 		</a>
 		<div class="container">
-			<div class="heading">Recuperar Contraseña</div>
-			<div class="info">
-				<p>
-					¿Has olvidado tu contraseña? No te preocupes, aquí puedes recuperarla.
-					Solo necesitas tu correo electrónico registrado para recibir una nueva
-					contraseña
-				</p>
-			</div>
+			<div class="heading">Iniciar sesión</div>
 			<form
 				class="form"
-				id="recoverForm"
-				action="Programas/recovery.php"
+				id="loginForm"
+				action="Programas/login.php"
 				method="POST"
 			>
 				<input
 					required
 					class="input"
-					type="email"
-					name="email"
-					placeholder="Tu correo electrónico"
+					type="text"
+					name="Usu_Identificacion"
+					placeholder="Documento de identidad"
 				/>
 				<input
-					type="submit"
-					class="submit-button"
-					value="Enviar enlace de recuperación"
+					required
+					class="input"
+					type="password"
+					name="Usu_Contraseña"
+					placeholder="Contraseña"
 				/>
-				<div class="back-link">
-					<a href="login.html">Volver al inicio de sesión</a>
+				<input type="submit" class="login-button" value="Iniciar sesión" />
+				<div class="forgot-password">
+					<a href="recovery.html">Olvidé mi contraseña</a>
 				</div>
 			</form>
 		</div>
@@ -175,7 +159,7 @@
 		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 		<script>
 			document
-				.getElementById('recoverForm')
+				.getElementById('loginForm')
 				.addEventListener('submit', function (event) {
 					event.preventDefault() // Evita el envío del formulario tradicional
 
@@ -187,24 +171,28 @@
 						method: 'POST',
 						body: formData
 					})
-						.then(response => response.json())
+						.then(response => {
+							if (!response.ok) {
+								throw new Error('Network response was not ok')
+							}
+							return response.json()
+						})
 						.then(data => {
 							if (data.success) {
 								// Si la respuesta del servidor indica éxito
 								Swal.fire({
 									title: '¡Éxito!',
-									text:
-										'Se ha enviado un enlace de recuperación a tu correo electrónico.',
+									text: data.message,
 									icon: 'success'
 								}).then(() => {
-									window.location.href = 'login.html' // Redirige al usuario
+									window.location.href = 'redireccionar.php' // Redirige a la página de inicio después del inicio de sesión
 								})
 							} else {
 								// Si la respuesta del servidor indica error
 								Swal.fire({
 									icon: 'error',
 									title: 'Oops...',
-									text: data.message || 'Algo salió mal.'
+									text: data.message
 								})
 							}
 						})
