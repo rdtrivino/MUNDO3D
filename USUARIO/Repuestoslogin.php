@@ -116,12 +116,18 @@
     <!-- Navbar End -->
     <div class="page-header container-fluid bg-secondary pt-0 pt-lg-1 pb-1 mb-4">
         <div class="row align-items-center py-4">
-            <div class="col-md-6 text-center text-md-left offset-md-0">
+            <div class="col-md-6 text-center text-md-left offset-md-0" style="margin-top: 50px;">
+                <!-- Campo de búsqueda -->
                 <div class="InputContainer">
-                    <input required="" type="text" id="nombre_producto" class="input" placeholder="Buscar producto..."
-                        onkeyup="buscarProducto()">
+                    <input
+                        required
+                        type="text"
+                        id="nombre_producto"
+                        class="input"
+                        placeholder="Buscar producto..."
+                        onkeyup="buscarProducto()" />
                 </div>
-                <div id="resultado_busqueda" class="col-md-6 mt-3"></div>
+                <div id="resultado_busqueda" class="mt-3"></div>
             </div>
             <div class="col-md-6 text-center text-md-right">
                 <a id="carritoBtn" class="btn btn-danger text-white font-weight-bold ml-3 position-relative" href="#"
@@ -259,7 +265,7 @@
                         if (mysqli_num_rows($result) > 0) {
                             // Iterar sobre los resultados y mostrar cada producto
                             while ($row = mysqli_fetch_assoc($result)) {
-                                ?>
+                        ?>
                                 <div class="col mb-4 producto">
                                     <div class="card">
                                         <img src="<?php echo $row['nombre_imagen']; ?>" class="card-img-top"
@@ -303,7 +309,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <?php
+                        <?php
                             }
                         } else {
                             echo "No se encontraron productos en la categoría 2.";
@@ -390,11 +396,11 @@
                         <a href="https://web.whatsapp.com/" target="_blank" rel="noopener noreferrer">
                             <button id="button1" class="button btn-4">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 30 508 512" height="1em" fill="#25D366">
-                                    <path d="M380.9 97.1c-40.9-40.9-95.8-63.1-154.1-63.1-120.4 0-218.6 98.2-218.6 218.6 0 38.4 9.9 76.4 29 109.7L0 512l151.4-40.2c33.7 18.5 71.3 28.3 110.3 28.3 120.4 0 218.6-98.2 218.6-218.6 0-58.3-23.1-113.1-65.1-155.2zm-154.1 344.3c-33.5 0-66.2-8.8-95.1-25.3l-6.8-4-70.6 18.7 18.8-68.9-4.3-7.1c-18.6-30.3-28.4-65.7-28.4-102.2 0-106.1 86.2-192.3 192.3-192.3 51.4 0 99.8 20 136.1 56.3s56.3 84.7 56.3 136.1c0 106.1-86.2 192.3-192.3 192.3zm101.7-138.7c-5.5-2.7-32.6-16.1-37.7-17.9-5.1-1.8-8.8-2.7-12.5 2.7-3.7 5.5-14.3 17.9-17.6 21.6-3.2 3.7-6.5 4.1-12 1.4-5.5-2.7-23.2-8.5-44.2-27.1-16.4-14.6-27.4-32.7-30.6-38.2-3.2-5.5-.3-8.5 2.4-11.2 2.5-2.6 5.5-6.8 8.2-10.3 2.7-3.7 3.7-6.3 5.5-10.8 1.8-4.5.9-8.2-.5-11.1-1.4-2.7-12.5-30.1-17.1-41.1-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.8-.2-10.3-.2s-9.3 1.3-14.1 6.8c-4.8 5.5-18.6 18.2-18.6 44.5s19.1 51.6 21.8 55.1c2.7 3.7 37.4 57.2 90.7 80.1 12.7 5.5 22.6 8.8 30.3 11.3 12.7 4 24.4 3.4 33.7 2 10.3-1.5 31.6-12.9 36-25.4 4.5-12.5 4.5-23.2 3.2-25.4-1.3-2.3-5-3.7-10.5-6.5z"/>
+                                    <path d="M380.9 97.1c-40.9-40.9-95.8-63.1-154.1-63.1-120.4 0-218.6 98.2-218.6 218.6 0 38.4 9.9 76.4 29 109.7L0 512l151.4-40.2c33.7 18.5 71.3 28.3 110.3 28.3 120.4 0 218.6-98.2 218.6-218.6 0-58.3-23.1-113.1-65.1-155.2zm-154.1 344.3c-33.5 0-66.2-8.8-95.1-25.3l-6.8-4-70.6 18.7 18.8-68.9-4.3-7.1c-18.6-30.3-28.4-65.7-28.4-102.2 0-106.1 86.2-192.3 192.3-192.3 51.4 0 99.8 20 136.1 56.3s56.3 84.7 56.3 136.1c0 106.1-86.2 192.3-192.3 192.3zm101.7-138.7c-5.5-2.7-32.6-16.1-37.7-17.9-5.1-1.8-8.8-2.7-12.5 2.7-3.7 5.5-14.3 17.9-17.6 21.6-3.2 3.7-6.5 4.1-12 1.4-5.5-2.7-23.2-8.5-44.2-27.1-16.4-14.6-27.4-32.7-30.6-38.2-3.2-5.5-.3-8.5 2.4-11.2 2.5-2.6 5.5-6.8 8.2-10.3 2.7-3.7 3.7-6.3 5.5-10.8 1.8-4.5.9-8.2-.5-11.1-1.4-2.7-12.5-30.1-17.1-41.1-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.8-.2-10.3-.2s-9.3 1.3-14.1 6.8c-4.8 5.5-18.6 18.2-18.6 44.5s19.1 51.6 21.8 55.1c2.7 3.7 37.4 57.2 90.7 80.1 12.7 5.5 22.6 8.8 30.3 11.3 12.7 4 24.4 3.4 33.7 2 10.3-1.5 31.6-12.9 36-25.4 4.5-12.5 4.5-23.2 3.2-25.4-1.3-2.3-5-3.7-10.5-6.5z" />
                                 </svg>
                         </a>
                         </button>
-                    </div> 
+                    </div>
                 </div>
             </div>
             <div class="col-lg-4 col-md-6 mb-5">
