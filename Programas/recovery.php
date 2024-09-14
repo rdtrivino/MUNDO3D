@@ -1,5 +1,10 @@
 <?php
-require_once ('../conexion.php');
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+include __DIR__ . '/../conexion.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -60,14 +65,14 @@ function enviarCorreoRecuperacion($email, $nueva_contrasena)
 
     try {
         $mail->isSMTP();
-        $mail->Host = 'smtp.office365.com';
+        $mail->Host = 'smtp.hostinger.com';
         $mail->SMTPAuth = true;
-        $mail->Username = 'Mundo3D.RYSJ@outlook.com';
-        $mail->Password = 'Mundo3D123';
-        $mail->SMTPSecure = 'tls';
-        $mail->Port = 587;
+        $mail->Username = 'admin@mundo3d.orionweb.site';
+        $mail->Password = 'Mundo3D*';
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;        
+        $mail->Port = 465;
 
-        $mail->setFrom('Mundo3D.RYSJ@outlook.com', 'MUNDO 3D');
+        $mail->setFrom('admin@mundo3d.orionweb.site', 'MUNDO 3D');
         $mail->addAddress($email);
 
         $mail->Subject = 'Recuperacion de Contrasena';

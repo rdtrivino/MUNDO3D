@@ -202,3 +202,27 @@
 
 
  /* Fin Boton Home */
+
+ .bd-placeholder-img {
+  font-size: 1.125rem;
+  text-anchor: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+@media (min-width: 768px) {
+  .bd-placeholder-img-lg {
+      font-size: 3.5rem;
+  }
+}
+.link-container {
+  margin: 0.5cm;
+  display: inline-block;
+}
+
+/*Espacio entre los campos del formulario*/
+.form-group {
+  margin-bottom: 1.5rem; /* Ajusta el valor según sea necesario */
+}

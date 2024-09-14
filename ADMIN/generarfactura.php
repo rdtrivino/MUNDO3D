@@ -5,15 +5,7 @@ use Dompdf\Dompdf;
 use Dompdf\Options;
 
 // Configuración de la conexión a la base de datos
-$host = "localhost";
-$user = "root";
-$password = "";
-$dbname = "mundo3d";
-$conexion = mysqli_connect($host, $user, $password, $dbname);
-
-if (!$conexion) {
-    die("Error al conectarse a la Base de Datos: " . mysqli_connect_error());
-}
+include __DIR__ . '/../conexion.php';
 
 // Obtener el ID de la factura desde la URL (ejemplo)
 $id = isset($_GET['id']) ? $_GET['id'] : null;
@@ -28,10 +20,10 @@ $sql = "SELECT f.id, f.numero_factura, f.fecha, f.total, f.estado, f.nombre_clie
         FROM factura f
         LEFT JOIN productos p ON f.producto = p.Identificador
         WHERE f.pedido_id = (SELECT pedido_id FROM factura WHERE id = ?)";
-$stmt = mysqli_prepare($conexion, $sql);
+$stmt = mysqli_prepare($link, $sql);
 
 if ($stmt === false) {
-    die("Error al preparar la consulta: " . mysqli_error($conexion));
+    die("Error al preparar la consulta: " . mysqli_error($link));
 }
 
 mysqli_stmt_bind_param($stmt, "i", $id);
@@ -223,5 +215,5 @@ readfile($pdfFilePath);
 unlink($pdfFilePath);
 
 // Cerrar la conexión a la base de datos
-mysqli_close($conexion);
+mysqli_close($link);
 ?>

@@ -50,13 +50,13 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="Index.html">INICIO</a>
+                    <a class="nav-link" href="index.html">INICIO</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="Catalogo.php">IMPRESORAS</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="Respuestos.php">REPUESTOS</a>
+                    <a class="nav-link" href="Repuestos.php">REPUESTOS</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#" onclick="checkLogin('Archivos3dlogin.php')">ARCHIVOS 3D</a>
@@ -71,7 +71,7 @@
                 <li class="nav-item">
                     <div class="cta-buttons">
                         <a href="login.html" class="btn btn-primary">Iniciar sesión</a>
-                        <a href="register.html" class="btn btn-outline-primary">Regístrate</a>
+                        <a href="registro.html" class="btn btn-primary">Regístrate</a>
                     </div>
                 </li>
             </ul>
@@ -142,7 +142,7 @@
                                     <?php } else { ?>
                                         <div class="text-center">
                                             <!-- Precio -->
-                                            <p class="price mb-0">USD-<?php echo $row['Pro_PrecioVenta']; ?></p>
+                                            <p class="price mb-0">COP <?php echo number_format($row['Pro_PrecioVenta'], 2, ',', '.'); ?></p>
                                         </div>
                                     <?php } ?>
                                 </div>
@@ -217,7 +217,7 @@
                 // Actualizar el contenido del modal
                 document.getElementById('productoNombre').textContent = name;
                 document.getElementById('productoDescripcion').textContent = description;
-                document.getElementById('productoPrecio').textContent = 'USD-' + price;
+                document.getElementById('productoPrecio').textContent = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(price);
                 document.getElementById('productoImagen').src = imageSrc;
             });
         });

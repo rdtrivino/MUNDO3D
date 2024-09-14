@@ -53,7 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         header("Location: ../ADMIN/index.php");
                         break;
                     case "2":
-                        header("Location: colaborador.php");
+                        header("Location: ../COLABORADOR/index.php");
                         break;
                     case "3":
                         header("Location: ../indexusuario.html");

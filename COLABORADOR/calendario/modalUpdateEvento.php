@@ -18,16 +18,23 @@
           </div>
         </div>
         <div class="form-group">
-          <label for="fecha_inicio" class="col-sm-12 control-label">Fecha Inicio</label>
+          <label for="fecha_inicio" class="col-sm-12 control-label">Fecha</label>
           <div class="col-sm-10">
             <input type="text" class="form-control" name="fecha_inicio" id="fecha_inicio" placeholder="Fecha Inicio">
           </div>
         </div>
 
         <div class="form-group">
-          <label for="fecha_fin" class="col-sm-12 control-label">Fecha Final</label>
-          <div class="col-sm-10">
-            <input type="text" class="form-control" name="fecha_fin" id="fecha_fin" placeholder="Fecha Final">
+          <label for="hora_inicio" class="col-sm-12 control-label">Hora Inicio</label>
+          <div class="col-sm-4">
+            <input type="time" class="form-control" name="hora_inicio" id="hora_inicio" placeholder="Hora de inicio">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="hora_fin" class="col-sm-12 control-label">Hora Final</label>
+          <div class="col-sm-4">
+            <input type="time" class="form-control" name="hora_fin" id="hora_fin" placeholder="Hora de finalización">
           </div>
         </div>
 

@@ -2,6 +2,7 @@
 <!-- http://localhost/MUNDO 3D/COLABORADOR/editar.php -->
 <html lang="en">
 <?php
+
         session_start();
         include __DIR__ . '/../conexion.php';
 
@@ -55,29 +56,9 @@
     <title>Editar</title>
     <link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/checkout/">
     <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/estilo.css" rel="stylesheet">
     <link rel="shortcut icon" href="../images/Logo Mundo 3d.png" type="image/x-icon">
-    <style>
-        .bd-placeholder-img {
-            font-size: 1.125rem;
-            text-anchor: middle;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-
-        @media (min-width: 768px) {
-            .bd-placeholder-img-lg {
-                font-size: 3.5rem;
-            }
-        }
-        .link-container {
-            margin: 0.5cm;
-            display: inline-block;
-        }
-    </style>
     <link href="form-validation.css" rel="stylesheet">
+    <link href="css/estilo.css" rel="stylesheet">
 </head>
 <body class="bg-light">
 
@@ -100,6 +81,10 @@
         <input type="hidden" class="form-control" id="address2" name="tabla" value="<?php echo $_GET['tabla']; ?>">
 
         <?php
+        ini_set('display_errors', 1);
+        ini_set('display_startup_errors', 1);
+        error_reporting(E_ALL);
+
         // Verificar si se ha enviado un formulario
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Aquí maneja la actualización de los datos del usuario y redirección
@@ -115,7 +100,7 @@
                     if ($result && $fila = mysqli_fetch_assoc($result)) {
 
                         // Consulta SQL para obtener los datos de la tabla Usuario
-                        $queryUsuarios = "SELECT Usu_Identificacion, Usu_Nombre_completo FROM Usuario";
+                        $queryUsuarios = "SELECT Usu_Identificacion, Usu_Nombre_completo FROM usuario";
                         $resultUsuarios = mysqli_query($link, $queryUsuarios);
 
                         // Consulta SQL para obtener los datos de la tabla Estado

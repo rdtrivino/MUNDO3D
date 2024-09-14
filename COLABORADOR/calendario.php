@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <?php 
-    include __DIR__ . '/../conexion.php';
+
     $id = $_SESSION['user_id']
 ?>
 <head>
@@ -16,7 +16,6 @@
 <body>
 
 <?php
-include __DIR__ . '/../conexion.php';
 
   $SqlEventos   = ("SELECT * FROM calendario WHERE usuario = $id");
   $resulEventos = mysqli_query($link, $SqlEventos);
@@ -52,118 +51,100 @@ include __DIR__ . '/../conexion.php';
 
 <script type="text/javascript">
 $(document).ready(function() {
-  $("#calendar").fullCalendar({
-    header: {
-      left: "prev,next today",
-      center: "title",
-      right: "month,agendaWeek,agendaDay"
-    },
+    $("#calendar").fullCalendar({
+        header: {
+            left: "prev,next today",
+            center: "title",
+            right: "month,agendaWeek,agendaDay"
+        },
+        locale: 'es',
+        defaultView: "month",
+        navLinks: true, 
+        editable: true,
+        eventLimit: true, 
+        selectable: true,
+        selectHelper: false,
 
-    locale: 'es',
+        // Nuevo Evento
+        select: function(start, end){
+            $("#exampleModal").modal();
+            $("input[name=fecha_inicio]").val(start.format('YYYY-MM-DD'));
+            $("input[name=hora_inicio]").val(start.format('HH:mm'));
+            
+            $("input[name=fecha_fin]").val(end.format('YYYY-MM-DD'));
+            $("input[name=hora_fin]").val(end.format('HH:mm'));
+        },
 
-    defaultView: "month",
-    navLinks: true, 
-    editable: true,
-    eventLimit: true, 
-    selectable: true,
-    selectHelper: false,
+        events: [
+            <?php
+            while ($dataEvento = mysqli_fetch_array($resulEventos)) { ?>
+                {
+                    _id: '<?php echo $dataEvento['identificador']; ?>',
+                    title: '<?php echo $dataEvento['evento']; ?>',
+                    start: '<?php echo $dataEvento['fecha_inicio'] . "T" . $dataEvento['hora_inicio']; ?>',
+                    end: '<?php echo $dataEvento['fecha_inicio'] . "T" . $dataEvento['hora_fin']; ?>',
+                    observaciones: '<?php echo $dataEvento['observaciones']; ?>',
+                    //end: '<?php //echo $dataEvento['fecha_fin'] . "T" . $dataEvento['hora_fin']; ?>',
+                    color: '<?php echo $dataEvento['color_evento']; ?>'
+                },
+            <?php } ?>
+        ],
 
-//Nuevo Evento
-  select: function(start, end){
-      $("#exampleModal").modal();
-      $("input[name=fecha_inicio]").val(start.format('DD-MM-YYYY'));
-       
-      var valorFechaFin = end.format("DD-MM-YYYY");
-      var F_final = moment(valorFechaFin, "DD-MM-YYYY").subtract(1, 'days').format('DD-MM-YYYY'); //Le resto 1 dia
-      $('input[name=fecha_fin').val(F_final);  
+        // Eliminar Evento
+        eventRender: function(event, element) {
+            element.find(".fc-content").prepend("<span id='btnCerrar' class='closeon material-icons'>&#xe5cd;</span>");
+            element.find(".closeon").on("click", function() {
+                var pregunta = confirm("Deseas Borrar este Evento?");
+                if (pregunta) {
+                    $("#calendar").fullCalendar("removeEvents", event._id);
+                    $.ajax({
+                        type: "POST",
+                        url: 'calendario/deleteEvento.php',
+                        data: { id: event._id },
+                        success: function(datos) {
+                            $(".alert-danger").show();
+                            setTimeout(function () {
+                                $(".alert-danger").slideUp(500);
+                            }, 3000);
+                        }
+                    });
+                }
+            });
+        },
 
-    },
-      
-    events: [
-      <?php
-       while($dataEvento = mysqli_fetch_array($resulEventos)){ ?>
-          {
-          _id: '<?php echo $dataEvento['identificador']; ?>',
-          title: '<?php echo $dataEvento['evento']; ?>',
-          start: '<?php echo $dataEvento['fecha_inicio']; ?>',
-          end:   '<?php echo $dataEvento['fecha_fin']; ?>',
-          color: '<?php echo $dataEvento['color_evento']; ?>'
-          },
-        <?php } ?>
-    ],
+        // Moviendo Evento Drag - Drop
+        eventDrop: function(event, delta) {
+            var idEvento = event._id;
+            var start = (event.start.format('YYYY-MM-DDTHH:mm:ss'));
+            var end = (event.end ? event.end.format("YYYY-MM-DDTHH:mm:ss") : start);
 
+            $.ajax({
+                url: 'drag_drop_evento.php',
+                data: 'start=' + start + '&end=' + end + '&idEvento=' + idEvento,
+                type: "POST",
+                success: function(response) {}
+            });
+        },
 
-//Eliminar Evento
-eventRender: function(event, element) {
-    element
-      .find(".fc-content")
-      .prepend("<span id='btnCerrar'; class='closeon material-icons'>&#xe5cd;</span>");
-    
-    //Eliminar evento
-    element.find(".closeon").on("click", function() {
+        // Modificar Evento del Calendario 
+        eventClick: function(event) {
+            var idEvento = event._id;
+            $('input[name=idEvento]').val(idEvento);
+            $('input[name=evento]').val(event.title);
+            $('input[name=fecha_inicio]').val(event.start.format('YYYY-MM-DD'));
+            $('input[name=hora_inicio]').val(event.start.format('HH:mm'));
+            $('input[name=fecha_fin]').val(event.end ? event.end.format('YYYY-MM-DD') : '');
+            $('input[name=hora_fin]').val(event.end ? event.end.format('HH:mm') : '');
+            $('input[name=observaciones]').val(event.observaciones);
 
-  var pregunta = confirm("Deseas Borrar este Evento?");   
-  if (pregunta) {
-
-    $("#calendar").fullCalendar("removeEvents", event._id);
-
-     $.ajax({
-            type: "POST",
-            url: 'calendario/deleteEvento.php',
-            data: {id:event._id},
-            success: function(datos)
-            {
-              $(".alert-danger").show();
-
-              setTimeout(function () {
-                $(".alert-danger").slideUp(500);
-              }, 3000); 
-
-            }
-        });
-      }
-    });
-  },
-
-
-//Moviendo Evento Drag - Drop
-eventDrop: function (event, delta) {
-  var idEvento = event._id;
-  var start = (event.start.format('DD-MM-YYYY'));
-  var end = (event.end.format("DD-MM-YYYY"));
-
-    $.ajax({
-        url: 'drag_drop_evento.php',
-        data: 'start=' + start + '&end=' + end + '&idEvento=' + idEvento,
-        type: "POST",
-        success: function (response) {
-         // $("#respuesta").html(response);
+            $("#modalUpdateEvento").modal();
         }
     });
-},
 
-//Modificar Evento del Calendario 
-eventClick:function(event){
-    var idEvento = event._id;
-    $('input[name=idEvento').val(idEvento);
-    $('input[name=evento').val(event.title);
-    $('input[name=fecha_inicio').val(event.start.format('DD-MM-YYYY'));
-    $('input[name=fecha_fin').val(event.end.format("DD-MM-YYYY"));
-    $('input[name=observaciones').val(event.observaciones);
-
-    $("#modalUpdateEvento").modal();
-  },
-
-
-  });
-
-
-//Oculta mensajes de Notificacion
-  setTimeout(function () {
-    $(".alert").slideUp(300);
-  }, 3000); 
-
-
+    // Oculta mensajes de Notificación
+    setTimeout(function () {
+        $(".alert").slideUp(300);
+    }, 3000);
 });
 
 </script>

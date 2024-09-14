@@ -7,12 +7,10 @@ include __DIR__ . '../../../conexion.php';
 $evento = ucwords($_REQUEST['evento']);
 $f_inicio = $_REQUEST['fecha_inicio'];
 $fecha_inicio = date('Y-m-d', strtotime($f_inicio));
-$f_fin = $_REQUEST['fecha_fin'];
-$seteando_f_final = date('Y-m-d', strtotime($f_fin));
-$fecha_fin1 = strtotime($seteando_f_final . "+ 1 days");
-$fecha_fin = date('Y-m-d', ($fecha_fin1));
 $color_evento = $_REQUEST['color_evento'];
 $observaciones = $_REQUEST['observaciones'];
+$hora_inicio = $_REQUEST['hora_inicio'];
+$hora_fin = $_REQUEST['hora_fin'];
 
 session_start();
 $usuario_id = $_SESSION['user_id'];
@@ -36,18 +34,20 @@ $InsertNuevoEvento = "INSERT INTO calendario(
       identificador,
       evento,
       fecha_inicio,
-      fecha_fin,
       color_evento,
       observaciones,
+      hora_inicio,
+      hora_fin,
       usuario
       )
     VALUES (
       '" . $identificador . "',
       '" . $evento . "',
       '" . $fecha_inicio . "',
-      '" . $fecha_fin . "',
       '" . $color_evento . "',
       '" . $observaciones . "',
+      '" . $hora_inicio . "',
+      '" . $hora_fin . "',
       '" . $usuario_id . "'  
   )";
 $resultadoNuevoEvento = mysqli_query($link, $InsertNuevoEvento);

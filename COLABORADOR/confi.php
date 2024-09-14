@@ -3,27 +3,45 @@ error_reporting(E_ALL);
 ini_set('display_errors', '1');
 session_start();
 
-$host = "localhost";
-$user = "root";
-$password = "";
-$dbname = "mundo3d";
+        include __DIR__ . '/../conexion.php';
 
-mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-$link = mysqli_connect($host, $user, $password);
+        // Confirmación de que el usuario ha realizado el proceso de autenticación
+        if (!isset($_SESSION['confirmado']) || $_SESSION['confirmado'] == false) {
+            header("Location: ../Programas/autenticacion.php");
+            exit(); // Terminamos la ejecución del script después de redirigir
+        }
 
-if (!$link) {
-    die("Error al conectarse al servidor: " . mysqli_connect_error());
-}
+        // Realizamos la consulta para obtener el rol del usuario
+        $peticion = "SELECT Usu_rol FROM usuario WHERE Usu_Identificacion = '".$_SESSION['user_id']."'";
+        $result = mysqli_query($link, $peticion);
 
-if (!mysqli_select_db($link, $dbname)) {
-    die("Error al conectarse a la Base de Datos: " . mysqli_error($link));
-}
+        // Verificamos si la consulta tuvo éxito
+        if (!$result) {
+            // Manejo de errores de consulta
+            // Redirigir a la página de autenticación o mostrar un mensaje de error
+            header("Location: ../Programas/autenticacion.php");
+            exit(); // Terminamos la ejecución del script después de redirigir
+        }
 
-// Verificar que la sesión esté iniciada y que las variables de sesión estén configuradas
-if (!isset($_SESSION['user_id']) || !isset($_SESSION['username'])) {
-    // Redirigir o manejar la falta de sesión según sea necesario
-    die("Error: Sesión no iniciada");
-}
+        // Verificamos si la consulta devolvió exactamente un resultado
+        if (mysqli_num_rows($result) != 1) {
+            // Si la consulta no devuelve un solo resultado, puede ser un problema de base de datos
+            // Redirigir a la página de autenticación o mostrar un mensaje de error
+            header("Location: ../Programas/autenticacion.php");
+            exit(); // Terminamos la ejecución del script después de redirigir
+        }
+
+        // Obtenemos el rol del usuario
+        $fila = mysqli_fetch_assoc($result);
+        $rolUsuario = $fila['Usu_rol'];
+
+        // Verificar si el rol del usuario es diferente de 2
+        if ($rolUsuario != 2) {
+            // Si el rol no es 2, redirigir a la página de autenticación
+            header("Location: ../Programas/autenticacion.php");
+            exit(); // Terminamos la ejecución del script después de redirigir
+        }
+        // Si llegamos aquí, el usuario está autenticado y tiene el rol 2
 
 // Verificar si el formulario ha sido enviado
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -55,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Puedes redirigir al usuario a otra página después de guardar cambios si es necesario
-    header("Location: ../index.php");
+    header("Location: index.php");
     exit();
 }
 
@@ -88,8 +106,7 @@ mysqli_close($link);
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="shortcut icon" href="../images/Logo Mundo 3d.png" type="image/x-icon">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link href="../css/estilo.css" rel="stylesheet">
+    <link href="css/estilo.css" rel="stylesheet">
     <style>
         .container {
             position: relative;
@@ -135,76 +152,39 @@ mysqli_close($link);
             margin-left: 5px;
         }
 
-        .home-icon {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            cursor: pointer;
-            z-index: 999;
-        }
-
-        .home-icon img {
-            width: 50px;
-            height: 50px;
-            background-color: white;
-            padding: 5px;
-            border-radius: 50%;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
 
         .blocked-field input[readonly] {
             cursor: not-allowed;
         }
 
-        .text-white {
-            color: white;
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
-        .font-weight-bold {
-            font-weight: bold;
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
         }
-
-        .mr-3 {
-            margin-right: 1rem;
-        }
-
-        .font-small {
-            font-size: 14px;
-        }
-
-        .font-medium {
-            font-size: 16px;
-        }
-
-        .font-large {
-            font-size: 20px;
-        }
-
-        #buttons-container {
-            position: absolute;
-            top: 10px;
-            right: 10px;
+        .link-container {
+            margin: 0.5cm;
+            display: inline-block;
         }
     </style>
 </head>
 
 <body style="background: linear-gradient(135deg, #2980b9, #2c3e50); color: white;">
-
-    <div class="">
-        <a class="Btn-1" href="../index.php">
+        <a class="Btn-1" href="index.php">
             <div class="sign">
-                <img src="../../images/iconizer-bx-home-alt-2.2.svg" alt="Inicio">
+                <img src="../images/iconizer-bx-home-alt-2.2.svg" alt="Inicio">
             </div>
             <div class="text">INICIO</div>
         </a>
-    </div>
-
-    <div id="buttons-container" style="display: flex; justify-content: flex-end; align-items: center;">
-        <a href="#" class="font-small text-white font-weight-bold mr-3" onclick="adjustFontSize('small')">A</a>
-        <a href="#" class="font-medium text-white font-weight-bold mr-3" onclick="adjustFontSize('medium')">A</a>
-        <a href="#" class="font-large text-white font-weight-bold mr-3" onclick="adjustFontSize('large')">A</a>
-
-    </div>
     <div class="container mt-5">
         <h2 class="mb-4">Editar Usuario</h2>
 
@@ -214,21 +194,25 @@ mysqli_close($link);
                     <label for="edit-identificacion" class="form-label">Identificación:</label>
                     <input type="text" class="form-control" name="Usu_Identificacion" id="edit-identificacion"
                         value="<?php echo $identificacion; ?>" readonly title="Este campo no se puede editar">
+                    <i class="fas fa-edit edit-icon"></i>
                 </div>
                 <div class="mb-3 blocked-field">
                     <label for="edit-nombre" class="form-label">Nombre Completo:</label>
                     <input type="text" class="form-control" name="Usu_Nombre_completo" id="edit-nombre"
                         value="<?php echo $nombre; ?>" readonly title="Este campo no se puede editar">
+                    <i class="fas fa-edit edit-icon"></i>
                 </div>
                 <div class="mb-3">
                     <label for="edit-telefono" class="form-label">Teléfono:</label>
                     <input type="text" class="form-control" name="Usu_Telefono" id="edit-telefono"
                         value="<?php echo $telefono; ?>">
+                    <i class="fas fa-edit edit-icon"></i>
                 </div>
                 <div class="mb-3">
                     <label for="edit-email" class="form-label">Email:</label>
                     <input type="text" class="form-control" name="Usu_Email" id="edit-email"
                         value="<?php echo $email; ?>">
+                    <i class="fas fa-edit edit-icon"></i>
                 </div>
             </div>
             <div class="col-md-6 col-sm-12">
@@ -236,20 +220,24 @@ mysqli_close($link);
                     <label for="edit-ciudad" class="form-label">Ciudad:</label>
                     <input type="text" class="form-control" name="Usu_Ciudad" id="edit-ciudad"
                         value="<?php echo $ciudad; ?>">
+                    <i class="fas fa-edit edit-icon"></i>
                 </div>
                 <div class="mb-3">
                     <label for="edit-direccion" class="form-label">Dirección:</label>
                     <input type="text" class="form-control" name="Usu_Direccion" id="edit-direccion"
                         value="<?php echo $direccion; ?>">
+                    <i class="fas fa-edit edit-icon"></i>
                 </div>
                 <div class="mb-3">
                     <label for="edit-contrasena" class="form-label">Nueva Contraseña:</label>
                     <input type="password" class="form-control" name="Nueva_Contrasena" id="edit-contrasena">
+                    <i class="fas fa-edit edit-icon"></i>
                 </div>
                 <div class="mb-3">
                     <label for="edit-confirm-contrasena" class="form-label">Confirmar Contraseña:</label>
                     <input type="password" class="form-control" name="Nueva_Contrasena" id="edit-confirm-contrasena"
                         onkeyup="checkPasswordMatch();">
+                    <i class="fas fa-edit edit-icon"></i>
                     <div class="invalid-feedback" id="password-error" style="display: none;">Las contraseñas no
                         coinciden.</div>
                 </div>
@@ -257,7 +245,7 @@ mysqli_close($link);
 
             <div class="col-12">
                 <button type="button" class="btn btn-danger cancel-btn"
-                    onclick="window.location.href='../index.php'">Cancelar</button>
+                    onclick="window.location.href='index.php'">Cancelar</button>
                 <button type="button" class="btn btn-primary" onclick="guardarCambios()">Guardar Cambios</button>
             </div>
         </form>
@@ -276,58 +264,23 @@ mysqli_close($link);
                 error.style.display = "none";
             }
         }
-        function adjustFontSize(size) {
-            const body = document.body;
-            body.classList.remove('font-small', 'font-medium', 'font-large');
-
-            switch (size) {
-                case 'small':
-                    body.classList.add('font-small');
-                    break;
-                case 'medium':
-                    body.classList.add('font-medium');
-                    break;
-                case 'large':
-                    body.classList.add('font-large');
-                    break;
-            }
-        }
-
-        function aumentarTamano() {
-            // Funcionalidad específica para el icono de silla de ruedas
-        }
-
-        function cambiarCursor(event) {
-            event.target.style.cursor = 'pointer';
-        }
-
-        function restaurarCursor(event) {
-            event.target.style.cursor = 'default';
-        }
-
-        function checkPasswordMatch() {
-            const password = document.getElementById('edit-contrasena').value;
-            const confirmPassword = document.getElementById('edit-confirm-contrasena').value;
-            const passwordError = document.getElementById('password-error');
-
-            if (password !== confirmPassword) {
-                passwordError.style.display = 'block';
-            } else {
-                passwordError.style.display = 'none';
-            }
-        }
-
-        document.querySelector("#disabled-icon .fa-wheelchair").style.color = "#fff";
     </script>
+
+
+    <!-- Bootstrap JS (opcional, pero necesario para algunas funcionalidades de Bootstrap) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- FontAwesome JS (opcional, pero necesario para los íconos) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"
         integrity="sha512-ZvXQm6N5NnTEUKtT+5K/l5qZsHH1Tl0Qy0PvjBq0MBa6dHAsz5Ri9sn4yBYpq7i6miEjzCLODjKue6Gv1OMJLQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
         function guardarCambios() {
+            // Aquí puedes agregar el código para enviar los datos del formulario al servidor mediante AJAX
+            // Puedes usar la librería jQuery para simplificar la solicitud AJAX
+            // Ejemplo básico con jQuery:
             $.post($("#editForm").attr("action"), $("#editForm").serialize(), function (response) {
                 console.log(response);
-                window.location.href = '../index.php';
+                window.location.href = 'index.php';
             });
 
         }

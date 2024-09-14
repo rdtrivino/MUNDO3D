@@ -82,7 +82,7 @@ include ("Programas/controlsesion.php");
                 <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                     <div class="sb-sidenav-menu">
                         <div class="nav">
-                            <div class="sb-sidenav-menu-heading">INICIO</div>
+                            <div class="sb-sidenav-menu-heading"></div>
                             <a class="nav-link" href="index.php">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                                 INICIO
@@ -150,7 +150,7 @@ include ("Programas/controlsesion.php");
                             </div>
                             <div class="col-auto">
                                 <select name="num_registros" id="num_registros" class="form-select" onchange="cambiarRegistrosPorPagina()">
-                                    <option value="10" <?php if ($registrosPorPagina == 10) echo 'selected'; ?>>10</option>
+                                <option value="10" <?php if ($registrosPorPagina == 10) echo 'selected'; ?>>10</option>
                                     <option value="25" <?php if ($registrosPorPagina == 25) echo 'selected'; ?>>25</option>
                                     <option value="50" <?php if ($registrosPorPagina == 50) echo 'selected'; ?>>50</option>
                                     <option value="100" <?php if ($registrosPorPagina == 100) echo 'selected'; ?>>100</option>

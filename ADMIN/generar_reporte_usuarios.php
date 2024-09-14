@@ -1,14 +1,6 @@
 <?php
-$host = "localhost";
-$user = "root";
-$password = "";
-$dbname = "mundo3d";
 
-$conexion = mysqli_connect($host, $user, $password, $dbname);
-
-if (!$conexion) {
-    die("Error al conectarse a la Base de Datos: " . mysqli_connect_error());
-}
+include __DIR__ . '/../conexion.php';
 
 require_once 'vendor/autoload.php'; // Ruta donde se encuentra autoload.php de Composer
 
@@ -29,7 +21,7 @@ function obtenerEtiquetaRol($rol)
     }
 }
 
-function generarReporteUsuarios($conexion)
+function generarReporteUsuarios($link)
 {
     $options = new Options();
     $options->set('isHtml5ParserEnabled', true);
@@ -92,10 +84,10 @@ function generarReporteUsuarios($conexion)
                     <?php
                     $colorFondo = 'odd';
                     $sql = "SELECT Usu_Identificacion, Usu_Nombre_completo, Usu_Telefono, Usu_Email, Usu_Ciudad, Usu_Direccion, Usu_Rol, Usu_Estado FROM usuario";
-                    $resultado = mysqli_query($conexion, $sql);
+                    $resultado = mysqli_query($link, $sql);
 
                     if (!$resultado) {
-                        die("Error en la consulta: " . mysqli_error($conexion));
+                        die("Error en la consulta: " . mysqli_error($link));
                     }
 
                     while ($row = mysqli_fetch_assoc($resultado)) {
@@ -128,6 +120,6 @@ function generarReporteUsuarios($conexion)
         $pdf->stream('Reporte_Usuarios.pdf', array('Attachment' => 1));
 }
 
-generarReporteUsuarios($conexion);
-mysqli_close($conexion);
+generarReporteUsuarios($link);
+mysqli_close($link);
 ?>

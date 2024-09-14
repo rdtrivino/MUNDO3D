@@ -1,10 +1,46 @@
 <?php
-session_start();
-require '../conexion.php';
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+include __DIR__ . '/../conexion.php';
 
-$nombreCompleto = $_SESSION['username'];
-$usuario_id = $_SESSION['user_id'];
+// Confirmación de que el usuario ha realizado el proceso de autenticación
+if (!isset($_SESSION['confirmado']) || $_SESSION['confirmado'] == false) {
+    header("Location: ../Programas/autenticacion.php");
+    exit(); // Terminamos la ejecución del script después de redirigir
+}
 
+// Realizamos la consulta para obtener el rol del usuario
+$peticion = "SELECT Usu_rol FROM usuario WHERE Usu_Identificacion = '" . $_SESSION['user_id'] . "'";
+$result = mysqli_query($link, $peticion);
+
+// Verificamos si la consulta tuvo éxito
+if (!$result) {
+    // Manejo de errores de consulta
+    // Redirigir a la página de autenticación o mostrar un mensaje de error
+    header("Location: ../Programas/autenticacion.php");
+    exit(); // Terminamos la ejecución del script después de redirigir
+}
+
+// Verificamos si la consulta devolvió exactamente un resultado
+if (mysqli_num_rows($result) != 1) {
+    // Si la consulta no devuelve un solo resultado, puede ser un problema de base de datos
+    // Redirigir a la página de autenticación o mostrar un mensaje de error
+    header("Location: ../Programas/autenticacion.php");
+    exit(); // Terminamos la ejecución del script después de redirigir
+}
+
+// Obtenemos el rol del usuario
+$fila = mysqli_fetch_assoc($result);
+$rolUsuario = $fila['Usu_rol'];
+
+// Verificar si el rol del usuario es diferente de 1
+if ($rolUsuario != 1) {
+    // Si el rol no es 1, redirigir a la página de autenticación
+    header("Location: ../Programas/autenticacion.php");
+    exit(); // Terminamos la ejecución del script después de redirigir
+}
+// Si llegamos aquí, el usuario está autenticado y tiene el rol 1
 
 // Consulta SQL para obtener el número total de productos
 $totalProductosResult = mysqli_query($link, "SELECT COUNT(*) as total FROM productos");
@@ -108,7 +144,7 @@ if (isset($_POST['cliente'], $_POST['producto'], $_POST['cantidad'], $_POST['fec
     $observacion = $_POST['observacion'];
 
     // Consulta SQL para insertar un nuevo pedido
-    $consulta = "INSERT INTO pedidos (Pe_Cliente, Pe_Estado, Pe_Producto, Pe_Cantidad, Pe_Fechapedido, Pe_Fechaentrega, Pe_Observacion) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    $consulta = "INSERT INTO pedidos (Pe_Cliente, Pe_Estado, Pe_Producto, Pe_Cantidad, Pe_Fechapedido, Pe_Fechaentrega, Pe_Observacion, Pe_Usuario) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = mysqli_prepare($link, $consulta);
 
     // Verificar si la preparación de la consulta fue exitosa
@@ -116,7 +152,7 @@ if (isset($_POST['cliente'], $_POST['producto'], $_POST['cantidad'], $_POST['fec
         $estado = 1; // Estado por defecto del pedido (puedes ajustarlo según tus necesidades)
 
         // Vincular parámetros a la consulta
-        mysqli_stmt_bind_param($stmt, "iiissss", $cliente, $estado, $producto, $cantidad, $fechaPedido, $fechaEntrega, $observacion);
+        mysqli_stmt_bind_param($stmt, "iiisssss", $cliente, $estado, $producto, $cantidad, $fechaPedido, $fechaEntrega, $observacion, $_SESSION['user_id']);
 
         // Ejecutar la consulta
         if (mysqli_stmt_execute($stmt)) {
@@ -196,9 +232,9 @@ if (isset($_POST['guardar_cambios'])) {
     }
 
     // Guardar los registros en la base de datos
-    $sql = "UPDATE pedidos SET Pe_Cliente=?, Pe_Estado=?, Pe_Producto=?, Pe_Cantidad=?, Pe_Fechapedido=?, Pe_Fechaentrega=?, pe_color=?, Pe_Observacion=?, nombre_imagen=? WHERE Identificador=?";
+    $sql = "UPDATE pedidos SET Pe_Cliente=?, Pe_Estado=?, Pe_Producto=?, Pe_Cantidad=?, Pe_Fechapedido=?, Pe_Fechaentrega=?, pe_color=?, Pe_Observacion=?, nombre_imagen=?, Pe_Usuario=? WHERE Identificador=?";
     $stmt = $link->prepare($sql);
-    $stmt->bind_param('sisisssssi', $cliente, $estado, $producto, $cantidad, $fechaPedido, $fechaEntrega, $color, $observaciones, $imagen, $identificador);
+    $stmt->bind_param('sisisssssis', $cliente, $estado, $producto, $cantidad, $fechaPedido, $fechaEntrega, $color, $observaciones, $imagen, $_SESSION['user_id'], $identificador);
 
     if ($stmt->execute()) {
         echo "success";

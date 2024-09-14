@@ -235,52 +235,5 @@
 				<input type="submit" class="login-button" value="Regístrate" />
 			</form>
 		</div>
-
-		<!-- SweetAlert2 JavaScript -->
-		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-		<script>
-			document
-				.getElementById('registroForm')
-				.addEventListener('submit', function (event) {
-					event.preventDefault() // Evita el envío del formulario tradicional
-
-					// Captura los datos del formulario
-					let formData = new FormData(this)
-
-					// Envía los datos al servidor usando fetch
-					fetch(this.action, {
-						method: 'POST',
-						body: formData
-					})
-						.then(response => response.json())
-						.then(data => {
-							if (data.success) {
-								// Si la respuesta del servidor indica éxito
-								Swal.fire({
-									title: '¡Éxito!',
-									text: 'Te has registrado correctamente.',
-									icon: 'success'
-								}).then(() => {
-									window.location.href = 'Index.html'
-								})
-							} else {
-								// Si la respuesta del servidor indica error
-								Swal.fire({
-									icon: 'error',
-									title: 'Oops...',
-									text: data.message || 'Algo salió mal.'
-								})
-							}
-						})
-						.catch(error => {
-							// Maneja errores de red o problemas inesperados
-							Swal.fire({
-								icon: 'error',
-								title: 'Oops...',
-								text: 'No se pudo conectar con el servidor.'
-							})
-						})
-				})
-		</script>
 	</body>
 </html>

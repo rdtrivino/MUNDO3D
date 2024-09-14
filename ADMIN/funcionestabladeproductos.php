@@ -1,8 +1,46 @@
 <?php
-require '../conexion.php';
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+include __DIR__ . './../conexion.php';
 
-$nombreCompleto = $_SESSION['username'];
-$usuario_id = $_SESSION['user_id'];
+// Confirmación de que el usuario ha realizado el proceso de autenticación
+if (!isset($_SESSION['confirmado']) || $_SESSION['confirmado'] == false) {
+    header("Location: ../Programas/autenticacion.php");
+    exit(); // Terminamos la ejecución del script después de redirigir
+}
+
+// Realizamos la consulta para obtener el rol del usuario
+$peticion = "SELECT Usu_rol FROM usuario WHERE Usu_Identificacion = '" . $_SESSION['user_id'] . "'";
+$result = mysqli_query($link, $peticion);
+
+// Verificamos si la consulta tuvo éxito
+if (!$result) {
+    // Manejo de errores de consulta
+    // Redirigir a la página de autenticación o mostrar un mensaje de error
+    header("Location: ../Programas/autenticacion.php");
+    exit(); // Terminamos la ejecución del script después de redirigir
+}
+
+// Verificamos si la consulta devolvió exactamente un resultado
+if (mysqli_num_rows($result) != 1) {
+    // Si la consulta no devuelve un solo resultado, puede ser un problema de base de datos
+    // Redirigir a la página de autenticación o mostrar un mensaje de error
+    header("Location: ../Programas/autenticacion.php");
+    exit(); // Terminamos la ejecución del script después de redirigir
+}
+
+// Obtenemos el rol del usuario
+$fila = mysqli_fetch_assoc($result);
+$rolUsuario = $fila['Usu_rol'];
+
+// Verificar si el rol del usuario es diferente de 1
+if ($rolUsuario != 1) {
+    // Si el rol no es 1, redirigir a la página de autenticación
+    header("Location: ../Programas/autenticacion.php");
+    exit(); // Terminamos la ejecución del script después de redirigir
+}
+// Si llegamos aquí, el usuario está autenticado y tiene el rol 1
 
 
 // Obtener el número total de productos
@@ -105,10 +143,10 @@ if (isset($_POST['guardar_cambios'])) {
             $imagen_contenido = empty($imagen_contenido) ? $imagen_actual : $imagen_contenido;
 
             // Actualizar los datos en la base de datos
-            $consulta = "UPDATE productos SET Pro_Nombre=?, Pro_Descripcion=?, Pro_PrecioVenta=?, Pro_Categoria=?, Pro_Cantidad=?, Pro_Costo=?, Pro_Estado=?, nombre_imagen=? WHERE Identificador=?";
+            $consulta = "UPDATE productos SET Pro_Nombre=?, Pro_Descripcion=?, Pro_PrecioVenta=?, Pro_Categoria=?, Pro_Cantidad=?, Pro_Costo=?, Pro_Estado=?, nombre_imagen=?, Pro_Usuario=? WHERE Identificador=?";
             $stmt = mysqli_prepare($link, $consulta);
             if ($stmt) {
-                mysqli_stmt_bind_param($stmt, "sssssssss", $nombre, $descripcion, $precio, $categoria, $cantidad, $costo, $estado, $imagen_contenido, $identificador);
+                mysqli_stmt_bind_param($stmt, "ssssssssss", $nombre, $descripcion, $precio, $categoria, $cantidad, $costo, $estado, $imagen_contenido, $_SESSION['user_id'], $identificador);
                 if (mysqli_stmt_execute($stmt)) {
                     // Si la consulta se ejecutó con éxito, devuelve un mensaje de éxito
                     echo "success";
@@ -119,7 +157,7 @@ if (isset($_POST['guardar_cambios'])) {
                     exit; // Termina el script aquí para evitar que se envíe cualquier otro contenido
                 }
             } else {
-                // Si hay algún error en la preparación de la consulta, devuelve un mensaje de error
+                // Si hay algún error en la preparación de la consulta, devuelve un mensaje de error 
                 echo "Error al preparar la consulta: " . mysqli_error($link);
                 exit; // Termina el script aquí para evitar que se envíe cualquier otro contenido
             }
@@ -177,9 +215,9 @@ if (isset($_POST['nombre']) && isset($_POST['descripcion']) && isset($_POST['pre
     }
 
     // Insertar los datos en la base de datos
-    $consulta = "INSERT INTO productos (Identificador, Pro_Nombre, Pro_Descripcion, Pro_PrecioVenta, Pro_Categoria, Pro_Cantidad, Pro_Costo, Pro_Estado, nombre_imagen) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $consulta = "INSERT INTO productos (Identificador, Pro_Nombre, Pro_Descripcion, Pro_PrecioVenta, Pro_Categoria, Pro_Cantidad, Pro_Costo, Pro_Estado, nombre_imagen, Pro_Usuario) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = mysqli_prepare($link, $consulta);
-    mysqli_stmt_bind_param($stmt, "dssdsdsss", $nuevoCodigo, $nombre, $descripcion, $precio, $categoria, $cantidad, $costo, $estado, $imagen_contenido);
+    mysqli_stmt_bind_param($stmt, "dssdsdssss", $nuevoCodigo, $nombre, $descripcion, $precio, $categoria, $cantidad, $costo, $estado, $imagen_contenido, $_SESSION['user_id']);
 
     if (mysqli_stmt_execute($stmt)) {
         // Si la consulta se ejecutó con éxito, devuelve un mensaje de éxito

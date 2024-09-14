@@ -31,7 +31,7 @@
                 <div class="d-inline-flex align-items-center">
                     <i class="fas fa-user fa-lg text-white mr-2"></i>
                     <div class="text-white" id="user-name">
-                        Bienvenido:
+                        Bienvenido: <?php echo $nombreCompleto; ?>
                     </div>
                 </div>
             </div>
@@ -226,10 +226,10 @@
                                 </div>
                                 </td>';
                                             echo '<td style="text-align: center;">
-                                    <button type="button" class="btn btn-danger btn-sm" data-id="' . $row['id'] . '" data-action="remove"><i class="fas fa-trash-alt"></i></button>
+                                    <button type="button" class="" data-id="' . $row['id'] . '" data-action="remove"><i class="fas fa-trash-alt"></i></button>
                                 </td>';
                                             echo '</tr>';
-                                            $totalPrecioProductos += $row['precio_venta'];
+                                            $totalPrecioProductos += $row['precio_venta'] * $row['cantidad'];
                                         }
                                         echo '</tbody>';
                                         echo '</table>';
@@ -242,7 +242,9 @@
                                 ?>
                             </div>
                             <div id="totalProductos" style="text-align: right; font-weight: bold; color: blue;">
-                                <?php echo "Total a pagar: $" . $totalPrecioProductos; ?>
+                                
+                            <?php echo "Total a pagar: $" . number_format($totalPrecioProductos, 2, ',', '.'); ?>
+
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -306,7 +308,7 @@
                                             <?php } else { ?>
                                                 <div class="text-center">
                                                     <!-- Precio -->
-                                                    <p class="price mb-0">USD-<?php echo $row['Pro_PrecioVenta']; ?></p>
+                                                    <p class="price mb-0">COP <?php echo number_format($row['Pro_PrecioVenta'], 2, ',', '.'); ?></p>
                                                 </div>
                                             <?php } ?>
                                         </div>

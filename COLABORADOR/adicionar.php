@@ -170,15 +170,8 @@ $usuario_id = $_SESSION['user_id'];
                     <label for="tipoimpresion">Tipo de impresión</label required>
                     <select class="form-control" id="tipoimpresion" name="tipoimpresion">
                         <option value="No informado">Seleccionar el tipo de impresión</option>
-                        <option value="Poliácido Láctico">Poliácido Láctico</option>
-                        <option value="Acrilonitrilo Butadieno Estireno">Acrilonitrilo Butadieno Estireno</option>
-                        <option value="Tereftalato de Polietileno">Tereftalato de Polietileno</option>
-                        <option value="Tereftalato de Polietileno Glicol">Tereftalato de Polietileno Glicol</option>
-                        <option value="Nylon">Nylon</option>
-                        <option value="Poliestireno de alto impacto">Poliestireno de alto impacto</option>
-                        <option value="Elastómero termoplástico o TPE">Elastómero termoplástico o TPE</option>
-                        <option value="Filamento Fibra de Carbono">Filamento Fibra de Carbono</option>
-                        <option value="Filamento PP Polipropileno">Filamento PP Polipropileno</option>
+                        <option value="Poliácido Láctico">Filamento</option>
+                        <option value="Acrilonitrilo Butadieno Estireno">Resina</option>
                     </select>
                 </div>
 
@@ -186,11 +179,8 @@ $usuario_id = $_SESSION['user_id'];
                     <label for="color">Color de la impresión</label required>
                     <select class="form-control" id="color" name="color">
                         <option value="No informado">Seleccionar el color de impresión</option>
-                        <option value="Negro Fibra de Carbono">Negro Fibra de Carbono</option>
-                        <option value="Blanco Menta">Blanco Menta</option>
-                        <option value="Negro Clásico">Negro Clásico</option>
-                        <option value="Naranja metálizado">Naranja metálizado</option>
-                        <option value="Verde Glass">Verde Glass</option>
+                        <option value="Negro Fibra de Carbono">Único Color</option>
+                        <option value="Blanco Menta">Color Original </option>
                     </select>
                 </div>
 

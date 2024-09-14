@@ -1,8 +1,13 @@
 <?php
-$host = "localhost";
+/*$host = "localhost";
 $user = "root";
 $password = "";
-$dbname = "mundo3d";
+$dbname = "mundo3d";*/
+
+$host = "localhost";
+$user = "u255704174_root";
+$password = "Mundo3d2024";
+$dbname = "u255704174_mundo3d";
 
 $link = mysqli_connect($host, $user, $password);
 

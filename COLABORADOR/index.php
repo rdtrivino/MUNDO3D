@@ -1,6 +1,6 @@
 
 <!DOCTYPE html>
-<!-- http://localhost/MUNDO 3D/COLABORADOR/index.php -->
+<!-- http://localhost/MUNDO 3D/COLABORADOR/colaborador.php -->
 <html lang="es">
     <?php 
     include __DIR__ . '/../conexion.php';
@@ -37,7 +37,7 @@
                         Bienvenid@ <?php echo $nombreCompleto; ?>
                     </a>
                     <ul class="menu-vertical dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="Programas/config.php">Configuracion de cuenta</a></li>
+                        <li><a class="dropdown-item" href="confi.php">Configuracion de cuenta</a></li>
                         <li><a class="dropdown-item" href="../Programas/logout.php" id="cerrar-sesion-button">Cerrar sesión</a></li>
                     </ul>
                 </li>
@@ -53,46 +53,42 @@
                             PROCESOS</div>
                             <!--Listar las tablas de productos y pedidos-->
                             <?php
-                                $peticion = "SHOW TABLES WHERE Tables_in_mundo3d IN ('productos', 'pedidos');";
-                                $result = mysqli_query($link, $peticion);
 
-                                while ($fila = $result->fetch_assoc()) {
-                                    $nombre_tabla = ucfirst($fila['Tables_in_mundo3d']); // Capitalizar la primera letra
-                                    echo '
-                                    <li class="nav-item">
-                                    <a class="nav-link" href="?tabla='.$fila['Tables_in_mundo3d'].'">
-                                        <span data-feather="file"></span>
-                                        '.$nombre_tabla.'
-                                    </a>
-                                    </li>
-                                    ';
+                                if($entorno == "web"){
+                                    $peticion = "SHOW TABLES WHERE Tables_in_u255704174_mundo3d IN ('productos', 'pedidos');";
+                                    $result = mysqli_query($link, $peticion);
+
+                                    while ($fila = $result->fetch_assoc()) {
+                                        $nombre_tabla = ucfirst($fila['Tables_in_u255704174_mundo3d']); // Capitalizar la primera letra
+                                        echo '
+                                        <li class="nav-item">
+                                        <a class="nav-link" href="?tabla='.$fila['Tables_in_u255704174_mundo3d'].'">
+                                            <span data-feather="file"></span>
+                                            '.$nombre_tabla.'
+                                        </a>
+                                        </li>
+                                        ';
+                                }
+                                }elseif($entorno == "local"){
+                                    $peticion = "SHOW TABLES WHERE Tables_in_mundo3d IN ('productos', 'pedidos');";
+                                    $result = mysqli_query($link, $peticion);
+    
+                                    while ($fila = $result->fetch_assoc()) {
+                                        $nombre_tabla = ucfirst($fila['Tables_in_mundo3d']); // Capitalizar la primera letra
+                                        echo '
+                                        <li class="nav-item">
+                                        <a class="nav-link" href="?tabla='.$fila['Tables_in_mundo3d'].'">
+                                            <span data-feather="file"></span>
+                                            '.$nombre_tabla.'
+                                        </a>
+                                        </li>
+                                        ';
+                                    } 
+                                } else {
+                                    die('Entorno no reconocido.');
                                 }
                             ?>
-                            <!--Listar los reportes requeridos-->
-                            <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-                                <span>REPORTES</span>
-                                <a class="d-flex align-items-center text-muted" href="#" aria-label="Add a new report">
-                                    <span data-feather="plus-circle"></span>
-                                </a>
-                            </h6>
-                            <ul class="nav flex-column mb-2">
-                                <!--Mostrar todas las vistas creadas la base de datos-->
-                                <?php
-                                    /*include "../conexion.php";
-                                    $peticion = "SHOW FULL TABLES IN mundo3d WHERE TABLE_TYPE LIKE 'VIEW'";
-                                        $result = mysqli_query($link, $peticion);
-                                        while ($fila = $result->fetch_assoc()){
-                                            echo '
-                                            <li class="nav-item">
-                                            <a class="nav-link" href="#">
-                                                <span data-feather="file-text"></span>
-                                                '.$fila['Tables_in_mundo3d'].'
-                                            </a>
-                                            </li>
-                                            ';
-                                        }*/
-                                ?>
-                            </ul>   
+
                         </div>
                     </div>
 

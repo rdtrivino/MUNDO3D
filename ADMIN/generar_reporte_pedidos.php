@@ -1,40 +1,32 @@
 <?php
-$host = "localhost";
-$user = "root";
-$password = "";
-$dbname = "mundo3d";
 
-$conexion = mysqli_connect($host, $user, $password, $dbname);
-
-if (!$conexion) {
-    die("Error al conectarse a la Base de Datos: " . mysqli_connect_error());
-}
+include __DIR__ . '/../conexion.php';
 
 require_once 'vendor/autoload.php'; // Ruta donde se encuentra autoload.php de Composer
 
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
-function obtenerNombreEstado($conexion, $codigoEstado)
+function obtenerNombreEstado($link, $codigoEstado)
 {
     $sql = "SELECT Es_Nombre FROM pedido_estado WHERE Es_Codigo = '$codigoEstado'";
-    $resultado = mysqli_query($conexion, $sql);
+    $resultado = mysqli_query($link, $sql);
     $row = mysqli_fetch_assoc($resultado);
     return $row['Es_Nombre'];
 }
 
-function obtenerNombreCliente($conexion, $codigoCliente)
+function obtenerNombreCliente($link, $codigoCliente)
 {
     $sql = "SELECT Usu_Nombre_completo FROM usuario WHERE Usu_Identificacion = '$codigoCliente'";
-    $resultado = mysqli_query($conexion, $sql);
+    $resultado = mysqli_query($link, $sql);
     $row = mysqli_fetch_assoc($resultado);
     return $row['Usu_Nombre_completo'];
 }
 
-function obtenerNombreProducto($conexion, $codigoProducto)
+function obtenerNombreProducto($link, $codigoProducto)
 {
     $sql = "SELECT Pro_Nombre FROM productos WHERE Identificador = '$codigoProducto'";
-    $resultado = mysqli_query($conexion, $sql);
+    $resultado = mysqli_query($link, $sql);
     $row = mysqli_fetch_assoc($resultado);
     return $row['Pro_Nombre'];
 }
@@ -47,7 +39,7 @@ function truncarTexto($texto, $longitudMaxima)
     return $texto;
 }
 
-function generarReportePedidos($conexion)
+function generarReportePedidos($link)
 {
     $options = new Options();
     $options->set('isHtml5ParserEnabled', true); // Habilitar el analizador HTML5
@@ -121,16 +113,16 @@ function generarReportePedidos($conexion)
                 <?php
                 $colorFondo = 'odd';
                 $sql = "SELECT * FROM pedidos";
-                $resultado = mysqli_query($conexion, $sql);
+                $resultado = mysqli_query($link, $sql);
 
                 if (!$resultado) {
-                    die("Error en la consulta: " . mysqli_error($conexion));
+                    die("Error en la consulta: " . mysqli_error($link));
                 }
 
                 while ($row = mysqli_fetch_assoc($resultado)) {
-                    $estado = obtenerNombreEstado($conexion, $row['Pe_Estado']);
-                    $cliente = obtenerNombreCliente($conexion, $row['Pe_Cliente']);
-                    $producto = obtenerNombreProducto($conexion, $row['Pe_Producto']);
+                    $estado = obtenerNombreEstado($link, $row['Pe_Estado']);
+                    $cliente = obtenerNombreCliente($link, $row['Pe_Cliente']);
+                    $producto = obtenerNombreProducto($link, $row['Pe_Producto']);
                     ?>
                     <tr class="<?php echo $colorFondo; ?>">
                         <td><?php echo isset($row['Identificador']) ? $row['Identificador'] : ''; ?></td>
@@ -173,5 +165,5 @@ function generarReportePedidos($conexion)
     echo $pdfOutput;
 }
 
-generarReportePedidos($conexion);
+generarReportePedidos($link);
 ?>

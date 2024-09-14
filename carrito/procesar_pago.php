@@ -12,16 +12,7 @@ $cliente_id = $_SESSION['user_id']; // Obtener el ID de usuario de la sesión
 require_once ('vendor/autoload.php');
 \Stripe\Stripe::setApiKey('sk_test_51PCx2gRxUN5OHb784L4vrVA5ta8V9wpXoHXThlHuiDh0cBAQs2VCdCEiAma1CtUJDz5QzBgBElhyB3fu3fDNg8JO008Tfah9xf');
 
-$host = "localhost";
-$user = "root";
-$password = "";
-$dbname = "mundo3d";
-
-$link = mysqli_connect($host, $user, $password, $dbname);
-
-if (!$link) {
-    die("Error al conectarse al servidor: " . mysqli_connect_error());
-}
+include __DIR__ . '/../conexion.php';
 
 // Definir una variable para indicar si el pago fue exitoso o rechazado
 $pagoExitoso = false;
@@ -102,10 +93,10 @@ if (isset($_POST['monto']) && isset($_POST['stripeToken'])) {
                 $id_producto = $producto['id_producto'];
                 $cantidad = $producto['cantidad'];
 
-                $sql_transfer = "INSERT INTO pedidos (Pe_Cliente, Pe_Estado, Pe_Producto, Pe_Cantidad, Pe_Fechapedido, Pe_Fechaentrega, Compra_ID)
-                                 VALUES (?, 1, ?, ?, ?, ?, ?)";
+                $sql_transfer = "INSERT INTO pedidos (Pe_Cliente, Pe_Estado, Pe_Producto, Pe_Cantidad, Pe_Fechapedido, Pe_Fechaentrega, Compra_ID, Pe_Usuario)
+                                 VALUES (?, 1, ?, ?, ?, ?, ?, ?)";
                 $stmt = mysqli_prepare($link, $sql_transfer);
-                mysqli_stmt_bind_param($stmt, "iiissi", $cliente_id, $id_producto, $cantidad, $fechaPedido, $fechaEntrega, $compra_id);
+                mysqli_stmt_bind_param($stmt, "iiissii", $cliente_id, $id_producto, $cantidad, $fechaPedido, $fechaEntrega, $compra_id, $cliente_id);
                 mysqli_stmt_execute($stmt);
             }
             mysqli_stmt_close($stmt);
@@ -244,7 +235,7 @@ mysqli_close($link); // Cerrar conexión a la base de datos al finalizar
             setTimeout(function () {
                 document.getElementById('modal-exito').style.display = 'none';
                 // Redirige a la página del carrito después de cerrar el modal
-                window.location.href = '/../MUNDO 3D/USUARIO/Catalogologin.php';
+                window.location.href = './../USUARIO/Catalogologin.php';
             }, 3000);
         } else {
             // Muestra el modal de rechazo si el pago fue rechazado
@@ -253,7 +244,7 @@ mysqli_close($link); // Cerrar conexión a la base de datos al finalizar
             setTimeout(function () {
                 document.getElementById('modal-rechazo').style.display = 'none';
                 // Redirige a la página del carrito después de cerrar el modal
-                window.location.href = '/../MUNDO 3D/USUARIO/Catalogologin.php';
+                window.location.href = './../USUARIO/Catalogologin.php';
             }, 3000);
         }
     </script>

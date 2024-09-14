@@ -138,14 +138,14 @@
 					required
 					class="input"
 					type="text"
-					name="Usu_Identificacion"
-					placeholder="Documento de identidad"
+					name="username"
+					placeholder="Correo electrónico"
 				/>
 				<input
 					required
 					class="input"
 					type="password"
-					name="Usu_Contraseña"
+					name="password"
 					placeholder="Contraseña"
 				/>
 				<input type="submit" class="login-button" value="Iniciar sesión" />
@@ -155,56 +155,5 @@
 			</form>
 		</div>
 
-		<!-- SweetAlert2 JavaScript -->
-		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-		<script>
-			document
-				.getElementById('loginForm')
-				.addEventListener('submit', function (event) {
-					event.preventDefault() // Evita el envío del formulario tradicional
-
-					// Captura los datos del formulario
-					let formData = new FormData(this)
-
-					// Envía los datos al servidor usando fetch
-					fetch(this.action, {
-						method: 'POST',
-						body: formData
-					})
-						.then(response => {
-							if (!response.ok) {
-								throw new Error('Network response was not ok')
-							}
-							return response.json()
-						})
-						.then(data => {
-							if (data.success) {
-								// Si la respuesta del servidor indica éxito
-								Swal.fire({
-									title: '¡Éxito!',
-									text: data.message,
-									icon: 'success'
-								}).then(() => {
-									window.location.href = 'redireccionar.php' // Redirige a la página de inicio después del inicio de sesión
-								})
-							} else {
-								// Si la respuesta del servidor indica error
-								Swal.fire({
-									icon: 'error',
-									title: 'Oops...',
-									text: data.message
-								})
-							}
-						})
-						.catch(error => {
-							// Maneja errores de red o problemas inesperados
-							Swal.fire({
-								icon: 'error',
-								title: 'Oops...',
-								text: 'No se pudo conectar con el servidor.'
-							})
-						})
-				})
-		</script>
 	</body>
 </html>

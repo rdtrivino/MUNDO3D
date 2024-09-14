@@ -20,7 +20,7 @@ if (isset($_SESSION['user_id']) && isset($_SESSION['username']) && isset($_SESSI
     }
 } else {
     // Si el usuario no ha iniciado sesión o su rol no está definido, redirigirlo a la página de inicio de sesión
-    header("Location: ../index.html");
+    header("Location: ../Index.html");
     exit();
 }
 ?>

@@ -1,222 +1,334 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link
-			href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
-			rel="stylesheet"
-		/>
-		<link
-			rel="shortcut icon"
-			href="./images/Logo Mundo 3d.png"
-			type="image/x-icon"
-		/>
-		<link
-			rel="stylesheet"
-			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-		/>
-		<link rel="stylesheet" href="./css/estilosrg.css" />
-		<link
-			rel="stylesheet"
-			href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"
-		/>
-		<title>Recuperar Contraseña</title>
-		<style>
-			body {
-				background: linear-gradient(to bottom right, #dddddd, #dddddd);
-				font-family: 'Roboto', sans-serif;
-			}
 
-			.container {
-				max-width: 500px;
-				background: #f8f9fd;
-				background: linear-gradient(
-					0deg,
-					rgb(255, 255, 255) 0%,
-					rgb(244, 247, 251) 100%
-				);
-				border-radius: 40px;
-				padding: 25px 35px;
-				border: 5px solid rgb(255, 255, 255);
-				box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 30px 30px -20px;
-				margin: 20px auto;
-				text-align: center;
-			}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Olvidó su Contraseña</title>
+    <link rel="shortcut icon" href="./images/Logo Mundo 3d.png" type="image/x-icon">
+    <link rel="stylesheet" href="./css/estilosrecovery.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-			.heading {
-				font-weight: 900;
-				font-size: 30px;
-				color: rgb(16, 137, 211);
-				margin-bottom: 20px;
-			}
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
 
-			.info {
-				margin-top: 15px;
-				font-size: 16px;
-				color: rgb(100, 100, 100);
-				line-height: 1.5;
-			}
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+            text-align: center;
+            border-radius: 30px;
+        }
 
-			.form {
-				margin-top: 20px;
-			}
+        #modalMessage {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
 
-			.form .input {
-				width: 100%;
-				background: white;
-				border: none;
-				padding: 15px 20px;
-				border-radius: 20px;
-				margin-top: 15px;
-				box-shadow: #cff0ff 0px 10px 10px -5px;
-				border-inline: 2px solid transparent;
-			}
+        #closeModal {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 18px;
+            border-radius: 20px;
+            margin-top: 30px;
+        }
 
-			.form .input::-moz-placeholder {
-				color: rgb(170, 170, 170);
-			}
+        #closeModal:hover {
+            background-color: #45a049;
+        }
 
-			.form .input::placeholder {
-				color: rgb(170, 170, 170);
-			}
+        .home-icon {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            cursor: pointer;
+            z-index: 999;
+        }
 
-			.form .input:focus {
-				outline: none;
-				border-inline: 2px solid #12b1d1;
-			}
+        .home-icon img {
+            width: 50px;
+            height: 50px;
+            background-color: rgb(12, 12, 12);
+            padding: 5px;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
 
-			.form .submit-button {
-				display: block;
-				width: 100%;
-				font-weight: bold;
-				background: linear-gradient(
-					45deg,
-					rgb(16, 137, 211) 0%,
-					rgb(18, 177, 209) 100%
-				);
-				color: white;
-				padding-block: 15px;
-				margin: 20px auto;
-				border-radius: 20px;
-				box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 20px 10px -15px;
-				border: none;
-				transition: all 0.2s ease-in-out;
-			}
+        .text-white {
+            color: rgb(10, 10, 10);
+        }
 
-			.form .submit-button:hover {
-				transform: scale(1.03);
-				box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 23px 10px -20px;
-			}
+        .font-weight-bold {
+            font-weight: bold;
+        }
 
-			.form .submit-button:active {
-				transform: scale(0.95);
-				box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 15px 10px -10px;
-			}
+        .mr-3 {
+            margin-right: 1rem;
+        }
 
-			.back-link {
-				margin-top: 15px;
-			}
+        .font-small {
+            font-size: 14px;
+        }
 
-			.back-link a {
-				text-decoration: none;
-				color: #0099ff;
-				font-size: 14px;
-			}
+        .font-medium {
+            font-size: 16px;
+        }
 
-			.back-link a:hover {
-				text-decoration: underline;
-			}
-		</style>
-	</head>
-	<body>
-		<a class="Btn-1" href="index.html">
-			<div class="sign">
-				<img src="images/iconizer-bx-home-alt-2.2.svg" alt="Inicio" />
-			</div>
-			<div class="text">INICIO</div>
-		</a>
-		<div class="container">
-			<div class="heading">Recuperar Contraseña</div>
-			<div class="info">
-				<p>
-					¿Has olvidado tu contraseña? No te preocupes, aquí puedes recuperarla.
-					Solo necesitas tu correo electrónico registrado para recibir una nueva
-					contraseña
-				</p>
-			</div>
-			<form
-				class="form"
-				id="recoverForm"
-				action="Programas/recovery.php"
-				method="POST"
-			>
-				<input
-					required
-					class="input"
-					type="email"
-					name="email"
-					placeholder="Tu correo electrónico"
-				/>
-				<input
-					type="submit"
-					class="submit-button"
-					value="Enviar enlace de recuperación"
-				/>
-				<div class="back-link">
-					<a href="login.html">Volver al inicio de sesión</a>
-				</div>
-			</form>
-		</div>
+        .font-large {
+            font-size: 20px;
+        }
 
-		<!-- SweetAlert2 JavaScript -->
-		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-		<script>
-			document
-				.getElementById('recoverForm')
-				.addEventListener('submit', function (event) {
-					event.preventDefault() // Evita el envío del formulario tradicional
+        #buttons-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+                        /* Boton Home */
+        .Btn-1 {
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+          width: 45px;
+          height: 45px;
+          border: none;
+          border-radius: 50%;
+          cursor: pointer;
+          position: relative;
+          overflow: hidden;
+          transition-duration: .3s;
+          box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.199);
+          background-color: rgb(0, 0, 0);
+          margin-top: 10px;
+          margin-left: 10px;
+          position: absolute;
+          top: 10px; /* Ajusta la distancia desde la parte superior según sea necesario */
+          left: 10px; /* Ajusta la distancia desde la izquierda según sea necesario */
+      }
 
-					// Captura los datos del formulario
-					let formData = new FormData(this)
+      /* plus sign */
+      .sign {
+          width: 100%;
+          transition-duration: .3s;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+      }
 
-					// Envía los datos al servidor usando fetch
-					fetch(this.action, {
-						method: 'POST',
-						body: formData
-					})
-						.then(response => response.json())
-						.then(data => {
-							if (data.success) {
-								// Si la respuesta del servidor indica éxito
-								Swal.fire({
-									title: '¡Éxito!',
-									text:
-										'Se ha enviado un enlace de recuperación a tu correo electrónico.',
-									icon: 'success'
-								}).then(() => {
-									window.location.href = 'login.html' // Redirige al usuario
-								})
-							} else {
-								// Si la respuesta del servidor indica error
-								Swal.fire({
-									icon: 'error',
-									title: 'Oops...',
-									text: data.message || 'Algo salió mal.'
-								})
-							}
-						})
-						.catch(error => {
-							// Maneja errores de red o problemas inesperados
-							Swal.fire({
-								icon: 'error',
-								title: 'Oops...',
-								text: 'No se pudo conectar con el servidor.'
-							})
-						})
-				})
-		</script>
-	</body>
+      .sign svg {
+          width: 17px;
+      }
+
+      .sign svg path {
+          fill: white;
+      }
+
+      /* text */
+      .text {
+          position: absolute;
+          right: -10px;
+          /* Ajusta la posición a la derecha, con un margen de 10px */
+          opacity: 0;
+          /* Cambia la opacidad para hacer visible el texto */
+          color: white;
+          font-size: 1.2em;
+          font-weight: 600;
+          transition-duration: .3s;
+      }
+
+
+
+      /* hover effect on button width */
+      .Btn-1:hover {
+          width: 125px;
+          border-radius: 40px;
+          transition-duration: .3s;
+      }
+
+      .Btn-1:hover .sign {
+          width: 30%;
+          transition-duration: .3s;
+          padding-left: 20px;
+      }
+
+      /* hover effect button's text */
+      .Btn-1:hover .text {
+          opacity: 1;
+          width: 70%;
+          transition-duration: .3s;
+          padding-right: 10px;
+      }
+
+      /* button click effect*/
+      .Btn-1:active {
+          transform: translate(2px, 2px);
+      }
+
+      .title-container h2 {
+          margin: 0;
+          pointer-events: auto;
+      }
+
+      .title-container {
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+          text-align: center;
+      }
+      .text-black {
+  color: black !important;
+}
+
+.text-black-icon {
+  color: black !important;
+}
+    </style>
+</head>
+
+<body style="background: linear-gradient(to bottom right, #dddddd, #dddddd);">
+    <a class="Btn-1" href="index.html">
+        <div class="sign">
+            <img src="images/iconizer-bx-home-alt-2.2.svg" alt="Inicio">
+        </div>
+        <div class="text">INICIO</div>
+    </a>
+    <div id="buttons-container" style="display: flex; justify-content: flex-end; align-items: center;">
+        <a href="#" class="font-small text-white font-weight-bold mr-3" onclick="adjustFontSize('small')">A</a>
+        <a href="#" class="font-medium text-white font-weight-bold mr-3" onclick="adjustFontSize('medium')">A</a>
+        <a href="#" class="font-large text-white font-weight-bold mr-3" onclick="adjustFontSize('large')">A</a>
+        <div id="disabled-icon">
+            <i class="fas fa-wheelchair fa-lg text-black" onclick="aumentarTamano()" onmouseover="cambiarCursor(event)" onmouseout="restaurarCursor()"></i>
+        </div>
+        
+    </div>
+    <div class="container">
+        <img src="images/Logo Mundo 3d.png" alt="logo mundo 3D">
+        <h2>Olvidó su Contraseña</h2>
+        <p>Por favor, ingrese su dirección de correo electrónico registrada para restablecer su contraseña.</p>
+
+        <form class="form" id="olvidoForm" action="Programas/recovery.php" method="post">
+            <input type="email" id="email" name="email" required placeholder="Ingrese su correo electrónico">
+            <br />
+            <input type="submit" value="Restablecer Contraseña">
+        </form>
+    </div>
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <p id="modalMessage">¡Operación exitosa!</p>
+            <button id="closeModal">Aceptar</button>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const formulario = document.querySelector('#olvidoForm');
+            const modal = document.getElementById('myModal');
+            const closeModalBtn = document.getElementById('closeModal');
+            const modalMessage = document.getElementById('modalMessage');
+
+            formulario.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                const formData = new FormData(formulario);
+
+                fetch('Programas/recovery.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        modalMessage.textContent = data.message;
+                        modal.style.display = 'block';
+
+                        if (data.success) {
+                            closeModalBtn.style.backgroundColor = 'green';
+                            setTimeout(function () {
+                                modal.style.display = 'none';
+                                closeModalBtn.style.backgroundColor = ''; // Restaura el color por defecto al cerrar el modal
+                                window.location.href = 'index.html';
+                            }, 5000);
+                        } else {
+                            closeModalBtn.style.backgroundColor = 'red';
+                            setTimeout(function () {
+                                modal.style.display = 'none';
+                                closeModalBtn.style.backgroundColor = ''; // Restaura el color por defecto al cerrar el modal
+                            }, 5000);
+                        }
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        modalMessage.textContent = 'Ocurrió un error al procesar la operación.';
+                        modal.style.display = 'block';
+                        closeModalBtn.style.backgroundColor = 'red';
+                        closeModalBtn.classList.add('error'); // Puedes usar esta clase para personalizar estilos específicos de error si es necesario
+                        setTimeout(function () {
+                            modal.style.display = 'none';
+                            closeModalBtn.style.backgroundColor = ''; // Restaura el color por defecto al cerrar el modal
+                        }, 5000);
+                    });
+            });
+
+            closeModalBtn.addEventListener('click', function () {
+                modal.style.display = 'none';
+                closeModalBtn.style.backgroundColor = ''; // Restaura el color por defecto al cerrar el modal
+            });
+        });
+        function adjustFontSize(size) {
+            const body = document.body;
+            body.classList.remove('font-small', 'font-medium', 'font-large');
+
+            switch (size) {
+                case 'small':
+                    body.classList.add('font-small');
+                    break;
+                case 'medium':
+                    body.classList.add('font-medium');
+                    break;
+                case 'large':
+                    body.classList.add('font-large');
+                    break;
+            }
+        }
+
+        function aumentarTamano() {
+            // Funcionalidad específica para el icono de silla de ruedas
+        }
+
+        function cambiarCursor(event) {
+            event.target.style.cursor = 'pointer';
+        }
+
+        function restaurarCursor(event) {
+            event.target.style.cursor = 'default';
+        }
+
+        function checkPasswordMatch() {
+            const password = document.getElementById('edit-contrasena').value;
+            const confirmPassword = document.getElementById('edit-confirm-contrasena').value;
+            const passwordError = document.getElementById('password-error');
+
+            if (password !== confirmPassword) {
+                passwordError.style.display = 'block';
+            } else {
+                passwordError.style.display = 'none';
+            }
+        }
+
+        document.querySelector("#disabled-icon .fa-wheelchair").style.color = "#fff";
+
+    </script>
+</body>
+
 </html>

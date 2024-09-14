@@ -3,10 +3,15 @@ error_reporting(E_ALL);
 ini_set('display_errors', '1');
 session_start();
 
-$host = "localhost";
+/*$host = "localhost";
 $user = "root";
 $password = "";
-$dbname = "mundo3d";
+$dbname = "mundo3d";*/
+
+$host = "localhost";
+$user = "u255704174_root";
+$password = "Mundo3d2024";
+$dbname = "u255704174_mundo3d";
 
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 $link = mysqli_connect($host, $user, $password);

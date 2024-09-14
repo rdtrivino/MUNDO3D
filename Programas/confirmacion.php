@@ -15,7 +15,7 @@
     <div class="container-modal">
         <div class="content-modal">
             <h2>¡Alerta!</h2>
-            <p>No has iniciado sesión.</p>
+            <p>Registro exitoso.</p>
             <div class="btn-cerrar">
                 <label for="btn-modal" id="cerrar-modal">Cerrar</label>
             </div>
@@ -31,7 +31,7 @@
 
             // Agregar evento de clic al botón "Cerrar"
             document.getElementById('cerrar-modal').addEventListener('click', function () {
-                window.location.href = './../index.html'; // Redirigir al usuario a la página de inicio
+                window.location.href = '../index.html'; // Redirigir al usuario a la página de inicio
             });
         });
     </script>

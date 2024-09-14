@@ -1,6 +1,6 @@
 <?php
 session_start();
-require dirname(__DIR__) . '../conexion.php';
+include __DIR__ . '/../conexion.php';
 
 // Confirmar que el usuario ha realizado el proceso de autenticación
 if (!isset($_SESSION['confirmado']) || $_SESSION['confirmado'] == false) {

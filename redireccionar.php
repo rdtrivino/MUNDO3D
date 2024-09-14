@@ -109,7 +109,7 @@
   <script>
     // Redirecciona al usuario después de 5 segundos
     setTimeout(function () {
-      window.location.href = "Programas/roleslogin.php";
+      window.location.href = "Programas/Roleslogin.php";
     }, 900); // 5000 milisegundos = 5 segundos
   </script>
 

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 
@@ -22,7 +21,9 @@
 </head>
 
 <body>
-<?php include 'programas/funciones-in-re.php'; ?>
+<?php include './programas/funciones-in-re.php'; 
+
+?>
 
     <!-- Topbar Start -->
     <div class="container-fluid bg-primary py-3">
@@ -33,7 +34,7 @@
                     <i class="fas fa-user fa-lg text-white mr-2"></i>
                     <!-- Texto de bienvenida y nombre de usuario -->
                     <div class="text-white" id="user-name">
-                        Bienvenido:
+                        Bienvenid@: <?php echo $nombreCompleto; ?>
                     </div>
 
                     <script>
@@ -485,7 +486,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    ¡Tu pedido ha sido enviado con éxito!
+                    ¡Tu solicitud se ha registrado con éxito!
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -515,8 +516,8 @@
  <script>
          $(document).  ready(function () {
           // Funci  ón para mostrar la imagen previa
-          function mos  trarImagenPrevia(input) {
-              if (inpu  t.files && input.files[0]) {
+          function mostrarImagenPrevia(input) {
+              if (input.files && input.files[0]) {
                   var   reader = new FileReader();
                     reader.onload = function (e) {
                         $('#imagenPrevia').attr('src', e.target.result);

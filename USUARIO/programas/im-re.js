@@ -352,7 +352,7 @@ function cargarDetallesProducto(
 	modalImagen.src = productImage
 	modalNombre.textContent = productName
 	modalDescripcion.textContent = productDescription
-	modalPrecio.textContent = 'USD-' + productPrice
+	modalPrecio.textContent = 'COP ' + productPrice
 
 	$('#detalleProductoModal').modal('show')
 }

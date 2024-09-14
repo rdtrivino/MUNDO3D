@@ -1,27 +1,18 @@
 <?php
 // Realizar la conexión a la base de datos
-$host = "localhost";
-$user = "root";
-$password = "";
-$dbname = "mundo3d";
 
-$conexion = mysqli_connect($host, $user, $password, $dbname);
-
-// Comprobar si la conexión se realizó correctamente
-if (!$conexion) {
-    die("Error al conectarse a la Base de Datos: " . mysqli_connect_error());
-}
+include __DIR__ . '/../conexion.php';
 
 // Consulta SQL para obtener los productos con stock entre 0 y 10 y estado activo
 $sql = "SELECT p.*, c.Cgo_Nombre AS nombre_categoria 
         FROM productos p 
         JOIN categoria c ON p.Pro_Categoria = c.Cgo_Codigo 
         WHERE p.Pro_Cantidad > 0 AND p.Pro_Cantidad < 10 AND p.Pro_Estado = 'activo'";
-$resultado = mysqli_query($conexion, $sql);
+$resultado = mysqli_query($link, $sql);
 
 // Comprobar si la consulta fue exitosa
 if (!$resultado) {
-    die("Error en la consulta: " . mysqli_error($conexion));
+    die("Error en la consulta: " . mysqli_error($link));
 }
 ?>
 
@@ -56,5 +47,5 @@ if (!$resultado) {
 
 <?php
 // Cerrar la conexión a la base de datos
-mysqli_close($conexion);
+mysqli_close($link);
 ?>

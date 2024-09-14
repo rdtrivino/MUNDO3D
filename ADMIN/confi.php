@@ -3,27 +3,45 @@ error_reporting(E_ALL);
 ini_set('display_errors', '1');
 session_start();
 
-$host = "localhost";
-$user = "root";
-$password = "";
-$dbname = "mundo3d";
+        include __DIR__ . '/../conexion.php';
 
-mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-$link = mysqli_connect($host, $user, $password);
+        // Confirmación de que el usuario ha realizado el proceso de autenticación
+        if (!isset($_SESSION['confirmado']) || $_SESSION['confirmado'] == false) {
+            header("Location: ../Programas/autenticacion.php");
+            exit(); // Terminamos la ejecución del script después de redirigir
+        }
 
-if (!$link) {
-    die("Error al conectarse al servidor: " . mysqli_connect_error());
-}
+        // Realizamos la consulta para obtener el rol del usuario
+        $peticion = "SELECT Usu_rol FROM usuario WHERE Usu_Identificacion = '".$_SESSION['user_id']."'";
+        $result = mysqli_query($link, $peticion);
 
-if (!mysqli_select_db($link, $dbname)) {
-    die("Error al conectarse a la Base de Datos: " . mysqli_error($link));
-}
+        // Verificamos si la consulta tuvo éxito
+        if (!$result) {
+            // Manejo de errores de consulta
+            // Redirigir a la página de autenticación o mostrar un mensaje de error
+            header("Location: ../Programas/autenticacion.php");
+            exit(); // Terminamos la ejecución del script después de redirigir
+        }
 
-// Verificar que la sesión esté iniciada y que las variables de sesión estén configuradas
-if (!isset($_SESSION['user_id']) || !isset($_SESSION['username'])) {
-    // Redirigir o manejar la falta de sesión según sea necesario
-    die("Error: Sesión no iniciada");
-}
+        // Verificamos si la consulta devolvió exactamente un resultado
+        if (mysqli_num_rows($result) != 1) {
+            // Si la consulta no devuelve un solo resultado, puede ser un problema de base de datos
+            // Redirigir a la página de autenticación o mostrar un mensaje de error
+            header("Location: ../Programas/autenticacion.php");
+            exit(); // Terminamos la ejecución del script después de redirigir
+        }
+
+        // Obtenemos el rol del usuario
+        $fila = mysqli_fetch_assoc($result);
+        $rolUsuario = $fila['Usu_rol'];
+
+        // Verificar si el rol del usuario es diferente de 1
+        if ($rolUsuario != 1) {
+            // Si el rol no es 2, redirigir a la página de autenticación
+            header("Location: ../Programas/autenticacion.php");
+            exit(); // Terminamos la ejecución del script después de redirigir
+        }
+        // Si llegamos aquí, el usuario está autenticado y tiene el rol 1
 
 // Verificar si el formulario ha sido enviado
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -133,33 +151,143 @@ mysqli_close($link);
             margin-left: 5px;
         }
 
-        .home-icon {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            cursor: pointer;
-            z-index: 999;
-        }
-
-        .home-icon img {
-            width: 50px;
-            height: 50px;
-            background-color: white;
-            padding: 5px;
-            border-radius: 50%;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
         .blocked-field input[readonly] {
             cursor: not-allowed;
         }
+
+        /* Boton Home */
+        .Btn-1 {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        width: 60px;
+        height: 60px;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        position: fixed; /* Cambiado a fixed */
+        overflow: hidden;
+        transition-duration: .3s;
+        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.199);
+        background-color: rgb(0, 0, 0);
+        margin-top: 10px;
+        margin-left: 10px;
+        z-index: 1000; /* Asegura que esté por encima del contenido */
+        }
+
+
+        /* plus sign */
+        .sign {
+        width: 100%;
+        transition-duration: .3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        }
+
+        .sign svg {
+        width: 17px;
+        }
+
+        .sign svg path {
+        fill: white;
+        }
+
+        /* text */
+        .text {
+        position: absolute;
+        right: -10px;
+        /* Ajusta la posición a la derecha, con un margen de 10px */
+        opacity: 0;
+        /* Cambia la opacidad para hacer visible el texto */
+        color: white;
+        font-size: 1.2em;
+        font-weight: 600;
+        transition-duration: .3s;
+        }
+
+        /* hover effect on button width */
+        .Btn-1:hover {
+        width: 125px;
+        border-radius: 40px;
+        transition-duration: .3s;
+        }
+
+        .Btn-1:hover .sign {
+        width: 30%;
+        transition-duration: .3s;
+        padding-left: 20px;
+        }
+
+        /* hover effect button's text */
+        .Btn-1:hover .text {
+        opacity: 1;
+        width: 70%;
+        transition-duration: .3s;
+        padding-right: 10px;
+        }
+
+        /* button click effect*/
+        .Btn-1:active {
+        transform: translate(2px, 2px);
+        }
+
+        .text-white {
+        color: white;
+        }
+
+        .font-weight-bold {
+        font-weight: bold;
+        }
+
+        .mr-3 {
+        margin-right: 1rem;
+        }
+
+        .font-small {
+        font-size: 14px;
+        }
+
+        .font-medium {
+        font-size: 16px;
+        }
+
+        .font-large {
+        font-size: 20px;
+        }
+
+        .font-small,
+        .font-medium,
+        .font-large {
+        background-color: transparent;
+        /* Quitar el fondo */
+        color: black;
+        /* Color de texto blanco */
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
+        /* Negrita */
+        }
+
+        #buttons-container {
+        position: fixed;
+        top: 10px; /* Ajusta la distancia desde la parte superior */
+        right: 10px; /* Ajusta la distancia desde la derecha */
+        }
+
+
+        /* Fin Boton Home */
+
     </style>
 </head>
 
 <body style="background: linear-gradient(135deg, #2980b9, #2c3e50); color: white;">
-    <a href="index.php" class="home-icon">
-        <img src="/../MUNDO 3D/images/bx-home-alt-2.svg" alt="Ir a Inicio">
-    </a>
+        <a class="Btn-1" href="index.php">
+            <div class="sign">
+                <img src="../images/iconizer-bx-home-alt-2.2.svg" alt="Inicio">
+            </div>
+            <div class="text">INICIO</div>
+        </a>
     <div class="container mt-5">
         <h2 class="mb-4">Editar Usuario</h2>
 

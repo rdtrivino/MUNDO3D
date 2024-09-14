@@ -16,7 +16,7 @@ if (isset($_SESSION['user_id'])) {
     $usuario_id = $_SESSION['user_id'];
     $sql = "SELECT carrito.*, 
             productos1.Pro_Nombre AS nombre, 
-            productos1.Pro_PrecioVenta AS precio_venta, 
+            productos1.Pro_Pvdolar AS precio_venta, 
             productos1.Pro_Descripcion AS descripcion, 
             productos1.nombre_imagen AS nombre_imagen
         FROM carrito 
@@ -351,7 +351,7 @@ if (isset($_SESSION['user_id'])) {
                                         <div class="card-body">
                                             <h5 class="card-title"><?php echo $fila['nombre']; ?></h5>
 
-                                            <p class="card-text precio-producto">$<?php echo $fila['precio_venta']; ?></p>
+                                            <p class="card-text precio-producto">$ <?php echo $fila['precio_venta']; ?></p>
                                             <div class="cantidad-container">
                                                 <!-- Botones para ajustar la cantidad -->
                                                 <input type="text" id="cantidad-<?php echo $fila['id']; ?>"
@@ -378,8 +378,8 @@ if (isset($_SESSION['user_id'])) {
                     <?php if ($total_a_pagar > 0) { ?>
                         <!-- Subtotal -->
                         <div class="subtotal">
-                            Total a pagar: <span
-                                id="total">$<?php echo number_format($total_a_pagar, 2, '.', ','); ?></span>
+                            Total a pagar USD: <span
+                                id="total">$ <?php echo number_format($total_a_pagar, 2, '.', ','); ?></span>
                         </div>
 
                         <br>

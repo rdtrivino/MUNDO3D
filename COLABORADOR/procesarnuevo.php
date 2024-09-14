@@ -2,11 +2,44 @@
     session_start();
     include __DIR__ . '/../conexion.php';
 
-    // Verificar si el usuario ha iniciado sesión
+    // Confirmación de que el usuario ha realizado el proceso de autenticación
     if (!isset($_SESSION['confirmado']) || $_SESSION['confirmado'] == false) {
         header("Location: ../Programas/autenticacion.php");
-        exit; // Es importante salir del script después de redireccionar
+        exit(); // Terminamos la ejecución del script después de redirigir
     }
+
+    // Realizamos la consulta para obtener el rol del usuario
+    $peticion = "SELECT Usu_rol FROM usuario WHERE Usu_Identificacion = '" . $_SESSION['user_id'] . "'";
+    $result = mysqli_query($link, $peticion);
+
+    // Verificamos si la consulta tuvo éxito
+    if (!$result) {
+        // Manejo de errores de consulta
+        // Redirigir a la página de autenticación o mostrar un mensaje de error
+        header("Location: ../Programas/autenticacion.php");
+        exit(); // Terminamos la ejecución del script después de redirigir
+    }
+
+    // Verificamos si la consulta devolvió exactamente un resultado
+    if (mysqli_num_rows($result) != 1) {
+        // Si la consulta no devuelve un solo resultado, puede ser un problema de base de datos
+        // Redirigir a la página de autenticación o mostrar un mensaje de error
+        header("Location: ../Programas/autenticacion.php");
+        exit(); // Terminamos la ejecución del script después de redirigir
+    }
+
+    // Obtenemos el rol del usuario
+    $fila = mysqli_fetch_assoc($result);
+    $rolUsuario = $fila['Usu_rol'];
+
+    // Verificar si el rol del usuario es diferente de 2
+    if ($rolUsuario != 2) {
+        // Si el rol no es 2, redirigir a la página de autenticación
+        header("Location: ../Programas/autenticacion.php");
+        exit(); // Terminamos la ejecución del script después de redirigir
+    }
+    // Si llegamos aquí, el usuario está autenticado y tiene el rol 2
+
 
     // Inicializar la variable mensaje
     $mensaje = "";
@@ -32,6 +65,7 @@
             $identificador = $max_id + 1;
 
             //Obtener la extension de la imagen
+            $extension = '';
             if(isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
                 // Obtiene la información del archivo
                 $info_archivo = pathinfo($_FILES['imagen']['name']); 
@@ -51,18 +85,18 @@
                 if(move_uploaded_file($_FILES['imagen']['tmp_name'], $ruta_completa)){
                     //echo "La imagen se ha guardado correctamente en: " . $ruta_completa;
                 } else {
-                    echo "Error al guardar la imagen.";
+                    $ruta_completa = "../images/imagenes_pedidos/logo.png";
                 }
             }
             //Preparar la consulta
-            $peticion = "INSERT INTO pedidos (Identificador, Pe_Cliente, Pe_Estado, Pe_Producto, Pe_Cantidad, Pe_Fechapedido, Pe_Fechaentrega, pe_tipo_impresion, pe_color, Pe_Observacion, nombre_imagen) 
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $peticion = "INSERT INTO pedidos (Identificador, Pe_Cliente, Pe_Estado, Pe_Producto, Pe_Cantidad, Pe_Fechapedido, Pe_Fechaentrega, pe_tipo_impresion, pe_color, Pe_Observacion, nombre_imagen, Pe_Usuario) 
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             // Preparar la consulta
             $stmt = mysqli_prepare($link, $peticion);
 
             // Vincular parámetros
-            mysqli_stmt_bind_param($stmt, "sssssssssss", $identificador , $_POST['cliente'], $_POST['estado'], $_POST['producto'], $_POST['cantidad'], $_POST['fechapedido'], $_POST['fechaentrega'], $_POST['tipoimpresion'], $_POST['color'], $_POST['observacion'], $ruta_completa);
+            mysqli_stmt_bind_param($stmt, "ssssssssssss", $identificador , $_POST['cliente'], $_POST['estado'], $_POST['producto'], $_POST['cantidad'], $_POST['fechapedido'], $_POST['fechaentrega'], $_POST['tipoimpresion'], $_POST['color'], $_POST['observacion'], $ruta_completa, $_SESSION['user_id']);
                 
                 // Ejecutar la consulta preparada
                 if (mysqli_stmt_execute($stmt)) {
@@ -113,13 +147,13 @@
                 }
             }
                 // Preparar la consulta
-                $peticion = "INSERT INTO productos (Identificador, Pro_Nombre, Pro_Descripcion, Pro_Categoria, Pro_Cantidad, Pro_PrecioVenta, Pro_Costo, Pro_Estado, nombre_imagen) 
-                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                $peticion = "INSERT INTO productos (Identificador, Pro_Nombre, Pro_Descripcion, Pro_Categoria, Pro_Cantidad, Pro_PrecioVenta, Pro_Costo, Pro_Estado, nombre_imagen, Pro_Usuario) 
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                 $estado = "inactivo";
                 $stmt = mysqli_prepare($link, $peticion);
                 
                 // Vincular parámetros
-                mysqli_stmt_bind_param($stmt, "sssssssss", $identificador ,$_POST['nombre'], $_POST['descripcion'], $_POST['categoria'], $_POST['cantidad'], $_POST['precioventa'], $_POST['costo'], $estado, $ruta_completa);
+                mysqli_stmt_bind_param($stmt, "ssssssssss", $identificador ,$_POST['nombre'], $_POST['descripcion'], $_POST['categoria'], $_POST['cantidad'], $_POST['precioventa'], $_POST['costo'], $estado, $ruta_completa, $_SESSION['user_id']);
                 
                 // Ejecutar la consulta preparada
                 if (mysqli_stmt_execute($stmt)) {

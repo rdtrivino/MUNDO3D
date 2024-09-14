@@ -1,16 +1,7 @@
 <?php
 // Realizar la conexión a la base de datos
-$host = "localhost";
-$user = "root";
-$password = "";
-$dbname = "mundo3d";
 
-$conexion = mysqli_connect($host, $user, $password, $dbname);
-
-// Comprobar si la conexión se realizó correctamente
-if (!$conexion) {
-    die("Error al conectarse a la Base de Datos: " . mysqli_connect_error());
-}
+include __DIR__ . '/../conexion.php';
 
 require_once 'vendor/autoload.php'; // Ruta donde se encuentra autoload.php de Composer
 
@@ -18,7 +9,7 @@ use Dompdf\Dompdf;
 use Dompdf\Options;
 
 // Función para generar el reporte de la tabla de productos
-function generarReporteProductos($conexion)
+function generarReporteProductos($link)
 {
     $options = new Options();
     $options->set('isHtml5ParserEnabled', true);
@@ -94,10 +85,10 @@ function generarReporteProductos($conexion)
                 $sql = "SELECT p.Pro_Nombre, p.Identificador, p.Pro_Descripcion, p.Pro_PrecioVenta, c.Cgo_Nombre AS Pro_Categoria, p.Pro_Cantidad, p.Pro_Costo
                         FROM productos p
                         INNER JOIN categoria c ON p.Pro_Categoria = c.Cgo_Codigo";
-                $resultado = mysqli_query($conexion, $sql);
+                $resultado = mysqli_query($link, $sql);
 
                 if (!$resultado) {
-                    die("Error en la consulta: " . mysqli_error($conexion));
+                    die("Error en la consulta: " . mysqli_error($link));
                 }
 
                 while ($row = mysqli_fetch_assoc($resultado)) {
@@ -134,8 +125,8 @@ function generarReporteProductos($conexion)
 }
 
 // Generar el reporte de productos
-generarReporteProductos($conexion);
+generarReporteProductos($link);
 
 // Cerrar la conexión a la base de datos
-mysqli_close($conexion);
+mysqli_close($link);
 ?>

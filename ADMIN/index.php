@@ -2,6 +2,11 @@
 <html lang="es">
 <!-- http://localhost/MUNDO 3D/ADMIN/index.php -->
 <?php
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 include __DIR__ . '/../conexion.php';
 include ("Programas/controlsesion.php");
 include ("Programas/graficos.php");
@@ -53,10 +58,10 @@ include ("Programas/graficos.php");
                 <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                     <div class="sb-sidenav-menu">
                         <div class="nav">
-                            <div class="sb-sidenav-menu-heading">INICIO</div>
+                            <div class="sb-sidenav-menu-heading"></div>
                             <a class="nav-link" href="index.php">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                                Inicio
+                                INICIO
                             </a>
                             <div class="sb-sidenav-menu-heading">Administrar</div>
 
