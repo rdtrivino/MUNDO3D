@@ -19,7 +19,7 @@ $sql = "SELECT f.id, f.numero_factura, f.fecha, f.total, f.estado, f.nombre_clie
         FROM factura f
         LEFT JOIN productos p ON f.producto = p.Identificador
         WHERE f.pedido_id = (SELECT pedido_id FROM factura WHERE id = ?)";
-$stmt = mysqli_prepare($conexion, $sql);
+$stmt = mysqli_prepare($link, $sql);
 
 if ($stmt === false) {
     die("Error al preparar la consulta: " . mysqli_error($conexion));
