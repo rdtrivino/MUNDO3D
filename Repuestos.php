@@ -27,7 +27,7 @@
 </head>
 
 <body>
-    <?php include './Programas/starsesion.php'; ?>
+    <?php include 'conexion.php'; ?>
 
     <!-- Navbar Start -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
