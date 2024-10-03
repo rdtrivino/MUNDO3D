@@ -2,7 +2,7 @@
 date_default_timezone_set("America/Bogota");
 setlocale(LC_ALL, "es_ES");
 //$hora = date("g:i:A");
-include __DIR__ . '../../../conexion.php';
+include __DIR__ . './../../conexion.php';
 
 $evento = ucwords($_REQUEST['evento']);
 $f_inicio = $_REQUEST['fecha_inicio'];
