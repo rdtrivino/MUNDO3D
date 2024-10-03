@@ -4,22 +4,7 @@ require '../ADMIN/vendor/autoload.php';
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
-// Configuración de la conexión a la base de datos
-/*$host = "localhost";
-$user = "root";
-$password = "";
-$dbname = "mundo3d";*/
-
-$host = "localhost";
-$user = "u255704174_root";
-$password = "Mundo3d2024";
-$dbname = "u255704174_mundo3d";
-
-$conexion = mysqli_connect($host, $user, $password, $dbname);
-
-if (!$conexion) {
-    die("Error al conectarse a la Base de Datos: " . mysqli_connect_error());
-}
+include './../conexion.php';
 
 // Obtener el ID de la factura desde la URL (ejemplo)
 $id = isset($_GET['id']) ? $_GET['id'] : null;
