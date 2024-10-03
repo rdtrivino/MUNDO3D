@@ -1,0 +1,389 @@
+/* Estilos para el reset general */
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+/* Estilos para el cuerpo de la página */
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-size: cover;
+  font-family: 'Roboto', sans-serif;
+}
+
+/* Estilos para el contenedor principal */
+.container-form {
+  display: flex;
+  border-radius: 20px;
+  box-shadow: 0 5px 7px rgba(0, 0, 0, 0.1);
+  max-width: 900px;
+  margin: 10px;
+  overflow-y: auto;
+  background-color: #fff;
+}
+
+/* Estilos para la sección de información */
+.information {
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background-color: #bacbf0;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+  position: relative;
+}
+
+.information img {
+  width: 200px;
+  height: auto;
+  position: absolute;
+  top: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+}
+
+.info-childs {
+  width: 100%;
+  padding: 30px;
+  color: #0c0c0f;
+  text-align: center;
+}
+
+.info-childs h2 {
+  font-size: 2.5rem;
+  color: #0c0c0f;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  margin-top: 250px;
+  /* Ajusta el valor según sea necesario */
+  margin-bottom: 15px;
+}
+
+.info-childs p {
+  font-size: 1rem;
+  margin: 15px 0;
+}
+
+/* Estilos para la sección de formulario */
+.form-information {
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+  overflow-y: auto;
+}
+
+.form-information-childs {
+  width: 100%;
+  padding: 30px;
+}
+
+.form-information-childs h2 {
+  font-size: 2rem;
+  color: black;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  margin-bottom: 15px;
+}
+
+/* Estilos para los íconos de redes sociales */
+.icons {
+  margin: 15px 0;
+}
+
+.icons img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  padding: 10px;
+  cursor: pointer;
+  margin: 0 10px;
+  color: #2433bd;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 5px 7px rgba(0, 0, 0, 0.1);
+}
+
+.icons img:hover {
+  background-color: #2433bd;
+  color: #1846cf;
+}
+
+/* Estilos para el formulario */
+.form {
+  width: 100%;
+  max-width: 500px;
+  margin: 30px 0;
+  padding: 0 20px;
+}
+
+.form label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  border-radius: 20px;
+  box-shadow: 0 5px 7px rgba(0, 0, 0, 0.1);
+}
+
+.form label input,
+.form label select {
+  flex: 1;
+  padding: 10px;
+  background-color: #fff;
+  border: none;
+  outline: none;
+  border-radius: 20px;
+  color: #333;
+}
+
+.form label img {
+  color: #a7a7a7;
+}
+
+.form input[type="submit"] {
+  background-color: #2433bd;
+  color: #fff;
+  border-radius: 20px;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  margin-top: 10px;
+  box-shadow: 0 5px 7px rgba(0, 0, 0, 0.1);
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.modal-content {
+  background-color: white;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 50%;
+  text-align: center;
+  border-radius: 30PX;
+}
+
+#modalMessage {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+#closeModal {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 18px;
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 20px;
+  margin-top: 30px;
+}
+
+#closeModal:hover {
+  background-color: #45a049;
+}
+
+.home-icon {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  cursor: pointer;
+  z-index: 999;
+}
+
+.home-icon img {
+  width: 50px;
+  height: 50px;
+  background-color: white;
+  padding: 5px;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.text-white {
+  color: rgb(17, 16, 16);
+}
+
+.font-weight-bold {
+  font-weight: bold;
+}
+
+.mr-3 {
+  margin-right: 1rem;
+}
+
+.font-small {
+  font-size: 14px;
+}
+
+.font-medium {
+  font-size: 16px;
+}
+
+.font-large {
+  font-size: 20px;
+}
+.text-black {
+  color: black !important;
+}
+
+.text-black-icon {
+  color: black !important;
+}
+#buttons-container {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+/* Media Query para tamaños de pantalla más pequeños */
+@media screen and (max-width: 768px) {
+
+  /* Redefine los estilos según las necesidades de pantalla más pequeña */
+  .container-form {
+    flex-direction: column;
+    /* Cambia a diseño de columna */
+    max-width: 100%;
+    /* Ocupa todo el ancho disponible */
+  }
+
+  .information {
+    width: 100%;
+    /* Ocupa todo el ancho disponible */
+    border-radius: 0;
+    /* Elimina los bordes redondeados si es necesario */
+  }
+
+  /* Estilos para centrar el formulario en pantalla más pequeña */
+  .form-information {
+    align-items: center;
+    /* Centra el contenido verticalmente */
+    text-align: center;
+    /* Centra el texto horizontalmente */
+  }
+
+  /* Ajustes para centrar el formulario en pantalla más pequeña */
+  .form {
+    width: 100%;
+    /* Ocupa todo el ancho disponible */
+    max-width: 100%;
+    /* Ocupa todo el ancho disponible */
+    margin: 0;
+    /* Elimina el margen que podría estar causando el desplazamiento a la izquierda */
+    padding: 20px;
+    /* Agrega espacio interior para mejorar la apariencia */
+  }
+
+  /* Resto de los ajustes necesarios para pantallas más pequeñas */
+}
+        /* Boton Home */
+        .Btn-1 {
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+          width: 45px;
+          height: 45px;
+          border: none;
+          border-radius: 50%;
+          cursor: pointer;
+          position: relative;
+          overflow: hidden;
+          transition-duration: .3s;
+          box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.199);
+          background-color: rgb(0, 0, 0);
+          margin-top: 10px;
+          margin-left: 10px;
+          position: absolute;
+          top: 10px; /* Ajusta la distancia desde la parte superior según sea necesario */
+          left: 10px; /* Ajusta la distancia desde la izquierda según sea necesario */
+      }
+
+      /* plus sign */
+      .sign {
+          width: 100%;
+          transition-duration: .3s;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+      }
+
+      .sign svg {
+          width: 17px;
+      }
+
+      .sign svg path {
+          fill: white;
+      }
+
+      /* text */
+      .text {
+          position: absolute;
+          right: -10px;
+          /* Ajusta la posición a la derecha, con un margen de 10px */
+          opacity: 0;
+          /* Cambia la opacidad para hacer visible el texto */
+          color: white;
+          font-size: 1.2em;
+          font-weight: 600;
+          transition-duration: .3s;
+      }
+
+
+
+      /* hover effect on button width */
+      .Btn-1:hover {
+          width: 125px;
+          border-radius: 40px;
+          transition-duration: .3s;
+      }
+
+      .Btn-1:hover .sign {
+          width: 30%;
+          transition-duration: .3s;
+          padding-left: 20px;
+      }
+
+      /* hover effect button's text */
+      .Btn-1:hover .text {
+          opacity: 1;
+          width: 70%;
+          transition-duration: .3s;
+          padding-right: 10px;
+      }
+
+      /* button click effect*/
+      .Btn-1:active {
+          transform: translate(2px, 2px);
+      }
+
+      .title-container h2 {
+          margin: 0;
+          pointer-events: auto;
+      }
+
+      .title-container {
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+          text-align: center;
+      }

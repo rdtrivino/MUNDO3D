@@ -1,0 +1,301 @@
+body {
+	font-family: 'Arial', sans-serif;
+	color: #333;
+	margin: 0;
+	padding: 0;
+	overflow-x: hidden;
+}
+
+.navbar {
+	padding: 0.75rem 1.5rem;
+	border-bottom: 2px solid #007bff;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand h1 {
+	font-size: 2.5rem;
+	font-weight: 700;
+}
+
+.navbar-nav {
+	margin-left: auto;
+}
+
+.navbar-nav .nav-item {
+	margin-left: 1rem;
+}
+
+.navbar-nav .nav-link {
+	font-size: 1rem;
+	color: #007bff;
+}
+
+.nav-link {
+    font-weight: bold;
+	color: #333;
+}
+
+.navbar-nav .btn {
+	margin: 0 0.5rem;
+	padding: 0.5rem 1rem;
+	display: inline-flex;
+	align-items: center;
+	font-size: 1rem;
+	font-weight: 600;
+	border-radius: 0.5rem;
+	transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.navbar-nav .btn-primary {
+	background-color: #007bff;
+    border: none;
+    color: #fff;
+    text-align: center; 
+    display: inline-block; 
+    padding: 0.5rem 1rem;
+	
+}
+
+.navbar-nav .btn-primary:hover {
+	background-color: #0056b3;
+}
+
+.navbar-nav .btn-outline-primary {
+	border-color: #007bff;
+	color: #007bff;
+}
+
+.navbar-nav .btn-outline-primary:hover {
+	background-color: #007bff;
+	color: #fff;
+}
+
+.hero {
+	position: relative;
+	background: linear-gradient(
+		to right,
+		#007bff,
+		#00bfff
+	); /* Puedes ajustar el gradiente según tu diseño */
+	color: #fff;
+	padding: 6rem 1.5rem;
+	text-align: center;
+	overflow: hidden;
+	clip-path: polygon(0 0, 100% 0, 100% 80%, 50% 95%, 0 80%);
+	z-index: 1; /* Asegura que el contenido esté sobre otros elementos si es necesario */
+}
+
+.hero::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(
+		0,
+		123,
+		255,
+		0.7
+	); /* Ajusta el color de fondo si es necesario */
+	clip-path: polygon(0 0, 100% 0, 100% 80%, 50% 95%, 0 80%);
+	z-index: -1; /* Coloca el pseudo-elemento detrás del contenido */
+}
+
+.footer {
+	background-color: #343a40;
+	color: #fff;
+	padding: 2rem 1.5rem;
+	text-align: center;
+}
+
+.footer h5 {
+	font-size: 1.25rem;
+	margin-bottom: 1rem;
+}
+
+.footer .social-icons a {
+	color: #fff;
+	font-size: 1.5rem;
+	margin: 0 0.5rem;
+	transition: color 0.3s ease;
+}
+
+.footer .social-icons a:hover {
+	color: #00bfff;
+}
+
+.footer .credits {
+	font-size: 0.875rem;
+}
+
+.about img {
+	border-radius: 1.25rem;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.products .card {
+	border-radius: 1rem;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.products .card-img-top {
+	border-bottom: 1px solid #ddd;
+}
+
+.location #map {
+	border: 1px solid #ddd;
+	border-radius: 1rem;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 576px) {
+	.navbar-brand h1 {
+		font-size: 2rem;
+	}
+
+	.hero h1 {
+		font-size: 2.5rem;
+	}
+
+	.hero p {
+		font-size: 1rem;
+	}
+}
+
+.navbar-nav .dropdown-menu {
+	border-radius: 0.5rem;
+	border: 1px solid #ddd;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-nav .dropdown-item {
+	padding: 0.5rem 1rem;
+	font-size: 1rem;
+	color: #333;
+}
+
+.navbar-nav .dropdown-item:hover {
+	background-color: #f8f9fa;
+}
+
+.navbar-nav .dropdown-toggle::after {
+	display: none;
+}
+
+.cta-buttons {
+	display: flex;
+	justify-content: center;
+	gap: 1rem; /* Ajusta el espacio entre los botones si es necesario */
+}
+
+.cta-buttons .btn {
+	min-width: 150px;
+}
+.card {
+	border-radius: 15px; /* Esquinas redondeadas para el panel */
+	overflow: hidden;
+	border: none; /* Eliminar el borde predeterminado */
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.card-header {
+	background-color: #007bff;
+	color: white;
+	cursor: pointer;
+	border-radius: 15px 15px 0 0; /* Esquinas redondeadas en la parte superior */
+	border: 1px solid transparent;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	text-align: center;
+	font-weight: bold;
+	font-size: 1.2rem;
+}
+.card-header:hover {
+	background-color: #0056b3;
+}
+.card-body {
+	background-color: #f8f9fa;
+	padding: 20px;
+}
+.btn-link {
+	color: white;
+	text-decoration: none;
+	font-size: 1.2rem;
+	display: block;
+	width: 100%;
+}
+.btn-link:hover {
+	color: #e2e6ea;
+	text-decoration: none;
+}
+.card-header i {
+	transition: transform 0.3s ease;
+}
+.collapsed .card-header i {
+	transform: rotate(-180deg);
+}
+.card.vision .card-header {
+	border: 2px solid transparent;
+	background-image: linear-gradient(
+		to right,
+		rgba(255, 0, 0, 0.2),
+		rgba(255, 0, 0, 0)
+	);
+}
+.card.mission .card-header {
+	border: 2px solid transparent;
+	background-image: linear-gradient(
+		to right,
+		rgba(0, 0, 255, 0.2),
+		rgba(0, 0, 255, 0)
+	);
+}
+/* Estilos para la sección de creadores */
+.creator-info {
+	background-color: #f8f9fa; /* Fondo suave */
+}
+
+.creator-card {
+	position: relative;
+	background-color: #ffffff; /* Fondo blanco para las tarjetas */
+	border-radius: 10px; /* Bordes redondeados */
+	padding: 20px; /* Espaciado interno */
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+	text-align: center;
+	min-height: 350px; /* Altura mínima para mantener el tamaño uniforme */
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	/* Asegura que el contenido se centre verticalmente */
+}
+
+.creator-img-wrapper {
+	position: relative;
+	margin-bottom: 20px; /* Espacio debajo de la imagen */
+	width: 120px; /* Tamaño fijo de la imagen */
+	height: 120px; /* Tamaño fijo de la imagen */
+	overflow: hidden;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.creator-img {
+	width: 100%;
+	height: auto;
+	border: 5px solid #ffffff; /* Borde blanco para destacar la imagen */
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada para la imagen */
+}
+
+.creator-name {
+	font-size: 1.25rem; /* Tamaño de fuente para el nombre */
+	color: #333; /* Color del texto */
+	margin-bottom: 0.5rem; /* Espacio debajo del nombre */
+}
+
+.creator-description {
+	font-size: 1rem; /* Tamaño de fuente para la descripción */
+	color: #666; /* Color del texto */
+	line-height: 1.5; /* Espaciado entre líneas */
+	margin-top: 0; /* Elimina margen superior */
+	margin-bottom: 0; /* Elimina margen inferior */
+}
+

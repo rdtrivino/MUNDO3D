@@ -1,0 +1,234 @@
+<?php
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+include __DIR__ . './../conexion.php';
+
+// Confirmación de que el usuario ha realizado el proceso de autenticación
+if (!isset($_SESSION['confirmado']) || $_SESSION['confirmado'] == false) {
+    header("Location: ../Programas/autenticacion.php");
+    exit(); // Terminamos la ejecución del script después de redirigir
+}
+
+// Realizamos la consulta para obtener el rol del usuario
+$peticion = "SELECT Usu_rol FROM usuario WHERE Usu_Identificacion = '" . $_SESSION['user_id'] . "'";
+$result = mysqli_query($link, $peticion);
+
+// Verificamos si la consulta tuvo éxito
+if (!$result) {
+    // Manejo de errores de consulta
+    // Redirigir a la página de autenticación o mostrar un mensaje de error
+    header("Location: ../Programas/autenticacion.php");
+    exit(); // Terminamos la ejecución del script después de redirigir
+}
+
+// Verificamos si la consulta devolvió exactamente un resultado
+if (mysqli_num_rows($result) != 1) {
+    // Si la consulta no devuelve un solo resultado, puede ser un problema de base de datos
+    // Redirigir a la página de autenticación o mostrar un mensaje de error
+    header("Location: ../Programas/autenticacion.php");
+    exit(); // Terminamos la ejecución del script después de redirigir
+}
+
+// Obtenemos el rol del usuario
+$fila = mysqli_fetch_assoc($result);
+$rolUsuario = $fila['Usu_rol'];
+
+// Verificar si el rol del usuario es diferente de 1
+if ($rolUsuario != 1) {
+    // Si el rol no es 1, redirigir a la página de autenticación
+    header("Location: ../Programas/autenticacion.php");
+    exit(); // Terminamos la ejecución del script después de redirigir
+}
+// Si llegamos aquí, el usuario está autenticado y tiene el rol 1
+
+
+// Obtener el número total de productos
+$totalProductosResult = mysqli_query($link, "SELECT COUNT(*) as total FROM productos");
+$totalProductosRow = mysqli_fetch_assoc($totalProductosResult);
+$totalProductos = $totalProductosRow['total'];
+
+// Obtener los parámetros de paginación
+$pagina = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+$registrosPorPagina = isset($_GET['registrosPorPagina']) ? (int)$_GET['registrosPorPagina'] : 10;
+$offset = ($pagina - 1) * $registrosPorPagina;
+
+$sql = "SELECT p.Pro_Nombre, p.Identificador, p.Pro_Descripcion, p.Pro_PrecioVenta, c.Cgo_Nombre, p.Pro_Cantidad, p.Pro_Costo, p.Pro_Estado, p.nombre_imagen
+        FROM productos p
+        INNER JOIN categoria c ON p.Pro_Categoria = c.Cgo_Codigo
+        LIMIT $registrosPorPagina OFFSET $offset"; // Limitamos los resultados según la página actual y el número de registros por página
+
+$resultado = mysqli_query($link, $sql);
+
+if (!$resultado) {
+    die("Error en la consulta: " . mysqli_error($link));
+}
+
+$sql_categorias = "SELECT * FROM categoria";
+$resultado_categorias = mysqli_query($link, $sql_categorias);
+
+if (!$resultado_categorias) {
+    die("Error en la consulta de categorías: " . mysqli_error($link));
+}
+
+// Almacenar las categorías en un arreglo
+$categorias = [];
+while ($row = mysqli_fetch_assoc($resultado_categorias)) {
+    $categorias[] = $row;
+}
+
+
+// Verificar si se recibió una solicitud para guardar cambios
+if (isset($_POST['guardar_cambios'])) {
+    if (isset($_POST['Identificador'])) {
+        // Obtener el código del producto a actualizar
+        $identificador = $_POST['Identificador'];
+
+        // Obtener los demás datos del formulario
+        $nombre = $_POST['nombre'];
+        $descripcion = $_POST['descripcion'];
+        $precio = $_POST['precio'];
+        $categoria = $_POST['categoria'];
+        $cantidad = $_POST['cantidad'];
+        $costo = $_POST['costo'];
+        $estado = $_POST['estado']; // Obtener el estado
+
+        // Procesar la imagen (si se ha subido una nueva)
+        $imagen_contenido = null;
+        // Establecer parametros para almacenar imagen 
+        // Obtener la extensión del archivo
+        if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
+            // Obtener la extensión del archivo
+            $extension = strtolower(pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION));
+            $ruta_destino = "../images/imagenes_catalogo/"; // Ruta donde quieres guardar la imagen
+            $nombre_imagen = "catalogo-" . $identificador . ".$extension"; // Nombre que deseas para la imagen
+
+            // Combinar la ruta de destino con el nombre de la imagen
+            $imagen_contenido = $ruta_destino . $nombre_imagen;
+
+            // Mover la imagen cargada a la ruta específica
+            if (move_uploaded_file($_FILES['imagen']['tmp_name'], $imagen_contenido)) {
+                //echo "La imagen se ha guardado correctamente en: " . $ruta_completa;
+            } else {
+                echo "Error al guardar la imagen.";
+            }
+        } else {
+            // Si no se ha cargado ninguna imagen nueva, obtener el nombre de imagen existente de la base de datos
+            $query = "SELECT nombre_imagen FROM productos WHERE Identificador = $identificador";
+            $result = mysqli_query($link, $query);
+            $row = mysqli_fetch_assoc($result);
+            $imagen_contenido = $row['nombre_imagen'];
+        }
+
+        // Consulta para obtener los datos actuales del producto
+        $consulta_actualizar = "SELECT Pro_Nombre, Pro_Descripcion, Pro_PrecioVenta, Pro_Categoria, Pro_Cantidad, Pro_Costo, Pro_Estado, nombre_imagen FROM productos WHERE Identificador=?";
+        $stmt_actualizar = mysqli_prepare($link, $consulta_actualizar);
+        mysqli_stmt_bind_param($stmt_actualizar, "i", $identificador);
+        mysqli_stmt_execute($stmt_actualizar);
+        mysqli_stmt_store_result($stmt_actualizar);
+
+        // Si el producto existe, se procede a actualizar
+        if (mysqli_stmt_num_rows($stmt_actualizar) > 0) {
+            mysqli_stmt_bind_result($stmt_actualizar, $nombre_actual, $descripcion_actual, $precio_actual, $categoria_actual, $cantidad_actual, $costo_actual, $estado_actual, $imagen_actual);
+            mysqli_stmt_fetch($stmt_actualizar);
+
+            // Verificar y asignar los valores que se mantienen iguales si no se han modificado
+            $nombre = empty($nombre) ? $nombre_actual : $nombre;
+            $descripcion = empty($descripcion) ? $descripcion_actual : $descripcion;
+            $precio = empty($precio) ? $precio_actual : $precio;
+            $categoria = empty($categoria) ? $categoria_actual : $categoria;
+            $cantidad = empty($cantidad) ? $cantidad_actual : $cantidad;
+            $costo = empty($costo) ? $costo_actual : $costo;
+            $estado = empty($estado) ? $estado_actual : $estado;
+            $imagen_contenido = empty($imagen_contenido) ? $imagen_actual : $imagen_contenido;
+
+            // Actualizar los datos en la base de datos
+            $consulta = "UPDATE productos SET Pro_Nombre=?, Pro_Descripcion=?, Pro_PrecioVenta=?, Pro_Categoria=?, Pro_Cantidad=?, Pro_Costo=?, Pro_Estado=?, nombre_imagen=?, Pro_Usuario=? WHERE Identificador=?";
+            $stmt = mysqli_prepare($link, $consulta);
+            if ($stmt) {
+                mysqli_stmt_bind_param($stmt, "ssssssssss", $nombre, $descripcion, $precio, $categoria, $cantidad, $costo, $estado, $imagen_contenido, $_SESSION['user_id'], $identificador);
+                if (mysqli_stmt_execute($stmt)) {
+                    // Si la consulta se ejecutó con éxito, devuelve un mensaje de éxito
+                    echo "success";
+                    exit; // Termina el script aquí para evitar que se envíe cualquier otro contenido
+                } else {
+                    // Si hay algún error en la consulta, devuelve un mensaje de error
+                    echo "Error al actualizar los datos: " . mysqli_error($link);
+                    exit; // Termina el script aquí para evitar que se envíe cualquier otro contenido
+                }
+            } else {
+                // Si hay algún error en la preparación de la consulta, devuelve un mensaje de error 
+                echo "Error al preparar la consulta: " . mysqli_error($link);
+                exit; // Termina el script aquí para evitar que se envíe cualquier otro contenido
+            }
+        } else {
+            // Si el producto no existe, muestra un mensaje de error
+            echo "El producto no existe.";
+            exit; // Termina el script aquí para evitar que se envíe cualquier otro contenido
+        }
+    } else {
+        // Si no se recibió el código del producto, devuelve un mensaje de error
+        echo "No se recibió el código del producto.";
+        exit; // Termina el script aquí para evitar que se envíe cualquier otro contenido
+    }
+}
+
+
+// Verificar si se recibió una solicitud para agregar un nuevo producto
+if (isset($_POST['nombre']) && isset($_POST['descripcion']) && isset($_POST['precio']) && isset($_POST['categoria']) && isset($_POST['cantidad']) && isset($_POST['costo'])) {
+    // Obtener los datos del formulario
+    $nombre = $_POST['nombre'];
+    $descripcion = $_POST['descripcion'];
+    $precio = $_POST['precio'];
+    $categoria = $_POST['categoria'];
+    $cantidad = $_POST['cantidad'];
+    $costo = $_POST['costo'];
+
+    // Estado activo por defecto
+    $estado = 'activo';
+
+    // Obtener el último código de producto
+    $ultimoCodigoConsulta = mysqli_query($link, "SELECT MAX(Identificador) AS ultimo_codigo FROM productos");
+    $ultimoCodigoFila = mysqli_fetch_assoc($ultimoCodigoConsulta);
+    $ultimoCodigo = $ultimoCodigoFila['ultimo_codigo'];
+    $nuevoCodigo = $ultimoCodigo + 1;
+
+    // Procesar la imagen (si se ha subido una nueva)
+    $imagen_contenido = null;
+    // Establecer parametros para almacenar imagen 
+    // Obtener la extensión del archivo
+    if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
+        // Obtener la extensión del archivo
+        $extension = strtolower(pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION));
+        $ruta_destino = "../images/imagenes_catalogo/"; // Ruta donde quieres guardar la imagen
+        $nombre_imagen = "catalogo-" . $nuevoCodigo . ".$extension"; // Nombre que deseas para la imagen
+
+        // Combinar la ruta de destino con el nombre de la imagen
+        $imagen_contenido = $ruta_destino . $nombre_imagen;
+
+        // Mover la imagen cargada a la ruta específica
+        if (move_uploaded_file($_FILES['imagen']['tmp_name'], $imagen_contenido)) {
+            //echo "La imagen se ha guardado correctamente en: " . $ruta_completa;
+        } else {
+            echo "Error al guardar la imagen.";
+        }
+    }
+
+    // Insertar los datos en la base de datos
+    $consulta = "INSERT INTO productos (Identificador, Pro_Nombre, Pro_Descripcion, Pro_PrecioVenta, Pro_Categoria, Pro_Cantidad, Pro_Costo, Pro_Estado, nombre_imagen, Pro_Usuario) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $stmt = mysqli_prepare($link, $consulta);
+    mysqli_stmt_bind_param($stmt, "dssdsdssss", $nuevoCodigo, $nombre, $descripcion, $precio, $categoria, $cantidad, $costo, $estado, $imagen_contenido, $_SESSION['user_id']);
+
+    if (mysqli_stmt_execute($stmt)) {
+        // Si la consulta se ejecutó con éxito, devuelve un mensaje de éxito
+        echo "¡Producto guardado con éxito!";
+    } else {
+        // Si hay algún error en la consulta, devuelve un mensaje de error
+        echo "Error al guardar el producto: " . mysqli_error($link);
+    }
+
+    // Cierra la conexión a la base de datos
+    mysqli_close($link);
+}
+
+?>
