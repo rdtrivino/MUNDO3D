@@ -3,32 +3,8 @@ error_reporting(E_ALL);
 ini_set('display_errors', '1');
 session_start();
 
-/*$host = "localhost";
-$user = "root";
-$password = "";
-$dbname = "mundo3d";*/
+<?php include 'conexion.php'; ?>
 
-$host = "localhost";
-$user = "u255704174_root";
-$password = "Mundo3d2024";
-$dbname = "u255704174_mundo3d";
-
-mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-$link = mysqli_connect($host, $user, $password);
-
-if (!$link) {
-    die("Error al conectarse al servidor: " . mysqli_connect_error());
-}
-
-if (!mysqli_select_db($link, $dbname)) {
-    die("Error al conectarse a la Base de Datos: " . mysqli_error($link));
-}
-
-// Verificar que la sesión esté iniciada y que las variables de sesión estén configuradas
-if (!isset($_SESSION['user_id']) || !isset($_SESSION['username'])) {
-    // Redirigir o manejar la falta de sesión según sea necesario
-    die("Error: Sesión no iniciada");
-}
 
 // Verificar si el formulario ha sido enviado
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
