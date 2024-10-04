@@ -49,8 +49,7 @@
                 <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                     <div class="sb-sidenav-menu">
                         <div class="nav">
-                            <div class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-                            PROCESOS</div>
+                            <div class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">PROCESOS</div>
                             <!--Listar las tablas de productos y pedidos-->
                             <?php
 
@@ -106,15 +105,15 @@
                 </nav>
             </div>
 
-        <!--Inicia el contenido del cuerpo principal de la pagina-->
-        <div id="layoutSidenav_content">
-            <main>
-                <div class="container-fluid px-4">
-                    <!--Definir el titulo de la pagina-->
-                    <?php 
-                        $titulo = "";
+            <!--Inicia el contenido del cuerpo principal de la pagina-->
+            <div id="layoutSidenav_content">
+                <main>
+                    <div class="container-fluid px-4">
+                        <!--Definir el titulo de la pagina-->
+                        <?php 
+                            $titulo = "";
 
-                        if (isset($_GET['tabla'])) { 
+                            if (isset($_GET['tabla'])) { 
                             // Si 'tabla' es 'pedidos', asignar el título correspondiente
                             if ($_GET['tabla'] == 'pedidos'){
                                 $titulo = "Gestión de Pedidos";
@@ -123,18 +122,18 @@
                             else if ($_GET['tabla'] == 'productos') {
                                 $titulo = "Gestión de Productos";
                             }
-                        }
-                    ?>
+                            }
+                        ?>
 
-                    <!-- Seccion para validar la variable titulo y agregar el buscador-->
-                    <?php if (!empty($titulo)): ?>
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <h1 class="mt-4"><?php echo $titulo; ?></h1>
+                        <!-- Seccion para validar la variable titulo y agregar el buscador-->
+                        <?php if (!empty($titulo)): ?>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <h1 class="mt-4"><?php echo $titulo; ?></h1>
 
-                        </div>
-                    <?php endif; ?>
+                            </div>
+                        <?php endif; ?>
 
-                    <!--Seccion donde se encuentran los botones adicionar, exportar e imprimir-->
+                        <!--Seccion donde se encuentran los botones adicionar, exportar e imprimir-->
                         <div class="btn-group mr-7">
                             <?php
                                    if (isset($_GET['tabla'])) {
@@ -145,128 +144,123 @@
                             ?>
                         </div>
                          
-                    <style>.table-responsive{overflow-x: visible !important;}</style>
-                    <table class="table table-striped table-sm" id="table_id">
-                        <thead>
-                            <tr>
+                        <style>.table-responsive{overflow-x: visible !important;}</style>
+                        <table class="table table-striped table-sm" id="table_id">
+                            <thead>
+                                <tr>
 
-                            <!--Mostrar los encabezados de la tabla seleccionada-->
-                            <?php  
-                                if (isset($_GET['tabla'])) {
-                                    $tabla_seleccionada = $_GET['tabla'];
-                                    
-                                    // Definir encabezados específicos para cada tabla
-                                    $encabezados_pedidos = array("ID", "Cliente", "Estado", "Producto", "Cantidad", "F. Pédido", "F. Entrega", "Observación", "Editar");
-                                    $encabezados_productos = array("ID", "Nombre", "Descripción", "Categoría", "Cantidad", "P.Venta", "Costo", "Imagen", "Estado", "Editar");
-                                    
-                                    // Mostrar los encabezados según la tabla seleccionada
-                                    if ($tabla_seleccionada === 'pedidos') {
-                                        foreach ($encabezados_pedidos as $encabezado) {
-                                            echo '<th>' . $encabezado . '</th>';
+                                    <!--Mostrar los encabezados de la tabla seleccionada-->
+                                    <?php  
+                                        if (isset($_GET['tabla'])) {
+                                            $tabla_seleccionada = $_GET['tabla'];
+                                            
+                                            // Definir encabezados específicos para cada tabla
+                                            $encabezados_pedidos = array("ID", "Cliente", "Estado", "Producto", "Cantidad", "F. Pédido", "F. Entrega", "Observación", "Editar");
+                                            $encabezados_productos = array("ID", "Nombre", "Descripción", "Categoría", "Cantidad", "P.Venta", "Costo", "Imagen", "Estado", "Editar");
+                                            
+                                            // Mostrar los encabezados según la tabla seleccionada
+                                            if ($tabla_seleccionada === 'pedidos') {
+                                                foreach ($encabezados_pedidos as $encabezado) {
+                                                    echo '<th>' . $encabezado . '</th>';
+                                                }
+                                            } elseif ($tabla_seleccionada === 'productos') {
+                                                foreach ($encabezados_productos as $encabezado) {
+                                                    echo '<th>' . $encabezado . '</th>';
+                                                }
+                                            }
                                         }
-                                    } elseif ($tabla_seleccionada === 'productos') {
-                                        foreach ($encabezados_productos as $encabezado) {
-                                            echo '<th>' . $encabezado . '</th>';
-                                        }
-                                    }
-                                }
-                            ?>
-                
-                            </tr>
-                        </thead>
-                        <!--Mostrar contenido de la tabla-->
-                        <tbody id="content">
-                
-                        <?php
-                            include __DIR__ . '/../conexion.php';
-
-                            if (isset($_GET['tabla'])) {
-                                if ($_GET['tabla'] == 'pedidos') {
-                                    $peticion = "SELECT pedidos.*, pedido_estado.Es_Nombre AS Pe_Estado, productos.Pro_Nombre AS Pe_Producto 
-                                                FROM pedidos
-                                                INNER JOIN pedido_estado ON pedidos.Pe_Estado = pedido_estado.Es_Codigo
-                                                INNER JOIN productos ON pedidos.Pe_Producto = productos.Identificador";           
-                                    
-                                    $result = mysqli_query($link, $peticion);
-                                    foreach ($result as $row) {
-                                        echo '<tr>
-                                            <th scope="row">' . $row['Identificador'] . '</th>
-                                            <td>' . $row['Pe_Cliente'] . '</td>
-                                            <td>' . $row['Pe_Estado'] . '</td>
-                                            <td>' . $row['Pe_Producto'] . '</td>
-                                            <td>' . $row['Pe_Cantidad'] . '</td>
-                                            <td>' . $row['Pe_Fechapedido'] . '</td>
-                                            <td>' . $row['Pe_Fechaentrega'] . '</td>
-                                            <td>' . $row['Pe_Observacion'] . '</td>
-                                            <td><a href="editar.php?tabla=' . $_GET['tabla'] . '&id=' . $row['Identificador'] . '"><i class="fas fa-edit"></i></a></td>
-                                            </tr>';
-                                    }
-                                } elseif ($_GET['tabla'] == 'productos') {
-                                    $peticion2 = "SELECT productos.*, categoria.Cgo_Nombre AS Pro_Categoria 
-                                                FROM productos
-                                                INNER JOIN categoria ON productos.Pro_Categoria = categoria.Cgo_Codigo";
-                                    $result = mysqli_query($link, $peticion2);
-                                    foreach ($result as $row) {
-                                        echo '<tr>
-                                            <th scope="row">' . $row['Identificador'] . '</th>
-                                            <td>' . $row['Pro_Nombre'] . '</td>
-                                            <td>' . htmlspecialchars(substr($row['Pro_Descripcion'], 0, 40)) . "... (Editar para ver mas)" .'</td>
-                                            <td>' . $row['Pro_Categoria'] . '</td>
-                                            <td>' . $row['Pro_Cantidad'] . '</td>
-                                            <td>' . $row['Pro_PrecioVenta'] . '</td>
-                                            <td>' . $row['Pro_Costo'] . '</td>
-                                            <td><img height="150px" src=' . $row['nombre_imagen'] . '></td>
-                                            <td>' . $row['Pro_Estado'] . '</td>
-                                            <td><a href="editar.php?tabla=' . $_GET['tabla'] . '&id=' . $row['Identificador'] . '"><i class="fas fa-edit"></i></a></td>
-                                            </tr>';
-                                    }
-                                }
-                                } else {
-                                    // Mensaje cuando no se selecciona ninguna tabla
-                                    echo '<tr><td colspan="35" style="text-align:center; font-weight: bold;">¿Qué quieres hacer hoy?</td></tr>';
-                                }
-                        ?>
-                        </tbody>
-                    </table> 
-                    
-                    </div>
-                        <!--Definicion para incluir o no el calendario-->
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <!-- Verifica si se debe mostrar el calendario -->
-                                    <?php if (isset($_GET['tabla']) && ($_GET['tabla'] == 'pedidos' || $_GET['tabla'] == 'productos')) { 
-                                        $mostrarCalendario = false;
-                                    } else {
-                                        //Incluir el archivo calendario.php
-                                        include('calendario.php');
-                                    }
                                     ?>
+                
+                                </tr>
+                            </thead>
+                            <!--Mostrar contenido de la tabla-->
+                            <tbody id="content">
+                    
+                            <?php
+                                include __DIR__ . '/../conexion.php';
+
+                                if (isset($_GET['tabla'])) {
+                                    if ($_GET['tabla'] == 'pedidos') {
+                                        $peticion = "SELECT pedidos.*, pedido_estado.Es_Nombre AS Pe_Estado, productos.Pro_Nombre AS Pe_Producto 
+                                                    FROM pedidos
+                                                    INNER JOIN pedido_estado ON pedidos.Pe_Estado = pedido_estado.Es_Codigo
+                                                    INNER JOIN productos ON pedidos.Pe_Producto = productos.Identificador";           
+                                        
+                                        $result = mysqli_query($link, $peticion);
+                                        foreach ($result as $row) {
+                                            echo '<tr>
+                                                <th scope="row">' . $row['Identificador'] . '</th>
+                                                <td>' . $row['Pe_Cliente'] . '</td>
+                                                <td>' . $row['Pe_Estado'] . '</td>
+                                                <td>' . $row['Pe_Producto'] . '</td>
+                                                <td>' . $row['Pe_Cantidad'] . '</td>
+                                                <td>' . $row['Pe_Fechapedido'] . '</td>
+                                                <td>' . $row['Pe_Fechaentrega'] . '</td>
+                                                <td>' . $row['Pe_Observacion'] . '</td>
+                                                <td><a href="editar.php?tabla=' . $_GET['tabla'] . '&id=' . $row['Identificador'] . '"><i class="fas fa-edit"></i></a></td>
+                                                </tr>';
+                                        }
+                                    } elseif ($_GET['tabla'] == 'productos') {
+                                        $peticion2 = "SELECT productos.*, categoria.Cgo_Nombre AS Pro_Categoria 
+                                                    FROM productos
+                                                    INNER JOIN categoria ON productos.Pro_Categoria = categoria.Cgo_Codigo";
+                                        $result = mysqli_query($link, $peticion2);
+                                        foreach ($result as $row) {
+                                            echo '<tr>
+                                                <th scope="row">' . $row['Identificador'] . '</th>
+                                                <td>' . $row['Pro_Nombre'] . '</td>
+                                                <td>' . htmlspecialchars(substr($row['Pro_Descripcion'], 0, 40)) . "... (Editar para ver mas)" .'</td>
+                                                <td>' . $row['Pro_Categoria'] . '</td>
+                                                <td>' . $row['Pro_Cantidad'] . '</td>
+                                                <td>' . $row['Pro_PrecioVenta'] . '</td>
+                                                <td>' . $row['Pro_Costo'] . '</td>
+                                                <td><img height="150px" src=' . $row['nombre_imagen'] . '></td>
+                                                <td>' . $row['Pro_Estado'] . '</td>
+                                                <td><a href="editar.php?tabla=' . $_GET['tabla'] . '&id=' . $row['Identificador'] . '"><i class="fas fa-edit"></i></a></td>
+                                                </tr>';
+                                        }
+                                    }
+                                    } else {
+                                        // Mensaje cuando no se selecciona ninguna tabla
+                                        echo '<tr><td colspan="35" style="text-align:center; font-weight: bold;">¿Qué quieres hacer hoy?</td></tr>';
+                                    }
+                            ?>
+                            </tbody>
+                        </table> 
+                    
+                        </div>
+                            <!--Definicion para incluir o no el calendario-->
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <!-- Verifica si se debe mostrar el calendario -->
+                                        <?php if (isset($_GET['tabla']) && ($_GET['tabla'] == 'pedidos' || $_GET['tabla'] == 'productos')) { 
+                                            $mostrarCalendario = false;
+                                        } else {
+                                            //Incluir el archivo calendario.php
+                                            include('calendario.php');
+                                        }
+                                        ?>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
                 
-                </div>
-            </main>
-            <footer class="py-4 bg-light mt-auto">
-                <div class="container-fluid px-4">
-                    <div class="d-flex align-items-center justify-content-between small">
-                        <?php
-                        // Obtener el año actual
-                        $anio = date("Y");
-                        ?>
-                        <div class="text-muted">Copyright &copy; Mundo3d <?php echo $anio;?></div>
-                        <div>
-                            <a href="#">Política de privacidad</a>
-                            &middot;
-                            <a href="#">Términos &amp; Condiciones</a>
+                    </div>
+                </main>
+
+                <footer class="py-4 bg-light mt-auto">
+                    <div class="container-fluid px-4">
+                        <div class="d-flex align-items-center justify-content-between small">
+                            <?php
+                            // Obtener el año actual
+                            $anio = date("Y");
+                            ?>
                         </div>
                     </div>
-                </div>
-            </footer>   
-        </div>
-    |</div>
+                </footer>   
+            </div>
+    |   </div>
     </body>
     <script type="text/javascript" src="Librerias/DataTables/js/jquery.dataTables.min.js"></script>
     <script src="Librerias/DataTables/js/dataTables.bootstrap4.min.js"></script>
