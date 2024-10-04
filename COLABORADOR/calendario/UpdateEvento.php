@@ -7,8 +7,7 @@ session_start();
 $usuario_id = $_SESSION['user_id'];
 $idEvento = $_POST['idEvento'];
 $evento = ucwords($_REQUEST['evento']);
-$f_inicio = $_REQUEST['fecha_inicio'];
-$fecha_inicio = date('Y-m-d', strtotime($f_inicio));
+$fecha_inicio = $_REQUEST['fecha_inicio'];
 
 $hora_inicio = $_REQUEST['hora_inicio'];
 $hora_fin = $_REQUEST['hora_fin'];

@@ -6,7 +6,7 @@ include __DIR__ . './../../conexion.php';
 
 $evento = ucwords($_REQUEST['evento']);
 $f_inicio = $_REQUEST['fecha_inicio'];
-$fecha_inicio = date('Y-m-d', strtotime($f_inicio));
+$fecha_inicio = $_REQUEST['fecha_inicio'];
 $color_evento = $_REQUEST['color_evento'];
 $observaciones = $_REQUEST['observaciones'];
 $hora_inicio = $_REQUEST['hora_inicio'];
@@ -16,7 +16,7 @@ session_start();
 $usuario_id = $_SESSION['user_id'];
 
 //Validar identificador de la tabla
-$sql = "SELECT MAX(Identificador) AS max_id FROM calendario";
+$sql = "SELECT MAX(identificador) AS max_id FROM calendario";
 $resultado = mysqli_query($link, $sql);
 // Verificar si se encontraron resultados
 if (mysqli_num_rows($resultado) > 0) {
