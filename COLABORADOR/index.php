@@ -19,8 +19,8 @@
         <script src="Librerias/DataTables/js/jquery.min.js"></script>
         <script src="js/scripts.js"></script>
         
-        <link rel="stylesheet" href="Librerias/DataTables/css/dataTables.bootstrap4.min.css">
-        <link rel="stylesheet" href="Librerias/DataTables/css/es.css">
+        <link rel="stylesheet" href="./../Librerias/DataTables/css/dataTables.bootstrap4.min.css">
+        <link rel="stylesheet" href="./../Librerias/DataTables/css/es.css">
         
 
     </head>
