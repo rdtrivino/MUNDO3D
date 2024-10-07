@@ -75,12 +75,12 @@ function enviarCorreoRecuperacion($email, $nueva_contrasena)
         $mail->setFrom('admin@mundo3d.orionweb.site', 'MUNDO 3D');
         $mail->addAddress($email);
 
-        $mail->Subject = 'Recuperacion de Contrasena';
+        $mail->Subject = 'Recuperacion de Contraseña';
 
         $mail->Body = "
                 <div style='text-align: center;'>
                     <p>Has solicitado restablecer tu contraseña. Tu nueva contraseña es:<br><br>
-                        <strong>$nueva_contrasena</strong>. 
+                        <strong>$nueva_contrasena</strong>
                     </p>
                     <p>Te recomendamos cambiar tu contraseña después de iniciar sesión por razones de seguridad. 
                         Si no has solicitado este cambio, por favor contáctanos de inmediato.
