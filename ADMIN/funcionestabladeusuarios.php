@@ -162,15 +162,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!empty($email)) {
                 $mail = new PHPMailer();
                 $mail->isSMTP();
-                $mail->Host = 'smtp.office365.com';
+                $mail->Host = 'smtp.hostinger.com';
                 $mail->SMTPAuth = true;
-                $mail->Username = 'Mundo3D.RYSJ@outlook.com';
-                $mail->Password = 'Mundo3D123';
+                $mail->Username = 'admin@mundo3d.orionweb.site';
+                $mail->Password = 'Mundo3D*';
                 $mail->SMTPSecure = 'tls';
                 $mail->Port = 587;
                 $mail->CharSet = 'UTF-8';
                 $mail->Encoding = 'base64';
-                $mail->setFrom('Mundo3D.RYSJ@outlook.com', 'MUNDO 3D');
+                $mail->setFrom('admin@mundo3d.orionweb.site', 'MUNDO 3D');
                 $mail->addAddress($email, $nombre);
                 $mail->Subject = 'Datos de inicio de sesión';
                 $mail->Body = "Hola $nombre,\n\nBienvenido a MUNDO 3D.\n\nTu información de inicio de sesión es la siguiente:\n\nCorreo electrónico: $email\nContraseña: $contraseña\n\nTe recomendamos cambiar tu contraseña al ingresar al sistema.\n\nGracias por ser parte de la mejor empresa,\nEquipo de soporte MUNDO 3D";
