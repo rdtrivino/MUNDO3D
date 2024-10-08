@@ -1,12 +1,14 @@
 <?php
-    session_start();
-    
+    if (session_status() == PHP_SESSION_NONE) {
+        session_start();
+    }
     // Confirmación de que el usuario ha realizado el proceso de autenticación
     if (!isset($_SESSION['confirmado']) || $_SESSION['confirmado'] == false) {
-        header("Location: ../Programas/autenticacion.php");
+        header("/../../Programas/autenticacion.php");
         exit(); // Terminamos la ejecución del script después de redirigir
     }
 
+    include __DIR__ . '/../../conexion.php';
     // Realizamos la consulta para obtener el rol del usuario
     $peticion = "SELECT Usu_rol FROM usuario WHERE Usu_Identificacion = '".$_SESSION['user_id']."'";
     $result = mysqli_query($link, $peticion);
@@ -15,7 +17,7 @@
     if (!$result) {
         // Manejo de errores de consulta
         // Redirigir a la página de autenticación o mostrar un mensaje de error
-        header("Location: ../Programas/autenticacion.php");
+        header("Location: /../../Programas/autenticacion.php");
         exit(); // Terminamos la ejecución del script después de redirigir
     }
 
@@ -23,7 +25,7 @@
     if (mysqli_num_rows($result) != 1) {
         // Si la consulta no devuelve un solo resultado, puede ser un problema de base de datos
         // Redirigir a la página de autenticación o mostrar un mensaje de error
-        header("Location: ../Programas/autenticacion.php");
+        header("Location: /../../Programas/autenticacion.php");
         exit(); // Terminamos la ejecución del script después de redirigir
     }
 
@@ -34,7 +36,7 @@
     // Verificar si el rol del usuario es diferente de 2
     if ($rolUsuario != 1) {
         // Si el rol no es 1, redirigir a la página de autenticación
-        header("Location: ../Programas/autenticacion.php");
+        header("Location: /../../Programas/autenticacion.php");
         exit(); // Terminamos la ejecución del script después de redirigir
     }
 

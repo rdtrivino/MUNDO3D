@@ -1,15 +1,15 @@
 <?php
 session_start();
 require '../conexion.php';
+include ("Programas/controlsesion.php");
 
 $nombreCompleto = $_SESSION['username'];
 $usuario_id = $_SESSION['user_id'];
 
-
-// Consulta SQL para obtener el número total de productos
-$totalProductosResult = mysqli_query($link, "SELECT COUNT(*) as total FROM productos");
-$totalProductosRow = mysqli_fetch_assoc($totalProductosResult);
-$totalProductos = $totalProductosRow['total'];
+// Consulta SQL para obtener el número total de facturas
+$totalFacturasResult = mysqli_query($link, "SELECT COUNT(*) as total FROM factura");
+$totalFacturasRow = mysqli_fetch_assoc($totalFacturasResult);
+$totalFacturas = $totalFacturasRow['total'];
 
 // Obtener los parámetros de paginación de la URL
 $pagina = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1; // Página actual, por defecto la primera página

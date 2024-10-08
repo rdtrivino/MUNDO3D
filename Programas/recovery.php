@@ -5,12 +5,12 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 include __DIR__ . '/../conexion.php';
+include __DIR__ . '/../Librerias/phpmailer/Exception.php';
+include __DIR__ . '/../Librerias/phpmailer/PHPMailer.php';
+include __DIR__ . '/../Librerias/phpmailer/SMTP.php';
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-
-require 'phpmailer/Exception.php';
-require 'phpmailer/PHPMailer.php';
-require 'phpmailer/SMTP.php';
 
 header('Content-Type: application/json');
 
@@ -75,11 +75,11 @@ function enviarCorreoRecuperacion($email, $nueva_contrasena)
         $mail->setFrom('admin@mundo3d.orionweb.site', 'MUNDO 3D');
         $mail->addAddress($email);
 
-        $mail->Subject = 'Recuperacion de Contraseña';
+        $mail->Subject = 'Recuperacion de Contrasena';
 
         $mail->Body = "
                 <div style='text-align: center;'>
-                    <p>Has solicitado restablecer tu contraseña. Tu nueva contraseña es:<br><br>
+                    <p>Has solicitado restablecer tu contraseña. Tu nueva contrasena es:<br><br>
                         <strong>$nueva_contrasena</strong>
                     </p>
                     <p>Te recomendamos cambiar tu contraseña después de iniciar sesión por razones de seguridad. 

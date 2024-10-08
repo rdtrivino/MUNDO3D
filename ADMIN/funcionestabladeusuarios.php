@@ -1,7 +1,9 @@
 <?php
-session_start();
-include __DIR__ . '/../conexion.php';
 include ("Programas/controlsesion.php");
+include __DIR__ . '/../conexion.php';
+include __DIR__ . '/../Librerias/phpmailer/Exception.php';
+include __DIR__ . '/../Librerias/phpmailer/PHPMailer.php';
+include __DIR__ . '/../Librerias/phpmailer/SMTP.php';
 
 if (!isset($_SESSION['username'])) {
     header("location: index.php");
@@ -33,6 +35,7 @@ function generarContraseña($longitud = 8)
     }
     return $contraseña;
 }
+
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -79,10 +82,6 @@ $response = array();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Verificar si se recibieron todos los datos del formulario
     if (isset($_POST['Identificacion'], $_POST['nombre'], $_POST['telefono'], $_POST['email'], $_POST['ciudad'], $_POST['direccion'], $_POST['rol'], $_POST['estado'])) {
-        // Incluir las clases de PHPMailer
-        require 'programas/phpmailer/Exception.php';
-        require 'programas/phpmailer/PHPMailer.php';
-        require 'programas/phpmailer/SMTP.php';
 
         // Obtener los datos del formulario
         $identificacion = $_POST['Identificacion'];
@@ -155,8 +154,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // Devolver respuesta como JSON
 echo json_encode($response);
 
-
-    $link->close();
-}
-
-?>
