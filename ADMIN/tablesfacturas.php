@@ -367,7 +367,12 @@ include ("Programas/controlsesion.php");
                             <?php endif; ?>
 
                             <?php
-                            $totalPaginas = ceil($totalProductos / $registrosPorPagina);
+
+                            $totalFacturasResult = mysqli_query($link, "SELECT COUNT(*) as total FROM factura");
+                            $totalFacturasRow = mysqli_fetch_assoc($totalFacturasResult);
+                            $totalFacturas = $totalFacturasRow['total'];
+
+                            $totalPaginas = ceil($totalFacturas / $registrosPorPagina);
                             $rango = 2; // Mostrar dos páginas antes y después de la actual
                             $inicio = max(1, $pagina - $rango);
                             $fin = min($totalPaginas, $pagina + $rango);
