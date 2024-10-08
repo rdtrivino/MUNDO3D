@@ -3,49 +3,12 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 include __DIR__ . '/../conexion.php';
+include ("Programas/controlsesion.php");
 
-// Confirmación de que el usuario ha realizado el proceso de autenticación
-if (!isset($_SESSION['confirmado']) || $_SESSION['confirmado'] == false) {
-    header("Location: ../Programas/autenticacion.php");
-    exit(); // Terminamos la ejecución del script después de redirigir
-}
-
-// Realizamos la consulta para obtener el rol del usuario
-$peticion = "SELECT Usu_rol FROM usuario WHERE Usu_Identificacion = '" . $_SESSION['user_id'] . "'";
-$result = mysqli_query($link, $peticion);
-
-// Verificamos si la consulta tuvo éxito
-if (!$result) {
-    // Manejo de errores de consulta
-    // Redirigir a la página de autenticación o mostrar un mensaje de error
-    header("Location: ../Programas/autenticacion.php");
-    exit(); // Terminamos la ejecución del script después de redirigir
-}
-
-// Verificamos si la consulta devolvió exactamente un resultado
-if (mysqli_num_rows($result) != 1) {
-    // Si la consulta no devuelve un solo resultado, puede ser un problema de base de datos
-    // Redirigir a la página de autenticación o mostrar un mensaje de error
-    header("Location: ../Programas/autenticacion.php");
-    exit(); // Terminamos la ejecución del script después de redirigir
-}
-
-// Obtenemos el rol del usuario
-$fila = mysqli_fetch_assoc($result);
-$rolUsuario = $fila['Usu_rol'];
-
-// Verificar si el rol del usuario es diferente de 1
-if ($rolUsuario != 1) {
-    // Si el rol no es 1, redirigir a la página de autenticación
-    header("Location: ../Programas/autenticacion.php");
-    exit(); // Terminamos la ejecución del script después de redirigir
-}
-// Si llegamos aquí, el usuario está autenticado y tiene el rol 1
-
-// Consulta SQL para obtener el número total de productos
-$totalProductosResult = mysqli_query($link, "SELECT COUNT(*) as total FROM productos");
-$totalProductosRow = mysqli_fetch_assoc($totalProductosResult);
-$totalProductos = $totalProductosRow['total'];
+// Consulta SQL para obtener el número total de pedidos
+$totalPedidosResult = mysqli_query($link, "SELECT COUNT(*) as total FROM pedidos");
+$totalPedidosRow = mysqli_fetch_assoc($totalPedidosResult);
+$totalPedidos = $totalPedidosRow['total'];
 
 // Obtener los parámetros de paginación de la URL
 $pagina = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1; // Página actual, por defecto la primera página
