@@ -562,7 +562,7 @@
                             <?php endif; ?>
 
                             <?php
-                            $totalPaginas = ceil($totalProductos / $registrosPorPagina);
+                            $totalPaginas = ceil($totalUsuarios / $registrosPorPagina);
                             $rango = 2; // Mostrar dos páginas antes y después de la actual
                             $inicio = max(1, $pagina - $rango);
                             $fin = min($totalPaginas, $pagina + $rango);
