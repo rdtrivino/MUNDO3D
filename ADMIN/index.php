@@ -412,7 +412,10 @@ include ("Programas/graficos.php");
                             <div class="container-fluid px-4">
                                 <div class="d-flex align-items-center justify-content-between small">
                                     <div class="text-muted">Mundo3d 2024</div>
+<<<<<<< HEAD
 
+=======
+>>>>>>> 4c0213dd743edaa6d7ce6766cd85b872c370e611
                                 </div>
                             </div>
                         </footer>
