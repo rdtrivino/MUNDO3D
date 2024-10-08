@@ -1,211 +1,161 @@
 <?php
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-}
+session_start();
 include __DIR__ . '/../conexion.php';
 include ("Programas/controlsesion.php");
 
-// Consulta SQL para obtener el número total de pedidos
-$totalPedidosResult = mysqli_query($link, "SELECT COUNT(*) as total FROM pedidos");
-$totalPedidosRow = mysqli_fetch_assoc($totalPedidosResult);
-$totalPedidos = $totalPedidosRow['total'];
+if (!isset($_SESSION['username'])) {
+    header("location: index.php");
+    exit();
+}
 
-// Obtener los parámetros de paginación de la URL
-$pagina = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1; // Página actual, por defecto la primera página
-$registrosPorPagina = isset($_GET['registrosPorPagina']) ? (int)$_GET['registrosPorPagina'] : 10; // Número de registros por página, por defecto 10
-$offset = ($pagina - 1) * $registrosPorPagina; // Calcular el offset para la consulta SQL
+// Obtener el número total de usuarios
+$totalUsuariosResult = mysqli_query($link, "SELECT COUNT(*) as total FROM usuario");
+$totalUsuariosRow = mysqli_fetch_assoc($totalUsuariosResult);
+$totalUsuarios = $totalUsuariosRow['total'];
 
-//--------------------------------------------------------
-// Consulta SQL para obtener los pedidos con paginación
-$sql = "SELECT Identificador, Pe_Cliente, Pe_Estado, Pe_Producto, Pe_Cantidad, Pe_Fechapedido, Pe_Fechaentrega, Pe_Observacion, nombre_imagen 
-        FROM pedidos
-        ORDER BY Identificador DESC
+// Obtener los parámetros de paginación
+$pagina = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+$registrosPorPagina = isset($_GET['registrosPorPagina']) ? (int)$_GET['registrosPorPagina'] : 10;
+$offset = ($pagina - 1) * $registrosPorPagina;
+//Fin parametros de paginacion
+
+$nombreCompleto = $_SESSION['username'];
+$usuario_id = $_SESSION['user_id'];
+
+// Función para generar una contraseña aleatoria
+function generarContraseña($longitud = 8)
+{
+    $caracteres = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+';
+    $contraseña = '';
+    $maxCaracteres = strlen($caracteres) - 1;
+    for ($i = 0; $i < $longitud; $i++) {
+        $contraseña .= $caracteres[rand(0, $maxCaracteres)];
+    }
+    return $contraseña;
+}
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+// Modificar la consulta SQL para incluir LIMIT y OFFSET
+$sql = "SELECT Usu_Identificacion, Usu_Nombre_completo, Usu_Telefono, Usu_Email, Usu_Ciudad, Usu_Direccion, Usu_Rol, Usu_Estado 
+        FROM usuario
         LIMIT $registrosPorPagina OFFSET $offset";
-//--------------------------------------------------------
-function obtenerNombreProducto($IdentificadorProducto, $conexion)
-{
-    $sql = "SELECT pro_nombre FROM productos WHERE Identificador = ?";
-    $stmt = mysqli_prepare($conexion, $sql);
-    mysqli_stmt_bind_param($stmt, "i", $IdentificadorProducto);
-    mysqli_stmt_execute($stmt);
-    mysqli_stmt_bind_result($stmt, $nombreProducto);
-    mysqli_stmt_fetch($stmt);
-    mysqli_stmt_close($stmt);
-    return $nombreProducto ? $nombreProducto : "Producto no encontrado";
+        $resultado = mysqli_query($link, $sql);
+
+if (!$resultado) {
+    die("Error en la consulta: " . mysqli_error($link));
 }
 
-// Función para obtener el nombre del estado a partir del código
-function obtenerNombreEstado($IdentificadorEstado, $conexion)
-{
-    $sql = "SELECT Es_Nombre FROM pedido_estado WHERE Es_Codigo = ?";
-    $stmt = mysqli_prepare($conexion, $sql);
-    mysqli_stmt_bind_param($stmt, "i", $IdentificadorEstado);
-    mysqli_stmt_execute($stmt);
-    mysqli_stmt_bind_result($stmt, $nombreEstado);
-    mysqli_stmt_fetch($stmt);
-    mysqli_stmt_close($stmt);
-    return $nombreEstado ? $nombreEstado : "Estado no encontrado";
-}
-// Esta función devuelve un array con los estados de la tabla pedido_estado
-function obtenerEstadosPedidos($link)
-{
-    // Array para almacenar los resultados
-    $estados = array();
+// Verifica si se recibieron los datos del formulario de actualización
+if (isset($_POST['id_usuario'])) {
+    // Manejo de la actualización del usuario existente
+    $id_usuario = $_POST['id_usuario'];
+    $nombre = $_POST['nombre'];
+    $telefono = $_POST['telefono'];
+    $email = $_POST['email'];
+    $ciudad = $_POST['ciudad'];
+    $direccion = $_POST['direccion'];
+    $rol = $_POST['rol'];
+    $estado = $_POST['estado'];
 
-    // Consulta SQL para obtener los estados
-    $sql = "SELECT Es_Codigo, Es_Nombre FROM pedido_estado";
+    $sql_actualizar = "UPDATE usuario SET Usu_Nombre_completo=?, Usu_Telefono=?, Usu_Email=?, Usu_Ciudad=?, Usu_Direccion=?, Usu_Rol=?, Usu_Estado=? WHERE Usu_Identificacion=?";
+    $stmt = mysqli_prepare($link, $sql_actualizar);
+    mysqli_stmt_bind_param($stmt, "sssssssi", $nombre, $telefono, $email, $ciudad, $direccion, $rol, $estado, $id_usuario);
 
-    // Ejecutar la consulta
-    $result = mysqli_query($link, $sql);
-
-    // Verificar si la consulta fue exitosa
-    if ($result) {
-        // Iterar sobre los resultados y agregarlos al array de estados
-        while ($row = mysqli_fetch_assoc($result)) {
-            $estados[] = $row;
-        }
-    } else {
-        // Si hay un error en la consulta, puedes manejarlo aquí
-        echo "Error al obtener los estados: " . mysqli_error($link);
-    }
-
-    // Devolver el array de estados
-    return $estados;
-}
-// Función para obtener todos los productos disponibles desde la base de datos
-function obtenerProductos($link)
-{
-    // Array para almacenar los productos
-    $productos = array();
-
-    // Consulta SQL para obtener todos los productos
-    $sql = "SELECT Identificador, Pro_Nombre FROM productos";
-
-    // Ejecutar la consulta
-    $result = mysqli_query($link, $sql);
-
-    // Verificar si la consulta fue exitosa y procesar los resultados
-    if ($result && mysqli_num_rows($result) > 0) {
-        // Iterar sobre los resultados y almacenar cada producto en el array
-        while ($row = mysqli_fetch_assoc($result)) {
-            $productos[] = $row;
-        }
-    }
-
-    // Retornar el array de productos
-    return $productos;
-}
-// Verificar si se recibió una solicitud para agregar un nuevo pedido
-if (isset($_POST['cliente'], $_POST['producto'], $_POST['cantidad'], $_POST['fechaPedido'], $_POST['fechaEntrega'], $_POST['observacion'])) {
-
-    // Obtener los datos del formulario
-    $cliente = $_POST['cliente'];
-    $producto = $_POST['producto'];
-    $cantidad = $_POST['cantidad'];
-    $fechaPedido = $_POST['fechaPedido'];
-    $fechaEntrega = $_POST['fechaEntrega'];
-    $observacion = $_POST['observacion'];
-
-    // Consulta SQL para insertar un nuevo pedido
-    $consulta = "INSERT INTO pedidos (Pe_Cliente, Pe_Estado, Pe_Producto, Pe_Cantidad, Pe_Fechapedido, Pe_Fechaentrega, Pe_Observacion, Pe_Usuario) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-    $stmt = mysqli_prepare($link, $consulta);
-
-    // Verificar si la preparación de la consulta fue exitosa
-    if ($stmt) {
-        $estado = 1; // Estado por defecto del pedido (puedes ajustarlo según tus necesidades)
-
-        // Vincular parámetros a la consulta
-        mysqli_stmt_bind_param($stmt, "iiisssss", $cliente, $estado, $producto, $cantidad, $fechaPedido, $fechaEntrega, $observacion, $_SESSION['user_id']);
-
-        // Ejecutar la consulta
-        if (mysqli_stmt_execute($stmt)) {
-            echo "Pedido agregado exitosamente.";
-        } else {
-            echo "Error al agregar el pedido: " . mysqli_error($link);
-        }
-
-        // Cerrar la declaración
-        mysqli_stmt_close($stmt);
-    } else {
-        echo "Error al preparar la consulta: " . mysqli_error($link);
-    }
-
-    // Cerrar la conexión a la base de datos
-    mysqli_close($link);
-} else {
-}
-
-// Verificar si se recibió el identificador del pedido a eliminar
-if (isset($_POST['identificador'])) {
-    // Obtener el identificador del pedido
-    $identificador = $_POST['identificador'];
-
-    $consulta = "UPDATE pedidos SET Acciones = 'inactivo' WHERE identificador = ?";
-    $stmt = mysqli_prepare($link, $consulta);
-    mysqli_stmt_bind_param($stmt, "i", $identificador);
-
-    // Ejecutar la consulta
     if (mysqli_stmt_execute($stmt)) {
-        // Si la consulta se ejecutó correctamente, enviar mensaje de éxito
-        echo "El pedido ha sido eliminado correctamente.";
+        header("Location: tables.php");
+        exit();
     } else {
-        // Si hubo un error al ejecutar la consulta, enviar mensaje de error
-        echo "Error al eliminar el pedido: " . mysqli_error($link);
+        echo "Error al actualizar el usuario: " . mysqli_error($link);
     }
-
-    // Cerrar la declaración
     mysqli_stmt_close($stmt);
-} else {
-    // Si no se recibió el identificador del pedido, enviar un mensaje de error
 }
-if (isset($_POST['guardar_cambios'])) {
-    $identificador = $_POST['Identificador'];
-    $cliente = $_POST['Pe_Cliente'];
-    $estado = $_POST['Pe_Estado'];
-    $producto = $_POST['Pe_Producto'];
-    $cantidad = $_POST['Pe_Cantidad'];
-    $fechaEntrega = $_POST['Pe_Fechaentrega'];
-    $fechaPedido = $_POST['Pe_Fechapedido'];
-    $color = $_POST['pe_color'];
-    $observaciones = $_POST['Pe_Observacion'];
-    $imagen = null;
 
-    // Obtener la extensión del archivo
-    if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
-        // Obtener la extensión del archivo
-        $extension = strtolower(pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION));
-        $ruta_destino = "../images/imagenes_pedidos/"; // Ruta donde quieres guardar la imagen
-        $nombre_imagen = "pedido-" . $identificador . ".$extension"; // Nombre que deseas para la imagen
+// Inicializar la respuesta
+$response = array();
 
-        // Combinar la ruta de destino con el nombre de la imagen
-        $imagen = $ruta_destino . $nombre_imagen;
+// Verificar si se recibió una solicitud POST
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Verificar si se recibieron todos los datos del formulario
+    if (isset($_POST['Identificacion'], $_POST['nombre'], $_POST['telefono'], $_POST['email'], $_POST['ciudad'], $_POST['direccion'], $_POST['rol'], $_POST['estado'])) {
+        // Incluir las clases de PHPMailer
+        require 'programas/phpmailer/Exception.php';
+        require 'programas/phpmailer/PHPMailer.php';
+        require 'programas/phpmailer/SMTP.php';
 
-        // Mover la imagen cargada a la ruta específica
-        if (move_uploaded_file($_FILES['imagen']['tmp_name'], $imagen)) {
-            //echo "La imagen se ha guardado correctamente en: " . $ruta_completa;
+        // Obtener los datos del formulario
+        $identificacion = $_POST['Identificacion'];
+        $nombre = $_POST['nombre'];
+        $telefono = $_POST['telefono'];
+        $email = $_POST['email'];
+        $ciudad = $_POST['ciudad'];
+        $direccion = $_POST['direccion'];
+        // Generar la contraseña
+        $contraseña = generarContraseña(8); // Longitud de la contraseña: 8 caracteres
+        $rol = $_POST['rol'];
+        $estado = $_POST['estado'];
+
+        // Cifrar la contraseña para almacenarla en la base de datos
+        $contraseña_cifrada = password_hash($contraseña, PASSWORD_DEFAULT);
+
+        $sql = "INSERT INTO usuario (Usu_Identificacion, Usu_Nombre_completo, Usu_Telefono, Usu_Email, Usu_Ciudad, Usu_Direccion, Usu_Contraseña, Usu_Rol, Usu_Estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $stmt = mysqli_prepare($link, $sql);
+        mysqli_stmt_bind_param($stmt, "sssssssss", $identificacion, $nombre, $telefono, $email, $ciudad, $direccion, $contraseña_cifrada, $rol, $estado);
+
+        if (mysqli_stmt_execute($stmt)) {
+            // Registro exitoso, enviar correo electrónico con los datos de inicio de sesión
+            if (!empty($email)) {
+                $mail = new PHPMailer();
+                $mail->isSMTP();
+                $mail->Host = 'smtp.hostinger.com';
+                $mail->SMTPAuth = true;
+                $mail->Username = 'admin@mundo3d.orionweb.site';
+                $mail->Password = 'Mundo3D*';
+                $mail->SMTPSecure = 'tls';
+                $mail->Port = 587;
+                $mail->CharSet = 'UTF-8';
+                $mail->Encoding = 'base64';
+                $mail->setFrom('admin@mundo3d.orionweb.site', 'MUNDO 3D');
+                $mail->addAddress($email, $nombre);
+                $mail->Subject = 'Datos de inicio de sesión';
+                $mail->Body = "Hola $nombre,\n\nBienvenido a MUNDO 3D.\n\nTu información de inicio de sesión es la siguiente:\n\nCorreo electrónico: $email\nContraseña: $contraseña\n\nTe recomendamos cambiar tu contraseña al ingresar al sistema.\n\nGracias por ser parte de la mejor empresa,\nEquipo de soporte MUNDO 3D";
+
+                if ($mail->send()) {
+                    // Envío de correo exitoso
+                    $response['success'] = true;
+                    $response['message'] = 'El colaborador se ha agregado correctamente.';
+                } else {
+                    // Error al enviar el correo
+                    $response['success'] = false;
+                    $response['message'] = 'Error al enviar el correo electrónico: ' . $mail->ErrorInfo;
+                }
+            } else {
+                // No se proporcionó una dirección de correo electrónico válida
+                $response['success'] = false;
+                $response['message'] = 'No se proporcionó una dirección de correo electrónico válida.';
+            }
         } else {
-            echo "Error al guardar la imagen.";
+            // Error al registrar el colaborador en la base de datos
+            $response['success'] = false;
+            $response['message'] = 'Error al agregar el colaborador: ' . mysqli_error($link);
         }
     } else {
-        // Si no se ha cargado ninguna imagen nueva, obtener el nombre de imagen existente de la base de datos
-        $query = "SELECT nombre_imagen FROM pedidos WHERE Identificador = $identificador";
-        $result = mysqli_query($link, $query);
-        $row = mysqli_fetch_assoc($result);
-        $imagen = $row['nombre_imagen'];
+        // No se recibieron todos los datos del formulario
+        $response['success'] = false;
+        $response['message'] = 'No se recibieron todos los datos del formulario para agregar un nuevo colaborador.';
     }
+} else {
+    // No se recibió una solicitud POST
+    $response['success'] = false;
+    //$response['message'] = 'Se esperaba una solicitud POST.';
+    $response['message'] = '';
+}
 
-    // Guardar los registros en la base de datos
-    $sql = "UPDATE pedidos SET Pe_Cliente=?, Pe_Estado=?, Pe_Producto=?, Pe_Cantidad=?, Pe_Fechapedido=?, Pe_Fechaentrega=?, pe_color=?, Pe_Observacion=?, nombre_imagen=?, Pe_Usuario=? WHERE Identificador=?";
-    $stmt = $link->prepare($sql);
-    $stmt->bind_param('sisisssssis', $cliente, $estado, $producto, $cantidad, $fechaPedido, $fechaEntrega, $color, $observaciones, $imagen, $_SESSION['user_id'], $identificador);
+// Devolver respuesta como JSON
+echo json_encode($response);
 
-    if ($stmt->execute()) {
-        echo "success";
-    } else {
-        echo "error: " . $stmt->error;
-    }
 
-    $stmt->close();
     $link->close();
 }
 
