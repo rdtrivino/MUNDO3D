@@ -1,54 +1,19 @@
-<!DOCTYPE html>
-<!-- http://localhost/MUNDO 3D/COLABORADOR/adicionar.php -->
-<html lang="en">
-
 <?php
-session_start();
 include __DIR__ . '/../conexion.php';
+include 'Programas/controlsesion.php';
 
-// Confirmación de que el usuario ha realizado el proceso de autenticación
-if (!isset($_SESSION['confirmado']) || $_SESSION['confirmado'] == false) {
-    header("Location: ../Programas/autenticacion.php");
-    exit(); // Terminamos la ejecución del script después de redirigir
+if (!isset($_SESSION['username']) || !isset($_SESSION['user_id'])) {
+    // Manejar el error de sesión no activa
+    die("Acceso denegado");
 }
 
-// Realizamos la consulta para obtener el rol del usuario
-$peticion = "SELECT Usu_rol FROM usuario WHERE Usu_Identificacion = '" . $_SESSION['user_id'] . "'";
-$result = mysqli_query($link, $peticion);
-
-// Verificamos si la consulta tuvo éxito
-if (!$result) {
-    // Manejo de errores de consulta
-    // Redirigir a la página de autenticación o mostrar un mensaje de error
-    header("Location: ../Programas/autenticacion.php");
-    exit(); // Terminamos la ejecución del script después de redirigir
-}
-
-// Verificamos si la consulta devolvió exactamente un resultado
-if (mysqli_num_rows($result) != 1) {
-    // Si la consulta no devuelve un solo resultado, puede ser un problema de base de datos
-    // Redirigir a la página de autenticación o mostrar un mensaje de error
-    header("Location: ../Programas/autenticacion.php");
-    exit(); // Terminamos la ejecución del script después de redirigir
-}
-
-// Obtenemos el rol del usuario
-$fila = mysqli_fetch_assoc($result);
-$rolUsuario = $fila['Usu_rol'];
-
-// Verificar si el rol del usuario es diferente de 2
-if ($rolUsuario != 2) {
-    // Si el rol no es 2, redirigir a la página de autenticación
-    header("Location: ../Programas/autenticacion.php");
-    exit(); // Terminamos la ejecución del script después de redirigir
-}
-
-// Si llegamos aquí, el usuario está autenticado y tiene el rol 2
-// Continuar con el resto del código
 $nombreCompleto = $_SESSION['username'];
 $usuario_id = $_SESSION['user_id'];
-?>
 
+// Sanitiza los datos de entrada
+$tabla = isset($_GET['tabla']) ? mysqli_real_escape_string($link, $_GET['tabla']) : '';
+$tipo = isset($_GET['tipo']) ? mysqli_real_escape_string($link, $_GET['tipo']) : '';
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -68,7 +33,6 @@ $usuario_id = $_SESSION['user_id'];
 <body class="bg-light">
 
     <div class="">
-        <?php $tabla = $_GET['tabla']; ?>
         <a class="Btn-1" href="index.php?tabla=<?php echo $tabla; ?>">
             <div class="sign">
                 <img src="../images/iconizer-bx-home-alt-2.2.svg" alt="Inicio">
@@ -77,33 +41,26 @@ $usuario_id = $_SESSION['user_id'];
         </a>
     </div>
 
-
-
     <div class="container">
         <div class="py-5 text-center">
-            <img class="mundo" src="../images/Logo Mundo 3d.png" alt="" width="150" height="150">
+            <img class="mundo" src="./../images/Logo Mundo 3d.png" alt="" width="150" height="150">
         </div>
 
-        
+        <form class="needs-validation" novalidate method="POST" enctype="multipart/form-data" action="procesarnuevo.php?tabla=<?php echo $tabla; ?>">
+            <input type="hidden" class="form-control" name="tabla" value="<?php echo $tabla; ?>">
 
-        <form class="needs-validation" novalidate method="POST" enctype="multipart/form-data"
-            action="procesarnuevo.php?tabla=<?php echo $tabla; ?>">
-            <input type="hidden" class="form-control" id="address2" name="tabla" value="<?php echo $_GET['tabla'] ?>">
-            <?php if ($_GET['tabla'] == 'pedidos') { ?>
-
+            <?php if ($tabla == 'pedidos') { 
+                    if ($tipo == 'producto') {
+            ?>
                 <div class="form-group">
                     <label for="cliente">Cliente (*)</label>
-                    <select class="form-control" id="cliente" name="cliente">
-                        <option value="">Seleccionar cliente</option> <!-- Opción vacía por defecto -->
+                    <select class="form-control" id="cliente" name="cliente" required>
+                        <option value="">Seleccionar cliente</option>
                         <?php
-                        // Realizar la consulta SQL para obtener la lista de clientes
                         $consulta = "SELECT Usu_Identificacion, Usu_Nombre_Completo FROM usuario";
                         $resultado = mysqli_query($link, $consulta);
-
-                        // Verificar si la consulta tuvo éxito y mostrar las opciones
                         if ($resultado && mysqli_num_rows($resultado) > 0) {
                             while ($fila = mysqli_fetch_assoc($resultado)) {
-                                // Concatenar Identificador y Nombre con un guion (-)
                                 $opcion = $fila['Usu_Identificacion'] . ' - ' . $fila['Usu_Nombre_Completo'];
                                 echo '<option value="' . $fila['Usu_Identificacion'] . '">' . $opcion . '</option>';
                             }
@@ -114,15 +71,14 @@ $usuario_id = $_SESSION['user_id'];
 
                 <div class="form-group">
                     <label for="estado">Estado (*)</label>
-                    <select class="form-control" id="estado" name="estado">
-                        <option value="">Seleccionar estado del pédido</option>
+                    <select class="form-control" id="estado" name="estado" required>
+                        <option value="">Seleccionar estado del pedido</option>
                         <?php
                         $consulta = "SELECT Es_Codigo, Es_Nombre FROM pedido_estado";
                         $resultado = mysqli_query($link, $consulta);
                         if ($resultado && mysqli_num_rows($resultado) > 0) {
                             while ($fila = mysqli_fetch_assoc($resultado)) {
-                                $opcion = $fila['Es_Nombre'];
-                                echo '<option value="' . $fila['Es_Codigo'] . '">' . $opcion . '</option>';
+                                echo '<option value="' . $fila['Es_Codigo'] . '">' . $fila['Es_Nombre'] . '</option>';
                             }
                         }
                         ?>
@@ -131,15 +87,14 @@ $usuario_id = $_SESSION['user_id'];
 
                 <div class="form-group">
                     <label for="producto">Producto (*)</label>
-                    <select class="form-control" id="producto" name="producto">
+                    <select class="form-control" id="producto" name="producto" required>
                         <option value="">Seleccionar el producto</option>
                         <?php
                         $consulta = "SELECT Identificador, Pro_Nombre FROM productos";
                         $resultado = mysqli_query($link, $consulta);
                         if ($resultado && mysqli_num_rows($resultado) > 0) {
                             while ($fila = mysqli_fetch_assoc($resultado)) {
-                                $opcion = $fila['Pro_Nombre'];
-                                echo '<option value="' . $fila['Identificador'] . '">' . $opcion . '</option>';
+                                echo '<option value="' . $fila['Identificador'] . '">' . $fila['Pro_Nombre'] . '</option>';
                             }
                         }
                         ?>
@@ -148,39 +103,78 @@ $usuario_id = $_SESSION['user_id'];
 
                 <div class="form-group">
                     <label for="cantidad">Cantidad (*)</label>
-                    <input type="text" class="form-control" id="cantidad" name="cantidad" required oninvalid="this.setCustomValidity('Por favor, rellene este campo')" oninput="setCustomValidity('')"/>
+                    <input type="number" class="form-control" id="cantidad" name="cantidad" required />
                 </div>
 
                 <div class="form-group">
                     <label for="fechapedido">Fecha de Pedido (*)</label>
-                    <input type="date" class="form-control" id="fechapedido" name="fechapedido" required/>
+                    <input type="date" class="form-control" id="fechapedido" name="fechapedido" required />
                 </div>
 
                 <div class="form-group">
                     <label for="fechaentrega">Fecha estimada de entrega</label>
-                    <input type="date" class="form-control" id="fechaentrega" name="fechaentrega" required/>
+                    <input type="date" class="form-control" id="fechaentrega" name="fechaentrega" />
                 </div>
 
                 <div class="form-group">
-                    <label for="imagen" class="form-control">Imagen del producto</label>
+                    <label for="observacion">Observación</label>
+                    <input type="text" class="form-control" id="observacion" name="observacion" />
+                </div>
+
+            <?php } elseif ($tipo == 'impresion') { ?>
+
+                <div class="form-group">
+                    <label for="cliente">Cliente (*)</label>
+                    <select class="form-control" id="cliente" name="cliente" required>
+                        <option value="">Seleccionar cliente</option>
+                        <?php
+                        $consulta = "SELECT Usu_Identificacion, Usu_Nombre_Completo FROM usuario";
+                        $resultado = mysqli_query($link, $consulta);
+                        if ($resultado && mysqli_num_rows($resultado) > 0) {
+                            while ($fila = mysqli_fetch_assoc($resultado)) {
+                                $opcion = $fila['Usu_Identificacion'] . ' - ' . $fila['Usu_Nombre_Completo'];
+                                echo '<option value="' . $fila['Usu_Identificacion'] . '">' . $opcion . '</option>';
+                            }
+                        }
+                        ?>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="imagen" class="form-label">Imagen del producto a imprimir</label>
                     <input type="file" class="form-control-file" id="imagen" name="imagen" accept="image/*" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="tipoimpresion">Tipo de impresión</label required>
-                    <select class="form-control" id="tipoimpresion" name="tipoimpresion">
-                        <option value="No informado">Seleccionar el tipo de impresión</option>
+                    <label for="cantidad">Cantidad (*)</label>
+                    <input type="number" class="form-control" id="cantidad" name="cantidad" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="fechapedido">Fecha de Pedido (*)</label>
+                    <input type="date" class="form-control" id="fechapedido" name="fechapedido" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="fechaentrega">Fecha estimada de entrega</label>
+                    <input type="date" class="form-control" id="fechaentrega" name="fechaentrega" />
+                </div>
+
+                <div class="form-group">
+                    <label for="tipoimpresion">Tipo de impresión</label>
+                    <select class="form-control" id="tipoimpresion" name="tipoimpresion" required>
+                        <option value="">Seleccionar el tipo de impresión</option>
                         <option value="Poliácido Láctico">Filamento</option>
                         <option value="Acrilonitrilo Butadieno Estireno">Resina</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="color">Color de la impresión</label required>
-                    <select class="form-control" id="color" name="color">
-                        <option value="No informado">Seleccionar el color de impresión</option>
+                    <label for="color">Color de la impresión</label>
+                    <select class="form-control" id="color" name="color" required>
+                        <option value="">Seleccionar el color de impresión</option>
                         <option value="Negro Fibra de Carbono">Único Color</option>
-                        <option value="Blanco Menta">Color Original </option>
+                        <option value="Blanco Menta">Color Original</option>
                     </select>
                 </div>
 
@@ -188,17 +182,23 @@ $usuario_id = $_SESSION['user_id'];
                     <label for="observacion">Observación</label>
                     <input type="text" class="form-control" id="observacion" name="observacion" />
                 </div>
-            <?php } elseif ($_GET['tabla'] == 'productos') { ?>
+             
+             
+            <?php
+            }
+            ?>
 
+            <!--Inicia formulario productos-->
+            <?php } elseif ($tabla == 'productos') { ?>
 
                 <div class="form-group">
                     <label for="nombre">Nombre (*)</label>
-                    <input type="text" class="form-control" id="nombre" name="nombre"  required/>
+                    <input type="text" class="form-control" id="nombre" name="nombre" required />
                 </div>
 
                 <div class="form-group">
                     <label for="descripcion">Descripción (*)</label>
-                    <input type="text" class="form-control" id="descripcion" name="descripcion"  required/>
+                    <input type="text" class="form-control" id="descripcion" name="descripcion" required />
                 </div>
 
                 <div class="form-group">
@@ -210,8 +210,7 @@ $usuario_id = $_SESSION['user_id'];
                         $resultado = mysqli_query($link, $consulta);
                         if ($resultado && mysqli_num_rows($resultado) > 0) {
                             while ($fila = mysqli_fetch_assoc($resultado)) {
-                                $opcion = $fila['Cgo_Nombre'];
-                                echo '<option value="' . $fila['Cgo_Codigo'] . '">' . $opcion . '</option>';
+                                echo '<option value="' . $fila['Cgo_Codigo'] . '">' . $fila['Cgo_Nombre'] . '</option>';
                             }
                         }
                         ?>
@@ -220,17 +219,17 @@ $usuario_id = $_SESSION['user_id'];
 
                 <div class="form-group">
                     <label for="cantidad">Cantidad (*)</label>
-                    <input type="text" class="form-control" id="cantidad" name="cantidad"  required/>
+                    <input type="number" class="form-control" id="cantidad" name="cantidad" required />
                 </div>
 
                 <div class="form-group">
                     <label for="precioventa">Precio de Venta (*)</label>
-                    <input type="text" class="form-control" id="precioventa" name="precioventa"  required/>
+                    <input type="text" class="form-control" id="precioventa" name="precioventa" required />
                 </div>
 
                 <div class="form-group">
                     <label for="costo">Costo (*)</label>
-                    <input type="text" class="form-control" id="costo" name="costo"  required/>
+                    <input type="text" class="form-control" id="costo" name="costo" required />
                 </div>
 
                 <div class="form-group">
@@ -242,14 +241,6 @@ $usuario_id = $_SESSION['user_id'];
 
             <hr class="mb-4">
             <button class="btn btn-primary btn-lg btn-block" type="submit">Procesar</button>
-            <!-- Modal de confirmacion -->
-            <dialog id="modal">
-                <h2>!Alerta¡</h2>
-                <p>Registro almacenado con éxito</p>
-                <p></p>
-                <button id="btn-cerrar-modal">Cerrar modal</button>
-            </dialog>
-            <!----------------------------->
         </form>
     </div>
 
@@ -257,12 +248,14 @@ $usuario_id = $_SESSION['user_id'];
         <p class="mb-1">&copy; 2024 Mundo 3D</p>
     </footer>
 
-    <script src="js/jquery-3.5.1.slim.min.js"
-        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-        crossorigin="anonymous"></script>
-    <script>window.jQuery || document.write('<script src="../assets/js/vendor/jquery.slim.min.js"><\/script>')</script>
+    <script src="js/jquery-3.5.1.slim.min.js"></script>
     <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
     <script src="form-validation.js"></script>
+    <script>
+        document.getElementById('btn-cerrar-modal').addEventListener('click', function() {
+            document.getElementById('modal').close();
+        });
+    </script>
 </body>
 
 </html>

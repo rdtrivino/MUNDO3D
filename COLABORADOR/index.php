@@ -150,7 +150,7 @@
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <div class="d-flex align-items-center">
-                                                            <h5 class="modal-title" id="productosModalLabel">Selecciona el tipo de producto a incluir</h5>
+                                                            <h5 class="modal-title" id="productosModalLabel">Selecciona el tipo de pédido que se va a adicionar</h5>
                                                         </div>
                                                     </div>
                                         
