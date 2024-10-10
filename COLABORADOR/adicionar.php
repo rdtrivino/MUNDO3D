@@ -148,7 +148,7 @@ $usuario_id = $_SESSION['user_id'];
 
                 <div class="form-group">
                     <label for="cantidad">Cantidad (*)</label>
-                    <input type="text" class="form-control" id="cantidad" name="cantidad" required/>
+                    <input type="text" class="form-control" id="cantidad" name="cantidad" required oninvalid="this.setCustomValidity('Por favor, rellene este campo')" oninput="setCustomValidity('')"/>
                 </div>
 
                 <div class="form-group">
