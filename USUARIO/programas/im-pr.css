@@ -109,14 +109,12 @@
 .card {
 	width: 250px;
 	height: 300px;
-	border-radius: 30px;
-	background: #ffffff;
-	box-shadow: 15px 15px 30px rgba(0, 0, 50, 0.5),
-		-15px -15px 30px rgba(0, 0, 50, 0.5);
+	border-radius: 15px;
+
 }
 /*redes sociales__________________________________________________________________________________________________*/
 .parent2 {
-	width: 30%;
+	width: 40%;
 	height: 50%;
 	display: flex;
 	justify-content: center;
@@ -270,7 +268,7 @@
 }
 /*botones redes sociales*/
 .parent2 {
-	width: 30%;
+	width: 80%;
 	height: 50%;
 	display: flex;
 	justify-content: center;
