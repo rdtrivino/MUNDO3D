@@ -117,7 +117,7 @@
         </div>
     </div>
     <!-- Navbar End -->
-    <div class="page-header container-fluid bg-secondary pt-0 pt-lg-1 pb-1 mb-4">
+    <div class="page-header container-fluid bg-secondary pt-0 pt-lg-1 pb-1">
         <div class="row align-items-center py-4">
             <div class="col-md-6 text-center text-md-left offset-md-0" style="margin-top: 50px;">
                 <!-- Campo de búsqueda -->
