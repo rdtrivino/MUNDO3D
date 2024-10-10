@@ -146,19 +146,23 @@
                             ?>
                                     <!--Inicio modal seleccion-->
                                         <div class="modal fade" id="productosModal" tabindex="-1" aria-labelledby="productosModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: 90%; margin: 5% auto;">
+                                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: 50%; margin: 5% auto;">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <div class="d-flex align-items-center">
-                                                            <h5 class="modal-title" id="productosModalLabel">Selecciona el tipo de pédido que se va a adicionar</h5>
+                                                            <h5 class="modal-principal-title" id="productosModalLabel">Selecciona el tipo de pédido que vas a adicionar</h5>
                                                         </div>
                                                     </div>
                                         
                                                     <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" id="producto-btn" data-bs-dismiss="modal">Impresora o repuesto</button>
-                                                        <button type="button" class="btn btn-secondary" id="impresion-btn" data-bs-dismiss="modal">Servicio de impresión</button>
+                                                        <div class="text-start me-auto">
+                                                            <button type="button" class="btn btn-primary" id="producto-btn" data-bs-dismiss="modal">Impresora o repuesto</button>
+                                                            <button type="button" class="btn btn-primary" id="impresion-btn" data-bs-dismiss="modal">Servicio de impresión</button>
+                                                        </div>
+                                                        
                                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                                                     </div>
+
                                                 </div>
                                             </div>
                                         </div>
