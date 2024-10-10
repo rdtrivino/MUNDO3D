@@ -182,9 +182,11 @@
                                 if (isset($_GET['tabla'])) {
                                     if ($_GET['tabla'] == 'pedidos') {
                                         $peticion = "SELECT pedidos.*, pedido_estado.Es_Nombre AS Pe_Estado, productos.Pro_Nombre AS Pe_Producto 
-                                                    FROM pedidos
+                                                    FROM pedidos 
                                                     INNER JOIN pedido_estado ON pedidos.Pe_Estado = pedido_estado.Es_Codigo
-                                                    INNER JOIN productos ON pedidos.Pe_Producto = productos.Identificador";           
+                                                    INNER JOIN productos ON pedidos.Pe_Producto = productos.Identificador
+                                                    WHERE Pe_Estado NOT IN (4,5,6,7)";
+           
                                         
                                         $result = mysqli_query($link, $peticion);
                                         foreach ($result as $row) {
