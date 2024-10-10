@@ -18,9 +18,9 @@
         <link href="css/styles.css" rel="stylesheet" />
         <script src="Librerias/DataTables/js/jquery.min.js"></script>
         <script src="js/scripts.js"></script>
-        
         <link rel="stylesheet" href="./../Librerias/DataTables/css/dataTables.bootstrap4.min.css">
         <link rel="stylesheet" href="./../Librerias/DataTables/css/es.css">
+        <script src="js/bootstrap.bundle.min.js"></script>
         
 
     </head>
@@ -136,24 +136,27 @@
                         <!--Seccion donde se encuentran los botones adicionar, exportar e imprimir-->
                         <div class="btn-group mr-7">
                             <?php
-                                   if (isset($_GET['tabla'])) {
+
+                                if (isset($_GET['tabla'])) { 
+                                // Boton adicionar dependiendo de tabla
+                                if ($_GET['tabla'] == 'productos'){
+                                    echo '<a href="adicionar.php?tabla=' . $_GET['tabla'] . '" class="btn btn-sm btn-outline-secondary">Adicionar registro</a>';
+                                } else if ($_GET['tabla'] == 'pedidos') {
                                     echo '<a href="#" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#productosModal">Adicionar registro</a>';
                             ?>
-                            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
                                     <!--Inicio modal seleccion-->
                                         <div class="modal fade" id="productosModal" tabindex="-1" aria-labelledby="productosModalLabel" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: 90%; margin: 5% auto;">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <div class="d-flex align-items-center">
-                                                            <img class="logo" src="../images/Logo Mundo 3d.png" alt="Logo de la empresa" style="max-width: 100px;">
                                                             <h5 class="modal-title" id="productosModalLabel">Selecciona el tipo de producto a incluir</h5>
                                                         </div>
                                                     </div>
                                         
                                                     <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" id="producto-btn" data-bs-dismiss="modal">Producto</button>
-                                                        <button type="button" class="btn btn-secondary" id="impresion-btn" data-bs-dismiss="modal">Impresión</button>
+                                                        <button type="button" class="btn btn-secondary" id="producto-btn" data-bs-dismiss="modal">Impresora o repuesto</button>
+                                                        <button type="button" class="btn btn-secondary" id="impresion-btn" data-bs-dismiss="modal">Servicio de impresión</button>
                                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                                                     </div>
                                                 </div>
@@ -162,26 +165,26 @@
                                         
                                         <script>
                                             document.addEventListener("DOMContentLoaded", function () {
-                                                let producto = ""; // Variable para almacenar la selección
-                                        
+
                                                 // Capturar selección de "Producto"
                                                 document.getElementById('producto-btn').addEventListener('click', function () {
-                                                    producto = "Producto";
-                                                    console.log("Seleccionado:", producto); // Aquí puedes hacer algo más con esta variable
+                                                let tipo = 'producto';
+                                                let tabla = '<?php echo $_GET['tabla']; ?>'; // Obtén el valor de tabla
+                                                window.location.href = 'adicionar.php?tabla=' + tabla + '&tipo=' + tipo // Aquí puedes hacer algo más con esta variable
                                                 });
                                         
                                                 // Capturar selección de "Impresión"
                                                 document.getElementById('impresion-btn').addEventListener('click', function () {
-                                                    producto = "Impresión";
-                                                    console.log("Seleccionado:", producto); // Aquí puedes hacer algo más con esta variable
+                                                    let tipo = 'impresion';
+                                                    let tabla = '<?php echo $_GET['tabla']; ?>'; // Obtén el valor de tabla
+                                                    window.location.href = 'adicionar.php?tabla=' + tabla + '&tipo=' + tipo; // Redirige a la URL
                                                 });
-                                        
-                                                // El botón de cerrar solo cierra el modal gracias a data-bs-dismiss="modal"
                                             });
                                         </script>
                                     <!--Fin modal seleccion-->
-
+    
                                     <?php
+                                }
                                     echo '<a href="crear_excel.php?tabla=' . $_GET['tabla'] . '" type="button" class="btn btn-sm btn-outline-secondary">Exportar</a>';
                                     echo '<a href="crear_pdf.php?tabla=' . $_GET['tabla'] . '" type="button" class="btn btn-sm btn-outline-secondary" target="_blank">Imprimir</a>';
                                 }
