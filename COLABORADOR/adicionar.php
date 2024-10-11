@@ -46,7 +46,7 @@ $tipo = isset($_GET['tipo']) ? mysqli_real_escape_string($link, $_GET['tipo']) :
             <img class="mundo" src="./../images/Logo Mundo 3d.png" alt="" width="150" height="150">
         </div>
 
-        <form class="needs-validation" novalidate method="POST" enctype="multipart/form-data" action="procesarnuevo.php?tabla=<?php echo $tabla; ?>&tipo=<?php echo $tipo; ?>"">
+        <form class="needs-validation" novalidate method="POST" enctype="multipart/form-data" action="procesarnuevo.php?tabla=<?php echo $tabla; ?>&tipo=<?php echo $tipo; ?>" onsubmit="return validateForm()">
             <input type="hidden" class="form-control" name="tabla" value="<?php echo $tabla; ?>">
 
             <?php if ($tabla == 'pedidos') { 
@@ -256,6 +256,29 @@ $tipo = isset($_GET['tipo']) ? mysqli_real_escape_string($link, $_GET['tipo']) :
             document.getElementById('modal').close();
         });
     </script>
+
+    <script>
+        function validateForm() {
+            let isValid = true;
+            const requiredFields = document.querySelectorAll('input[required], select[required]');
+
+            requiredFields.forEach(field => {
+                if (!field.value) {
+                    isValid = false;
+                    field.classList.add('is-invalid'); // Puedes aplicar una clase para marcar el campo como inválido
+                } else {
+                    field.classList.remove('is-invalid'); // Limpiar la clase si el campo es válido
+                }
+            });
+
+            if (!isValid) {
+                alert('Por favor, complete todos los campos obligatorios marcados con (*).');
+            }
+
+            return isValid; // Retornar el estado de validación
+        }
+    </script>
+
 </body>
 
 </html>
