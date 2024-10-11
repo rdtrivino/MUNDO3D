@@ -231,16 +231,18 @@
                             <div class="form-group">
                                 <label for="tipo">Tipo de impresión (*)</label>
                                 <select class="form-control" id="tipo" name="tipo" required>
-                                    <option value="Seleccion">' . $fila['pe_tipo_impresion'] . '</option>
-                                    <option value="Alterno">Resina</option>
+                                    <option value="Seleccion1">' . $fila['pe_tipo_impresion'] . '</option>
+                                    <option value="Resina">Resina</option>
+                                    <option value="Filamento">Filamento</option>
                                 </select>
                             </div>
 
                             <div class="form-group">
                                 <label for="tipo">Color del producto (*)</label>
                                 <select class="form-control" id="color" name="color" required>
-                                    <option value="Seleccion">' . $fila['pe_color'] . '</option>
-                                    <option value="Negro">Negro</option>
+                                    <option value="Seleccion2">' . $fila['pe_color'] . '</option>
+                                    <option value="Único color">Único color</option>
+                                    <option value="Color original">Color original</option>
                                 </select>
                             </div>
 
