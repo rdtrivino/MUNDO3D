@@ -46,7 +46,7 @@ $tipo = isset($_GET['tipo']) ? mysqli_real_escape_string($link, $_GET['tipo']) :
             <img class="mundo" src="./../images/Logo Mundo 3d.png" alt="" width="150" height="150">
         </div>
 
-        <form class="needs-validation" novalidate method="POST" enctype="multipart/form-data" action="procesarnuevo.php?tabla=<?php echo $tabla; ?>">
+        <form class="needs-validation" novalidate method="POST" enctype="multipart/form-data" action="procesarnuevo.php?tabla=<?php echo $tabla; ?>&tipo=<?php echo $tipo; ?>"">
             <input type="hidden" class="form-control" name="tabla" value="<?php echo $tabla; ?>">
 
             <?php if ($tabla == 'pedidos') { 

@@ -1,55 +1,53 @@
 <?php
-    session_start();
+    //session_start();
     include __DIR__ . '/../conexion.php';
+    include 'Programas/controlsesion.php';
 
-    // Confirmación de que el usuario ha realizado el proceso de autenticación
-    if (!isset($_SESSION['confirmado']) || $_SESSION['confirmado'] == false) {
-        header("Location: ../Programas/autenticacion.php");
-        exit(); // Terminamos la ejecución del script después de redirigir
-    }
-
-    // Realizamos la consulta para obtener el rol del usuario
-    $peticion = "SELECT Usu_rol FROM usuario WHERE Usu_Identificacion = '" . $_SESSION['user_id'] . "'";
-    $result = mysqli_query($link, $peticion);
-
-    // Verificamos si la consulta tuvo éxito
-    if (!$result) {
-        // Manejo de errores de consulta
-        // Redirigir a la página de autenticación o mostrar un mensaje de error
-        header("Location: ../Programas/autenticacion.php");
-        exit(); // Terminamos la ejecución del script después de redirigir
-    }
-
-    // Verificamos si la consulta devolvió exactamente un resultado
-    if (mysqli_num_rows($result) != 1) {
-        // Si la consulta no devuelve un solo resultado, puede ser un problema de base de datos
-        // Redirigir a la página de autenticación o mostrar un mensaje de error
-        header("Location: ../Programas/autenticacion.php");
-        exit(); // Terminamos la ejecución del script después de redirigir
-    }
-
-    // Obtenemos el rol del usuario
-    $fila = mysqli_fetch_assoc($result);
-    $rolUsuario = $fila['Usu_rol'];
-
-    // Verificar si el rol del usuario es diferente de 2
-    if ($rolUsuario != 2) {
-        // Si el rol no es 2, redirigir a la página de autenticación
-        header("Location: ../Programas/autenticacion.php");
-        exit(); // Terminamos la ejecución del script después de redirigir
-    }
-    // Si llegamos aquí, el usuario está autenticado y tiene el rol 2
-
-
+    
     // Inicializar la variable mensaje
     $mensaje = "";
+    $tipo = isset($_GET['tipo']) ? mysqli_real_escape_string($link, $_GET['tipo']) : '';
 
     // Verificar si se ha enviado el formulario y se ha establecido la tabla adecuada
     if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['tabla'])) {
         if ($_POST['tabla'] == 'pedidos') {
 
+            if ($tipo == "producto"){
+
             //Obetener el identificador mas alto de la tabla
-            include __DIR__ . '/../conexion.php';
+            $sql = "SELECT MAX(Identificador) AS max_id FROM pedidos";
+            $resultado = mysqli_query($link, $sql);
+            // Verificar si se encontraron resultados
+            if (mysqli_num_rows($resultado) > 0) {
+                // Obtener el resultado como un array asociativo
+                $fila = mysqli_fetch_assoc($resultado);
+                // Almacenar el valor del identificador más alto en una variable
+                $max_id = $fila['max_id'];
+            } else {
+                $max_id = '1';
+            }
+
+            $identificador = $max_id + 1;
+
+            //Preparar la consulta
+            $peticion = "INSERT INTO pedidos (Identificador, Pe_Cliente, Pe_Estado, Pe_Producto, Pe_Cantidad, Pe_Fechapedido, Pe_Fechaentrega, Pe_Observacion, Pe_Usuario) 
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+            // Preparar la consulta
+            $stmt = mysqli_prepare($link, $peticion);
+
+            // Vincular parámetros
+            mysqli_stmt_bind_param($stmt, "sssssssss", $identificador , $_POST['cliente'], $_POST['estado'], $_POST['producto'], $_POST['cantidad'], $_POST['fechapedido'], $_POST['fechaentrega'], $_POST['observacion'], $_SESSION['user_id']);
+                
+                // Ejecutar la consulta preparada
+                if (mysqli_stmt_execute($stmt)) {
+                    $mensaje = "Registro insertado con éxito.";
+                } else {
+                    $mensaje = "Error al insertar el registro: " . mysqli_error($link);
+                }
+
+            } elseif ($tipo == "impresion"){
+            //Obetener el identificador mas alto de la tabla
             $sql = "SELECT MAX(Identificador) AS max_id FROM pedidos";
             $resultado = mysqli_query($link, $sql);
             // Verificar si se encontraron resultados
@@ -92,18 +90,26 @@
             $peticion = "INSERT INTO pedidos (Identificador, Pe_Cliente, Pe_Estado, Pe_Producto, Pe_Cantidad, Pe_Fechapedido, Pe_Fechaentrega, pe_tipo_impresion, pe_color, Pe_Observacion, nombre_imagen, Pe_Usuario) 
              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
+             $estado = "1";
+             $producto = "48";
+
             // Preparar la consulta
             $stmt = mysqli_prepare($link, $peticion);
 
             // Vincular parámetros
-            mysqli_stmt_bind_param($stmt, "ssssssssssss", $identificador , $_POST['cliente'], $_POST['estado'], $_POST['producto'], $_POST['cantidad'], $_POST['fechapedido'], $_POST['fechaentrega'], $_POST['tipoimpresion'], $_POST['color'], $_POST['observacion'], $ruta_completa, $_SESSION['user_id']);
+            mysqli_stmt_bind_param($stmt, "ssssssssssss", $identificador , $_POST['cliente'], $estado, $producto, $_POST['cantidad'], $_POST['fechapedido'], $_POST['fechaentrega'], $_POST['tipoimpresion'], $_POST['color'], $_POST['observacion'], $ruta_completa, $_SESSION['user_id']);
                 
                 // Ejecutar la consulta preparada
-                if (mysqli_stmt_execute($stmt)) {
-                    $mensaje = "Registro insertado con éxito.";
-                } else {
-                    $mensaje = "Error al insertar el registro: " . mysqli_error($link);
-                }
+                try {
+                    if (mysqli_stmt_execute($stmt)) {
+                        $mensaje = "Registro insertado con éxito.";
+                    } else {
+                        $mensaje = "Error al insertar el registro: " . mysqli_error($link);
+                    }
+                } catch (mysqli_sql_exception $e) {
+                    $mensaje = "Error en la consulta: " . $e->getMessage();
+                }              
+            }
 
         } elseif ($_POST['tabla'] == 'productos') {
 
@@ -166,6 +172,7 @@
         mysqli_stmt_close($stmt);
         }
     }
+    mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 ?>
 <!DOCTYPE html>
