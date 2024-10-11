@@ -39,13 +39,13 @@
     }
 
     // Crear una instancia de la conexión a la base de datos
-    $link = mysqli_connect($host, $user, $password);
+    $link = mysqli_connect($dbConfig['host'], $dbConfig['user'], $dbConfig['password'], $dbConfig['dbname']);
 
     if (!$link) {   
         die("Error al conectarse al servidor: " . mysqli_connect_error());
     }
 
-    if (!mysqli_select_db($link, $dbname)) {
+    if (!mysqli_select_db($link, $dbConfig['dbname'])) {
         die("Error al conectarse a la Base de Datos: " . mysqli_error($link));
     }
 

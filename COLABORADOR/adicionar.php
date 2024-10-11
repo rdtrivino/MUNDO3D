@@ -113,7 +113,7 @@ $tipo = isset($_GET['tipo']) ? mysqli_real_escape_string($link, $_GET['tipo']) :
 
                 <div class="form-group">
                     <label for="fechaentrega">Fecha estimada de entrega</label>
-                    <input type="date" class="form-control" id="fechaentrega" name="fechaentrega" />
+                    <input type="date" class="form-control" id="fechaentrega" name="fechaentrega" required />
                 </div>
 
                 <div class="form-group">
