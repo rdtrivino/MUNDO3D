@@ -255,8 +255,9 @@
                                         }
                                     } elseif ($_GET['tabla'] == 'productos') {
                                         $peticion2 = "SELECT productos.*, categoria.Cgo_Nombre AS Pro_Categoria 
-                                                    FROM productos
-                                                    INNER JOIN categoria ON productos.Pro_Categoria = categoria.Cgo_Codigo";
+                                        FROM productos
+                                        INNER JOIN categoria ON productos.Pro_Categoria = categoria.Cgo_Codigo
+                                        WHERE productos.Identificador != 1";
                                         $result = mysqli_query($link, $peticion2);
                                         foreach ($result as $row) {
                                             echo '<tr>
