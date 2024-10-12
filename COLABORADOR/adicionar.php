@@ -164,8 +164,8 @@ $tipo = isset($_GET['tipo']) ? mysqli_real_escape_string($link, $_GET['tipo']) :
                     <label for="tipoimpresion">Tipo de impresión</label>
                     <select class="form-control" id="tipoimpresion" name="tipoimpresion" required>
                         <option value="">Seleccionar el tipo de impresión</option>
-                        <option value="Poliácido Láctico">Filamento</option>
-                        <option value="Acrilonitrilo Butadieno Estireno">Resina</option>
+                        <option value="Filamento">Filamento</option>
+                        <option value="Resina">Resina</option>
                     </select>
                 </div>
 
@@ -173,8 +173,8 @@ $tipo = isset($_GET['tipo']) ? mysqli_real_escape_string($link, $_GET['tipo']) :
                     <label for="color">Color de la impresión</label>
                     <select class="form-control" id="color" name="color" required>
                         <option value="">Seleccionar el color de impresión</option>
-                        <option value="Negro Fibra de Carbono">Único Color</option>
-                        <option value="Blanco Menta">Color Original</option>
+                        <option value="Único Color">Único Color</option>
+                        <option value="Color Original">Color Original</option>
                     </select>
                 </div>
 
