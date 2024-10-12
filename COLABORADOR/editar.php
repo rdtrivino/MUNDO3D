@@ -50,8 +50,15 @@
                                 $fila = mysqli_fetch_assoc($tipo);
                             }
         ?>
-
-        <form class="needs-validation" novalidate method="POST" enctype="multipart/form-data" action="procesaractualizar.php?tabla=<?php echo $tabla; ?>&id=<?php echo $id; ?>&tipo=<?php echo $fila['Pe_Producto']; ?>" onsubmit="return validateForm()">
+        
+        <?php if ($tabla == "pedidos"){
+        echo '
+        <form class="needs-validation" novalidate method="POST" enctype="multipart/form-data" action="procesaractualizar.php?tabla=';?><?php echo $tabla; ?>&id=<?php echo $id; ?>&tipo=<?php echo $fila['Pe_Producto']; ?> <?php echo '" onsubmit="return validateForm()">';
+        } elseif ($tabla == "productos"){
+            echo '
+        <form class="needs-validation" novalidate method="POST" enctype="multipart/form-data" action="procesaractualizar.php?tabla=';?><?php echo $tabla; ?>&id=<?php echo $id; ?><?php echo '" onsubmit="return validateForm()">';
+        }?>
+    
             <input type="hidden" class="form-control" id="address2" name="tabla" value="<?php echo $_GET['tabla']; ?>">
 
             <?php
@@ -255,6 +262,7 @@
                             </div>';
                         }
                         }
+                    //Codigo para procesar formulario de productos    
                     } elseif ($_GET['tabla'] == 'productos') {
                         $peticion3 = "SELECT * FROM productos WHERE Identificador = $Identificador";
                         $result = mysqli_query($link, $peticion3);
