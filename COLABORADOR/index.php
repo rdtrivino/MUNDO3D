@@ -89,9 +89,35 @@
 
                     </div>
                 </div>
-
+                
+                <!--Codigo para establecer logo-->
+                <?php
+                    $logo = ""; 
+                    if (isset($_GET['tabla'])) { 
+                        if ($_GET['tabla'] == "productos"){
+                            echo '
+                            <h4 style="text-align: center;">PRODUCTOS</h4>
+                            <div style="max-width: 70%; margin: 0 auto;">
+                                <div class="caja-giratoria" style="display: inline-block;">
+                                    <img src="..\images\productos.png" alt="Productos" class="img-fluid gira" style="width: 100%; height: auto;">
+                                </div>
+                            </div>';
+                        } else if ($_GET['tabla'] == "pedidos"){
+                            echo '
+                            <h4 style="text-align: center;">PEDIDOS</h4>
+                            <div style="max-width: 70%; margin: 0 auto;">
+                                <div class="caja-giratoria" style="display: inline-block;">
+                                    <img src="..\images\pedidos.png" alt="Pedidos" class="img-fluid gira" style="width: 100%; height: auto;">
+                                </div>
+                            </div>';
+                        } else {
+                        }
+                    }
+                ?>
+                <!--Fin codigo para establecer logo-->
+                
                 <div class="mb-3 text-center" style="margin-top: 70px;"> 
-                    <div style="max-width: 80%; margin: 0 auto;"> 
+                    <div style="max-width: 50%; margin: 0 auto;"> 
                         <div class="caja-giratoria" style="display: inline-block;">
                             <img src="../images/Logo Mundo 3d.png" alt="Pedidos" class="img-fluid gira">
                         </div>
