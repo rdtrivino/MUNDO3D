@@ -1,8 +1,9 @@
 <?php
+
     // Incluir el archivo de conexión a la base de datos
     include __DIR__ . '/../conexion.php';
     // Incluir la librería PDF
-    include_once('libs/fpdf.php');
+    include_once('/../Librerias/fpdf/fpdf.php');
 
     
     
@@ -54,12 +55,15 @@
     
     if ($_GET['tabla'] == 'pedidos') {
         // Consulta SQL para obtener los datos del pedido
-        $result = mysqli_query($link, "SELECT pedidos.*, pedido_estado.Es_Nombre AS Pe_Estado, 
-                    SUBSTRING(productos.Pro_Nombre, 1, 24) AS Pe_Producto_Corta 
+        $result = mysqli_query($link, "SELECT pedidos.*, 
+                    pedido_estado.Es_Nombre AS Pe_Estado, 
+                    SUBSTRING(productos.Pro_Nombre, 1, 24) AS Pe_Producto_Corta, 
+                    SUBSTRING(pedidos.pe_color, 1, 9) AS pe_color_Corta, 
+                    SUBSTRING(pedidos.Pe_Observacion, 1, 25) AS Pe_Observacion_Corta 
                     FROM pedidos
                     INNER JOIN pedido_estado ON pedidos.Pe_Estado = pedido_estado.Es_Codigo
-                    INNER JOIN productos ON pedidos.Pe_Producto = productos.Identificador") or die("Error en la consulta: ".mysqli_error($link));
-    
+                    INNER JOIN productos ON pedidos.Pe_Producto = productos.Identificador") 
+                    or die("Error en la consulta: ".mysqli_error($link));
         // Crear una instancia del objeto PDF
         $pdf = new PDF('L'); // Establecer orientación como landscape
         $pdf->SetAutoPageBreak(true, 15); // Habilitar el salto automático de página con margen de 15mm
@@ -113,8 +117,8 @@
             $pdf->Cell($w[5],6,$row['Pe_Fechapedido'],1);
             $pdf->Cell($w[6],6,$row['Pe_Fechaentrega'],1);
             $pdf->Cell($w[7],6,$row['pe_tipo_impresion'],1);
-            $pdf->Cell($w[8],6,$row['pe_color'],1);
-            $pdf->Cell($w[9],6,$row['Pe_Observacion'],1);
+            $pdf->Cell($w[8],6,$row['pe_color_Corta'],1);
+            $pdf->Cell($w[9],6,$row['Pe_Observacion_Corta'],1);
     
             $pdf->Ln(); // Salto de línea después de cada fila
         }  
@@ -187,7 +191,8 @@
         
         // Salida del PDF
         $pdf->Output();
+
     }
-
-
+ 
 ?>
+
