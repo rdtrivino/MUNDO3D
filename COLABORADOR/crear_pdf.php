@@ -3,10 +3,8 @@
     // Incluir el archivo de conexión a la base de datos
     include __DIR__ . '/../conexion.php';
     // Incluir la librería PDF
-    include_once('/../Librerias/fpdf/fpdf.php');
+    include __DIR__ . '/../Librerias/fpdf/fpdf.php';
 
-    
-    
     class PDF extends FPDF
     {
         // Función encargada de realizar el encabezado

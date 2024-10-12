@@ -226,23 +226,26 @@
                                 <label for="imagen">Nueva Imagen
                                     <input type="file" class="form-control-file" id="imagen" name="imagen" accept="image/*">
                                 </label>
-                            </div>
+                            </div>';
 
+                            echo '
                             <div class="form-group">
                                 <label for="tipo">Tipo de impresión (*)</label>
                                 <select class="form-control" id="tipo" name="tipo" required>
-                                    <option value="Seleccion1">' . $fila['pe_tipo_impresion'] . '</option>
-                                    <option value="Resina">Resina</option>
-                                    <option value="Filamento">Filamento</option>
+                                    <option value="' . $fila['pe_tipo_impresion'] . '">' . $fila['pe_tipo_impresion'] . '</option>
+                                    <option value="' . ($fila['pe_tipo_impresion'] === 'Resina' ? 'Filamento' : 'Resina') . '">
+                                        ' . ($fila['pe_tipo_impresion'] === 'Resina' ? 'Filamento' : 'Resina') . '
+                                    </option>
                                 </select>
                             </div>
 
                             <div class="form-group">
                                 <label for="tipo">Color del producto (*)</label>
                                 <select class="form-control" id="color" name="color" required>
-                                    <option value="Seleccion2">' . $fila['pe_color'] . '</option>
-                                    <option value="Único color">Único color</option>
-                                    <option value="Color original">Color original</option>
+                                    <option value="' . $fila['pe_color'] . '">' . $fila['pe_color'] . '</option>
+                                    <option value="' . ($fila['pe_color'] === 'Único Color' ? 'Color Original' : 'Único Color') . '">
+                                    ' . ($fila['pe_color'] === 'Único Color' ? 'Color Original' : 'Único Color') . '
+                                    </option>
                                 </select>
                             </div>
 
