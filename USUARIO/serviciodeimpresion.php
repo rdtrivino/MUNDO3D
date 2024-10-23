@@ -339,7 +339,6 @@
                                         <tr>
                                             <th>Material</th>
                                             <th>Volumen de pieza</th>
-                                            <th>Tiempo de impresion</th>
                                             <th>Fechas de entrega </th>
                                             <th>Precio estimado</th>
                                         </tr>
@@ -347,17 +346,15 @@
                                     <tbody>
                                         <tr>
                                             <td>filamento</td>
-                                            <td>10 kg</td>
-                                            <td> 05 Horas</td>
-                                            <td>De 5 a 7 dias</td>
-                                            <td>$600.000</td>
+                                            <td>1-cm3</td>
+                                            <td>5 min a 15 min</td>
+                                            <td>$15.000</td>
                                         </tr>
                                         <tr>
                                             <td>Resina</td>
-                                            <td>8 kg</td>
-                                            <td> 15 Horas</td>
-                                            <td>De 1 a 2 semanas</td>
-                                            <td>$960.000</td>
+                                            <td>1-cm3</td>
+                                            <td>3 min a 10 min</td>
+                                            <td>$20.000</td>
                                         </tr>
                                         <!-- Agrega más filas según sea necesario -->
                                     </tbody>
