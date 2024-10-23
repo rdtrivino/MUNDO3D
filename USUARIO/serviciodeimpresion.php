@@ -446,7 +446,7 @@
                             <div class="col-lg-6">
                                 <div class="form-group text-right">
                                     <label for="imagenPrevia">Imagen a Imprimir:</label>
-                                    <img src="#" alt="Imagen Previa" id="imagenPrevia"
+                                    <img src="./logo.png" alt="Imagen Previa" id="imagenPrevia"
                                         style="max-width: 80%; height: auto;">
                                 </div>
                             </div>
@@ -513,33 +513,33 @@
         ?>
     </script>
     
- <script>
-         $(document).  ready(function () {
-          // Funci  ón para mostrar la imagen previa
-          function mostrarImagenPrevia(input) {
-              if (input.files && input.files[0]) {
-                  var   reader = new FileReader();
-                    reader.onload = function (e) {
-                        $('#imagenPrevia').attr('src', e.target.result);
-                        // Almacenar la URL de la imagen en el almacenamiento local
-                        localStorage.setItem('imagenPrevia', e.target.result);
+    <script>
+    $(document).ready(function () {
+        // Función para mostrar la imagen previa
+        function mostrarImagenPrevia(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#imagenPrevia').attr('src', e.target.result);
+                    // Almacenar la URL de la imagen en el almacenamiento local
+                    localStorage.setItem('imagenPrevia', e.target.result);
                 }
-                    reader.readAsDataURL(input.files[0]);
-                }
+                reader.readAsDataURL(input.files[0]);
             }
-    
-            // Mostrar la imagen previa al cargar la página, si existe en el almacenamiento local
-        var imagenPreviaGuardada = localStorage.getItem('imagenPrevia');
-            if (imagenPreviaGuardada) {
-                $('#imagenPrevia').attr('src', imagenPreviaGuardada);
         }
-    
-                // Manejar el cambio en el campo de entrada de archivo
-            $('#archivoImpresion').change(function () {
+
+        // Mostrar la imagen previa al cargar la página, si existe en el almacenamiento local
+        //   var imagenPreviaGuardada = localStorage.getItem('imagenPrevia');
+        //     if (imagenPreviaGuardada) {
+        //     $('#imagenPrevia').attr('src', imagenPreviaGuardada);
+        // }
+
+        // Manejar el cambio en el campo de entrada de archivo
+        $('#archivoImpresion').change(function () {
             mostrarImagenPrevia(this);
-            });
         });
-    </script>
+    });
+</script>
     
     <!-- Footer Start -->
     <div class="container-fluid bg-primary text-white px-sm-3 px-md-5" style="margin-top: auto; margin-bottom: 0;">
