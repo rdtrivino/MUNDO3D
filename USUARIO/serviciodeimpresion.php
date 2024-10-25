@@ -21,9 +21,7 @@
 </head>
 
 <body>
-<?php include './programas/funciones-in-re.php'; 
-
-?>
+<?php include './programas/funciones-in-re.php'; //Conexión a la base de datos ?>
 
     <!-- Topbar Start -->
     <div class="container-fluid bg-primary py-3">

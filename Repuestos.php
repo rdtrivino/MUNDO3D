@@ -16,12 +16,10 @@
     <link rel="shortcut icon" href="./images/Logo Mundo 3d.png" type="image/x-icon">
     <link rel="stylesheet" href="../css/normalize.css">
     <link rel="stylesheet" type="text/css" href="./css/estilosvisi.css">
-    <!-- SweetAlert2 CSS -->
-    <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" />
+    <!-- Alerta de "SweetAlert2" CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" />
 
-    <!-- SweetAlert2 JS -->
+    <!-- Alerta de "SweetAlert2" JS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="./Programas/css/index.css">
 </head>
