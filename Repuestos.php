@@ -29,7 +29,7 @@
 <body>
     <?php include 'conexion.php'; ?>
 
-    <!-- Navbar Start -->
+    <!--Funcionalidad del Navbar  -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="#">
             <h1 class="m-0">
@@ -77,6 +77,8 @@
             </ul>
         </div>
     </nav>
+
+<!--Funcionalidad del buscador de productos de repuestos -->
     <div class="page-header container-fluid bg-secondary pt-0 pt-lg-1 pb-1 mb-4">
         <div class="row align-items-center py-4">
             <div class="col-md-9 text-center text-md-right">
@@ -89,7 +91,6 @@
             </div>
         </div>
     </div>
-
 
     <!-- Agregar un margen superior aquí para separar la sección del nav -->
     <div class="container-fluid" style="background-color: #D3D3D3; margin-top: -30px;">
@@ -158,7 +159,8 @@
             </div>
         </div>
     </div>
-    <!-- Modal de detalles del producto -->
+
+    <!-- Modal de detalles de cada producto -->
     <div class="modal fade" id="detalleProductoModal" tabindex="-1" role="dialog"
         aria-labelledby="detalleProductoModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">

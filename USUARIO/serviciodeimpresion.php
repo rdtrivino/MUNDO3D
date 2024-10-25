@@ -441,9 +441,9 @@
                                 </div>
                             </div>
                             <div class="col-lg-6">
-                                <div class="form-group text-right">
-                                    <label for="imagenPrevia">Imagen a Imprimir:</label>
-                                    <img src="./logo.png" alt="Imagen Previa" id="imagenPrevia"
+                                <div class="form-group text-center">
+                                    <label for="imagenPrevia"style="margin: 4%">Imagen a Imprimir:</label>
+                                    <img src="../ADMIN/images/Logo Mundo 3d.png" alt="Imagen Previa" id="imagenPrevia"
                                         style="max-width: 80%; height: auto;">
                                 </div>
                             </div>
