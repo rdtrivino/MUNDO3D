@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 13-11-2024 a las 19:53:33
+-- Tiempo de generación: 14-11-2024 a las 01:37:37
 -- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.2.12
+-- Versión de PHP: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -229,7 +229,15 @@ INSERT INTO `auditoria_productos` (`identificador`, `usuario`, `fecha`, `product
 (173, 0, '2024-11-11 06:35:34.000000', 44, 'Se actualiza producto con id relacionado'),
 (174, 0, '2024-11-11 06:35:45.000000', 44, 'Se actualiza producto con id relacionado'),
 (175, 0, '2024-11-11 06:37:45.000000', 44, 'Se actualiza producto con id relacionado'),
-(176, 0, '2024-11-11 06:37:57.000000', 44, 'Se actualiza producto con id relacionado');
+(176, 0, '2024-11-11 06:37:57.000000', 44, 'Se actualiza producto con id relacionado'),
+(177, 0, '2024-11-13 14:31:06.000000', 39, 'Se actualiza producto con id relacionado'),
+(178, 0, '2024-11-13 14:31:42.000000', 39, 'Se actualiza producto con id relacionado'),
+(179, 0, '2024-11-13 14:32:09.000000', 39, 'Se actualiza producto con id relacionado'),
+(180, 0, '2024-11-13 14:32:22.000000', 39, 'Se actualiza producto con id relacionado'),
+(181, 0, '2024-11-13 14:35:52.000000', 40, 'Se actualiza producto con id relacionado'),
+(182, 0, '2024-11-13 14:36:01.000000', 40, 'Se actualiza producto con id relacionado'),
+(183, 0, '2024-11-13 14:36:09.000000', 40, 'Se actualiza producto con id relacionado'),
+(184, 0, '2024-11-13 14:36:17.000000', 40, 'Se actualiza producto con id relacionado');
 
 -- --------------------------------------------------------
 
@@ -270,6 +278,15 @@ CREATE TABLE `carrito` (
   `estado_pago` enum('pendiente','pagado') NOT NULL DEFAULT 'pendiente',
   `id_producto` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `carrito`
+--
+
+INSERT INTO `carrito` (`id`, `Pe_Cliente`, `cantidad`, `estado_pago`, `id_producto`) VALUES
+(323, 1000698993, 2, 'pendiente', 4),
+(324, 1000698993, 1, 'pendiente', 21),
+(325, 1000698993, 1, 'pendiente', 23);
 
 -- --------------------------------------------------------
 
@@ -486,8 +503,8 @@ INSERT INTO `productos` (`Identificador`, `Pro_Nombre`, `Pro_Descripcion`, `Pro_
 (35, 'CORREA GT2 X/Y', 'Un juego de correas X/Y cortas de repuesto.  Modelos compatibles  Zortrax M200 Zortrax M200 Plus Zortrax M300 Plus Zortrax M300 Zortrax M300 Doble', 2, 10, 160000, 80000, 'activo', '../images/imagenes_catalogo/catalogo-35.webp', '', 38.35, 1026577616, ''),
 (36, 'EXTRUSOR METALICO DOBLE PIÑON CREALITY', 'Hecho en aleación de aluminio Color rojo y gris Adecuado para CR-10, para CR-10S, para Ender-3, para Ender-3 PRO.  1. Mecanismo de extrusión de doble engranaje, alta fuerza de extrusión, asegurando una alimentación suave 2. El controlador original de alea', 2, 19, 200000, 100000, 'activo', '../images/imagenes_catalogo/catalogo-36.webp', '', 47.93, 1026577616, ''),
 (38, 'Charmander - Pokemon', 'Modelo 3D de Charmander, dividido en dos partes: una linda cabeza redonda y un cuerpo pequeño y regordete', 5, 2, 0, 0, 'activo', '../images/imagenes_catalogo/pokemon.png', '', 0.00, 0, 'pokemon.zip'),
-(39, 'Mascara', 'Modelo 3D de una mascara con dientes afilados', 5, 2, 0, 0, 'activo', '../images/imagenes_catalogo/mascara.png', '', 0.00, 0, 'mascara.zip'),
-(40, 'Nomos ', 'Modelo 3D de nomos ideal para el jardín o decoración navideña', 5, 2, 0, 0, 'activo', '../images/imagenes_catalogo/nomos.png', '', 0.00, 0, 'nomos.zip'),
+(39, 'Mini Vault with Lever', 'Piezas 100 % impresas, sin pasadores ni cojinetes. Tamaño adecuado para imprimir en Prusa Mini ', 5, 2, 0, 0, 'activo', '../images/imagenes_catalogo/boveda.png', '', 0.00, 0, 'boveda.zip'),
+(40, 'Mini Árbol de Navidad LED', 'Impresión fácil y rápida. Iluminado por una vela LED // Impresión sencilla y rápida. Iluminado por una vela de té LED.', 5, 2, 0, 0, 'activo', '../images/imagenes_catalogo/vela2.png', '', 0.00, 0, 'vela2.zip'),
 (41, 'Manzana', 'Modelo 3D de una manzana con Calaveras', 5, 2, 0, 0, 'activo', '../images/imagenes_catalogo/manzana.png', '', 0.00, 0, 'manzana.zip'),
 (42, 'Candelabro', 'Modelo 3D de un candelabro con ondas ', 5, 2, 0, 0, 'activo', '../images/imagenes_catalogo/candelabro.png', '', 0.00, 0, 'candelabro.zip'),
 (43, 'Maceta ', 'Modelo 3D de una maceta moderna con una base plana', 5, 2, 0, 0, 'activo', '../images/imagenes_catalogo/maceta.png', '', 0.00, 0, 'maceta.zip'),
@@ -720,7 +737,7 @@ ALTER TABLE `auditoria_pedidos`
 -- AUTO_INCREMENT de la tabla `auditoria_productos`
 --
 ALTER TABLE `auditoria_productos`
-  MODIFY `identificador` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=177;
+  MODIFY `identificador` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=185;
 
 --
 -- AUTO_INCREMENT de la tabla `calendario`
@@ -732,7 +749,7 @@ ALTER TABLE `calendario`
 -- AUTO_INCREMENT de la tabla `carrito`
 --
 ALTER TABLE `carrito`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=323;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=326;
 
 --
 -- AUTO_INCREMENT de la tabla `compras`
