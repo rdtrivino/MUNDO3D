@@ -168,7 +168,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
 
             // Preparar la consulta SQL para insertar los datos en la tabla de pedidos
-            $sql = "INSERT INTO pedidos (Pe_Cliente, pe_nombre_pedido, pe_tipo_impresion, nombre_imagen, pe_color, Pe_Observacion, Pe_Cantidad, Pe_Estado, Pe_FechaPedido, Pe_FechaEntrega, Pe_Producto) VALUES ('$cliente', '$nombrePedido', '$tipoImpresion', '$imagenBinaria', '$color', '$observaciones', '$cantidad', 1, '$fechaPedido', '$fechaEntrega', 48)";
+            $sql = "INSERT INTO pedidos (Pe_Cliente, pe_nombre_pedido, pe_tipo_impresion, nombre_imagen, pe_color, Pe_Observacion, Pe_Cantidad, Pe_Estado, Pe_FechaPedido, Pe_FechaEntrega, Pe_Producto) VALUES ('$cliente', '$nombrePedido', '$tipoImpresion', '$imagenBinaria', '$color', '$observaciones', '$cantidad', 1, '$fechaPedido', '$fechaEntrega', 1)";
 
             // Ejecutar la consulta
             if (mysqli_query($link, $sql)) {

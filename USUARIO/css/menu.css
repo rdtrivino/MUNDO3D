@@ -1,0 +1,99 @@
+  /* Estilo para el contenedor que envuelve al botón de cerrar sesión */
+  .align-items-center {
+    display: flex;
+    align-items: center;
+}
+
+/* Estilo para el recuadro del ícono de cerrar sesión */
+#logout {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 20px;
+    /* Aumenta el padding para hacer el recuadro más grande */
+    border: 1px solid #ffffff;
+    border-radius: 10px;
+    /* Aumenta el radio de borde para hacer el recuadro más redondeado */
+    cursor: pointer;
+    color: white;
+}
+
+/* Estilo para el icono de discapacitado */
+#disabled-icon {
+    margin-right: 10px;
+}
+
+/* Estilo para el texto "Cerrar sesión" */
+#logout-text {
+    white-space: nowrap;
+    margin-right: 10px;
+}
+
+/* Estilo para el texto dentro del botón de hamburguesa */
+#menu-toggle span {
+    color: white;
+    text-decoration: none;
+}
+
+/* Estilo para los elementos del menú desplegable */
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    background-color: #333;
+    padding: 20px;
+    /* Aumenta el padding para hacer el recuadro más grande */
+    border-radius: 10px;
+    /* Aumenta el radio de borde para hacer el recuadro más redondeado */
+    z-index: 1000;
+    /* Ajusta el z-index para que esté por encima */
+}
+
+/* Estilo para cada opción del menú desplegable */
+.dropdown-menu-item {
+    color: white;
+    text-decoration: none;
+    display: block;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ffffff;
+    border-radius: 5px;
+}
+
+.dropdown-menu-item:hover {
+    color: #ffffff;
+    /* Cambia el color del texto al pasar el mouse */
+    text-decoration: none !important;
+    /* Quita el subrayado al pasar el ratón */
+}
+
+/* Estilo para el botón de cerrar sesión al pasar el ratón */
+#logout-button:hover {
+    cursor: pointer;
+}
+
+/* Estilo para alinear a la derecha */
+.align-right {
+    margin-left: auto;
+}
+
+/* ETILOS DE ACCESIBILIDAD*/
+.font-small {
+    font-size: 14px;
+}
+
+.font-medium {
+    font-size: 16px;
+}
+
+.font-large {
+    font-size: 20px;
+}
+
+#disabled-icon {
+    display: inline-block;
+    /* Para alinear verticalmente con los enlaces */
+}
+
+a {
+    text-decoration: none;
+    /* Eliminar subrayado de los enlaces */
+}

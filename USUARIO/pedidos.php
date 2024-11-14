@@ -280,7 +280,9 @@ function obtenerNombreEstado($IdentificadorEstado, $conexion)
       <button class="font-large text-black" onclick="aumentarTamano()">A</button>
     </div>
     <div class="button-box" style="margin-right: 10px;">
-      <i class="fas fa-wheelchair fa-lg text-black"></i>
+    <i class="fas fa-search fa-lg text-black"
+           data-tooltip="Ampliar vista"
+           onmouseover="cambiarCursor(event)" onmouseout="restaurarCursor()"></i>
     </div>
   </div>
 

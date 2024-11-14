@@ -18,6 +18,11 @@
     <link href="css/style.css" rel="stylesheet">
     <link rel="stylesheet" href="../css/normalize.css">
     <link rel="stylesheet" type="text/css" href="programas/im-pr.css">
+    <link rel="stylesheet" type="text/css" href="css/icon.css">
+    <link rel="stylesheet" type="text/css" href="css/menu.css">
+
+     <!-- SweetAlert2 CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -60,107 +65,7 @@
                     </script>
                 </div>
             </div>
-            <style>
-                /* Estilo para el contenedor que envuelve al botón de cerrar sesión */
-                .align-items-center {
-                    display: flex;
-                    align-items: center;
-                }
-
-                /* Estilo para el recuadro del ícono de cerrar sesión */
-                #logout {
-                    display: inline-flex;
-                    align-items: center;
-                    padding: 10px 20px;
-                    /* Aumenta el padding para hacer el recuadro más grande */
-                    border: 1px solid #ffffff;
-                    border-radius: 10px;
-                    /* Aumenta el radio de borde para hacer el recuadro más redondeado */
-                    cursor: pointer;
-                    color: white;
-                }
-
-                /* Estilo para el icono de discapacitado */
-                #disabled-icon {
-                    margin-right: 10px;
-                }
-
-                /* Estilo para el texto "Cerrar sesión" */
-                #logout-text {
-                    white-space: nowrap;
-                    margin-right: 10px;
-                }
-
-                /* Estilo para el texto dentro del botón de hamburguesa */
-                #menu-toggle span {
-                    color: white;
-                    text-decoration: none;
-                }
-
-                /* Estilo para los elementos del menú desplegable */
-                .dropdown-menu {
-                    display: none;
-                    position: absolute;
-                    background-color: #333;
-                    padding: 20px;
-                    /* Aumenta el padding para hacer el recuadro más grande */
-                    border-radius: 10px;
-                    /* Aumenta el radio de borde para hacer el recuadro más redondeado */
-                    z-index: 1000;
-                    /* Ajusta el z-index para que esté por encima */
-                }
-
-                /* Estilo para cada opción del menú desplegable */
-                .dropdown-menu-item {
-                    color: white;
-                    text-decoration: none;
-                    display: block;
-                    margin-bottom: 10px;
-                    padding: 10px;
-                    border: 1px solid #ffffff;
-                    border-radius: 5px;
-                }
-
-                .dropdown-menu-item:hover {
-                    color: #ffffff;
-                    /* Cambia el color del texto al pasar el mouse */
-                    text-decoration: none !important;
-                    /* Quita el subrayado al pasar el ratón */
-                }
-
-                /* Estilo para el botón de cerrar sesión al pasar el ratón */
-                #logout-button:hover {
-                    cursor: pointer;
-                }
-
-                /* Estilo para alinear a la derecha */
-                .align-right {
-                    margin-left: auto;
-                }
-
-                /* ETILOS DE ACCESIBILIDAD*/
-                .font-small {
-                    font-size: 14px;
-                }
-
-                .font-medium {
-                    font-size: 16px;
-                }
-
-                .font-large {
-                    font-size: 20px;
-                }
-
-                #disabled-icon {
-                    display: inline-block;
-                    /* Para alinear verticalmente con los enlaces */
-                }
-
-                a {
-                    text-decoration: none;
-                    /* Eliminar subrayado de los enlaces */
-                }
-            </style>
+           
             </head>
 
             <body>
@@ -168,22 +73,21 @@
                     <div class="align-items-center">
                         <!-- Botón de hamburguesa para desplegar opciones -->
                         <div class="col-md-6 text-center text-lg-right align-right">
-                            <div class="d-inline-flex align-items-center">
-                                <!-- Icono de discapacitado -->
-                                <div id="buttons-container"
-                                    style="display: flex; justify-content: space-between; align-items: center;">
-                                    <a href="#" class="font-small text-white font-weight-bold mr-3"
-                                        onclick="adjustFontSize('small')">A</a>
-                                    <a href="#" class="font-medium text-white font-weight-bold mr-3"
-                                        onclick="adjustFontSize('medium')">A</a>
-                                    <a href="#" class="font-large text-white font-weight-bold mr-3"
-                                        onclick="adjustFontSize('large')">A</a>
+                        <div class="d-inline-flex align-items-center">
+                                <!-- Icono para aumentar la letra -->
+                                <div id="buttons-container" style="display: flex; justify-content: space-between; align-items: center;">
+                                <a href="#" class="font-small text-white font-weight-bold mr-3" onclick="adjustFontSize('small')">A</a>
+                                <a href="#" class="font-medium text-white font-weight-bold mr-3" onclick="adjustFontSize('medium')">A</a>
+                                <a href="#" class="font-large text-white font-weight-bold mr-3" onclick="adjustFontSize('large')">A</a>
 
-                                    <div id="disabled-icon">
-                                        <i class="fas fa-wheelchair fa-lg text-white" onclick="aumentarTamano()"
-                                            onmouseover="cambiarCursor(event)" onmouseout="restaurarCursor()"></i>
-                                    </div>
+                                <div id="disabled-icon" style="position: relative;">
+                                    <!-- Ícono de lupa con mensaje personalizado al pasar el mouse -->
+                                    <i class="fas fa-search fa-lg text-white"
+                                    data-tooltip="Ampliar vista"
+                                    onclick="aumentarTamano()"
+                                    onmouseover="cambiarCursor(event)" onmouseout="restaurarCursor()"></i>
                                 </div>
+                            </div>
                                 <script>
                                     function adjustFontSize(size) {
                                         const body = document.body;
@@ -214,8 +118,8 @@
                                         event.target.style.cursor = 'default';
                                     }
                                 </script>
-                                <!-- Menú desplegable -->
-                                <div class="dropdown" style="position: relative; white-space: nowrap;">
+                               <!-- Menú desplegable -->
+                               <div class="dropdown" style="position: relative; white-space: nowrap;">
                                     <div id="dropdown-menu" class="dropdown-menu dropdown-menu-right"
                                         aria-labelledby="menu-toggle" style="background-color: black;"> <a
                                             href="../Programas/redireccionarpaginas.php?page=configuracion"
@@ -258,11 +162,23 @@
                                     });
 
                                     function confirmLogout() {
-                                        var confirmLogout = confirm("¿Estás seguro de que deseas cerrar sesión?");
-                                        if (confirmLogout) {
-                                            window.location.href = "../Programas/logout.php"; // Redirige al script de cierre de sesión
-                                        }
+                                        Swal.fire({
+                                            title: '¿Estás seguro?',
+                                            text: "¿Realmente quieres cerrar sesión?",
+                                            icon: 'warning',
+                                            showCancelButton: true,
+                                            confirmButtonColor: '#d33',
+                                            cancelButtonColor: '#616970',
+                                            confirmButtonText: 'Sí, cerrar sesión',
+                                            cancelButtonText: 'Cancelar'
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                // Redirige al script de cierre de sesión
+                                                window.location.href = "../Programas/logout.php";
+                                            }
+                                        });
                                     }
+                                </script>
                                 </script>
                             </div>
                         </div>
@@ -300,7 +216,7 @@
             </nav>
         </div>
     </div>
-    <!-- Navbar End -->
+    <!--Fin del  Navbar -->
     <div class="page-header container-fluid bg-secondary pt-0 pt-lg-1 pb-1 mb-4">
         <div class="row align-items-center py-4">
             <div class="col-md-6 offset-md-6 text-center text-md-right">
@@ -536,7 +452,7 @@
     });
 </script>
     
-    <!-- Footer Start -->
+    <!--Inicio de el Footer-->
     <div class="container-fluid bg-primary text-white px-sm-3 px-md-5" style="margin-top: auto; margin-bottom: 0;">
         <div class="row pt-5">
             <div class="col-lg-4 col-md-6 mb-5">
@@ -618,12 +534,10 @@
     </p>
     </div>
 
-    <!-- Footer End -->
-
+    <!--fin del Footer -->
 
     <!-- Back to Top -->
     <a href="#" class="btn btn-lg btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
-
 
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>

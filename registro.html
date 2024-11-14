@@ -1,32 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
+		<!-- Metadatos y configuraciones básicas -->
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+		<!-- Importa la fuente Roboto de Google Fonts -->
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link
-			href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
-			rel="stylesheet"
-		/>
-		<link
-			rel="shortcut icon"
-			href="./images/Logo Mundo 3d.png"
-			type="image/x-icon"
-		/>
-		<link
-			rel="stylesheet"
-			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-		/>
+		<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet"/>
+
+		<!-- Favicon de la página (ícono en la pestaña del navegador) -->
+		<link rel="shortcut icon" href="./images/Logo Mundo 3d.png" type="image/x-icon"/>
+
+		<!-- Librería de iconos Fon Awesome -->
+		<link rel="stylesheet" thref="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+
+		<!-- Hoja de estilos personalizada -->
 		<link rel="stylesheet" href="./css/estilosrg.css" />
-		<link
-			rel="stylesheet"
-			href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"
-		/>
+
+		<!-- Librería de estilos para SweetAlert2 -->
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"/>
 		<title>Página de registro</title>
+
+		<!-- Estilos internos personalizados para el formulario -->
 		<style>
+			/* Contenedor principal con estilos y sombras */
 			.container {
-				max-width: 500px; /* Ajusta el ancho máximo aquí */
+				max-width: 500px; /* Define el ancho máximo del contenedor */
 				background: #f8f9fd;
 				background: linear-gradient(
 					0deg,
@@ -41,6 +42,7 @@
 				text-align: center;
 			}
 
+			/* Encabezado del formulario de registro */
 			.heading {
 				font-weight: 900;
 				font-size: 30px;
@@ -48,10 +50,12 @@
 				margin-bottom: 20px;
 			}
 
+			/* Estilo de los campos del formulario */
 			.form {
 				margin-top: 20px;
 			}
 
+			/* Estilos para los campos de entrada del formulario */
 			.form .input {
 				width: 100%;
 				background: white;
@@ -63,19 +67,23 @@
 				border-inline: 2px solid transparent;
 			}
 
+			/* Placeholder para navegadores antiguos */
 			.form .input::-moz-placeholder {
 				color: rgb(170, 170, 170);
 			}
 
+			/* Placeholder para la mayoría de navegadores */
 			.form .input::placeholder {
 				color: rgb(170, 170, 170);
 			}
 
+			/* Estilos para el campo de entrada activo */
 			.form .input:focus {
 				outline: none;
 				border-inline: 2px solid #12b1d1;
 			}
 
+			/* Botón de envío del formulario */
 			.form .login-button {
 				display: block;
 				width: 100%;
@@ -94,144 +102,52 @@
 				transition: all 0.2s ease-in-out;
 			}
 
+			/* Efecto hover del botón */
 			.form .login-button:hover {
 				transform: scale(1.03);
 				box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 23px 10px -20px;
 			}
 
+			/* Efecto al hacer clic en el botón */
 			.form .login-button:active {
 				transform: scale(0.95);
 				box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 15px 10px -10px;
 			}
-
-			.social-account-container {
-				margin-top: 25px;
-			}
-
-			.social-account-container .title {
-				display: block;
-				font-size: 10px;
-				color: rgb(170, 170, 170);
-			}
-
-			.social-account-container .social-accounts {
-				width: 100%;
-				display: flex;
-				justify-content: center;
-				gap: 15px;
-				margin-top: 5px;
-			}
-
-			.social-account-container .social-accounts .social-button {
-				background: linear-gradient(
-					45deg,
-					rgb(0, 0, 0) 0%,
-					rgb(112, 112, 112) 100%
-				);
-				border: 5px solid white;
-				padding: 5px;
-				border-radius: 50%;
-				width: 40px;
-				aspect-ratio: 1;
-				display: grid;
-				place-content: center;
-				box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 12px 10px -8px;
-				transition: all 0.2s ease-in-out;
-			}
-
-			.social-account-container .social-accounts .social-button .svg {
-				fill: white;
-				margin: auto;
-			}
-
-			.social-account-container .social-accounts .social-button:hover {
-				transform: scale(1.2);
-			}
-
-			.social-account-container .social-accounts .social-button:active {
-				transform: scale(0.9);
-			}
-
-			.agreement {
-				display: block;
-				margin-top: 15px;
-			}
-
-			.agreement a {
-				text-decoration: none;
-				color: #0099ff;
-				font-size: 9px;
-			}
 		</style>
 	</head>
+	<!-- Contenido del cuerpo con fondo de degradado -->
 	<body style="background: linear-gradient(to bottom right, #dddddd, #dddddd);">
+		<!-- Botón para regresar a la página de inicio -->
 		<a class="Btn-1" href="index.html">
 			<div class="sign">
 				<img src="images/iconizer-bx-home-alt-2.2.svg" alt="Inicio" />
 			</div>
 			<div class="text">INICIO</div>
 		</a>
+		<!-- Contenedor principal del formulario -->
 		<div class="container">
 			<div class="heading">Regístrate</div>
-			<form
-				class="form"
-				id="registroForm"
-				action="Programas/registro.php"
-				method="POST"
-			>
-				<input
-					required
-					class="input"
-					type="text"
-					name="Usu_Identificacion"
-					placeholder="Documento de identidad"
-				/>
-				<input
-					required
-					class="input"
-					type="text"
-					name="Usu_Nombre_completo"
-					placeholder="Nombres y apellidos"
-				/>
-				<input
-					class="input"
-					type="tel"
-					name="Usu_Telefono"
-					placeholder="Número de teléfono"
-				/>
-				<input
-					required
-					class="input"
-					type="email"
-					name="Usu_Email"
-					placeholder="Correo electrónico"
-				/>
+			<!-- Formulario de registro con método POST -->
+			<form class="form"id="registroForm" action="Programas/registro.php"method="POST">
+				<!-- Campos de entrada requeridos para registro de usuario -->
+				<input required class="input" type="text"name="Usu_Identificacion"placeholder="Documento de identidad"/>
+				<input required class="input"type="text"name="Usu_Nombre_completo"placeholder="Nombres y apellidos"/>
+				<input class="input"type="tel"name="Usu_Telefono"placeholder="Número de teléfono"/>
+				<input required class="input"type="email"name="Usu_Email"placeholder="Correo electrónico"/>
+
+				<!-- Menú desplegable para seleccionar ciudad -->
 				<select name="Usu_Ciudad" class="input">
 					<option value="Bogota D.C.">Bogota D.C.</option>
 					<option value="Medellin">Medellin</option>
 					<option value="Cali">Cali</option>
 				</select>
-				<input
-					required
-					class="input"
-					type="text"
-					name="Usu_Direccion"
-					placeholder="Dirección de residencia"
-				/>
-				<input
-					required
-					class="input"
-					type="password"
-					name="Usu_Contraseña"
-					placeholder="Contraseña"
-				/>
-				<input
-					required
-					class="input"
-					type="password"
-					name="Confirma_Contraseña"
-					placeholder="Confirma contraseña"
-				/>
+
+				<!-- Más campos de entrada de usuario -->
+				<input required class="input" type="text"name="Usu_Direccion"placeholder="Dirección de residencia"/>
+				<input required class="input" type="password" name="Usu_Contraseña"placeholder="Contraseña"/>
+				<input required class="input"type="password"name="Confirma_Contraseña"placeholder="Confirma contraseña"/>
+
+				<!-- Botón de envío para registrar usuario -->
 				<input type="submit" class="login-button" value="Regístrate" />
 			</form>
 		</div>

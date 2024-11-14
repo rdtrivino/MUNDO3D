@@ -2,32 +2,29 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
+		<!-- Etiqueta meta para ajustar la visualización en dispositivos móviles -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+		<!-- Fuentes de Google para el estilo del texto -->
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link
-			href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
-			rel="stylesheet"
-		/>
-		<link
-			rel="shortcut icon"
-			href="./images/Logo Mundo 3d.png"
-			type="image/x-icon"
-		/>
-		<link
-			rel="stylesheet"
-			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-		/>
+		<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"rel="stylesheet"/>
+		<!-- Favicon (icono de la pestaña del navegador) -->
+		<link rel="shortcut icon" href="./images/Logo Mundo 3d.png" type="image/x-icon"/>
+		<!-- Iconos de Font Awesome para estilos o gráficos -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+		<!-- Archivo de estilos CSS personalizado -->
 		<link rel="stylesheet" href="./css/estilosrg.css" />
-		<link
-			rel="stylesheet"
-			href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"
-		/>
+		<!-- Estilos para las alertas de SweetAlert2 -->
+		<link rel="stylesheet"href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"/>
+
 		<title>Iniciar sesión</title>
+		
+		<!-- Estilos adicionales para el formulario -->
 		<style>
+			/* Estilos de la caja contenedora del formulario */
 			.container {
-				max-width: 500px; /* Ajusta el ancho máximo aquí */
-				background: #f8f9fd;
+				max-width: 500px;
 				background: linear-gradient(
 					0deg,
 					rgb(255, 255, 255) 0%,
@@ -41,6 +38,7 @@
 				text-align: center;
 			}
 
+			/* Estilos para el encabezado del formulario */
 			.heading {
 				font-weight: 900;
 				font-size: 30px;
@@ -48,10 +46,12 @@
 				margin-bottom: 20px;
 			}
 
+			/* Estilos generales del formulario */
 			.form {
 				margin-top: 20px;
 			}
 
+			/* Estilos de los campos de entrada */
 			.form .input {
 				width: 100%;
 				background: white;
@@ -63,6 +63,7 @@
 				border-inline: 2px solid transparent;
 			}
 
+			/* Color del placeholder en los navegadores */
 			.form .input::-moz-placeholder {
 				color: rgb(170, 170, 170);
 			}
@@ -71,11 +72,13 @@
 				color: rgb(170, 170, 170);
 			}
 
+			/* Efecto de foco en los campos de entrada */
 			.form .input:focus {
 				outline: none;
 				border-inline: 2px solid #12b1d1;
 			}
 
+			/* Estilos para el botón de inicio de sesión */
 			.form .login-button {
 				display: block;
 				width: 100%;
@@ -94,16 +97,19 @@
 				transition: all 0.2s ease-in-out;
 			}
 
+			/* Efecto hover del botón */
 			.form .login-button:hover {
 				transform: scale(1.03);
 				box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 23px 10px -20px;
 			}
 
+			/* Efecto activo del botón */
 			.form .login-button:active {
 				transform: scale(0.95);
 				box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 15px 10px -10px;
 			}
 
+			/* Estilos para el enlace de "Olvidé mi contraseña" */
 			.forgot-password {
 				margin-top: 15px;
 			}
@@ -114,26 +120,35 @@
 				font-size: 14px;
 			}
 
+			/* Efecto hover en el enlace */
 			.forgot-password a:hover {
 				text-decoration: underline;
 			}
 		</style>
 	</head>
+
 	<body style="background: linear-gradient(to bottom right, #dddddd, #dddddd);">
+		<!-- Enlace a la página de inicio -->
 		<a class="Btn-1" href="index.html">
 			<div class="sign">
 				<img src="images/iconizer-bx-home-alt-2.2.svg" alt="Inicio" />
 			</div>
 			<div class="text">INICIO</div>
 		</a>
+
+		<!-- Contenedor del formulario de inicio de sesión -->
 		<div class="container">
 			<div class="heading">Iniciar sesión</div>
+			<!-- Formulario de inicio de sesión -->
 			<form
 				class="form"
 				id="loginForm"
 				action="Programas/login.php"
 				method="POST"
-			>
+				onsubmit="return validatePassword()" 
+			><!-- Llama a la función validatePassword al enviar el formulario -->
+			
+				<!-- Campo de entrada para el nombre de usuario -->
 				<input
 					required
 					class="input"
@@ -141,19 +156,52 @@
 					name="username"
 					placeholder="Correo electrónico"
 				/>
+				<!-- Campo de entrada para la contraseña, con límite de caracteres -->
 				<input
 					required
 					class="input"
 					type="password"
 					name="password"
 					placeholder="Contraseña"
+					maxlength="30"
+					id="password"
 				/>
+				<!-- Botón de envío para iniciar sesión -->
 				<input type="submit" class="login-button" value="Iniciar sesión" />
+				<!-- Enlace para la recuperación de contraseña -->
 				<div class="forgot-password">
 					<a href="recovery.html">Olvidé mi contraseña</a>
 				</div>
 			</form>
 		</div>
+		<!-- Script de SweetAlert2 para las alertas -->
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+		<!-- Script para validar la contraseña -->
+		 
+		<script>
+			
+			function validatePassword() {
+				// Obtiene el valor del campo de contraseña
+				const password = document.getElementById("password").value;
+
+				// Expresión regular para validar al menos una mayúscula y un carácter especial
+				const regex = /^(?=.*[A-Z])(?=.*[!@#\$%\^\&*\()\+=._-])/; 
+				// Si la contraseña no cumple con los requisitos, muestra una alerta
+				if (!regex.test(password)) {
+					Swal.fire({
+						title: "Contraseña inválida",
+						text: "La contraseña debe tener al menos una letra mayúscula y un carácter especial.",
+						icon: "warning",
+						confirmButtonText: "Entendido",
+						confirmButtonColor: "#12b1d1",
+					});
+					return false; // Evita el envío del formulario
+				}
+
+				return true; // Permite el envío si la contraseña es válida
+			}
+			//*/	
+		</script>
 	</body>
 </html>

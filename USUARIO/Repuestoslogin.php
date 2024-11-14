@@ -20,6 +20,7 @@
     <link href="css\misestilos.css" rel="stylesheet">
     <link rel="stylesheet" href="../css/normalize.css">
     <link rel="stylesheet" type="text/css" href="programas/im-pr.css">
+    <link rel="stylesheet" type="text/css" href="css/icon.css">
 </head>
 
 <body>
@@ -44,22 +45,21 @@
                     <div class="align-items-center">
                         <!-- Botón de hamburguesa para desplegar opciones -->
                         <div class="col-md-6 text-center text-lg-right align-right">
-                            <div class="d-inline-flex align-items-center">
-                                <!-- Icono de discapacitado -->
-                                <div id="buttons-container"
-                                    style="display: flex; justify-content: space-between; align-items: center;">
-                                    <a href="#" class="font-small text-white font-weight-bold mr-3"
-                                        onclick="adjustFontSize('small')">A</a>
-                                    <a href="#" class="font-medium text-white font-weight-bold mr-3"
-                                        onclick="adjustFontSize('medium')">A</a>
-                                    <a href="#" class="font-large text-white font-weight-bold mr-3"
-                                        onclick="adjustFontSize('large')">A</a>
+                        <div class="d-inline-flex align-items-center">
+                                <!-- Icono para aumentar la letra -->
+                                <div id="buttons-container" style="display: flex; justify-content: space-between; align-items: center;">
+                                <a href="#" class="font-small text-white font-weight-bold mr-3" onclick="adjustFontSize('small')">A</a>
+                                <a href="#" class="font-medium text-white font-weight-bold mr-3" onclick="adjustFontSize('medium')">A</a>
+                                <a href="#" class="font-large text-white font-weight-bold mr-3" onclick="adjustFontSize('large')">A</a>
 
-                                    <div id="disabled-icon">
-                                        <i class="fas fa-wheelchair fa-lg text-white" onclick="aumentarTamano()"
-                                            onmouseover="cambiarCursor(event)" onmouseout="restaurarCursor()"></i>
-                                    </div>
+                                <div id="disabled-icon" style="position: relative;">
+                                    <!-- Ícono de lupa con mensaje personalizado al pasar el mouse -->
+                                    <i class="fas fa-search fa-lg text-white"
+                                    data-tooltip="Ampliar vista"
+                                    onclick="aumentarTamano()"
+                                    onmouseover="cambiarCursor(event)" onmouseout="restaurarCursor()"></i>
                                 </div>
+                            </div>
                                 <!-- Menú desplegable -->
                                 <div class="dropdown" style="position: relative; white-space: nowrap;">
                                     <div id="dropdown-menu" class="dropdown-menu dropdown-menu-right"
@@ -117,22 +117,18 @@
             </nav>
         </div>
     </div>
-    <!-- Navbar End -->
+    <!--Fin del Navbar -->
     <div class="page-header container-fluid bg-secondary pt-0 pt-lg-1 pb-1 mb-4">
         <div class="row align-items-center py-4">
             <div class="col-md-6 text-center text-md-left offset-md-0" style="margin-top: 50px;">
                 <!-- Campo de búsqueda -->
                 <div class="InputContainer">
-                    <input
-                        required
-                        type="text"
-                        id="nombre_producto"
-                        class="input"
-                        placeholder="Buscar producto..."
-                        onkeyup="buscarProducto()" />
+                    <input required="" type="text" id="nombre_producto" class="input" placeholder="Buscar producto..." onkeyup="buscarProducto()">
                 </div>
-                <div id="resultado_busqueda" class="mt-3"></div>
-            </div>
+            <div id="resultado_busqueda" class="mt-3">
+        </div>
+    </div>
+    <!--Inicio del modal del carrito -->
             <div class="col-md-6 text-center text-md-right">
                 <a id="carritoBtn" class="btn btn-danger text-white font-weight-bold ml-3 position-relative" href="#"
                     data-toggle="modal" data-target="#carritoModal">
@@ -360,7 +356,7 @@
         </div>
     </div>
 
-    <!-- Footer Start -->
+    <!--inicio del  Footer -->
     <div class="container-fluid bg-primary text-white px-sm-3 px-md-5" style="margin-top: auto; margin-bottom: 0;">
         <div class="row pt-5">
             <div class="col-lg-4 col-md-6 mb-5">

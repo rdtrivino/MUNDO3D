@@ -16,6 +16,11 @@
     <link href="css\misestilos.css" rel="stylesheet">
     <link rel="stylesheet" href="../css/normalize.css">
     <link rel="stylesheet" type="text/css" href="programas/im-pr.css">
+    <!-- Estilos de icono de vista ampliar vista -->
+    <link rel="stylesheet" type="text/css" href="css/icon.css">
+    <!-- SweetAlert CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 
 <body>
@@ -40,45 +45,38 @@
                         <!-- Botón de hamburguesa para desplegar opciones -->
                         <div class="col-md-6 text-center text-lg-right align-right">
                             <div class="d-inline-flex align-items-center">
-                                <!-- Icono de discapacitado -->
-                                <div id="buttons-container"
-                                    style="display: flex; justify-content: space-between; align-items: center;">
-                                    <a href="#" class="font-small text-white font-weight-bold mr-3"
-                                        onclick="adjustFontSize('small')">A</a>
-                                    <a href="#" class="font-medium text-white font-weight-bold mr-3"
-                                        onclick="adjustFontSize('medium')">A</a>
-                                    <a href="#" class="font-large text-white font-weight-bold mr-3"
-                                        onclick="adjustFontSize('large')">A</a>
+                                <!-- Icono para aumentar la letra -->
+                                <div id="buttons-container" style="display: flex; justify-content: space-between; align-items: center;">
+                                <a href="#" class="font-small text-white font-weight-bold mr-3" onclick="adjustFontSize('small')">A</a>
+                                <a href="#" class="font-medium text-white font-weight-bold mr-3" onclick="adjustFontSize('medium')">A</a>
+                                <a href="#" class="font-large text-white font-weight-bold mr-3" onclick="adjustFontSize('large')">A</a>
 
-                                    <div id="disabled-icon">
-                                        <i class="fas fa-wheelchair fa-lg text-white" onclick="aumentarTamano()"
-                                            onmouseover="cambiarCursor(event)" onmouseout="restaurarCursor()"></i>
-                                    </div>
+                                <div id="disabled-icon" style="position: relative;">
+                                    <!-- Ícono de lupa con mensaje personalizado al pasar el mouse -->
+                                    <i class="fas fa-search fa-lg text-white"
+                                    data-tooltip="Ampliar vista"
+                                    onclick="aumentarTamano()"
+                                    onmouseover="cambiarCursor(event)" onmouseout="restaurarCursor()"></i>
                                 </div>
-                                <!-- Menú desplegable -->
+                            </div>
+
+                                <!-- Menú desplegable con Cerrar Sesión -->
                                 <div class="dropdown" style="position: relative; white-space: nowrap;">
-                                    <div id="dropdown-menu" class="dropdown-menu dropdown-menu-right"
-                                        aria-labelledby="menu-toggle" style="background-color: black;"> <a
-                                            href="../Programas/redireccionarpaginas.php?page=configuracion"
-                                            class="dropdown-menu-item">
-                                            <i class="fas fa-cogs"></i> <!-- Icono de configuración -->
-                                            Configurar mi cuenta
+                                    <div id="dropdown-menu" class="dropdown-menu dropdown-menu-right" aria-labelledby="menu-toggle"
+                                        style="background-color: black;">
+                                        <a href="../Programas/redireccionarpaginas.php?page=configuracion" class="dropdown-menu-item">
+                                            <i class="fas fa-cogs"></i> Configurar mi cuenta
                                         </a>
-                                        <a href="../Programas/redireccionarpaginas.php?page=pedidos"
-                                            class="dropdown-menu-item bm-2">
-                                            <i class="fas fa-list"></i> <!-- Icono de lista -->
-                                            Mis pedidos
+                                        <a href="../Programas/redireccionarpaginas.php?page=pedidos" class="dropdown-menu-item bm-2">
+                                            <i class="fas fa-list"></i> Mis pedidos
                                         </a>
                                         <a href="#" class="dropdown-menu-item" onclick="confirmLogout()">
-                                            <i class="fas fa-sign-out-alt fa-lg text-white"></i>
-                                            <!-- Icono de cerrar sesión -->
-                                            Cerrar Sesión
+                                            <i class="fas fa-sign-out-alt fa-lg text-white"></i> Cerrar Sesión
                                         </a>
                                     </div>
-                                    <!-- Icono de barras -->
                                     <button class="btn btn-link" type="button" id="menu-toggle">
                                         <i class="fas fa-bars fa-lg text-white"></i>
-                                        <span>Mi menú</span> <!-- Cambia el texto del botón de hamburguesa -->
+                                        <span>Mi menú</span>
                                     </button>
                                 </div>
                             </div>
@@ -88,7 +86,7 @@
         </div>
     </div>
 
-    <!-- Navbar Start -->
+    <!-- Inicio del Navbar -->
     <div class="container-fluid position-relative nav-bar p-0">
         <div class="container-lg position-relative p-0 px-lg-3" style="z-index: 9;">
             <nav class="navbar navbar-expand-lg bg-white navbar-light py-3 py-lg-0 pl-3 pl-lg-5">
@@ -115,13 +113,12 @@
             </nav>
         </div>
     </div>
-    <!-- Navbar End -->
+    <!--fin del Navbar  -->
     <div class="page-header container-fluid bg-secondary pt-0 pt-lg-1 pb-1 mb-4">
         <div class="row align-items-center py-4">
-            <div class="col-md-6 text-center text-md-left offset-md-0">
+            <div class="col-md-6 text-center text-md-left offset-md-0" style="margin-top: 50px;">
                 <div class="InputContainer">
-                    <input required="" type="text" id="nombre_producto" class="input" placeholder="Buscar producto..."
-                        onkeyup="buscarProducto()">
+                    <input required="" type="text" id="nombre_producto" class="input" placeholder="Buscar producto..." onkeyup="buscarProducto()">
                 </div>
                 <div id="resultado_busqueda" class="col-md-6 mt-3"></div>
             </div>
@@ -131,9 +128,9 @@
         <div class="container">
             <h1 class="display-4 text-center mb-5">Explora Nuestros archivos 3D</h1>
             <div class="row row-cols-lg-4 row-cols-md-3 justify-content-center" id="productosContainer">
-                <?php
-                
-                // Realizar la consulta para obtener productos de la categoría 5
+            <?php
+
+                // Realizar la consulta para obtener productos de la categoría 5 
                 $sql = "SELECT * FROM productos WHERE Pro_Categoria = 5 AND Pro_Estado = 'activo'";
                 $result = mysqli_query($link, $sql);
 
@@ -150,11 +147,12 @@
                                 <div
                                     class="overlay position-absolute w-100 h-100 d-flex justify-content-center align-items-center">
                                     <?php if ($row['Pro_Cantidad'] > 0) { ?>
-                                        <button class="btn btn-primary btn-lg descargar"
-                                            onclick="downloadImage('<?php echo base64_encode(file_get_contents($row['nombre_imagen'])); ?>', '<?php echo htmlspecialchars($row['Pro_Nombre']); ?>.jpg')"
-                                            style="background-color: #000080;">
-                                            <i class="fas fa-download"></i>
-                                        </button>
+                                        <a href="../images/ArchivosZIP3D/<?php echo htmlspecialchars($row['Pro_Zip']); ?>" 
+                                            class="btn btn-primary btn-lg descargar"
+                                            style="background-color: #000080;" download>
+                                                <i class="fas fa-download"></i> 
+                                        </a>
+
                                     <?php } else { ?>
                                         <button class="btn btn-primary btn-lg descargar" disabled>
                                             <i class="fas fa-download"></i>
@@ -164,8 +162,9 @@
                                         data-target="#detalleProductoModal" data-id="<?php echo $row['Identificador']; ?>"
                                         data-name="<?php echo htmlspecialchars($row['Pro_Nombre']); ?>"
                                         data-description="<?php echo htmlspecialchars($row['Pro_Descripcion']); ?>"
-                                        data-image="<?php echo $row['nombre_imagen']; ?>" style="background-color: #800000;"><i
-                                            class="fas fa-search"></i></a>
+                                        data-image="<?php echo $row['nombre_imagen']; ?>" style="background-color: #800000;">
+                                        <i class="fas fa-search"></i>
+                                    </a>
                                 </div>
                                 <div class="card-body text-center">
                                     <h5 class="card-title mb-2"
@@ -195,7 +194,7 @@
     </div>
 
 
-    <!-- Modal de detalles del producto -->
+    <!-- Modal de detalles de los archivos 3d-->
     <div class="modal fade" id="detalleProductoModal" tabindex="-1" role="dialog"
         aria-labelledby="detalleProductoModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
@@ -209,39 +208,36 @@
                 <div class="modal-body">
                     <div class="row align-items-center">
                         <div class="col-md-6 text-center">
-                            <!-- Imagen del producto -->
+                            <!-- Imagen de cada producto -->
                             <img id="productoImagen" src="" height="150px"
                                 style="border: 1px solid #dddddd; padding: 8px;">
                         </div>
                         <div class="col-md-6">
-                            <!-- Descripción y precio del producto -->
+                            <!-- Descripción y precio de cada producto -->
                             <h4 id="productoNombre"></h4>
                             <p><strong>Descripción:</strong> <span id="productoDescripcion"></span></p>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                    <button type="button" class="btn btn-primary " data-dismiss="modal"
                         style="background-color: #E42E24;">Cerrar</button>
-                    <button class="btn btn-primary btn-lg descargar" id="modalDownloadButton"
-                        style="background-color: #000080;">
-                        <i class="fas fa-download"></i> Descargar
-                    </button>
+                    
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Footer Start -->
+    <!--inicio del Footer  -->
     <div class="container-fluid bg-primary text-white px-sm-3 px-md-5" style="margin-top: auto; margin-bottom: 0;">
         <div class="row pt-5">
             <div class="col-lg-4 col-md-6 mb-5">
                 <a href="">
                     <h1 class="text-secondary mb-3"><span class="text-white">MUNDO</span>3D</h1>
                 </a>
-                <p>¡Adéntrate en un mundo tridimensional como nunca antes! ¡Bienvenid@ nuestra página 3D, donde tus
-                    sueños cobran vida!</p>
-                <!--redes sociales html-->
+                <p>¡Adéntrate en un mundo tridimensional como nunca antes! ¡Bienvenid@ nuestra página 3D, donde tus sueños cobran vida!</p>
+
+                <!--inicio de las redes sociales html-->
                 <div class="parent2">
                     <div class="child child-2" data-title="Instagram">
                         <a href="//www.instagram.com/mundo3d.rysj/" target="_blank"
@@ -301,7 +297,7 @@
             </div>
         </div>
     </div>
-    <!--redes sociales html-->
+    <!--fin de las redes sociales html-->
     <div class="container-fluid bg-dark text-white py-4 px-sm-3 px-md-5">
         <p class="m-0 text-center text-white">
             &copy; <a class="text-white font-weight-medium" href="#">MUNDO 3D</a>. Todos los derechos reservados
@@ -310,7 +306,7 @@
     </div>
     <a href="#" class="btn btn-lg btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
 
-    <!-- JavaScript Libraries -->
+    <!--librerias de JavaScript  -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
     <script src="lib/easing/easing.min.js"></script>

@@ -19,6 +19,7 @@
     <link href="css\misestilos.css" rel="stylesheet">
     <link rel="stylesheet" href="../css/normalize.css">
     <link rel="stylesheet" type="text/css" href="programas/im-pr.css">
+    <link rel="stylesheet" type="text/css" href="css/icon.css">
 </head>
 
 <body>
@@ -43,22 +44,22 @@
                     <div class="align-items-center">
                         <!-- Botón de hamburguesa para desplegar opciones -->
                         <div class="col-md-6 text-center text-lg-right align-right">
-                            <div class="d-inline-flex align-items-center">
-                                <!-- Icono de discapacitado -->
-                                <div id="buttons-container"
-                                    style="display: flex; justify-content: space-between; align-items: center;">
-                                    <a href="#" class="font-small text-white font-weight-bold mr-3"
-                                        onclick="adjustFontSize('small')">A</a>
-                                    <a href="#" class="font-medium text-white font-weight-bold mr-3"
-                                        onclick="adjustFontSize('medium')">A</a>
-                                    <a href="#" class="font-large text-white font-weight-bold mr-3"
-                                        onclick="adjustFontSize('large')">A</a>
+                        <div class="d-inline-flex align-items-center">
+                                <!-- Icono para aumentar la letra -->
+                                <div id="buttons-container" style="display: flex; justify-content: space-between; align-items: center;">
+                                <a href="#" class="font-small text-white font-weight-bold mr-3" onclick="adjustFontSize('small')">A</a>
+                                <a href="#" class="font-medium text-white font-weight-bold mr-3" onclick="adjustFontSize('medium')">A</a>
+                                <a href="#" class="font-large text-white font-weight-bold mr-3" onclick="adjustFontSize('large')">A</a>
 
-                                    <div id="disabled-icon">
-                                        <i class="fas fa-wheelchair fa-lg text-white" onclick="aumentarTamano()"
-                                            onmouseover="cambiarCursor(event)" onmouseout="restaurarCursor()"></i>
-                                    </div>
+                                <div id="disabled-icon" style="position: relative;">
+                                    <!-- Ícono de lupa con mensaje personalizado al pasar el mouse -->
+                                    <i class="fas fa-search fa-lg text-white"
+                                    data-tooltip="Ampliar vista"
+                                    onclick="aumentarTamano()"
+                                    onmouseover="cambiarCursor(event)" onmouseout="restaurarCursor()"></i>
                                 </div>
+                            </div>
+                           
                                 <!-- Menú desplegable -->
                                 <div class="dropdown" style="position: relative; white-space: nowrap;">
                                     <div id="dropdown-menu" class="dropdown-menu dropdown-menu-right"

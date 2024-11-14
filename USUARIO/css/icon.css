@@ -1,0 +1,19 @@
+
+#disabled-icon i:hover::after {
+    content: attr(data-tooltip); /* Extrae el contenido del atributo data-tooltip */
+    position: absolute;
+    top: 30px; /* Coloca el tooltip encima del ícono */
+    left: 50%; /* Centra horizontalmente respecto al ícono */
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.75); /* Fondo oscuro */
+    color: #fff; /* Texto blanco */
+    padding: 5px 8px; /* Espaciado alrededor del texto */
+    border-radius: 4px; /* Bordes redondeados */
+    font-size: 14px; /* Tamaño de fuente pequeño */
+    white-space: nowrap;
+    z-index: 10;
+    opacity: 0.9;
+    pointer-events: none; /* No afecta la posición de otros elementos */
+}
+.overlay {border-radius: 15px; }
+
