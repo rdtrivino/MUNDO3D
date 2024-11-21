@@ -44,22 +44,22 @@
                     <div class="align-items-center">
                         <!-- Botón de hamburguesa para desplegar opciones -->
                         <div class="col-md-6 text-center text-lg-right align-right">
-                        <div class="d-inline-flex align-items-center">
+                            <div class="d-inline-flex align-items-center">
                                 <!-- Icono para aumentar la letra -->
                                 <div id="buttons-container" style="display: flex; justify-content: space-between; align-items: center;">
-                                <a href="#" class="font-small text-white font-weight-bold mr-3" onclick="adjustFontSize('small')">A</a>
-                                <a href="#" class="font-medium text-white font-weight-bold mr-3" onclick="adjustFontSize('medium')">A</a>
-                                <a href="#" class="font-large text-white font-weight-bold mr-3" onclick="adjustFontSize('large')">A</a>
+                                    <a href="#" class="font-small text-white font-weight-bold mr-3" onclick="adjustFontSize('small')">A</a>
+                                    <a href="#" class="font-medium text-white font-weight-bold mr-3" onclick="adjustFontSize('medium')">A</a>
+                                    <a href="#" class="font-large text-white font-weight-bold mr-3" onclick="adjustFontSize('large')">A</a>
 
-                                <div id="disabled-icon" style="position: relative;">
-                                    <!-- Ícono de lupa con mensaje personalizado al pasar el mouse -->
-                                    <i class="fas fa-search fa-lg text-white"
-                                    data-tooltip="Ampliar vista"
-                                    onclick="aumentarTamano()"
-                                    onmouseover="cambiarCursor(event)" onmouseout="restaurarCursor()"></i>
+                                    <div id="disabled-icon" style="position: relative;">
+                                        <!-- Ícono de lupa con mensaje personalizado al pasar el mouse -->
+                                        <i class="fas fa-search fa-lg text-white"
+                                            data-tooltip="Ampliar vista"
+                                            onclick="aumentarTamano()"
+                                            onmouseover="cambiarCursor(event)" onmouseout="restaurarCursor()"></i>
+                                    </div>
                                 </div>
-                            </div>
-                           
+
                                 <!-- Menú desplegable -->
                                 <div class="dropdown" style="position: relative; white-space: nowrap;">
                                     <div id="dropdown-menu" class="dropdown-menu dropdown-menu-right"
@@ -170,10 +170,8 @@
             </div>
             </span>
             </a>
-
             <!-- Modal del carrito -->
-            <div class="modal fade" id="carritoModal" tabindex="-1" role="dialog" aria-labelledby="carritoModalLabel"
-                aria-hidden="true">
+            <div class="modal fade" id="carritoModal" tabindex="-1" role="dialog" aria-labelledby="carritoModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -185,74 +183,83 @@
                         <div class="modal-body">
                             <!-- Contenedor para mostrar los productos agregados al carrito -->
                             <div id="carritoContenido">
+                                <!-- Tabla de productos -->
                                 <?php
                                 $totalPrecioProductos = 0;
+                                $carritoVacio = true; // Indicador de carrito vacío
 
                                 if (isset($_SESSION["user_id"])) {
                                     $cliente = $_SESSION["user_id"];
-
                                     $sql = "SELECT carrito.*, 
-                                productos.Pro_Nombre AS nombre, 
-                                productos.Pro_PrecioVenta AS precio_venta, 
-                                productos.nombre_imagen AS nombre_imagen
-                                FROM carrito 
-                                INNER JOIN productos ON carrito.id_producto = productos.Identificador
-                                WHERE carrito.Pe_Cliente = '$cliente' AND carrito.estado_pago = 'pendiente'";
+                        productos.Pro_Nombre AS nombre, 
+                        productos.Pro_PrecioVenta AS precio_venta, 
+                        productos.nombre_imagen AS nombre_imagen
+                        FROM carrito 
+                        INNER JOIN productos ON carrito.id_producto = productos.Identificador
+                        WHERE carrito.Pe_Cliente = '$cliente' AND carrito.estado_pago = 'pendiente'";
                                     $result = mysqli_query($link, $sql);
-
                                     $contadorProductos = mysqli_num_rows($result);
 
                                     if ($contadorProductos > 0) {
-                                        echo '<table class="table table-bordered">';
-                                        echo '<thead style="background-color: #f2f2f2;">';
+                                        $carritoVacio = false; // Carrito no está vacío
+                                        echo '<table class="table table-striped table-responsive">';
+                                        echo '<thead>';
                                         echo '<tr>';
-                                        echo '<th style="text-align: center; color: #333;">Nombre del Producto</th>';
-                                        echo '<th style="text-align: center; color: #333;">Precio</th>';
-                                        echo '<th style="text-align: center; color: #333;">Imagen</th>';
-                                        echo '<th style="text-align: center; color: #333;">Cantidad</th>';
-                                        echo '<th style="text-align: center; color: #333;">Acciones</th>';
+                                        echo '<th>Producto</th>';
+                                        echo '<th>Precio</th>';
+                                        echo '<th>Imagen</th>';
+                                        echo '<th>Cantidad</th>';
                                         echo '</tr>';
                                         echo '</thead>';
                                         echo '<tbody>';
                                         while ($row = mysqli_fetch_assoc($result)) {
                                             echo '<tr>';
-                                            echo '<td style="text-align: left;">' . $row['nombre'] . '</td>';
-                                            echo '<td style="text-align: left;">' . $row['precio_venta'] . '</td>';
-                                            echo '<td><img height="70px" src=' . $row['nombre_imagen'] . '></td>';
-                                            echo '<td style="text-align: center; width: 150px;">
-                                <div class="input-group">
-                                    <button class="btn btn-outline-primary" type="button" data-id="' . $row['id'] . '" data-action="decrement"><i class="fas fa-minus"></i></button>
-                                    <input type="text" class="form-control text-center" value="' . $row['cantidad'] . '" aria-label="Example text with button addon" aria-describedby="button-addon1" disabled>  
-                                    <button class="btn btn-outline-primary" type="button" data-id="' . $row['id'] . '" data-action="increment"><i class="fas fa-plus"></i></button>
-                                </div>
-                                </td>';
-                                            echo '<td style="text-align: center;">
-                                    <button type="button" class="" data-id="' . $row['id'] . '" data-action="remove"><i class="fas fa-trash-alt"></i></button>
-                                </td>';
+                                            echo '<td>' . $row['nombre'] . '</td>';
+                                            echo '<td>$' . number_format($row['precio_venta'], 2) . '</td>';
+                                            echo '<td><img src="' . $row['nombre_imagen'] . '" class="img-fluid" style="max-width: 70px;"></td>';
+                                            echo '<td>
+                                    <div class="input-group">
+                                        <button class="btn btn-outline-primary btn-sm" type="button" data-id="' . $row['id'] . '" data-action="decrement"><i class="fas fa-minus"></i></button>
+                                        <input type="text" class="form-control text-center" value="' . $row['cantidad'] . '" disabled>
+                                        <button class="btn btn-outline-primary btn-sm" type="button" data-id="' . $row['id'] . '" data-action="increment"><i class="fas fa-plus"></i></button>
+                                    </div>
+                                  </td>';
                                             echo '</tr>';
                                             $totalPrecioProductos += $row['precio_venta'] * $row['cantidad'];
                                         }
                                         echo '</tbody>';
                                         echo '</table>';
                                     } else {
-                                        echo "El carrito está vacío.";
+                                        echo '<p>El carrito está vacío.</p>';
                                     }
                                 } else {
-                                    echo "El usuario no está logueado.";
+                                    echo '<p>El usuario no está logueado.</p>';
                                 }
                                 ?>
                             </div>
-                            <div id="totalProductos" style="text-align: right; font-weight: bold; color: blue;">
-                                
-                            <?php echo "Total a pagar: $" . number_format($totalPrecioProductos, 2, ',', '.'); ?>
-
+                            <!-- Total del carrito -->
+                            <div id="totalProductos" class="text-right font-weight-bold text-primary">
+                                <?php echo "Total a pagar: $" . number_format($totalPrecioProductos, 2, ',', '.'); ?>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary"
-                                style="background-color: red; border-color: red;" onclick="vaciarCarrito()">Vaciar
-                                Carrito</button>
-                            <button type="button" class="btn btn-primary" id="irAPagarBtn">Ir a pagar</button>
+                        <div class="modal-footer d-flex flex-column flex-md-row w-100">
+                            <!-- Botón Vaciar Carrito -->
+                            <button
+                                type="button"
+                                class="btn btn-outline-danger w-100 w-md-48 mb-3 mb-md-0 mr-md-3 btn-lg rounded-pill shadow-sm"
+                                onclick="vaciarCarrito()"
+                                <?php if ($carritoVacio) echo 'disabled'; ?>>
+                                Vaciar Carrito
+                            </button>
+
+                            <!-- Botón Ir a Pagar -->
+                            <button
+                                type="button"
+                                class="btn btn-success w-100 w-md-48 btn-lg rounded-pill shadow-sm"
+                                id="irAPagarBtn"
+                                <?php if ($carritoVacio) echo 'disabled'; ?>>
+                                Ir a Pagar
+                            </button>
                         </div>
                     </div>
                 </div>
