@@ -53,7 +53,7 @@
 
                                 <div id="disabled-icon" style="position: relative;">
                                     <!-- Ícono de lupa con mensaje personalizado al pasar el mouse -->
-                                    <i class="fas fa-search fa-lg text-white"
+                                    <i class="fas fa-wheelchair fa-lg text-white"
                                     data-tooltip="Ampliar vista"
                                     onclick="aumentarTamano()"
                                     onmouseover="cambiarCursor(event)" onmouseout="restaurarCursor()"></i>
