@@ -116,7 +116,7 @@
     // Redirecciona al usuario a otra página después de 900 ms
     setTimeout(function () {
       window.location.href = "Programas/Roleslogin.php"; // URL de redireccionamiento
-    }, 900); // El tiempo de espera es de 900 milisegundos (0.9 segundos)
+    }, 500); // El tiempo de espera es de 900 milisegundos (0.9 segundos)
   </script>
 </body>
 

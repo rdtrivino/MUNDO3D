@@ -91,7 +91,7 @@
              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
              $estado = "1";
-             $producto = "1";
+             $producto = "4";
 
             // Preparar la consulta
             $stmt = mysqli_prepare($link, $peticion);

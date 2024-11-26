@@ -237,8 +237,7 @@
                                     <?php
                                 }
                                     echo '<a href="crear_excel.php?tabla=' . $_GET['tabla'] . '" type="button" class="btn btn-sm btn-outline-secondary">Exportar</a>';
-                                echo '<a href="crear_pdf.php?tabla=' . $_GET['tabla'] . '" type="button" class="btn btn-sm btn-outline-secondary" target="_blank">Imprimir</a>';
-                            }
+                                    echo '<a href="generar_reporte.php?tabla=' . $_GET['tabla'] . '" type="button" class="btn btn-sm btn-outline-secondary" target="_blank">Imprimir</a>'; }
                         ?>
                     </div>
                      

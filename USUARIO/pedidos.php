@@ -320,81 +320,96 @@ function obtenerNombreEstado($IdentificadorEstado, $conexion)
                 </tr>
               </thead>
               <tbody>
-                <?php
-                $sql_pedidos = "
-                        SELECT 
-                            p.compra_ID AS pedido_id,
-                            MIN(p.Pe_Fechapedido) AS fecha_pedido,
-                            MIN(p.Pe_Fechaentrega) AS fecha_entrega,
-                            GROUP_CONCAT(DISTINCT CONCAT(p.Pe_Cantidad, ' - ', pr.Pro_Nombre) ORDER BY p.Pe_Producto SEPARATOR '<br>') AS producto,
-                            MIN(p.pe_nombre_pedido) AS nombre_pedido,
-                            MIN(p.pe_tipo_impresion) AS tipo_impresion,
-                            MIN(p.pe_color) AS color,
-                            MIN(p.Pe_Observacion) AS observacion,
-                            ep.Es_Nombre AS estado_pedido,
-                            MIN(f.id) AS factura_id
-                        FROM 
-                            pedidos p
-                        LEFT JOIN 
-                            factura f ON p.compra_ID = f.pedido_id
-                        LEFT JOIN 
-                            pedido_estado ep ON p.Pe_Estado = ep.Es_Codigo
-                        LEFT JOIN 
-                            productos pr ON p.Pe_Producto = pr.Identificador
-                        WHERE 
-                            p.Pe_Cliente = ? AND p.Pe_Estado <> 'inactivo'
-                        GROUP BY 
-                            p.compra_ID
-                        ORDER BY 
-                            p.compra_ID
-                    ";
+              <?php
+                  $sql_pedidos = "
+                      SELECT 
+                          p.compra_ID AS pedido_id,
+                          MIN(p.Pe_Fechapedido) AS fecha_pedido,
+                          MIN(p.Pe_Fechaentrega) AS fecha_entrega,
+                          GROUP_CONCAT(DISTINCT CONCAT(p.Pe_Cantidad, ' - ', pr.Pro_Nombre) ORDER BY p.Pe_Producto SEPARATOR '<br>') AS producto,
+                          MIN(p.pe_nombre_pedido) AS nombre_pedido,
+                          MIN(p.pe_tipo_impresion) AS tipo_impresion,
+                          MIN(p.pe_color) AS color,
+                          MIN(p.Pe_Observacion) AS observacion,
+                          ep.Es_Nombre AS estado_pedido,
+                          MIN(f.id) AS factura_id
+                      FROM 
+                          pedidos p
+                      LEFT JOIN 
+                          factura f ON p.compra_ID = f.pedido_id
+                      LEFT JOIN 
+                          pedido_estado ep ON p.Pe_Estado = ep.Es_Codigo
+                      LEFT JOIN 
+                          productos pr ON p.Pe_Producto = pr.Identificador
+                      WHERE 
+                          p.Pe_Cliente = ? 
+                          AND p.Pe_Estado <> 'inactivo'
+                          AND p.compra_ID IS NOT NULL   -- Filtrar solo aquellos pedidos con Compra_ID no NULL
+                      GROUP BY 
+                          p.compra_ID
+                      ORDER BY 
+                          p.compra_ID
+                  ";
 
-                $stmt = mysqli_prepare($link, $sql_pedidos);
-                if (!$stmt) {
-                  die('Error en la preparación de la consulta: ' . mysqli_error($link));
-                }
-                mysqli_stmt_bind_param($stmt, "i", $usuario_id);
-                mysqli_stmt_execute($stmt);
-                $resultado_pedidos = mysqli_stmt_get_result($stmt);
+           // Preparación de la consulta SQL. Usamos mysqli_prepare para evitar inyecciones SQL
+            $stmt = mysqli_prepare($link, $sql_pedidos);
 
-                if ($resultado_pedidos && mysqli_num_rows($resultado_pedidos) > 0) {
-                  while ($row = mysqli_fetch_assoc($resultado_pedidos)) {
+            // Verificación de errores en la preparación de la consulta
+            if (!$stmt) {
+                die('Error en la preparación de la consulta: ' . mysqli_error($link));  // Si hay un error, muestra el mensaje de error y termina la ejecución
+            }
+            // Asociamos el parámetro a la consulta preparada. En este caso, el parámetro es el ID del usuario (cliente)
+            mysqli_stmt_bind_param($stmt, "i", $usuario_id);
+            // Ejecutamos la consulta
+            mysqli_stmt_execute($stmt);
+            // Obtenemos los resultados de la consulta
+            $resultado_pedidos = mysqli_stmt_get_result($stmt);
+            // Verificamos si hay resultados. Si existen, comenzamos a procesarlos.
+            if ($resultado_pedidos && mysqli_num_rows($resultado_pedidos) > 0) {
+                // Si hay resultados, recorremos cada fila con un while
+                while ($row = mysqli_fetch_assoc($resultado_pedidos)) {
                     ?>
-                    <tr id="pedidoRow<?php echo $row['pedido_id']; ?>">
-                      <td><?php echo $row['pedido_id']; ?></td>
-                      <td><?php echo $row['fecha_pedido']; ?></td>
-                      <td><?php echo $row['fecha_entrega']; ?></td>
-                      <td><?php echo $row['producto']; ?></td>
-                      <td><?php echo $row['nombre_pedido']; ?></td>
-                      <td><?php echo $row['tipo_impresion']; ?></td>
-                      <td><?php echo $row['color']; ?></td>
-                      <td><?php echo $row['observacion']; ?></td>
-                      <td><?php echo $row['estado_pedido']; ?></td>
-                      <td style="text-align: center;">
-                        <div class="button-container">
-                          <a href="factura.php?id=<?php echo $row['factura_id']; ?>" class="button__link">
-                            <button class="button" type="button">
-                              <span class="button__text">Factura</span>
-                              <span class="button__icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 35 35"
-                                  id="bdd05811-e15d-428c-bb53-8661459f9307" data-name="Layer 2" class="svg">
-                                  <path
-                                    d="M17.5,22.131a1.249,1.249,0,0,1-1.25-1.25V2.187a1.25,1.25,0,0,1,2.5,0V20.881A1.25,1.25,0,0,1,17.5,22.131Z">
-                                  </path>
-                                  <path
-                                    d="M17.5,22.693a3.189,3.189,0,0,1-2.262-.936L8.487,15.006a1.249,1.249,0,0,1,1.767-1.767l6.751,6.751a.7.7,0,0,0,.99,0l6.751-6.751a1.25,1.25,0,0,1,1.768,1.767l-6.752,6.751A3.191,3.191,0,0,1,17.5,22.693Z">
-                                  </path>
-                                  <path
-                                    d="M31.436,34.063H3.564A3.318,3.318,0,0,1,.25,30.749V22.011a1.25,1.25,0,0,1,2.5,0v8.738a.815.815,0,0,0,.814.814H31.436a.815.815,0,0,0,.814-.814V22.011a1.25,1.25,0,1,1,2.5,0v8.738A3.318,3.318,0,0,1,31.436,34.063Z">
-                                  </path>
-                                </svg>
-                              </span>
-                            </button>
-                          </a>
-                        </div>
-                      </td>
-
-
+                    <!-- Generación del HTML para cada pedido -->
+                    <tr id="pedidoRow<?php echo $row['pedido_id']; ?>">  <!-- Cada fila tiene un ID único basado en el pedido_id -->
+                        <!-- Mostramos los datos de cada pedido en sus respectivas celdas -->
+                        <td><?php echo $row['pedido_id']; ?></td>
+                        <td><?php echo $row['fecha_pedido']; ?></td>
+                        <td><?php echo $row['fecha_entrega']; ?></td>
+                        <td><?php echo $row['producto']; ?></td>
+                        <td><?php echo $row['nombre_pedido']; ?></td>
+                        <td><?php echo $row['tipo_impresion']; ?></td>
+                        <td><?php echo $row['color']; ?></td>
+                        <td><?php echo $row['observacion']; ?></td>
+                        <td><?php echo $row['estado_pedido']; ?></td>
+                        <!-- Columna para el botón de "Factura" -->
+                        <td style="text-align: center;">
+                            <div class="button-container">
+                                <!-- Enlace al detalle de la factura del pedido -->
+                                <a href="factura.php?id=<?php echo $row['factura_id']; ?>" class="button__link">
+                                    <!-- Botón con el texto y un icono SVG -->
+                                    <button class="button" type="button">
+                                        <span class="button__text">Factura</span>
+                                        <span class="button__icon">
+                                            <!-- Icono SVG (flecha de descarga, por ejemplo) -->
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 35 35"
+                                                id="bdd05811-e15d-428c-bb53-8661459f9307" data-name="Layer 2" class="svg">
+                                                <path
+                                                    d="M17.5,22.131a1.249,1.249,0,0,1-1.25-1.25V2.187a1.25,1.25,0,0,1,2.5,0V20.881A1.25,1.25,0,0,1,17.5,22.131Z">
+                                                </path>
+                                                <path
+                                                    d="M17.5,22.693a3.189,3.189,0,0,1-2.262-.936L8.487,15.006a1.249,1.249,0,0,1,1.767-1.767l6.751,6.751a.7.7,0,0,0,.99,0l6.751-6.751a1.25,1.25,0,0,1,1.768,1.767l-6.752,6.751A3.191,3.191,0,0,1,17.5,22.693Z">
+                                                </path>
+                                                <path
+                                                    d="M31.436,34.063H3.564A3.318,3.318,0,0,1,.25,30.749V22.011a1.25,1.25,0,0,1,2.5,0v8.738a.815.815,0,0,0,.814.814H31.436a.815.815,0,0,0,.814-.814V22.011a1.25,1.25,0,1,1,2.5,0v8.738A3.318,3.318,0,0,1,31.436,34.063Z">
+                                                </path>
+                                            </svg>
+                                        </span>
+                                    </button>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    
                     </tr>
                     <style>
                       .button-container {
