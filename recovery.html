@@ -199,96 +199,121 @@
 </head>
 
 <body style="background: linear-gradient(to bottom right, #dddddd, #dddddd);">
+    <!-- Botón de inicio con ícono y texto -->
     <a class="Btn-1" href="index.html">
         <div class="sign">
             <img src="images/iconizer-bx-home-alt-2.2.svg" alt="Inicio">
         </div>
         <div class="text">INICIO</div>
     </a>
+
+    <!-- Contenedor para los botones de accesibilidad -->
     <div id="buttons-container" style="display: flex; justify-content: flex-end; align-items: center;">
+        <!-- Botones para ajustar el tamaño de la fuente -->
         <a href="#" class="font-small text-white font-weight-bold mr-3" onclick="adjustFontSize('small')">A</a>
         <a href="#" class="font-medium text-white font-weight-bold mr-3" onclick="adjustFontSize('medium')">A</a>
         <a href="#" class="font-large text-white font-weight-bold mr-3" onclick="adjustFontSize('large')">A</a>
+        
+        <!-- Ícono de accesibilidad (silla de ruedas) -->
         <div id="disabled-icon">
             <i class="fas fa-wheelchair fa-lg text-black" onclick="aumentarTamano()" onmouseover="cambiarCursor(event)" onmouseout="restaurarCursor()"></i>
         </div>
-        
     </div>
+
+    <!-- Contenedor principal de la página -->
     <div class="container">
+        <!-- Logotipo y encabezado -->
         <img src="images/Logo Mundo 3d.png" alt="logo mundo 3D">
         <h2>Olvidó su Contraseña</h2>
         <p>Por favor, ingrese su dirección de correo electrónico registrada para restablecer su contraseña.</p>
 
+        <!-- Formulario para recuperar la contraseña -->
         <form class="form" id="olvidoForm" action="Programas/recovery.php" method="post">
+            <!-- Campo de correo electrónico -->
             <input type="email" id="email" name="email" required placeholder="Ingrese su correo electrónico">
             <br />
+            <!-- Botón de envío -->
             <input type="submit" value="Restablecer Contraseña">
         </form>
     </div>
+
+    <!-- Modal para mostrar mensajes al usuario -->
     <div id="myModal" class="modal">
         <div class="modal-content">
+            <!-- Mensaje dinámico del modal -->
             <p id="modalMessage">¡Operación exitosa!</p>
+            <!-- Botón para cerrar el modal -->
             <button id="closeModal">Aceptar</button>
         </div>
     </div>
+
     <script>
+        // Espera a que el DOM esté completamente cargado
         document.addEventListener('DOMContentLoaded', function () {
+            // Referencias a elementos HTML clave
             const formulario = document.querySelector('#olvidoForm');
             const modal = document.getElementById('myModal');
             const closeModalBtn = document.getElementById('closeModal');
             const modalMessage = document.getElementById('modalMessage');
 
+            // Manejo del evento de envío del formulario
             formulario.addEventListener('submit', function (e) {
-                e.preventDefault();
+                e.preventDefault(); // Evita que el formulario recargue la página
 
-                const formData = new FormData(formulario);
+                const formData = new FormData(formulario); // Crea un objeto FormData con los datos del formulario
 
+                // Envía los datos al servidor utilizando fetch
                 fetch('Programas/recovery.php', {
                     method: 'POST',
                     body: formData
                 })
-                    .then(response => response.json())
-                    .then(data => {
-                        modalMessage.textContent = data.message;
-                        modal.style.display = 'block';
+                .then(response => response.json()) // Convierte la respuesta a JSON
+                .then(data => {
+                    modalMessage.textContent = data.message; // Muestra el mensaje devuelto por el servidor
+                    modal.style.display = 'block'; // Abre el modal
 
-                        if (data.success) {
-                            closeModalBtn.style.backgroundColor = 'green';
-                            setTimeout(function () {
-                                modal.style.display = 'none';
-                                closeModalBtn.style.backgroundColor = ''; // Restaura el color por defecto al cerrar el modal
-                                window.location.href = 'index.html';
-                            }, 5000);
-                        } else {
-                            closeModalBtn.style.backgroundColor = 'red';
-                            setTimeout(function () {
-                                modal.style.display = 'none';
-                                closeModalBtn.style.backgroundColor = ''; // Restaura el color por defecto al cerrar el modal
-                            }, 5000);
-                        }
-                    })
-                    .catch(error => {
-                        console.error(error);
-                        modalMessage.textContent = 'Ocurrió un error al procesar la operación.';
-                        modal.style.display = 'block';
-                        closeModalBtn.style.backgroundColor = 'red';
-                        closeModalBtn.classList.add('error'); // Puedes usar esta clase para personalizar estilos específicos de error si es necesario
+                    // Si la operación fue exitosa
+                    if (data.success) {
+                        closeModalBtn.style.backgroundColor = 'green'; // Cambia el color del botón a verde
                         setTimeout(function () {
-                            modal.style.display = 'none';
-                            closeModalBtn.style.backgroundColor = ''; // Restaura el color por defecto al cerrar el modal
+                            modal.style.display = 'none'; // Cierra el modal después de 5 segundos
+                            closeModalBtn.style.backgroundColor = ''; // Restaura el color original del botón
+                            window.location.href = 'index.html'; // Redirige a la página principal
                         }, 5000);
-                    });
+                    } else { // Si la operación falló
+                        closeModalBtn.style.backgroundColor = 'red'; // Cambia el color del botón a rojo
+                        setTimeout(function () {
+                            modal.style.display = 'none'; // Cierra el modal después de 5 segundos
+                            closeModalBtn.style.backgroundColor = ''; // Restaura el color original del botón
+                        }, 5000);
+                    }
+                })
+                .catch(error => { // Manejo de errores en la solicitud
+                    console.error(error); // Muestra el error en la consola
+                    modalMessage.textContent = 'Ocurrió un error al procesar la operación.'; // Mensaje de error
+                    modal.style.display = 'block'; // Abre el modal
+                    closeModalBtn.style.backgroundColor = 'red'; // Cambia el color del botón a rojo
+                    setTimeout(function () {
+                        modal.style.display = 'none'; // Cierra el modal después de 5 segundos
+                        closeModalBtn.style.backgroundColor = ''; // Restaura el color original del botón
+                    }, 5000);
+                });
             });
 
+            // Cierra el modal cuando se hace clic en el botón
             closeModalBtn.addEventListener('click', function () {
                 modal.style.display = 'none';
-                closeModalBtn.style.backgroundColor = ''; // Restaura el color por defecto al cerrar el modal
+                closeModalBtn.style.backgroundColor = ''; // Restaura el color del botón
             });
         });
+
+        // Cambia el tamaño de la fuente según la selección del usuario
         function adjustFontSize(size) {
             const body = document.body;
+            // Elimina las clases de tamaño de fuente existentes
             body.classList.remove('font-small', 'font-medium', 'font-large');
 
+            // Agrega la clase correspondiente al tamaño seleccionado
             switch (size) {
                 case 'small':
                     body.classList.add('font-small');
@@ -302,23 +327,28 @@
             }
         }
 
+        // Función reservada para funcionalidades adicionales del ícono de silla de ruedas
         function aumentarTamano() {
-            // Funcionalidad específica para el icono de silla de ruedas
+            // Implementar funcionalidad específica aquí
         }
 
+        // Cambia el cursor al pasar sobre un elemento
         function cambiarCursor(event) {
             event.target.style.cursor = 'pointer';
         }
 
+        // Restaura el cursor a su estado original
         function restaurarCursor(event) {
             event.target.style.cursor = 'default';
         }
 
+        // Comprueba si las contraseñas coinciden (no utilizado directamente en este formulario)
         function checkPasswordMatch() {
             const password = document.getElementById('edit-contrasena').value;
             const confirmPassword = document.getElementById('edit-confirm-contrasena').value;
             const passwordError = document.getElementById('password-error');
 
+            // Muestra un error si las contraseñas no coinciden
             if (password !== confirmPassword) {
                 passwordError.style.display = 'block';
             } else {
@@ -326,6 +356,7 @@
             }
         }
 
+        // Configura el color del ícono de accesibilidad al cargar la página
         document.querySelector("#disabled-icon .fa-wheelchair").style.color = "#fff";
 
     </script>
