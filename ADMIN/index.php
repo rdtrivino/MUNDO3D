@@ -360,7 +360,7 @@ include ("Programas/graficos.php");
                                                 if ($resultado_pedidos && mysqli_num_rows($resultado_pedidos) > 0) {
                                                     while ($row = mysqli_fetch_assoc($resultado_pedidos)) {
                                                         ?>
-                                                        <tr style="background-color: tomato;">
+                                                        <tr style="background-color: #CCE2CB;">
                                                             <td><?php echo $row['Identificador']; ?></td>
                                                             <td><?php echo obtenerNombreEstado($row['Pe_Estado'], $link); ?>
                                                             </td>
@@ -412,10 +412,6 @@ include ("Programas/graficos.php");
                             <div class="container-fluid px-4">
                                 <div class="d-flex align-items-center justify-content-between small">
                                     <div class="text-muted">Mundo3d 2024</div>
-<<<<<<< HEAD
-
-=======
->>>>>>> 4c0213dd743edaa6d7ce6766cd85b872c370e611
                                 </div>
                             </div>
                         </footer>
