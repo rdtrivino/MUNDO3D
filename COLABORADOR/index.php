@@ -26,17 +26,17 @@
 
 <body class="sb-nav-fixed">
     <!--Inicia el codigo de la barra lateral izquierda de navegacion-->
-    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>  
-        <a class="navbar-brand ps-3" href="index.php">COLABORADOR</a>
+    <nav class="sb-topnav navbar navbar-expand" style="background-color: #3386ff;">
+    <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!" style="color: #e42e24;"> <i class="fas fa-bars"></i> </button>
+    <a class="navbar-brand ps-3" href="index.php"style="color: white;" >COLABORADOR</a>
 
         <ul class="navbar-nav ms-auto ms-auto me-0 me-md-3 my-2 my-md-0">
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Bienvenid@ <?php echo $nombreCompleto; ?>
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: white;">
+                    Bienvenid@ <span style="color: white;"><?php echo $nombreCompleto; ?></span>
                 </a>
                 <ul class="menu-vertical dropdown-menu" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="confi.php">Configuracion de cuenta</a></li>
+                    <li><a class="dropdown-item" href="confi.php">Configuración de cuenta</a></li>
                     <li><a class="dropdown-item" href="../Programas/logout.php" id="cerrar-sesion-button">Cerrar sesión</a></li>
                 </ul>
             </li>
@@ -347,20 +347,15 @@
             
                 </div>
             </main>
-
-            <footer class="py-4 bg-light mt-auto">
-                <div class="container-fluid px-4">
-                    <div class="d-flex align-items-center justify-content-between small">
-                        <?php
-                        // Obtener el año actual
-                        $anio = date("Y");
-                        ?>
-                    </div>
-                </div>
-            </footer>   
         </div>
 |   </div>
-</body>
+</body> <br><br><br><br>
+<footer class="py-4 bg-light mt-auto">
+    <div class="container-fluid px-4">
+        <div class="d-flex align-items-center justify-content-between small">
+    </div>
+</div>
+</footer>   
 <script type="text/javascript" src="Librerias/DataTables/js/jquery.dataTables.min.js"></script>
 <script src="Librerias/DataTables/js/dataTables.bootstrap4.min.js"></script>
 <script src="Librerias/DataTables/js/user.js"></script>

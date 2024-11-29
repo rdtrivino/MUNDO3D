@@ -52,16 +52,15 @@ include ("Programas/controlsesion.php");
 
     <body class="sb-nav-fixed">
         <?php include 'funcionestabladepedidos.php'; ?>
-        <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-            <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
-                    class="fas fa-bars"></i></button>
-            <a class="navbar-brand ps-3" href="index.php">ADMINISTRADOR</a>
+        <nav class="sb-topnav navbar navbar-expand" style="background-color: #3386ff;">
+        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!" style="color: #e42e24;"> <i class="fas fa-bars"></i> </button>
+            <a class="navbar-brand ps-3" href="index.php" style="color: white;">ADMINISTRADOR</a>
             <ul class="navbar-nav ms-auto ms-auto me-0 me-md-3 my-2 my-md-0">
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button"
+                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" style="color: white;"
                         data-bs-toggle="dropdown" aria-expanded="false"><?php echo $nombreCompleto; ?><i
-                            class="fas fa-user fa-fw"></i></a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            class="fas fa-user fa-fw" style="color: #e42e24;"></i></a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                         <li><a class="dropdown-item" href="confi.php">Configuracion de cuenta</a></li>
                         <li>
                             <hr class="dropdown-divider" />
@@ -79,7 +78,7 @@ include ("Programas/controlsesion.php");
                         <div class="nav">
                             <div class="sb-sidenav-menu-heading"></div>
                             <a class="nav-link" href="index.php">
-                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt" style="color: #e42e24;"></i></div>
                                 INICIO
                             </a>
                             <div class="sb-sidenav-menu-heading">Tablas</div>
@@ -87,15 +86,15 @@ include ("Programas/controlsesion.php");
                                 data-bs-parent="#sidenavAccordion">
                             </div>
                             <a class="nav-link" href="tables.php">
-                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                            <div class="sb-nav-link-icon"><i class="fas fa-table" style="color: #e42e24;"></i></div>
                                 Tablas usuarios
                             </a>
                             <a class="nav-link" href="tablesproductos.php">
-                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                            <div class="sb-nav-link-icon"><i class="fas fa-table" style="color: #e42e24;"></i></div>
                                 Tablas Productos
                             </a>
                             <a class="nav-link" href="tablesfacturas.php">
-                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                            <div class="sb-nav-link-icon"><i class="fas fa-table" style="color: #e42e24;"></i></div>
                                 Facturas
                             </a>
                         </div>
@@ -810,11 +809,11 @@ include ("Programas/controlsesion.php");
                 <!--estilos de paginacion-->
 
     </main>
-    <footer class="py-4 bg-light mt-auto">
+    <footer class="py-4 mt-auto" style="background-color: #3386ff; color: white;">
         <div class="container-fluid px-4">
-            <div class="d-flex align-items-center justify-content-between small">
-                <div class="text-muted">© Mundo 3D 2024</div>
-            </div>
+                <div class="d-flex align-items-center justify-content-between small">
+                         <div class="" style="color: white;">Mundo 3D 2024</div>
+                </div>
         </div>
     </footer>
     </div>
