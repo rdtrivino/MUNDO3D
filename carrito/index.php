@@ -421,91 +421,105 @@ if (isset($_SESSION['user_id'])) {
 
 <!-- Scripts JavaScript -->
 <script>
-        function disminuirTamano() {
-            var currentFontSize = parseFloat(document.body.style.fontSize) || 1;
-            var newFontSize = currentFontSize - 1 + 'rem';
-            document.body.style.fontSize = newFontSize;
-        }
+    // Función para disminuir el tamaño de la fuente
+    function disminuirTamano() {
+        // Obtener el tamaño actual de la fuente, o usar 1rem si no está definido
+        var currentFontSize = parseFloat(document.body.style.fontSize) || 1;
+        // Reducir el tamaño de la fuente en 1rem
+        var newFontSize = currentFontSize - 1 + 'rem';
+        document.body.style.fontSize = newFontSize;
+    }
 
+    // Función para ajustar el tamaño de la fuente a valores predefinidos
     function ajustarTamano(size) {
         switch (size) {
-            case 'small':
+            case 'small': // Tamaño pequeño
                 document.body.style.fontSize = 'small';
                 break;
-            case 'medium':
+            case 'medium': // Tamaño mediano
                 document.body.style.fontSize = 'medium';
                 break;
-            case 'large':
+            case 'large': // Tamaño grande
                 document.body.style.fontSize = 'large';
                 break;
-            default:
+            default: // No hacer nada si no coincide con un caso
                 break;
         }
     }
 
+    // Función para aumentar el tamaño de la fuente
     function aumentarTamano() {
-        // Aumentar el tamaño de fuente
         var currentFontSize = parseFloat(document.body.style.fontSize) || 1;
+        // Incrementar el tamaño de la fuente en 1rem
         var newFontSize = currentFontSize + 1 + 'rem';
         document.body.style.fontSize = newFontSize;
     }
 
+    // Función para restaurar el tamaño original de la fuente
     function restaurarTamano() {
-        // Restaurar el tamaño de fuente al original guardado
-        if (tamanoOriginal !== '') {
+        if (tamanoOriginal !== '') { // Si hay un tamaño original guardado
             document.body.style.fontSize = tamanoOriginal;
         }
     }
 
+    // Función para cambiar el cursor al estilo de "puntero"
     function cambiarCursor(event) {
         event.target.style.cursor = 'pointer';
     }
 
+    // Función para restaurar el cursor al estilo predeterminado
     function restaurarCursor() {
         document.body.style.cursor = 'default';
     }
 
-    // Guardar el tamaño original al cargar la página
+    // Variable para almacenar el tamaño original de la fuente
+    var tamanoOriginal = '';
+
+    // Guardar el tamaño original de la fuente al cargar la página
     document.addEventListener('DOMContentLoaded', function () {
         tamanoOriginal = window.getComputedStyle(document.body).fontSize;
     });
+
+    // Código para manejar eventos relacionados con el DOM una vez que la página esté cargada
     $(document).ready(function () {
-        // Agregar event listener para el cambio en el selector de cantidad
+        // Agregar listener para detectar cambios en los selectores de cantidad
         $(".selector-cantidad").change(function () {
-            actualizarTotal();
-            actualizarCantidadEnBD($(this).data('product-id'), $(this).val());
+            actualizarTotal(); // Actualizar el total al cambiar la cantidad
+            actualizarCantidadEnBD($(this).data('product-id'), $(this).val()); // Actualizar en la base de datos
         });
 
         // Calcular el total inicial al cargar la página
         actualizarTotal();
     });
 
+    // Función para disminuir la cantidad de un producto específico
     function restarCantidad(productId) {
-        var cantidadInput = $("#cantidad-" + productId);
-        var cantidad = parseInt(cantidadInput.val());
-        if (cantidad > 1) {
+        var cantidadInput = $("#cantidad-" + productId); // Seleccionar el input de cantidad
+        var cantidad = parseInt(cantidadInput.val()); // Obtener el valor actual
+        if (cantidad > 1) { // Evitar que sea menor que 1
             cantidad--;
-            cantidadInput.val(cantidad);
-            actualizarTotal(); // Llamar a actualizarTotal() después de restar la cantidad
-            actualizarCantidadEnBD(productId, cantidad);
+            cantidadInput.val(cantidad); // Actualizar el input con la nueva cantidad
+            actualizarTotal(); // Actualizar el total
+            actualizarCantidadEnBD(productId, cantidad); // Actualizar en la base de datos
         }
     }
 
+    // Función para aumentar la cantidad de un producto específico
     function sumarCantidad(productId) {
-        var cantidadInput = $("#cantidad-" + productId);
-        var cantidad = parseInt(cantidadInput.val());
+        var cantidadInput = $("#cantidad-" + productId); // Seleccionar el input de cantidad
+        var cantidad = parseInt(cantidadInput.val()); // Obtener el valor actual
         cantidad++;
-        cantidadInput.val(cantidad);
-        actualizarTotal(); // Llamar a actualizarTotal() después de sumar la cantidad
-        actualizarCantidadEnBD(productId, cantidad);
+        cantidadInput.val(cantidad); // Actualizar el input con la nueva cantidad
+        actualizarTotal(); // Actualizar el total
+        actualizarCantidadEnBD(productId, cantidad); // Actualizar en la base de datos
     }
 
+    // Función para actualizar la cantidad de un producto en la base de datos
     function actualizarCantidadEnBD(productId, cantidad) {
-        // Enviar una solicitud AJAX al servidor para actualizar la cantidad en la base de datos
         $.ajax({
-            type: "POST",
-            url: "index.php", // Cambiar por la URL correcta si es necesario
-            data: { product_id: productId, quantity: cantidad }, // Pasar los parámetros
+            type: "POST", // Método HTTP para la solicitud
+            url: "index.php", // URL a donde se enviará la solicitud
+            data: { product_id: productId, quantity: cantidad }, // Datos a enviar
             success: function (response) {
                 // Manejar la respuesta del servidor si es necesario
                 console.log(response);
@@ -513,14 +527,16 @@ if (isset($_SESSION['user_id'])) {
         });
     }
 
+    // Función para calcular y mostrar el precio total de los productos seleccionados
     function actualizarTotal() {
-        var precioTotal = 0;
+        var precioTotal = 0; // Variable para almacenar el total
         $(".card").each(function () {
+            // Obtener el precio del producto, eliminando el símbolo de moneda
             var precio = parseFloat($(this).find(".precio-producto").text().substring(1));
-            var cantidad = parseInt($(this).find(".selector-cantidad").val());
-            precioTotal += precio * cantidad;
+            var cantidad = parseInt($(this).find(".selector-cantidad").val()); // Obtener la cantidad
+            precioTotal += precio * cantidad; // Sumar al total
         });
-        $("#total").text("$" + precioTotal.toFixed(2));
+        $("#total").text("$" + precioTotal.toFixed(2)); // Mostrar el total con formato de moneda
     }
 </script>
 
