@@ -317,7 +317,7 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="archivoImpresion">Archivo a Imprimir:</label>
+                                    <label for="archivoImpresion">Archivo a Imprimir (máx. 500 KB):</label>
                                     <input type="file" class="form-control-file" id="archivoImpresion"
                                         name="archivoImpresion" required>
                                 </div>
@@ -553,6 +553,8 @@
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
+    <script src="js/limitacionkg.js"></script>
+
 </body>
 
 </html>
