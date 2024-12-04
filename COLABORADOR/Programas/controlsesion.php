@@ -3,7 +3,7 @@
     
     // Confirmación de que el usuario ha realizado el proceso de autenticación
     if (!isset($_SESSION['confirmado']) || $_SESSION['confirmado'] == false) {
-        header("Location: ../Programas/autenticacion.php");
+        header("Location: ./../Programas/autenticacion.php");
         exit(); // Terminamos la ejecución del script después de redirigir
     }
 
