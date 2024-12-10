@@ -29,7 +29,7 @@
 <?php include './programas/funciones-in-re.php'; //Conexión a la base de datos ?>
 
     <!-- Topbar Start -->
-    <div class="container-fluid bg-primary py-3">
+    <div class="container-fluid py-3" style="background-color: #3386ff;">
         <div class="row">
             <div class="col-md-6 text-center text-lg-left mb-2 mb-lg-0">
                 <!-- Icono de usuario -->
@@ -192,7 +192,7 @@
         }
     </style>
     <!-- Navbar Start -->
-    <div class="container-fluid position-relative nav-bar p-0">
+    <div class="" style="background-color: #3386ff;">
         <div class="container-lg position-relative p-0 px-lg-3" style="z-index: 9;">
             <nav class="navbar navbar-expand-lg bg-white navbar-light py-3 py-lg-0 pl-3 pl-lg-5">
                 <a href="" class="navbar-brand">
